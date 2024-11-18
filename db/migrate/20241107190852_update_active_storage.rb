@@ -1,4 +1,4 @@
-class UpdateActiveStorage < ActiveRecord::Migration[7.2]
+class UpdateActiveStorage < ActiveRecord::Migration[6.1]
   def change
     add_column :active_storage_blobs, :service_name, :string, null: false
     change_column :active_storage_blobs, :checksum, :string, null: true
