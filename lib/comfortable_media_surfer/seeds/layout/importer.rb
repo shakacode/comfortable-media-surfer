@@ -29,7 +29,7 @@ module ComfortableMediaSurfer::Seeds::Layout
       attributes_yaml = content_hash.delete('attributes')
       attrs           = YAML.safe_load(attributes_yaml)
 
-      layout = site.layouts.where(identifier:).first_or_initialize
+      layout = site.layouts.where(identifier: identifier).first_or_initialize
       layout.parent = parent
 
       if fresh_seed?(layout, content_path)

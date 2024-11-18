@@ -32,7 +32,7 @@ class RenderCmsIntergrationTest < ActionDispatch::IntegrationTest
     )
     site.pages.create!(
       label: 'default',
-      layout:,
+      layout: layout,
       fragments_attributes: [{ identifier: 'content', content: 'SiteBContent' }]
     )
   end
@@ -215,7 +215,7 @@ class RenderCmsIntergrationTest < ActionDispatch::IntegrationTest
 
   def test_cms_layout
     content = '{{cms:text content}} {{cms:text content_b}} {{cms:text content_c}}'
-    comfy_cms_layouts(:default).update_columns(content:)
+    comfy_cms_layouts(:default).update_columns(content: content)
     get '/render-layout?type=layout'
     assert_response :success
     assert_equal 'TestText TestPartial TestValue TestTemplate TestValue', response.body
@@ -235,7 +235,7 @@ class RenderCmsIntergrationTest < ActionDispatch::IntegrationTest
 
   def test_cms_layout_with_action
     content = '{{cms:text content}} {{cms:text content_b}} {{cms:text content_c}}'
-    comfy_cms_layouts(:default).update_columns(content:)
+    comfy_cms_layouts(:default).update_columns(content: content)
     get '/render-layout?type=layout_with_action'
     assert_response :success
     assert_equal "Can render CMS layout and specify action\n  ", response.body

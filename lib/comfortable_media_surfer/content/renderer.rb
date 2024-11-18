@@ -21,7 +21,7 @@ class ComfortableMediaSurfer::Content::Renderer
   MAX_DEPTH = 100
 
   # tags are in this format: {{ cms:tag_class params }}
-  TAG_REGEX = %r{\{\{\s*?cms:(?<class>\w+)(?<params>.*?)\}\}}.freeze
+  TAG_REGEX = %r{\{\{\s*?cms:(?<class>\w+)(?<params>.*?)\}\}}
 
   class << self
     # @return [Hash<String, Class<ComfortableMediaSurfer::Content::Tag>>]

@@ -18,22 +18,20 @@ module ComfortableMediaSurfer::Seeds::Snippet
         attributes_yaml = content_hash.delete('attributes')
         attrs           = YAML.safe_load(attributes_yaml)
 
-        snippet = site.snippets.where(identifier:).first_or_initialize
+        snippet = site.snippets.where(identifier: identifier).first_or_initialize
 
         if fresh_seed?(snippet, path)
           category_ids = category_names_to_ids(snippet, attrs.delete('categories'))
 
           snippet.attributes = attrs.merge(
-            category_ids:,
+            category_ids: category_ids,
             content: content_hash['content']
           )
 
           if snippet.save
-            message = "[CMS SEEDS] Imported Snippet \t #{snippet.identifier}"
-            ComfortableMediaSurfer.logger.info(message)
+            ComfortableMediaSurfer.logger.info("[CMS SEEDS] Imported Snippet \t #{snippet.identifier}")
           else
-            message = "[CMS SEEDS] Failed to import Snippet \n#{snippet.errors.inspect}"
-            ComfortableMediaSurfer.logger.warn(message)
+            ComfortableMediaSurfer.logger.warn("[CMS SEEDS] Failed to import Snippet \n#{snippet.errors.inspect}")
           end
         end
 
