@@ -88,6 +88,7 @@ class CreateCms < ActiveRecord::Migration[5.2]
       t.integer :site_id,     null: false
       t.string  :label,       null: false
       t.string  :identifier,  null: false
+      t.boolean :markdown
       t.text    :content,     limit: LIMIT
       t.integer :position,    null: false, default: 0
       t.timestamps
