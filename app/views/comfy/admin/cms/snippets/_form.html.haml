@@ -2,12 +2,18 @@
 
 = form.text_field :label, data: {slugify: @snippet.new_record?}
 = form.text_field :identifier, data: {slug: true}
-= form.text_area :content, data: {'cms-cm-mode' => 'text/html'}
+= form.check_box :markdown
+
+- if @snippet.markdown
+  = form.text_area :content, data: {'cms-cm-mode' => 'text/x-markdown'}
+- else
+  = form.text_area :content, data: {'cms-cm-mode' => 'text/html'}
 
 = render 'comfy/admin/cms/categories/form', form: form
 
-= comfy_admin_partial "comfy/admin/cms/partials/snippet_form_after", form: form
+= comfy_admin_partial 'comfy/admin/cms/partials/snippet_form_after', form: form
 
 = form.form_actions do
   = submit_tag t(@snippet.new_record? ? ".create" : ".update"), class: "btn btn-primary"
   = link_to t(".cancel"), comfy_admin_cms_site_snippets_path, class: "btn btn-link"
+  
