@@ -49,7 +49,7 @@ comfy_route :cms, path: "/"
 
 After finishing installation you should be able to navigate to http://localhost:3000/admin
 
-Default username and password is 'username' and 'password'. You probably want to change it right away. Admin credentials (among other things) can be found and changed in the cms initializer: [/config/initializers/comfortable\_mexican\_sofa.rb](https://github.com/comfy/comfortable-mexican-sofa/blob/master/config/initializers/comfortable_media_surfer.rb)
+Default username and password is 'user' and 'pass'. You probably want to change it right away. Admin credentials (among other things) can be found and changed in the cms initializer: [/config/initializers/comfortable\_media\_surfer.rb](https://github.com/shakacode/comfortable-media-surfer/blob/master/config/initializers/comfortable_media_surfer.rb)
 
 Before creating pages and populating them with content we need to create a Site. Site defines a hostname, content path and its language.
 
