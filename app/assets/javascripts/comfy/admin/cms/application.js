@@ -1,5 +1,6 @@
 import "@rails/ujs";
-import "jquery";
+import jQUery from "jquery";
+window.jQuery = jQUery; // Make jQuery available in global scope
 
 import "../../vendor/sortable.min";
 import "../../vendor/bootstrap.bundle.min";
