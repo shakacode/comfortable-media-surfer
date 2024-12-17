@@ -10,10 +10,8 @@ gem 'rails', '~> 7.2'
 group :development, :test do
   gem 'autoprefixer-rails', '~> 10.4.16.0'
   gem 'byebug',             '~> 11.1.0', platforms: %i[mri mingw x64_mingw]
-  gem 'cssbundling-rails',  '~> 1.4.1'
   gem 'gem-release'
   gem 'image_processing',   '>= 1.12.0'
-  gem 'jsbundling-rails',    '~> 1.3.1'
   gem 'propshaft',          '~> 1.1.0'
   gem 'sqlite3',            '~> 1.6.7'
   # gem 'mysql2',             '~> 0.5'
