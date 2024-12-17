@@ -31,6 +31,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mini_magick',          '~> 4.12',  '>= 4.12.0'
   spec.add_dependency 'rails',                '>= 6.1.0'
   spec.add_dependency 'rails-i18n',           '>= 6.0.0'
-  spec.add_dependency 'sassc-rails',          '~> 2.1',   '>= 2.1.2'
-  spec.add_dependency 'sprockets-rails',      '~> 3.4',   '>= 3.4.2'
 end
