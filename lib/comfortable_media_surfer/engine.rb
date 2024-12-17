@@ -6,7 +6,6 @@ require 'rails-i18n'
 require 'comfy_bootstrap_form'
 require 'active_link_to'
 require 'kramdown'
-require 'jquery-rails'
 require 'haml-rails'
 
 module ComfortableMediaSurfer
