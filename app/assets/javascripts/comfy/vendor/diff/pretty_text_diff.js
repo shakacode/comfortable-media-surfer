@@ -5,29 +5,31 @@
 See https://github.com/arnab/jQuery.PrettyTextDiff/
  */
 
-(function() {
+import jQuery from "jquery";
+
+(function () {
   var $;
 
   $ = jQuery;
 
   $.fn.extend({
-    prettyTextDiff: function(options) {
+    prettyTextDiff: function (options) {
       var dmp, settings;
       settings = {
         originalContainer: ".original",
         changedContainer: ".changed",
         diffContainer: ".diff",
         cleanup: true,
-        debug: false
+        debug: false,
       };
       settings = $.extend(settings, options);
       $.fn.prettyTextDiff.debug("Options: ", settings, settings);
       dmp = new diff_match_patch();
-      return this.each(function() {
+      return this.each(function () {
         var changed, diff_as_html, diffs, original;
         if (settings.originalContent && settings.changedContent) {
-          original = $('<div />').html(settings.originalContent).text();
-          changed = $('<div />').html(settings.changedContent).text();
+          original = $("<div />").html(settings.originalContent).text();
+          changed = $("<div />").html(settings.changedContent).text();
         } else {
           original = $(settings.originalContainer, this).text();
           changed = $(settings.changedContainer, this).text();
@@ -39,38 +41,48 @@ See https://github.com/arnab/jQuery.PrettyTextDiff/
           dmp.diff_cleanupSemantic(diffs);
         }
         $.fn.prettyTextDiff.debug("Diffs: ", diffs, settings);
-        diff_as_html = $.map(diffs, function(diff) {
+        diff_as_html = $.map(diffs, function (diff) {
           return $.fn.prettyTextDiff.createHTML(diff);
         });
-        $(settings.diffContainer, this).html(diff_as_html.join(''));
+        $(settings.diffContainer, this).html(diff_as_html.join(""));
         return this;
       });
-    }
+    },
   });
 
-  $.fn.prettyTextDiff.debug = function(message, object, settings) {
+  $.fn.prettyTextDiff.debug = function (message, object, settings) {
     if (settings.debug) {
       return console.log(message, object);
     }
   };
 
-  $.fn.prettyTextDiff.createHTML = function(diff) {
-    var data, html, operation, pattern_amp, pattern_gt, pattern_lt, pattern_para, text;
+  $.fn.prettyTextDiff.createHTML = function (diff) {
+    var data,
+      html,
+      operation,
+      pattern_amp,
+      pattern_gt,
+      pattern_lt,
+      pattern_para,
+      text;
     html = [];
     pattern_amp = /&/g;
     pattern_lt = /</g;
     pattern_gt = />/g;
     pattern_para = /\n/g;
-    operation = diff[0], data = diff[1];
-    text = data.replace(pattern_amp, '&amp;').replace(pattern_lt, '&lt;').replace(pattern_gt, '&gt;').replace(pattern_para, '<br>');
+    (operation = diff[0]), (data = diff[1]);
+    text = data
+      .replace(pattern_amp, "&amp;")
+      .replace(pattern_lt, "&lt;")
+      .replace(pattern_gt, "&gt;")
+      .replace(pattern_para, "<br>");
     switch (operation) {
       case DIFF_INSERT:
-        return '<ins>' + text + '</ins>';
+        return "<ins>" + text + "</ins>";
       case DIFF_DELETE:
-        return '<del>' + text + '</del>';
+        return "<del>" + text + "</del>";
       case DIFF_EQUAL:
-        return '<span>' + text + '</span>';
+        return "<span>" + text + "</span>";
     }
   };
-
 }).call(this);

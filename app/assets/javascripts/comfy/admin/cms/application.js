@@ -1,9 +1,8 @@
-import "@rails/ujs";
-import jQUery from "jquery";
-window.jQuery = jQUery; // Make jQuery available in global scope
+import ujs from "@rails/ujs";
+ujs.start();
 
-import "../../vendor/sortable.min";
-import "../../vendor/bootstrap.bundle.min";
+import "bootstrap/js/src/tab";
+
 import "../../vendor/diff/diff_match_patch.min";
 import "../../vendor/diff/pretty_text_diff";
 import "../../vendor/fontawesome";
@@ -21,10 +20,10 @@ import "../../vendor/flatpickr.min";
 
 import "./base";
 import "./categories";
-// import "./codemirror";
+import "./codemirror";
 import "./diff";
 import "./file_link";
-import "./file_upload";
+// import "./file_upload";
 import "./files_modal";
 import "./page_fragments";
 import "./sortable_list";

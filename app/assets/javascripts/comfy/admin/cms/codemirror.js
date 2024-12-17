@@ -1,3 +1,4 @@
+import jQuery from "jquery";
 import { EditorView } from "@codemirror/view";
 
 (() => {

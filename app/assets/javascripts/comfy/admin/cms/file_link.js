@@ -1,3 +1,6 @@
+import jQuery from "jquery";
+import Popover from "bootstrap/js/src/popover";
+
 (() => {
   const isFirefox = /\bFirefox\//.test(navigator.userAgent);
 
@@ -6,20 +9,23 @@
       this.link = link;
       this.isImage = !!link.dataset.cmsFileThumbUrl;
 
-      link.addEventListener('dragstart', (evt) => {
-        evt.dataTransfer.setData('text/plain', this.link.dataset.cmsFileLinkTag);
+      link.addEventListener("dragstart", (evt) => {
+        evt.dataTransfer.setData(
+          "text/plain",
+          this.link.dataset.cmsFileLinkTag
+        );
       });
 
       if (this.isImage) {
-        new bootstrap.Popover(link, {
+        new Popover(link, {
           container: link.parentElement,
-          trigger: 'hover',
-          placement: 'top',
+          trigger: "hover",
+          placement: "top",
           content: this.buildFileThumbnail(),
-          html: true
+          html: true,
         });
 
-        link.addEventListener('dragstart', (evt) => {
+        link.addEventListener("dragstart", (evt) => {
           evt.dataTransfer.setDragImage(this.buildFileThumbnail(), 4, 2);
           this.getPopover().hide();
         });
@@ -41,10 +47,10 @@
     // https://bugzilla.mozilla.org/show_bug.cgi?id=505521
     workAroundFirefoxPopoverGlitch() {
       if (!isFirefox) return;
-      this.link.addEventListener('dragstart', () => {
+      this.link.addEventListener("dragstart", () => {
         this.getPopover().disable();
       });
-      this.link.addEventListener('dragend', () => {
+      this.link.addEventListener("dragend", () => {
         setTimeout(() => {
           const popover = this.getPopover();
           popover.enable();
@@ -55,12 +61,12 @@
 
     // We can't keep a reference to the Popover object, because Bootstrap re-creates it internally.
     getPopover() {
-      return jQuery(this.link).data(bootstrap.Popover.DATA_KEY);
+      return jQuery(this.link).data(Popover.DATA_KEY);
     }
   }
 
   window.CMS.fileLinks = (root = document) => {
-    for (const link of root.querySelectorAll('[data-cms-file-link-tag]')) {
+    for (const link of root.querySelectorAll("[data-cms-file-link-tag]")) {
       new FileLink(link);
     }
   };
