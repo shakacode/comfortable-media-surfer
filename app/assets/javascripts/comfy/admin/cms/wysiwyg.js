@@ -1,6 +1,13 @@
 import jQuery from "jquery";
 import Rails from "@rails/ujs";
 
+import "../../vendor/redactor";
+import "../../vendor/redactor/filemanager";
+import "../../vendor/redactor/imagemanager";
+import "../../vendor/redactor/definedlinks";
+import "../../vendor/redactor/table";
+import "../../vendor/redactor/video";
+
 (() => {
   const buildRedactorOptions = () => {
     const fileUploadPath = document.querySelector(
