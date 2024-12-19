@@ -1,0 +1,20 @@
+{
+  "name": "comfortable-media-surfer",
+  "private": true,
+  "scripts": {
+    "build": "esbuild app/assets/javascripts/comfy/admin/cms/application.js --bundle --sourcemap --outdir=app/assets/builds/comfy/admin/cms --public-path=/assets",
+    "build:css": "sass --load-path=./app/assets/stylesheets ./app/assets/stylesheets/comfy/admin/cms/application.sass:./app/assets/builds/comfy/admin/cms/application.css --no-source-map --load-path=node_modules"
+  },
+  "dependencies": {
+    "@rails/ujs": "^7.1.3-4",
+    "bootstrap": "4.3.1",
+    "codemirror": "^5.65.18",
+    "esbuild": "^0.24.0",
+    "flatpickr": "^4.6.13",
+    "jquery": "3.7.1",
+    "plupload": "^2.3.9",
+    "popper.js": "^1.16.1",
+    "sass": "^1.83.0",
+    "sortablejs": "^1.15.6"
+  }
+}
