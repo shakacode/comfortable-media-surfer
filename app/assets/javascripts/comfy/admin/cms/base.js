@@ -21,7 +21,7 @@
   CMS.init = () => {
     CMS.current_path = window.location.pathname;
     CMS.slugify();
-    // CMS.codemirror.init();
+    CMS.codemirror.init();
     CMS.wysiwyg.init();
     CMS.sortableList.init();
     CMS.timepicker.init();

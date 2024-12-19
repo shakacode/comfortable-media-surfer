@@ -1,5 +1,7 @@
 import jQuery from "jquery";
-import { EditorView } from "@codemirror/view";
+import CodeMirror from "codemirror";
+import "codemirror/mode/markdown/markdown";
+import "codemirror/mode/htmlmixed/htmlmixed";
 
 (() => {
   const codeMirrorInstances = [];
@@ -8,20 +10,14 @@ import { EditorView } from "@codemirror/view";
       for (const textarea of root.querySelectorAll(
         "textarea[data-cms-cm-mode]"
       )) {
-        const codemirror = new EditorView({
-          doc: textarea.value,
-          // extensions: [],
-          parent: textarea,
+        const codemirror = CodeMirror.fromTextArea(textarea, {
+          mode: textarea.dataset.cmsCmMode,
+          tabSize: 2,
+          lineWrapping: true,
+          autoCloseTags: true,
+          lineNumbers: true,
+          viewportMargin: Infinity,
         });
-
-        // const codemirror = CodeMirror.fromTextArea(textarea, {
-        //   mode: textarea.dataset.cmsCmMode,
-        //   tabSize: 2,
-        //   lineWrapping: true,
-        //   autoCloseTags: true,
-        //   lineNumbers: true,
-        //   viewportMargin: Infinity,
-        // });
         codeMirrorInstances.push(codemirror);
       }
 
