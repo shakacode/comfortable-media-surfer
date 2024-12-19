@@ -29,7 +29,7 @@
     CMS.categories();
     CMS.files.init();
     CMS.fileLinks();
-    // CMS.fileUpload.init();
+    CMS.fileUpload.init();
     CMS.diff();
   };
 

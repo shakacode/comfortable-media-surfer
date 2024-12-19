@@ -23,7 +23,7 @@ import "./categories";
 import "./codemirror";
 import "./diff";
 import "./file_link";
-// import "./file_upload";
+import "./file_upload";
 import "./files_modal";
 import "./page_fragments";
 import "./sortable_list";

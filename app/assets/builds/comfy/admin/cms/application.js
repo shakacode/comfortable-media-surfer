@@ -408,8 +408,8 @@
             // For use in libraries implementing .is()
             // We use this for POS matching in `select`
             needsContext: new RegExp("^" + whitespace + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" + whitespace + "*((?:-\\d)?\\d*)" + whitespace + "*\\)|)(?=[^-]|$)", "i")
-          }, rinputs = /^(?:input|select|textarea|button)$/i, rheader = /^h\d$/i, rquickExpr2 = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/, rsibling = /[+~]/, runescape = new RegExp("\\\\[\\da-fA-F]{1,6}" + whitespace + "?|\\\\([^\\r\\n\\f])", "g"), funescape = function(escape, nonHex) {
-            var high = "0x" + escape.slice(1) - 65536;
+          }, rinputs = /^(?:input|select|textarea|button)$/i, rheader = /^h\d$/i, rquickExpr2 = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/, rsibling = /[+~]/, runescape = new RegExp("\\\\[\\da-fA-F]{1,6}" + whitespace + "?|\\\\([^\\r\\n\\f])", "g"), funescape = function(escape2, nonHex) {
+            var high = "0x" + escape2.slice(1) - 65536;
             if (nonHex) {
               return nonHex;
             }
@@ -3753,7 +3753,7 @@
           });
         })();
         function curCSS(elem, name2, computed) {
-          var width, minWidth, maxWidth, ret, isCustomProp = rcustomProp.test(name2), style = elem.style;
+          var width2, minWidth, maxWidth, ret, isCustomProp = rcustomProp.test(name2), style = elem.style;
           computed = computed || getStyles(elem);
           if (computed) {
             ret = computed.getPropertyValue(name2) || computed[name2];
@@ -3764,12 +3764,12 @@
               ret = jQuery12.style(elem, name2);
             }
             if (!support.pixelBoxStyles() && rnumnonpx.test(ret) && rboxStyle.test(name2)) {
-              width = style.width;
+              width2 = style.width;
               minWidth = style.minWidth;
               maxWidth = style.maxWidth;
               style.minWidth = style.maxWidth = style.width = ret;
               ret = computed.width;
-              style.width = width;
+              style.width = width2;
               style.minWidth = minWidth;
               style.maxWidth = maxWidth;
             }
@@ -7213,6 +7213,10497 @@
         }), Date.prototype.fp_incr = function(e2) {
           return new Date(this.getFullYear(), this.getMonth(), this.getDate() + ("string" == typeof e2 ? parseInt(e2, 10) : e2));
         }, b;
+      });
+    }
+  });
+
+  // node_modules/plupload/js/moxie.js
+  var require_moxie = __commonJS({
+    "node_modules/plupload/js/moxie.js"(exports, module) {
+      var MXI_DEBUG = true;
+      (function(global2, factory) {
+        var extract = function() {
+          var ctx = {};
+          factory.apply(ctx, arguments);
+          return ctx.moxie;
+        };
+        if (typeof define === "function" && define.amd) {
+          define("moxie", [], extract);
+        } else if (typeof module === "object" && module.exports) {
+          module.exports = extract();
+        } else {
+          global2.moxie = extract();
+        }
+      })(exports || window, function() {
+        (function(exports2, undefined2) {
+          "use strict";
+          var modules = {};
+          function require2(ids, callback) {
+            var module2, defs = [];
+            for (var i = 0; i < ids.length; ++i) {
+              module2 = modules[ids[i]] || resolve(ids[i]);
+              if (!module2) {
+                throw "module definition dependecy not found: " + ids[i];
+              }
+              defs.push(module2);
+            }
+            callback.apply(null, defs);
+          }
+          function define2(id, dependencies, definition) {
+            if (typeof id !== "string") {
+              throw "invalid module definition, module id must be defined and be a string";
+            }
+            if (dependencies === undefined2) {
+              throw "invalid module definition, dependencies must be specified";
+            }
+            if (definition === undefined2) {
+              throw "invalid module definition, definition function must be specified";
+            }
+            require2(dependencies, function() {
+              modules[id] = definition.apply(null, arguments);
+            });
+          }
+          function defined(id) {
+            return !!modules[id];
+          }
+          function resolve(id) {
+            var target = exports2;
+            var fragments = id.split(/[.\/]/);
+            for (var fi = 0; fi < fragments.length; ++fi) {
+              if (!target[fragments[fi]]) {
+                return;
+              }
+              target = target[fragments[fi]];
+            }
+            return target;
+          }
+          function expose(ids) {
+            for (var i = 0; i < ids.length; i++) {
+              var target = exports2;
+              var id = ids[i];
+              var fragments = id.split(/[.\/]/);
+              for (var fi = 0; fi < fragments.length - 1; ++fi) {
+                if (target[fragments[fi]] === undefined2) {
+                  target[fragments[fi]] = {};
+                }
+                target = target[fragments[fi]];
+              }
+              target[fragments[fragments.length - 1]] = modules[id];
+            }
+          }
+          define2("moxie/core/utils/Basic", [], function() {
+            function typeOf(o) {
+              var undef;
+              if (o === undef) {
+                return "undefined";
+              } else if (o === null) {
+                return "null";
+              } else if (o.nodeType) {
+                return "node";
+              }
+              return {}.toString.call(o).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
+            }
+            function extend2() {
+              return merge(false, false, arguments);
+            }
+            function extendIf() {
+              return merge(true, false, arguments);
+            }
+            function extendImmutable() {
+              return merge(false, true, arguments);
+            }
+            function extendImmutableIf() {
+              return merge(true, true, arguments);
+            }
+            function clone2(value) {
+              switch (typeOf(value)) {
+                case "array":
+                  return merge(false, true, [[], value]);
+                case "object":
+                  return merge(false, true, [{}, value]);
+                default:
+                  return value;
+              }
+            }
+            function shallowCopy(obj) {
+              switch (typeOf(obj)) {
+                case "array":
+                  return Array.prototype.slice.call(obj);
+                case "object":
+                  return extend2({}, obj);
+              }
+              return obj;
+            }
+            function merge(strict, immutable, args) {
+              var undef;
+              var target = args[0];
+              each(args, function(arg, i) {
+                if (i > 0) {
+                  each(arg, function(value, key) {
+                    var isComplex = inArray(typeOf(value), ["array", "object"]) !== -1;
+                    if (value === undef || strict && target[key] === undef) {
+                      return true;
+                    }
+                    if (isComplex && immutable) {
+                      value = shallowCopy(value);
+                    }
+                    if (typeOf(target[key]) === typeOf(value) && isComplex) {
+                      merge(strict, immutable, [target[key], value]);
+                    } else {
+                      target[key] = value;
+                    }
+                  });
+                }
+              });
+              return target;
+            }
+            function inherit(child, parent) {
+              for (var key in parent) {
+                if ({}.hasOwnProperty.call(parent, key)) {
+                  child[key] = parent[key];
+                }
+              }
+              function ctor() {
+                this.constructor = child;
+                if (MXI_DEBUG) {
+                  var getCtorName = function(fn) {
+                    var m2 = fn.toString().match(/^function\s([^\(\s]+)/);
+                    return m2 ? m2[1] : false;
+                  };
+                  this.ctorName = getCtorName(child);
+                }
+              }
+              ctor.prototype = parent.prototype;
+              child.prototype = new ctor();
+              child.parent = parent.prototype;
+              return child;
+            }
+            function each(obj, callback) {
+              var length, key, i, undef;
+              if (obj) {
+                try {
+                  length = obj.length;
+                } catch (ex) {
+                  length = undef;
+                }
+                if (length === undef || typeof length !== "number") {
+                  for (key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                      if (callback(obj[key], key) === false) {
+                        return;
+                      }
+                    }
+                  }
+                } else {
+                  for (i = 0; i < length; i++) {
+                    if (callback(obj[i], i) === false) {
+                      return;
+                    }
+                  }
+                }
+              }
+            }
+            function isEmptyObj(obj) {
+              var prop;
+              if (!obj || typeOf(obj) !== "object") {
+                return true;
+              }
+              for (prop in obj) {
+                return false;
+              }
+              return true;
+            }
+            function inSeries(queue, cb) {
+              var i = 0, length = queue.length;
+              if (typeOf(cb) !== "function") {
+                cb = function() {
+                };
+              }
+              if (!queue || !queue.length) {
+                cb();
+              }
+              function callNext(i2) {
+                if (typeOf(queue[i2]) === "function") {
+                  queue[i2](function(error) {
+                    ++i2 < length && !error ? callNext(i2) : cb(error);
+                  });
+                }
+              }
+              callNext(i);
+            }
+            function inParallel(queue, cb) {
+              var count = 0, num = queue.length, cbArgs = new Array(num);
+              each(queue, function(fn, i) {
+                fn(function(error) {
+                  if (error) {
+                    return cb(error);
+                  }
+                  var args = [].slice.call(arguments);
+                  args.shift();
+                  cbArgs[i] = args;
+                  count++;
+                  if (count === num) {
+                    cbArgs.unshift(null);
+                    cb.apply(this, cbArgs);
+                  }
+                });
+              });
+            }
+            function inArray(needle, array) {
+              if (array) {
+                if (Array.prototype.indexOf) {
+                  return Array.prototype.indexOf.call(array, needle);
+                }
+                for (var i = 0, length = array.length; i < length; i++) {
+                  if (array[i] === needle) {
+                    return i;
+                  }
+                }
+              }
+              return -1;
+            }
+            function arrayDiff(needles, array) {
+              var diff = [];
+              if (typeOf(needles) !== "array") {
+                needles = [needles];
+              }
+              if (typeOf(array) !== "array") {
+                array = [array];
+              }
+              for (var i in needles) {
+                if (inArray(needles[i], array) === -1) {
+                  diff.push(needles[i]);
+                }
+              }
+              return diff.length ? diff : false;
+            }
+            function arrayIntersect(array1, array2) {
+              var result = [];
+              each(array1, function(item) {
+                if (inArray(item, array2) !== -1) {
+                  result.push(item);
+                }
+              });
+              return result.length ? result : null;
+            }
+            function toArray3(obj) {
+              var i, arr = [];
+              for (i = 0; i < obj.length; i++) {
+                arr[i] = obj[i];
+              }
+              return arr;
+            }
+            var guid = /* @__PURE__ */ function() {
+              var counter = 0;
+              return function(prefix) {
+                var guid2 = (/* @__PURE__ */ new Date()).getTime().toString(32), i;
+                for (i = 0; i < 5; i++) {
+                  guid2 += Math.floor(Math.random() * 65535).toString(32);
+                }
+                return (prefix || "o_") + guid2 + (counter++).toString(32);
+              };
+            }();
+            function trim(str) {
+              if (!str) {
+                return str;
+              }
+              return String.prototype.trim ? String.prototype.trim.call(str) : str.toString().replace(/^\s*/, "").replace(/\s*$/, "");
+            }
+            function parseSizeStr(size) {
+              if (typeof size !== "string") {
+                return size;
+              }
+              var muls = {
+                t: 1099511627776,
+                g: 1073741824,
+                m: 1048576,
+                k: 1024
+              }, mul;
+              size = /^([0-9\.]+)([tmgk]?)$/.exec(size.toLowerCase().replace(/[^0-9\.tmkg]/g, ""));
+              mul = size[2];
+              size = +size[1];
+              if (muls.hasOwnProperty(mul)) {
+                size *= muls[mul];
+              }
+              return Math.floor(size);
+            }
+            function sprintf(str) {
+              var args = [].slice.call(arguments, 1);
+              return str.replace(/%([a-z])/g, function($0, $1) {
+                var value = args.shift();
+                switch ($1) {
+                  case "s":
+                    return value + "";
+                  case "d":
+                    return parseInt(value, 10);
+                  case "f":
+                    return parseFloat(value);
+                  case "c":
+                    return "";
+                  default:
+                    return value;
+                }
+              });
+            }
+            function delay(cb, timeout) {
+              var self2 = this;
+              setTimeout(function() {
+                cb.call(self2);
+              }, timeout || 1);
+            }
+            return {
+              guid,
+              typeOf,
+              extend: extend2,
+              extendIf,
+              extendImmutable,
+              extendImmutableIf,
+              clone: clone2,
+              inherit,
+              each,
+              isEmptyObj,
+              inSeries,
+              inParallel,
+              inArray,
+              arrayDiff,
+              arrayIntersect,
+              toArray: toArray3,
+              trim,
+              sprintf,
+              parseSizeStr,
+              delay
+            };
+          });
+          define2("moxie/core/utils/Encode", [], function() {
+            var utf8_encode = function(str) {
+              return unescape(encodeURIComponent(str));
+            };
+            var utf8_decode = function(str_data) {
+              return decodeURIComponent(escape(str_data));
+            };
+            var atob = function(data, utf8) {
+              if (typeof window.atob === "function") {
+                return utf8 ? utf8_decode(window.atob(data)) : window.atob(data);
+              }
+              var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+              var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, dec2 = "", tmp_arr = [];
+              if (!data) {
+                return data;
+              }
+              data += "";
+              do {
+                h1 = b64.indexOf(data.charAt(i++));
+                h2 = b64.indexOf(data.charAt(i++));
+                h3 = b64.indexOf(data.charAt(i++));
+                h4 = b64.indexOf(data.charAt(i++));
+                bits = h1 << 18 | h2 << 12 | h3 << 6 | h4;
+                o1 = bits >> 16 & 255;
+                o2 = bits >> 8 & 255;
+                o3 = bits & 255;
+                if (h3 == 64) {
+                  tmp_arr[ac++] = String.fromCharCode(o1);
+                } else if (h4 == 64) {
+                  tmp_arr[ac++] = String.fromCharCode(o1, o2);
+                } else {
+                  tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
+                }
+              } while (i < data.length);
+              dec2 = tmp_arr.join("");
+              return utf8 ? utf8_decode(dec2) : dec2;
+            };
+            var btoa = function(data, utf8) {
+              if (utf8) {
+                data = utf8_encode(data);
+              }
+              if (typeof window.btoa === "function") {
+                return window.btoa(data);
+              }
+              var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+              var o1, o2, o3, h1, h2, h3, h4, bits, i = 0, ac = 0, enc = "", tmp_arr = [];
+              if (!data) {
+                return data;
+              }
+              do {
+                o1 = data.charCodeAt(i++);
+                o2 = data.charCodeAt(i++);
+                o3 = data.charCodeAt(i++);
+                bits = o1 << 16 | o2 << 8 | o3;
+                h1 = bits >> 18 & 63;
+                h2 = bits >> 12 & 63;
+                h3 = bits >> 6 & 63;
+                h4 = bits & 63;
+                tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+              } while (i < data.length);
+              enc = tmp_arr.join("");
+              var r = data.length % 3;
+              return (r ? enc.slice(0, r - 3) : enc) + "===".slice(r || 3);
+            };
+            return {
+              utf8_encode,
+              utf8_decode,
+              atob,
+              btoa
+            };
+          });
+          define2("moxie/core/utils/Env", [
+            "moxie/core/utils/Basic"
+          ], function(Basic) {
+            var UAParser = function(undefined3) {
+              var EMPTY = "", UNKNOWN = "?", FUNC_TYPE = "function", UNDEF_TYPE = "undefined", OBJ_TYPE = "object", MAJOR = "major", MODEL = "model", NAME4 = "name", TYPE = "type", VENDOR = "vendor", VERSION4 = "version", ARCHITECTURE = "architecture", CONSOLE = "console", MOBILE = "mobile", TABLET = "tablet";
+              var util = {
+                has: function(str1, str2) {
+                  return str2.toLowerCase().indexOf(str1.toLowerCase()) !== -1;
+                },
+                lowerize: function(str) {
+                  return str.toLowerCase();
+                }
+              };
+              var mapper = {
+                rgx: function() {
+                  for (var result, i = 0, j, k, p, q, matches3, match, args = arguments; i < args.length; i += 2) {
+                    var regex = args[i], props = args[i + 1];
+                    if (typeof result === UNDEF_TYPE) {
+                      result = {};
+                      for (p in props) {
+                        q = props[p];
+                        if (typeof q === OBJ_TYPE) {
+                          result[q[0]] = undefined3;
+                        } else {
+                          result[q] = undefined3;
+                        }
+                      }
+                    }
+                    for (j = k = 0; j < regex.length; j++) {
+                      matches3 = regex[j].exec(this.getUA());
+                      if (!!matches3) {
+                        for (p = 0; p < props.length; p++) {
+                          match = matches3[++k];
+                          q = props[p];
+                          if (typeof q === OBJ_TYPE && q.length > 0) {
+                            if (q.length == 2) {
+                              if (typeof q[1] == FUNC_TYPE) {
+                                result[q[0]] = q[1].call(this, match);
+                              } else {
+                                result[q[0]] = q[1];
+                              }
+                            } else if (q.length == 3) {
+                              if (typeof q[1] === FUNC_TYPE && !(q[1].exec && q[1].test)) {
+                                result[q[0]] = match ? q[1].call(this, match, q[2]) : undefined3;
+                              } else {
+                                result[q[0]] = match ? match.replace(q[1], q[2]) : undefined3;
+                              }
+                            } else if (q.length == 4) {
+                              result[q[0]] = match ? q[3].call(this, match.replace(q[1], q[2])) : undefined3;
+                            }
+                          } else {
+                            result[q] = match ? match : undefined3;
+                          }
+                        }
+                        break;
+                      }
+                    }
+                    if (!!matches3) break;
+                  }
+                  return result;
+                },
+                str: function(str, map) {
+                  for (var i in map) {
+                    if (typeof map[i] === OBJ_TYPE && map[i].length > 0) {
+                      for (var j = 0; j < map[i].length; j++) {
+                        if (util.has(map[i][j], str)) {
+                          return i === UNKNOWN ? undefined3 : i;
+                        }
+                      }
+                    } else if (util.has(map[i], str)) {
+                      return i === UNKNOWN ? undefined3 : i;
+                    }
+                  }
+                  return str;
+                }
+              };
+              var maps = {
+                browser: {
+                  oldsafari: {
+                    major: {
+                      "1": ["/8", "/1", "/3"],
+                      "2": "/4",
+                      "?": "/"
+                    },
+                    version: {
+                      "1.0": "/8",
+                      "1.2": "/1",
+                      "1.3": "/3",
+                      "2.0": "/412",
+                      "2.0.2": "/416",
+                      "2.0.3": "/417",
+                      "2.0.4": "/419",
+                      "?": "/"
+                    }
+                  }
+                },
+                device: {
+                  sprint: {
+                    model: {
+                      "Evo Shift 4G": "7373KT"
+                    },
+                    vendor: {
+                      "HTC": "APA",
+                      "Sprint": "Sprint"
+                    }
+                  }
+                },
+                os: {
+                  windows: {
+                    version: {
+                      "ME": "4.90",
+                      "NT 3.11": "NT3.51",
+                      "NT 4.0": "NT4.0",
+                      "2000": "NT 5.0",
+                      "XP": ["NT 5.1", "NT 5.2"],
+                      "Vista": "NT 6.0",
+                      "7": "NT 6.1",
+                      "8": "NT 6.2",
+                      "8.1": "NT 6.3",
+                      "RT": "ARM"
+                    }
+                  }
+                }
+              };
+              var regexes = {
+                browser: [
+                  [
+                    // Presto based
+                    /(opera\smini)\/([\w\.-]+)/i,
+                    // Opera Mini
+                    /(opera\s[mobiletab]+).+version\/([\w\.-]+)/i,
+                    // Opera Mobi/Tablet
+                    /(opera).+version\/([\w\.]+)/i,
+                    // Opera > 9.80
+                    /(opera)[\/\s]+([\w\.]+)/i
+                    // Opera < 9.80
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /\s(opr)\/([\w\.]+)/i
+                    // Opera Webkit
+                  ],
+                  [[NAME4, "Opera"], VERSION4],
+                  [
+                    // Mixed
+                    /(kindle)\/([\w\.]+)/i,
+                    // Kindle
+                    /(lunascape|maxthon|netfront|jasmine|blazer)[\/\s]?([\w\.]+)*/i,
+                    // Lunascape/Maxthon/Netfront/Jasmine/Blazer
+                    // Trident based
+                    /(avant\s|iemobile|slim|baidu)(?:browser)?[\/\s]?([\w\.]*)/i,
+                    // Avant/IEMobile/SlimBrowser/Baidu
+                    /(?:ms|\()(ie)\s([\w\.]+)/i,
+                    // Internet Explorer
+                    // Webkit/KHTML based
+                    /(rekonq)\/([\w\.]+)*/i,
+                    // Rekonq
+                    /(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi)\/([\w\.-]+)/i
+                    // Chromium/Flock/RockMelt/Midori/Epiphany/Silk/Skyfire/Bolt/Iron
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /(trident).+rv[:\s]([\w\.]+).+like\sgecko/i
+                    // IE11
+                  ],
+                  [[NAME4, "IE"], VERSION4],
+                  [
+                    /(edge)\/((\d+)?[\w\.]+)/i
+                    // Microsoft Edge
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /(yabrowser)\/([\w\.]+)/i
+                    // Yandex
+                  ],
+                  [[NAME4, "Yandex"], VERSION4],
+                  [
+                    /(comodo_dragon)\/([\w\.]+)/i
+                    // Comodo Dragon
+                  ],
+                  [[NAME4, /_/g, " "], VERSION4],
+                  [
+                    /(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i,
+                    // Chrome/OmniWeb/Arora/Tizen/Nokia
+                    /(uc\s?browser|qqbrowser)[\/\s]?([\w\.]+)/i
+                    // UCBrowser/QQBrowser
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /(dolfin)\/([\w\.]+)/i
+                    // Dolphin
+                  ],
+                  [[NAME4, "Dolphin"], VERSION4],
+                  [
+                    /((?:android.+)crmo|crios)\/([\w\.]+)/i
+                    // Chrome for Android/iOS
+                  ],
+                  [[NAME4, "Chrome"], VERSION4],
+                  [
+                    /XiaoMi\/MiuiBrowser\/([\w\.]+)/i
+                    // MIUI Browser
+                  ],
+                  [VERSION4, [NAME4, "MIUI Browser"]],
+                  [
+                    /android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)/i
+                    // Android Browser
+                  ],
+                  [VERSION4, [NAME4, "Android Browser"]],
+                  [
+                    /FBAV\/([\w\.]+);/i
+                    // Facebook App for iOS
+                  ],
+                  [VERSION4, [NAME4, "Facebook"]],
+                  [
+                    /version\/([\w\.]+).+?mobile\/\w+\s(safari)/i
+                    // Mobile Safari
+                  ],
+                  [VERSION4, [NAME4, "Mobile Safari"]],
+                  [
+                    /version\/([\w\.]+).+?(mobile\s?safari|safari)/i
+                    // Safari & Safari Mobile
+                  ],
+                  [VERSION4, NAME4],
+                  [
+                    /webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i
+                    // Safari < 3.0
+                  ],
+                  [NAME4, [VERSION4, mapper.str, maps.browser.oldsafari.version]],
+                  [
+                    /(konqueror)\/([\w\.]+)/i,
+                    // Konqueror
+                    /(webkit|khtml)\/([\w\.]+)/i
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    // Gecko based
+                    /(navigator|netscape)\/([\w\.-]+)/i
+                    // Netscape
+                  ],
+                  [[NAME4, "Netscape"], VERSION4],
+                  [
+                    /(swiftfox)/i,
+                    // Swiftfox
+                    /(icedragon|iceweasel|camino|chimera|fennec|maemo\sbrowser|minimo|conkeror)[\/\s]?([\w\.\+]+)/i,
+                    // IceDragon/Iceweasel/Camino/Chimera/Fennec/Maemo/Minimo/Conkeror
+                    /(firefox|seamonkey|k-meleon|icecat|iceape|firebird|phoenix)\/([\w\.-]+)/i,
+                    // Firefox/SeaMonkey/K-Meleon/IceCat/IceApe/Firebird/Phoenix
+                    /(mozilla)\/([\w\.]+).+rv\:.+gecko\/\d+/i,
+                    // Mozilla
+                    // Other
+                    /(polaris|lynx|dillo|icab|doris|amaya|w3m|netsurf)[\/\s]?([\w\.]+)/i,
+                    // Polaris/Lynx/Dillo/iCab/Doris/Amaya/w3m/NetSurf
+                    /(links)\s\(([\w\.]+)/i,
+                    // Links
+                    /(gobrowser)\/?([\w\.]+)*/i,
+                    // GoBrowser
+                    /(ice\s?browser)\/v?([\w\._]+)/i,
+                    // ICE Browser
+                    /(mosaic)[\/\s]([\w\.]+)/i
+                    // Mosaic
+                  ],
+                  [NAME4, VERSION4]
+                ],
+                engine: [
+                  [
+                    /windows.+\sedge\/([\w\.]+)/i
+                    // EdgeHTML
+                  ],
+                  [VERSION4, [NAME4, "EdgeHTML"]],
+                  [
+                    /(presto)\/([\w\.]+)/i,
+                    // Presto
+                    /(webkit|trident|netfront|netsurf|amaya|lynx|w3m)\/([\w\.]+)/i,
+                    // WebKit/Trident/NetFront/NetSurf/Amaya/Lynx/w3m
+                    /(khtml|tasman|links)[\/\s]\(?([\w\.]+)/i,
+                    // KHTML/Tasman/Links
+                    /(icab)[\/\s]([23]\.[\d\.]+)/i
+                    // iCab
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /rv\:([\w\.]+).*(gecko)/i
+                    // Gecko
+                  ],
+                  [VERSION4, NAME4]
+                ],
+                os: [
+                  [
+                    // Windows based
+                    /microsoft\s(windows)\s(vista|xp)/i
+                    // Windows (iTunes)
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /(windows)\snt\s6\.2;\s(arm)/i,
+                    // Windows RT
+                    /(windows\sphone(?:\sos)*|windows\smobile|windows)[\s\/]?([ntce\d\.\s]+\w)/i
+                  ],
+                  [NAME4, [VERSION4, mapper.str, maps.os.windows.version]],
+                  [
+                    /(win(?=3|9|n)|win\s9x\s)([nt\d\.]+)/i
+                  ],
+                  [[NAME4, "Windows"], [VERSION4, mapper.str, maps.os.windows.version]],
+                  [
+                    // Mobile/Embedded OS
+                    /\((bb)(10);/i
+                    // BlackBerry 10
+                  ],
+                  [[NAME4, "BlackBerry"], VERSION4],
+                  [
+                    /(blackberry)\w*\/?([\w\.]+)*/i,
+                    // Blackberry
+                    /(tizen)[\/\s]([\w\.]+)/i,
+                    // Tizen
+                    /(android|webos|palm\os|qnx|bada|rim\stablet\sos|meego|contiki)[\/\s-]?([\w\.]+)*/i,
+                    // Android/WebOS/Palm/QNX/Bada/RIM/MeeGo/Contiki
+                    /linux;.+(sailfish);/i
+                    // Sailfish OS
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /(symbian\s?os|symbos|s60(?=;))[\/\s-]?([\w\.]+)*/i
+                    // Symbian
+                  ],
+                  [[NAME4, "Symbian"], VERSION4],
+                  [
+                    /\((series40);/i
+                    // Series 40
+                  ],
+                  [NAME4],
+                  [
+                    /mozilla.+\(mobile;.+gecko.+firefox/i
+                    // Firefox OS
+                  ],
+                  [[NAME4, "Firefox OS"], VERSION4],
+                  [
+                    // Console
+                    /(nintendo|playstation)\s([wids3portablevu]+)/i,
+                    // Nintendo/Playstation
+                    // GNU/Linux based
+                    /(mint)[\/\s\(]?(\w+)*/i,
+                    // Mint
+                    /(mageia|vectorlinux)[;\s]/i,
+                    // Mageia/VectorLinux
+                    /(joli|[kxln]?ubuntu|debian|[open]*suse|gentoo|arch|slackware|fedora|mandriva|centos|pclinuxos|redhat|zenwalk|linpus)[\/\s-]?([\w\.-]+)*/i,
+                    // Joli/Ubuntu/Debian/SUSE/Gentoo/Arch/Slackware
+                    // Fedora/Mandriva/CentOS/PCLinuxOS/RedHat/Zenwalk/Linpus
+                    /(hurd|linux)\s?([\w\.]+)*/i,
+                    // Hurd/Linux
+                    /(gnu)\s?([\w\.]+)*/i
+                    // GNU
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /(cros)\s[\w]+\s([\w\.]+\w)/i
+                    // Chromium OS
+                  ],
+                  [[NAME4, "Chromium OS"], VERSION4],
+                  [
+                    // Solaris
+                    /(sunos)\s?([\w\.]+\d)*/i
+                    // Solaris
+                  ],
+                  [[NAME4, "Solaris"], VERSION4],
+                  [
+                    // BSD based
+                    /\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i
+                    // FreeBSD/NetBSD/OpenBSD/PC-BSD/DragonFly
+                  ],
+                  [NAME4, VERSION4],
+                  [
+                    /(ip[honead]+)(?:.*os\s*([\w]+)*\slike\smac|;\sopera)/i
+                    // iOS
+                  ],
+                  [[NAME4, "iOS"], [VERSION4, /_/g, "."]],
+                  [
+                    /(mac\sos\sx)\s?([\w\s\.]+\w)*/i,
+                    /(macintosh|mac(?=_powerpc)\s)/i
+                    // Mac OS
+                  ],
+                  [[NAME4, "Mac OS"], [VERSION4, /_/g, "."]],
+                  [
+                    // Other
+                    /((?:open)?solaris)[\/\s-]?([\w\.]+)*/i,
+                    // Solaris
+                    /(haiku)\s(\w+)/i,
+                    // Haiku
+                    /(aix)\s((\d)(?=\.|\)|\s)[\w\.]*)*/i,
+                    // AIX
+                    /(plan\s9|minix|beos|os\/2|amigaos|morphos|risc\sos|openvms)/i,
+                    // Plan9/Minix/BeOS/OS2/AmigaOS/MorphOS/RISCOS/OpenVMS
+                    /(unix)\s?([\w\.]+)*/i
+                    // UNIX
+                  ],
+                  [NAME4, VERSION4]
+                ]
+              };
+              var UAParser2 = function(uastring) {
+                var ua = uastring || (window && window.navigator && window.navigator.userAgent ? window.navigator.userAgent : EMPTY);
+                this.getBrowser = function() {
+                  return mapper.rgx.apply(this, regexes.browser);
+                };
+                this.getEngine = function() {
+                  return mapper.rgx.apply(this, regexes.engine);
+                };
+                this.getOS = function() {
+                  return mapper.rgx.apply(this, regexes.os);
+                };
+                this.getResult = function() {
+                  return {
+                    ua: this.getUA(),
+                    browser: this.getBrowser(),
+                    engine: this.getEngine(),
+                    os: this.getOS()
+                  };
+                };
+                this.getUA = function() {
+                  return ua;
+                };
+                this.setUA = function(uastring2) {
+                  ua = uastring2;
+                  return this;
+                };
+                this.setUA(ua);
+              };
+              return UAParser2;
+            }();
+            function version_compare(v1, v2, operator) {
+              var i = 0, x = 0, compare2 = 0, vm = {
+                "dev": -6,
+                "alpha": -5,
+                "a": -5,
+                "beta": -4,
+                "b": -4,
+                "RC": -3,
+                "rc": -3,
+                "#": -2,
+                "p": 1,
+                "pl": 1
+              }, prepVersion = function(v) {
+                v = ("" + v).replace(/[_\-+]/g, ".");
+                v = v.replace(/([^.\d]+)/g, ".$1.").replace(/\.{2,}/g, ".");
+                return !v.length ? [-8] : v.split(".");
+              }, numVersion = function(v) {
+                return !v ? 0 : isNaN(v) ? vm[v] || -7 : parseInt(v, 10);
+              };
+              v1 = prepVersion(v1);
+              v2 = prepVersion(v2);
+              x = Math.max(v1.length, v2.length);
+              for (i = 0; i < x; i++) {
+                if (v1[i] == v2[i]) {
+                  continue;
+                }
+                v1[i] = numVersion(v1[i]);
+                v2[i] = numVersion(v2[i]);
+                if (v1[i] < v2[i]) {
+                  compare2 = -1;
+                  break;
+                } else if (v1[i] > v2[i]) {
+                  compare2 = 1;
+                  break;
+                }
+              }
+              if (!operator) {
+                return compare2;
+              }
+              switch (operator) {
+                case ">":
+                case "gt":
+                  return compare2 > 0;
+                case ">=":
+                case "ge":
+                  return compare2 >= 0;
+                case "<=":
+                case "le":
+                  return compare2 <= 0;
+                case "==":
+                case "=":
+                case "eq":
+                  return compare2 === 0;
+                case "<>":
+                case "!=":
+                case "ne":
+                  return compare2 !== 0;
+                case "":
+                case "<":
+                case "lt":
+                  return compare2 < 0;
+                default:
+                  return null;
+              }
+            }
+            var can = function() {
+              var caps = {
+                access_global_ns: function() {
+                  return !!window.moxie;
+                },
+                define_property: /* @__PURE__ */ function() {
+                  return false;
+                }(),
+                create_canvas: function() {
+                  var el = document.createElement("canvas");
+                  var isSupported = !!(el.getContext && el.getContext("2d"));
+                  caps.create_canvas = isSupported;
+                  return isSupported;
+                },
+                return_response_type: function(responseType) {
+                  try {
+                    if (Basic.inArray(responseType, ["", "text", "document"]) !== -1) {
+                      return true;
+                    } else if (window.XMLHttpRequest) {
+                      var xhr = new XMLHttpRequest();
+                      xhr.open("get", "/");
+                      if ("responseType" in xhr) {
+                        xhr.responseType = responseType;
+                        if (xhr.responseType !== responseType) {
+                          return false;
+                        }
+                        return true;
+                      }
+                    }
+                  } catch (ex) {
+                  }
+                  return false;
+                },
+                use_blob_uri: function() {
+                  var URL2 = window.URL;
+                  caps.use_blob_uri = URL2 && "createObjectURL" in URL2 && "revokeObjectURL" in URL2 && (Env.browser !== "IE" || Env.verComp(Env.version, "11.0.46", ">="));
+                  return caps.use_blob_uri;
+                },
+                // ideas for this heavily come from Modernizr (http://modernizr.com/)
+                use_data_uri: function() {
+                  var du = new Image();
+                  du.onload = function() {
+                    caps.use_data_uri = du.width === 1 && du.height === 1;
+                  };
+                  setTimeout(function() {
+                    du.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP8AAAAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
+                  }, 1);
+                  return false;
+                }(),
+                use_data_uri_over32kb: function() {
+                  return caps.use_data_uri && (Env.browser !== "IE" || Env.version >= 9);
+                },
+                use_data_uri_of: function(bytes) {
+                  return caps.use_data_uri && bytes < 33e3 || caps.use_data_uri_over32kb();
+                },
+                use_fileinput: function() {
+                  if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\/(1.0|2.0|2.5|3.0))/)) {
+                    return false;
+                  }
+                  var el = document.createElement("input");
+                  el.setAttribute("type", "file");
+                  return caps.use_fileinput = !el.disabled;
+                },
+                use_webgl: function() {
+                  var canvas = document.createElement("canvas");
+                  var gl = null, isSupported;
+                  try {
+                    gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                  } catch (e) {
+                  }
+                  if (!gl) {
+                    gl = null;
+                  }
+                  isSupported = !!gl;
+                  caps.use_webgl = isSupported;
+                  canvas = undefined2;
+                  return isSupported;
+                }
+              };
+              return function(cap) {
+                var args = [].slice.call(arguments);
+                args.shift();
+                return Basic.typeOf(caps[cap]) === "function" ? caps[cap].apply(this, args) : !!caps[cap];
+              };
+            }();
+            var uaResult = new UAParser().getResult();
+            var Env = {
+              can,
+              uaParser: UAParser,
+              browser: uaResult.browser.name,
+              version: uaResult.browser.version,
+              os: uaResult.os.name,
+              // everybody intuitively types it in a lowercase for some reason
+              osVersion: uaResult.os.version,
+              verComp: version_compare,
+              swf_url: "../flash/Moxie.swf",
+              xap_url: "../silverlight/Moxie.xap",
+              global_event_dispatcher: "moxie.core.EventTarget.instance.dispatchEvent"
+            };
+            Env.OS = Env.os;
+            if (MXI_DEBUG) {
+              Env.debug = {
+                runtime: true,
+                events: false
+              };
+              Env.log = function() {
+                function logObj(data2) {
+                  console2.appendChild(document.createTextNode(data2 + "\n"));
+                }
+                if (window && window.console && window.console.log && window.console.log.apply) {
+                  window.console.log.apply(window.console, arguments);
+                } else if (document) {
+                  var console2 = document.getElementById("moxie-console");
+                  if (!console2) {
+                    console2 = document.createElement("pre");
+                    console2.id = "moxie-console";
+                    document.body.appendChild(console2);
+                  }
+                  var data = arguments[0];
+                  if (Basic.typeOf(data) === "string") {
+                    data = Basic.sprintf.apply(this, arguments);
+                  } else if (Basic.inArray(Basic.typeOf(data), ["object", "array"]) !== -1) {
+                    logObj(data);
+                    return;
+                  }
+                  console2.appendChild(document.createTextNode(data + "\n"));
+                }
+              };
+            }
+            return Env;
+          });
+          define2("moxie/core/Exceptions", [
+            "moxie/core/utils/Basic"
+          ], function(Basic) {
+            function _findKey(obj, value) {
+              var key;
+              for (key in obj) {
+                if (obj[key] === value) {
+                  return key;
+                }
+              }
+              return null;
+            }
+            return {
+              RuntimeError: function() {
+                var namecodes = {
+                  NOT_INIT_ERR: 1,
+                  EXCEPTION_ERR: 3,
+                  NOT_SUPPORTED_ERR: 9,
+                  JS_ERR: 4
+                };
+                function RuntimeError(code, message) {
+                  this.code = code;
+                  this.name = _findKey(namecodes, code);
+                  this.message = this.name + (message || ": RuntimeError " + this.code);
+                }
+                Basic.extend(RuntimeError, namecodes);
+                RuntimeError.prototype = Error.prototype;
+                return RuntimeError;
+              }(),
+              OperationNotAllowedException: function() {
+                function OperationNotAllowedException(code) {
+                  this.code = code;
+                  this.name = "OperationNotAllowedException";
+                }
+                Basic.extend(OperationNotAllowedException, {
+                  NOT_ALLOWED_ERR: 1
+                });
+                OperationNotAllowedException.prototype = Error.prototype;
+                return OperationNotAllowedException;
+              }(),
+              ImageError: function() {
+                var namecodes = {
+                  WRONG_FORMAT: 1,
+                  MAX_RESOLUTION_ERR: 2,
+                  INVALID_META_ERR: 3
+                };
+                function ImageError(code) {
+                  this.code = code;
+                  this.name = _findKey(namecodes, code);
+                  this.message = this.name + ": ImageError " + this.code;
+                }
+                Basic.extend(ImageError, namecodes);
+                ImageError.prototype = Error.prototype;
+                return ImageError;
+              }(),
+              FileException: function() {
+                var namecodes = {
+                  NOT_FOUND_ERR: 1,
+                  SECURITY_ERR: 2,
+                  ABORT_ERR: 3,
+                  NOT_READABLE_ERR: 4,
+                  ENCODING_ERR: 5,
+                  NO_MODIFICATION_ALLOWED_ERR: 6,
+                  INVALID_STATE_ERR: 7,
+                  SYNTAX_ERR: 8
+                };
+                function FileException(code) {
+                  this.code = code;
+                  this.name = _findKey(namecodes, code);
+                  this.message = this.name + ": FileException " + this.code;
+                }
+                Basic.extend(FileException, namecodes);
+                FileException.prototype = Error.prototype;
+                return FileException;
+              }(),
+              DOMException: function() {
+                var namecodes = {
+                  INDEX_SIZE_ERR: 1,
+                  DOMSTRING_SIZE_ERR: 2,
+                  HIERARCHY_REQUEST_ERR: 3,
+                  WRONG_DOCUMENT_ERR: 4,
+                  INVALID_CHARACTER_ERR: 5,
+                  NO_DATA_ALLOWED_ERR: 6,
+                  NO_MODIFICATION_ALLOWED_ERR: 7,
+                  NOT_FOUND_ERR: 8,
+                  NOT_SUPPORTED_ERR: 9,
+                  INUSE_ATTRIBUTE_ERR: 10,
+                  INVALID_STATE_ERR: 11,
+                  SYNTAX_ERR: 12,
+                  INVALID_MODIFICATION_ERR: 13,
+                  NAMESPACE_ERR: 14,
+                  INVALID_ACCESS_ERR: 15,
+                  VALIDATION_ERR: 16,
+                  TYPE_MISMATCH_ERR: 17,
+                  SECURITY_ERR: 18,
+                  NETWORK_ERR: 19,
+                  ABORT_ERR: 20,
+                  URL_MISMATCH_ERR: 21,
+                  QUOTA_EXCEEDED_ERR: 22,
+                  TIMEOUT_ERR: 23,
+                  INVALID_NODE_TYPE_ERR: 24,
+                  DATA_CLONE_ERR: 25
+                };
+                function DOMException(code) {
+                  this.code = code;
+                  this.name = _findKey(namecodes, code);
+                  this.message = this.name + ": DOMException " + this.code;
+                }
+                Basic.extend(DOMException, namecodes);
+                DOMException.prototype = Error.prototype;
+                return DOMException;
+              }(),
+              EventException: function() {
+                function EventException(code) {
+                  this.code = code;
+                  this.name = "EventException";
+                }
+                Basic.extend(EventException, {
+                  UNSPECIFIED_EVENT_TYPE_ERR: 0
+                });
+                EventException.prototype = Error.prototype;
+                return EventException;
+              }()
+            };
+          });
+          define2("moxie/core/utils/Dom", ["moxie/core/utils/Env"], function(Env) {
+            var get = function(id) {
+              if (typeof id !== "string") {
+                return id;
+              }
+              return document.getElementById(id);
+            };
+            var hasClass = function(obj, name2) {
+              if (!obj.className) {
+                return false;
+              }
+              var regExp = new RegExp("(^|\\s+)" + name2 + "(\\s+|$)");
+              return regExp.test(obj.className);
+            };
+            var addClass = function(obj, name2) {
+              if (!hasClass(obj, name2)) {
+                obj.className = !obj.className ? name2 : obj.className.replace(/\s+$/, "") + " " + name2;
+              }
+            };
+            var removeClass = function(obj, name2) {
+              if (obj.className) {
+                var regExp = new RegExp("(^|\\s+)" + name2 + "(\\s+|$)");
+                obj.className = obj.className.replace(regExp, function($0, $1, $22) {
+                  return $1 === " " && $22 === " " ? " " : "";
+                });
+              }
+            };
+            var getStyle = function(obj, name2) {
+              if (obj.currentStyle) {
+                return obj.currentStyle[name2];
+              } else if (window.getComputedStyle) {
+                return window.getComputedStyle(obj, null)[name2];
+              }
+            };
+            var getPos = function(node, root) {
+              var x = 0, y = 0, parent, doc2 = document, nodeRect, rootRect;
+              node = node;
+              root = root || doc2.body;
+              function getIEPos(node2) {
+                var bodyElm, rect, x2 = 0, y2 = 0;
+                if (node2) {
+                  rect = node2.getBoundingClientRect();
+                  bodyElm = doc2.compatMode === "CSS1Compat" ? doc2.documentElement : doc2.body;
+                  x2 = rect.left + bodyElm.scrollLeft;
+                  y2 = rect.top + bodyElm.scrollTop;
+                }
+                return {
+                  x: x2,
+                  y: y2
+                };
+              }
+              if (node && node.getBoundingClientRect && Env.browser === "IE" && (!doc2.documentMode || doc2.documentMode < 8)) {
+                nodeRect = getIEPos(node);
+                rootRect = getIEPos(root);
+                return {
+                  x: nodeRect.x - rootRect.x,
+                  y: nodeRect.y - rootRect.y
+                };
+              }
+              parent = node;
+              while (parent && parent != root && parent.nodeType) {
+                x += parent.offsetLeft || 0;
+                y += parent.offsetTop || 0;
+                parent = parent.offsetParent;
+              }
+              parent = node.parentNode;
+              while (parent && parent != root && parent.nodeType) {
+                x -= parent.scrollLeft || 0;
+                y -= parent.scrollTop || 0;
+                parent = parent.parentNode;
+              }
+              return {
+                x,
+                y
+              };
+            };
+            var getSize2 = function(node) {
+              return {
+                w: node.offsetWidth || node.clientWidth,
+                h: node.offsetHeight || node.clientHeight
+              };
+            };
+            return {
+              get,
+              hasClass,
+              addClass,
+              removeClass,
+              getStyle,
+              getPos,
+              getSize: getSize2
+            };
+          });
+          define2("moxie/core/EventTarget", [
+            "moxie/core/utils/Env",
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Basic"
+          ], function(Env, x, Basic) {
+            var eventpool = {};
+            function EventTarget() {
+              this.uid = Basic.guid();
+            }
+            Basic.extend(EventTarget.prototype, {
+              /**
+              		Can be called from within a child  in order to acquire uniqie id in automated manner
+              
+              		@method init
+              		*/
+              init: function() {
+                if (!this.uid) {
+                  this.uid = Basic.guid("uid_");
+                }
+              },
+              /**
+              		Register a handler to a specific event dispatched by the object
+              
+              		@method addEventListener
+              		@param {String} type Type or basically a name of the event to subscribe to
+              		@param {Function} fn Callback function that will be called when event happens
+              		@param {Number} [priority=0] Priority of the event handler - handlers with higher priorities will be called first
+              		@param {Object} [scope=this] A scope to invoke event handler in
+              		*/
+              addEventListener: function(type, fn, priority, scope) {
+                var self2 = this, list;
+                if (!this.hasOwnProperty("uid")) {
+                  this.uid = Basic.guid("uid_");
+                }
+                type = Basic.trim(type);
+                if (/\s/.test(type)) {
+                  Basic.each(type.split(/\s+/), function(type2) {
+                    self2.addEventListener(type2, fn, priority, scope);
+                  });
+                  return;
+                }
+                type = type.toLowerCase();
+                priority = parseInt(priority, 10) || 0;
+                list = eventpool[this.uid] && eventpool[this.uid][type] || [];
+                list.push({ fn, priority, scope: scope || this });
+                if (!eventpool[this.uid]) {
+                  eventpool[this.uid] = {};
+                }
+                eventpool[this.uid][type] = list;
+              },
+              /**
+              		Check if any handlers were registered to the specified event
+              
+              		@method hasEventListener
+              		@param {String} [type] Type or basically a name of the event to check
+              		@return {Mixed} Returns a handler if it was found and false, if - not
+              		*/
+              hasEventListener: function(type) {
+                var list;
+                if (type) {
+                  type = type.toLowerCase();
+                  list = eventpool[this.uid] && eventpool[this.uid][type];
+                } else {
+                  list = eventpool[this.uid];
+                }
+                return list ? list : false;
+              },
+              /**
+              		Unregister the handler from the event, or if former was not specified - unregister all handlers
+              
+              		@method removeEventListener
+              		@param {String} type Type or basically a name of the event
+              		@param {Function} [fn] Handler to unregister
+              		*/
+              removeEventListener: function(type, fn) {
+                var self2 = this, list, i;
+                type = type.toLowerCase();
+                if (/\s/.test(type)) {
+                  Basic.each(type.split(/\s+/), function(type2) {
+                    self2.removeEventListener(type2, fn);
+                  });
+                  return;
+                }
+                list = eventpool[this.uid] && eventpool[this.uid][type];
+                if (list) {
+                  if (fn) {
+                    for (i = list.length - 1; i >= 0; i--) {
+                      if (list[i].fn === fn) {
+                        list.splice(i, 1);
+                        break;
+                      }
+                    }
+                  } else {
+                    list = [];
+                  }
+                  if (!list.length) {
+                    delete eventpool[this.uid][type];
+                    if (Basic.isEmptyObj(eventpool[this.uid])) {
+                      delete eventpool[this.uid];
+                    }
+                  }
+                }
+              },
+              /**
+              		Remove all event handlers from the object
+              
+              		@method removeAllEventListeners
+              		*/
+              removeAllEventListeners: function() {
+                if (eventpool[this.uid]) {
+                  delete eventpool[this.uid];
+                }
+              },
+              /**
+              		Dispatch the event
+              
+              		@method dispatchEvent
+              		@param {String/Object} Type of event or event object to dispatch
+              		@param {Mixed} [...] Variable number of arguments to be passed to a handlers
+              		@return {Boolean} true by default and false if any handler returned false
+              		*/
+              dispatchEvent: function(type) {
+                var uid, list, args, tmpEvt, evt = {}, result = true, undef;
+                if (Basic.typeOf(type) !== "string") {
+                  tmpEvt = type;
+                  if (Basic.typeOf(tmpEvt.type) === "string") {
+                    type = tmpEvt.type;
+                    if (tmpEvt.total !== undef && tmpEvt.loaded !== undef) {
+                      evt.total = tmpEvt.total;
+                      evt.loaded = tmpEvt.loaded;
+                    }
+                    evt.async = tmpEvt.async || false;
+                  } else {
+                    throw new x.EventException(x.EventException.UNSPECIFIED_EVENT_TYPE_ERR);
+                  }
+                }
+                if (type.indexOf("::") !== -1) {
+                  (function(arr) {
+                    uid = arr[0];
+                    type = arr[1];
+                  })(type.split("::"));
+                } else {
+                  uid = this.uid;
+                }
+                type = type.toLowerCase();
+                list = eventpool[uid] && eventpool[uid][type];
+                if (list) {
+                  list.sort(function(a, b) {
+                    return b.priority - a.priority;
+                  });
+                  args = [].slice.call(arguments);
+                  args.shift();
+                  evt.type = type;
+                  args.unshift(evt);
+                  if (MXI_DEBUG && Env.debug.events) {
+                    Env.log("%cEvent '%s' fired on %s", "color: #999;", evt.type, (this.ctorName ? this.ctorName + "::" : "") + uid);
+                  }
+                  var queue = [];
+                  Basic.each(list, function(handler) {
+                    args[0].target = handler.scope;
+                    if (evt.async) {
+                      queue.push(function(cb) {
+                        setTimeout(function() {
+                          cb(handler.fn.apply(handler.scope, args) === false);
+                        }, 1);
+                      });
+                    } else {
+                      queue.push(function(cb) {
+                        cb(handler.fn.apply(handler.scope, args) === false);
+                      });
+                    }
+                  });
+                  if (queue.length) {
+                    Basic.inSeries(queue, function(err) {
+                      result = !err;
+                    });
+                  }
+                }
+                return result;
+              },
+              /**
+              		Register a handler to the event type that will run only once
+              
+              		@method bindOnce
+              		@since >1.4.1
+              		@param {String} type Type or basically a name of the event to subscribe to
+              		@param {Function} fn Callback function that will be called when event happens
+              		@param {Number} [priority=0] Priority of the event handler - handlers with higher priorities will be called first
+              		@param {Object} [scope=this] A scope to invoke event handler in
+              		*/
+              bindOnce: function(type, fn, priority, scope) {
+                var self2 = this;
+                self2.bind.call(this, type, function cb() {
+                  self2.unbind(type, cb);
+                  return fn.apply(this, arguments);
+                }, priority, scope);
+              },
+              /**
+              		Alias for addEventListener
+              
+              		@method bind
+              		@protected
+              		*/
+              bind: function() {
+                this.addEventListener.apply(this, arguments);
+              },
+              /**
+              		Alias for removeEventListener
+              
+              		@method unbind
+              		@protected
+              		*/
+              unbind: function() {
+                this.removeEventListener.apply(this, arguments);
+              },
+              /**
+              		Alias for removeAllEventListeners
+              
+              		@method unbindAll
+              		@protected
+              		*/
+              unbindAll: function() {
+                this.removeAllEventListeners.apply(this, arguments);
+              },
+              /**
+              		Alias for dispatchEvent
+              
+              		@method trigger
+              		@protected
+              		*/
+              trigger: function() {
+                return this.dispatchEvent.apply(this, arguments);
+              },
+              /**
+              		Handle properties of on[event] type.
+              
+              		@method handleEventProps
+              		@private
+              		*/
+              handleEventProps: function(dispatches) {
+                var self2 = this;
+                this.bind(dispatches.join(" "), function(e) {
+                  var prop = "on" + e.type.toLowerCase();
+                  if (Basic.typeOf(this[prop]) === "function") {
+                    this[prop].apply(this, arguments);
+                  }
+                });
+                Basic.each(dispatches, function(prop) {
+                  prop = "on" + prop.toLowerCase(prop);
+                  if (Basic.typeOf(self2[prop]) === "undefined") {
+                    self2[prop] = null;
+                  }
+                });
+              }
+            });
+            EventTarget.instance = new EventTarget();
+            return EventTarget;
+          });
+          define2("moxie/runtime/Runtime", [
+            "moxie/core/utils/Env",
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Dom",
+            "moxie/core/EventTarget"
+          ], function(Env, Basic, Dom, EventTarget) {
+            var runtimeConstructors = {}, runtimes = {};
+            function Runtime(options, type, caps, modeCaps, preferredMode) {
+              var self2 = this, _shim, _uid = Basic.guid(type + "_"), defaultMode = preferredMode || "browser";
+              options = options || {};
+              runtimes[_uid] = this;
+              caps = Basic.extend({
+                // Runtime can: 
+                // provide access to raw binary data of the file
+                access_binary: false,
+                // provide access to raw binary data of the image (image extension is optional) 
+                access_image_binary: false,
+                // display binary data as thumbs for example
+                display_media: false,
+                // make cross-domain requests
+                do_cors: false,
+                // accept files dragged and dropped from the desktop
+                drag_and_drop: false,
+                // filter files in selection dialog by their extensions
+                filter_by_extension: true,
+                // resize image (and manipulate it raw data of any file in general)
+                resize_image: false,
+                // periodically report how many bytes of total in the file were uploaded (loaded)
+                report_upload_progress: false,
+                // provide access to the headers of http response 
+                return_response_headers: false,
+                // support response of specific type, which should be passed as an argument
+                // e.g. runtime.can('return_response_type', 'blob')
+                return_response_type: false,
+                // return http status code of the response
+                return_status_code: true,
+                // send custom http header with the request
+                send_custom_headers: false,
+                // pick up the files from a dialog
+                select_file: false,
+                // select whole folder in file browse dialog
+                select_folder: false,
+                // select multiple files at once in file browse dialog
+                select_multiple: true,
+                // send raw binary data, that is generated after image resizing or manipulation of other kind
+                send_binary_string: false,
+                // send cookies with http request and therefore retain session
+                send_browser_cookies: true,
+                // send data formatted as multipart/form-data
+                send_multipart: true,
+                // slice the file or blob to smaller parts
+                slice_blob: false,
+                // upload file without preloading it to memory, stream it out directly from disk
+                stream_upload: false,
+                // programmatically trigger file browse dialog
+                summon_file_dialog: false,
+                // upload file of specific size, size should be passed as argument
+                // e.g. runtime.can('upload_filesize', '500mb')
+                upload_filesize: true,
+                // initiate http request with specific http method, method should be passed as argument
+                // e.g. runtime.can('use_http_method', 'put')
+                use_http_method: true
+              }, caps);
+              if (options.preferred_caps) {
+                defaultMode = Runtime.getMode(modeCaps, options.preferred_caps, defaultMode);
+              }
+              if (MXI_DEBUG && Env.debug.runtime) {
+                Env.log("	default mode: %s", defaultMode);
+              }
+              _shim = /* @__PURE__ */ function() {
+                var objpool = {};
+                return {
+                  exec: function(uid, comp, fn, args) {
+                    if (_shim[comp]) {
+                      if (!objpool[uid]) {
+                        objpool[uid] = {
+                          context: this,
+                          instance: new _shim[comp]()
+                        };
+                      }
+                      if (objpool[uid].instance[fn]) {
+                        return objpool[uid].instance[fn].apply(this, args);
+                      }
+                    }
+                  },
+                  removeInstance: function(uid) {
+                    delete objpool[uid];
+                  },
+                  removeAllInstances: function() {
+                    var self3 = this;
+                    Basic.each(objpool, function(obj, uid) {
+                      if (Basic.typeOf(obj.instance.destroy) === "function") {
+                        obj.instance.destroy.call(obj.context);
+                      }
+                      self3.removeInstance(uid);
+                    });
+                  }
+                };
+              }();
+              Basic.extend(this, {
+                /**
+                			Specifies whether runtime instance was initialized or not
+                
+                			@property initialized
+                			@type {Boolean}
+                			@default false
+                			*/
+                initialized: false,
+                // shims require this flag to stop initialization retries
+                /**
+                			Unique ID of the runtime
+                
+                			@property uid
+                			@type {String}
+                			*/
+                uid: _uid,
+                /**
+                			Runtime type (e.g. flash, html5, etc)
+                
+                			@property type
+                			@type {String}
+                			*/
+                type,
+                /**
+                			Runtime (not native one) may operate in browser or client mode.
+                
+                			@property mode
+                			@private
+                			@type {String|Boolean} current mode or false, if none possible
+                			*/
+                mode: Runtime.getMode(modeCaps, options.required_caps, defaultMode),
+                /**
+                			id of the DOM container for the runtime (if available)
+                
+                			@property shimid
+                			@type {String}
+                			*/
+                shimid: _uid + "_container",
+                /**
+                			Number of connected clients. If equal to zero, runtime can be destroyed
+                
+                			@property clients
+                			@type {Number}
+                			*/
+                clients: 0,
+                /**
+                			Runtime initialization options
+                
+                			@property options
+                			@type {Object}
+                			*/
+                options,
+                /**
+                			Checks if the runtime has specific capability
+                
+                			@method can
+                			@param {String} cap Name of capability to check
+                			@param {Mixed} [value] If passed, capability should somehow correlate to the value
+                			@param {Object} [refCaps] Set of capabilities to check the specified cap against (defaults to internal set)
+                			@return {Boolean} true if runtime has such capability and false, if - not
+                			*/
+                can: function(cap, value) {
+                  var refCaps = arguments[2] || caps;
+                  if (Basic.typeOf(cap) === "string" && Basic.typeOf(value) === "undefined") {
+                    cap = Runtime.parseCaps(cap);
+                  }
+                  if (Basic.typeOf(cap) === "object") {
+                    for (var key in cap) {
+                      if (!this.can(key, cap[key], refCaps)) {
+                        return false;
+                      }
+                    }
+                    return true;
+                  }
+                  if (Basic.typeOf(refCaps[cap]) === "function") {
+                    return refCaps[cap].call(this, value);
+                  } else {
+                    return value === refCaps[cap];
+                  }
+                },
+                /**
+                			Returns container for the runtime as DOM element
+                
+                			@method getShimContainer
+                			@return {DOMElement}
+                			*/
+                getShimContainer: function() {
+                  var container, shimContainer = Dom.get(this.shimid);
+                  if (!shimContainer) {
+                    container = Dom.get(this.options.container) || document.body;
+                    shimContainer = document.createElement("div");
+                    shimContainer.id = this.shimid;
+                    shimContainer.className = "moxie-shim moxie-shim-" + this.type;
+                    Basic.extend(shimContainer.style, {
+                      position: "absolute",
+                      top: "0px",
+                      left: "0px",
+                      width: "1px",
+                      height: "1px",
+                      overflow: "hidden"
+                    });
+                    container.appendChild(shimContainer);
+                    container = null;
+                  }
+                  return shimContainer;
+                },
+                /**
+                			Returns runtime as DOM element (if appropriate)
+                
+                			@method getShim
+                			@return {DOMElement}
+                			*/
+                getShim: function() {
+                  return _shim;
+                },
+                /**
+                			Invokes a method within the runtime itself (might differ across the runtimes)
+                
+                			@method shimExec
+                			@param {Mixed} []
+                			@protected
+                			@return {Mixed} Depends on the action and component
+                			*/
+                shimExec: function(component, action) {
+                  var args = [].slice.call(arguments, 2);
+                  return self2.getShim().exec.call(this, this.uid, component, action, args);
+                },
+                /**
+                			Operaional interface that is used by components to invoke specific actions on the runtime
+                			(is invoked in the scope of component)
+                
+                			@method exec
+                			@param {Mixed} []*
+                			@protected
+                			@return {Mixed} Depends on the action and component
+                			*/
+                exec: function(component, action) {
+                  var args = [].slice.call(arguments, 2);
+                  if (self2[component] && self2[component][action]) {
+                    return self2[component][action].apply(this, args);
+                  }
+                  return self2.shimExec.apply(this, arguments);
+                },
+                /**
+                			Destroys the runtime (removes all events and deletes DOM structures)
+                
+                			@method destroy
+                			*/
+                destroy: function() {
+                  if (!self2) {
+                    return;
+                  }
+                  var shimContainer = Dom.get(this.shimid);
+                  if (shimContainer) {
+                    shimContainer.parentNode.removeChild(shimContainer);
+                  }
+                  if (_shim) {
+                    _shim.removeAllInstances();
+                  }
+                  this.unbindAll();
+                  delete runtimes[this.uid];
+                  this.uid = null;
+                  _uid = self2 = _shim = shimContainer = null;
+                }
+              });
+              if (this.mode && options.required_caps && !this.can(options.required_caps)) {
+                this.mode = false;
+              }
+            }
+            Runtime.order = "html5,flash,silverlight,html4";
+            Runtime.getRuntime = function(uid) {
+              return runtimes[uid] ? runtimes[uid] : false;
+            };
+            Runtime.addConstructor = function(type, constructor) {
+              constructor.prototype = EventTarget.instance;
+              runtimeConstructors[type] = constructor;
+            };
+            Runtime.getConstructor = function(type) {
+              return runtimeConstructors[type] || null;
+            };
+            Runtime.getInfo = function(uid) {
+              var runtime = Runtime.getRuntime(uid);
+              if (runtime) {
+                return {
+                  uid: runtime.uid,
+                  type: runtime.type,
+                  mode: runtime.mode,
+                  can: function() {
+                    return runtime.can.apply(runtime, arguments);
+                  }
+                };
+              }
+              return null;
+            };
+            Runtime.parseCaps = function(capStr) {
+              var capObj = {};
+              if (Basic.typeOf(capStr) !== "string") {
+                return capStr || {};
+              }
+              Basic.each(capStr.split(","), function(key) {
+                capObj[key] = true;
+              });
+              return capObj;
+            };
+            Runtime.can = function(type, caps) {
+              var runtime, constructor = Runtime.getConstructor(type), mode;
+              if (constructor) {
+                runtime = new constructor({
+                  required_caps: caps
+                });
+                mode = runtime.mode;
+                runtime.destroy();
+                return !!mode;
+              }
+              return false;
+            };
+            Runtime.thatCan = function(caps, runtimeOrder) {
+              var types2 = (runtimeOrder || Runtime.order).split(/\s*,\s*/);
+              for (var i in types2) {
+                if (Runtime.can(types2[i], caps)) {
+                  return types2[i];
+                }
+              }
+              return null;
+            };
+            Runtime.getMode = function(modeCaps, requiredCaps, defaultMode) {
+              var mode = null;
+              if (Basic.typeOf(defaultMode) === "undefined") {
+                defaultMode = "browser";
+              }
+              if (requiredCaps && !Basic.isEmptyObj(modeCaps)) {
+                Basic.each(requiredCaps, function(value, cap) {
+                  if (modeCaps.hasOwnProperty(cap)) {
+                    var capMode = modeCaps[cap](value);
+                    if (typeof capMode === "string") {
+                      capMode = [capMode];
+                    }
+                    if (!mode) {
+                      mode = capMode;
+                    } else if (!(mode = Basic.arrayIntersect(mode, capMode))) {
+                      if (MXI_DEBUG && Env.debug.runtime) {
+                        Env.log("		%s: %s (conflicting mode requested: %s)", cap, value, capMode);
+                      }
+                      return mode = false;
+                    }
+                  }
+                  if (MXI_DEBUG && Env.debug.runtime) {
+                    Env.log("		%s: %s (compatible modes: %s)", cap, value, mode);
+                  }
+                });
+                if (mode) {
+                  return Basic.inArray(defaultMode, mode) !== -1 ? defaultMode : mode[0];
+                } else if (mode === false) {
+                  return false;
+                }
+              }
+              return defaultMode;
+            };
+            Runtime.getGlobalEventTarget = function() {
+              if (/^moxie\./.test(Env.global_event_dispatcher) && !Env.can("access_global_ns")) {
+                var uniqueCallbackName = Basic.guid("moxie_event_target_");
+                window[uniqueCallbackName] = function(e, data) {
+                  EventTarget.instance.dispatchEvent(e, data);
+                };
+                Env.global_event_dispatcher = uniqueCallbackName;
+              }
+              return Env.global_event_dispatcher;
+            };
+            Runtime.capTrue = function() {
+              return true;
+            };
+            Runtime.capFalse = function() {
+              return false;
+            };
+            Runtime.capTest = function(expr) {
+              return function() {
+                return !!expr;
+              };
+            };
+            return Runtime;
+          });
+          define2("moxie/runtime/RuntimeClient", [
+            "moxie/core/utils/Env",
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/Runtime"
+          ], function(Env, x, Basic, Runtime) {
+            return function RuntimeClient() {
+              var runtime;
+              Basic.extend(this, {
+                /**
+                			Connects to the runtime specified by the options. Will either connect to existing runtime or create a new one.
+                			Increments number of clients connected to the specified runtime.
+                
+                			@private
+                			@method connectRuntime
+                			@param {Mixed} options Can be a runtme uid or a set of key-value pairs defining requirements and pre-requisites
+                			*/
+                connectRuntime: function(options) {
+                  var comp = this, ruid;
+                  function initialize(items) {
+                    var type, constructor;
+                    if (!items.length) {
+                      comp.trigger("RuntimeError", new x.RuntimeError(x.RuntimeError.NOT_INIT_ERR));
+                      runtime = null;
+                      return;
+                    }
+                    type = items.shift().toLowerCase();
+                    constructor = Runtime.getConstructor(type);
+                    if (!constructor) {
+                      if (MXI_DEBUG && Env.debug.runtime) {
+                        Env.log("Constructor for '%s' runtime is not available.", type);
+                      }
+                      initialize(items);
+                      return;
+                    }
+                    if (MXI_DEBUG && Env.debug.runtime) {
+                      Env.log("Trying runtime: %s", type);
+                      Env.log(options);
+                    }
+                    runtime = new constructor(options);
+                    runtime.bind("Init", function() {
+                      runtime.initialized = true;
+                      if (MXI_DEBUG && Env.debug.runtime) {
+                        Env.log("Runtime '%s' initialized", runtime.type);
+                      }
+                      setTimeout(function() {
+                        runtime.clients++;
+                        comp.ruid = runtime.uid;
+                        comp.trigger("RuntimeInit", runtime);
+                      }, 1);
+                    });
+                    runtime.bind("Error", function() {
+                      if (MXI_DEBUG && Env.debug.runtime) {
+                        Env.log("Runtime '%s' failed to initialize", runtime.type);
+                      }
+                      runtime.destroy();
+                      initialize(items);
+                    });
+                    runtime.bind("Exception", function(e, err) {
+                      var message = err.name + "(#" + err.code + ")" + (err.message ? ", from: " + err.message : "");
+                      if (MXI_DEBUG && Env.debug.runtime) {
+                        Env.log("Runtime '%s' has thrown an exception: %s", this.type, message);
+                      }
+                      comp.trigger("RuntimeError", new x.RuntimeError(x.RuntimeError.EXCEPTION_ERR, message));
+                    });
+                    if (MXI_DEBUG && Env.debug.runtime) {
+                      Env.log("	selected mode: %s", runtime.mode);
+                    }
+                    if (!runtime.mode) {
+                      runtime.trigger("Error");
+                      return;
+                    }
+                    runtime.init();
+                  }
+                  if (Basic.typeOf(options) === "string") {
+                    ruid = options;
+                  } else if (Basic.typeOf(options.ruid) === "string") {
+                    ruid = options.ruid;
+                  }
+                  if (ruid) {
+                    runtime = Runtime.getRuntime(ruid);
+                    if (runtime) {
+                      comp.ruid = ruid;
+                      runtime.clients++;
+                      return runtime;
+                    } else {
+                      throw new x.RuntimeError(x.RuntimeError.NOT_INIT_ERR);
+                    }
+                  }
+                  initialize((options.runtime_order || Runtime.order).split(/\s*,\s*/));
+                },
+                /**
+                			Disconnects from the runtime. Decrements number of clients connected to the specified runtime.
+                
+                			@private
+                			@method disconnectRuntime
+                			*/
+                disconnectRuntime: function() {
+                  if (runtime && --runtime.clients <= 0) {
+                    runtime.destroy();
+                  }
+                  runtime = null;
+                },
+                /**
+                			Returns the runtime to which the client is currently connected.
+                
+                			@method getRuntime
+                			@return {Runtime} Runtime or null if client is not connected
+                			*/
+                getRuntime: function() {
+                  if (runtime && runtime.uid) {
+                    return runtime;
+                  }
+                  return runtime = null;
+                },
+                /**
+                Handy shortcut to safely invoke runtime extension methods.
+                
+                @private
+                @method exec
+                @return {Mixed} Whatever runtime extension method returns
+                */
+                exec: function() {
+                  return runtime ? runtime.exec.apply(this, arguments) : null;
+                },
+                /**
+                Test runtime client for specific capability
+                
+                @method can
+                @param {String} cap
+                @return {Bool}
+                */
+                can: function(cap) {
+                  return runtime ? runtime.can(cap) : false;
+                }
+              });
+            };
+          });
+          define2("moxie/file/Blob", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Encode",
+            "moxie/runtime/RuntimeClient"
+          ], function(Basic, Encode, RuntimeClient) {
+            var blobpool = {};
+            function Blob(ruid, blob) {
+              function _sliceDetached(start2, end, type) {
+                var blob2, data = blobpool[this.uid];
+                if (Basic.typeOf(data) !== "string" || !data.length) {
+                  return null;
+                }
+                blob2 = new Blob(null, {
+                  type,
+                  size: end - start2
+                });
+                blob2.detach(data.substr(start2, blob2.size));
+                return blob2;
+              }
+              RuntimeClient.call(this);
+              if (ruid) {
+                this.connectRuntime(ruid);
+              }
+              if (!blob) {
+                blob = {};
+              } else if (Basic.typeOf(blob) === "string") {
+                blob = { data: blob };
+              }
+              Basic.extend(this, {
+                /**
+                			Unique id of the component
+                
+                			@property uid
+                			@type {String}
+                			*/
+                uid: blob.uid || Basic.guid("uid_"),
+                /**
+                			Unique id of the connected runtime, if falsy, then runtime will have to be initialized 
+                			before this Blob can be used, modified or sent
+                
+                			@property ruid
+                			@type {String}
+                			*/
+                ruid,
+                /**
+                			Size of blob
+                
+                			@property size
+                			@type {Number}
+                			@default 0
+                			*/
+                size: blob.size || 0,
+                /**
+                			Mime type of blob
+                
+                			@property type
+                			@type {String}
+                			@default ''
+                			*/
+                type: blob.type || "",
+                /**
+                @method slice
+                @param {Number} [start=0]
+                */
+                slice: function(start2, end, type) {
+                  if (this.isDetached()) {
+                    return _sliceDetached.apply(this, arguments);
+                  }
+                  return this.getRuntime().exec.call(this, "Blob", "slice", this.getSource(), start2, end, type);
+                },
+                /**
+                			Returns "native" blob object (as it is represented in connected runtime) or null if not found
+                
+                			@method getSource
+                			@return {Blob} Returns "native" blob object or null if not found
+                			*/
+                getSource: function() {
+                  if (!blobpool[this.uid]) {
+                    return null;
+                  }
+                  return blobpool[this.uid];
+                },
+                /** 
+                			Detaches blob from any runtime that it depends on and initialize with standalone value
+                
+                			@method detach
+                			@protected
+                			@param {DOMString} [data=''] Standalone value
+                			*/
+                detach: function(data) {
+                  if (this.ruid) {
+                    this.getRuntime().exec.call(this, "Blob", "destroy");
+                    this.disconnectRuntime();
+                    this.ruid = null;
+                  }
+                  data = data || "";
+                  if (data.substr(0, 5) == "data:") {
+                    var base64Offset = data.indexOf(";base64,");
+                    this.type = data.substring(5, base64Offset);
+                    data = Encode.atob(data.substring(base64Offset + 8));
+                  }
+                  this.size = data.length;
+                  blobpool[this.uid] = data;
+                },
+                /**
+                Checks if blob is standalone (detached of any runtime)
+                
+                @method isDetached
+                @protected
+                @return {Boolean}
+                */
+                isDetached: function() {
+                  return !this.ruid && Basic.typeOf(blobpool[this.uid]) === "string";
+                },
+                /** 
+                			Destroy Blob and free any resources it was using
+                
+                			@method destroy
+                			*/
+                destroy: function() {
+                  this.detach();
+                  delete blobpool[this.uid];
+                }
+              });
+              if (blob.data) {
+                this.detach(blob.data);
+              } else {
+                blobpool[this.uid] = blob;
+              }
+            }
+            return Blob;
+          });
+          define2("moxie/core/I18n", [
+            "moxie/core/utils/Basic"
+          ], function(Basic) {
+            var i18n = {};
+            return {
+              /**
+               * Extends the language pack object with new items.
+               *
+               * @param {Object} pack Language pack items to add.
+               * @return {Object} Extended language pack object.
+               */
+              addI18n: function(pack) {
+                return Basic.extend(i18n, pack);
+              },
+              /**
+               * Translates the specified string by checking for the english string in the language pack lookup.
+               *
+               * @param {String} str String to look for.
+               * @return {String} Translated string or the input string if it wasn't found.
+               */
+              translate: function(str) {
+                return i18n[str] || str;
+              },
+              /**
+               * Shortcut for translate function
+               *
+               * @param {String} str String to look for.
+               * @return {String} Translated string or the input string if it wasn't found.
+               */
+              _: function(str) {
+                return this.translate(str);
+              },
+              /**
+               * Pseudo sprintf implementation - simple way to replace tokens with specified values.
+               *
+               * @param {String} str String with tokens
+               * @return {String} String with replaced tokens
+               */
+              sprintf: function(str) {
+                var args = [].slice.call(arguments, 1);
+                return str.replace(/%[a-z]/g, function() {
+                  var value = args.shift();
+                  return Basic.typeOf(value) !== "undefined" ? value : "";
+                });
+              }
+            };
+          });
+          define2("moxie/core/utils/Mime", [
+            "moxie/core/utils/Basic",
+            "moxie/core/I18n"
+          ], function(Basic, I18n) {
+            var mimeData = "application/msword,doc dot,application/pdf,pdf,application/pgp-signature,pgp,application/postscript,ps ai eps,application/rtf,rtf,application/vnd.ms-excel,xls xlb xlt xla,application/vnd.ms-powerpoint,ppt pps pot ppa,application/zip,zip,application/x-shockwave-flash,swf swfl,application/vnd.openxmlformats-officedocument.wordprocessingml.document,docx,application/vnd.openxmlformats-officedocument.wordprocessingml.template,dotx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,xlsx,application/vnd.openxmlformats-officedocument.presentationml.presentation,pptx,application/vnd.openxmlformats-officedocument.presentationml.template,potx,application/vnd.openxmlformats-officedocument.presentationml.slideshow,ppsx,application/x-javascript,js,application/json,json,audio/mpeg,mp3 mpga mpega mp2,audio/x-wav,wav,audio/x-m4a,m4a,audio/ogg,oga ogg,audio/aiff,aiff aif,audio/flac,flac,audio/aac,aac,audio/ac3,ac3,audio/x-ms-wma,wma,image/bmp,bmp,image/gif,gif,image/jpeg,jpg jpeg jpe,image/photoshop,psd,image/png,png,image/svg+xml,svg svgz,image/tiff,tiff tif,text/plain,asc txt text diff log,text/html,htm html xhtml,text/css,css,text/csv,csv,text/rtf,rtf,video/mpeg,mpeg mpg mpe m2v,video/quicktime,qt mov,video/mp4,mp4,video/x-m4v,m4v,video/x-flv,flv,video/x-ms-wmv,wmv,video/avi,avi,video/webm,webm,video/3gpp,3gpp 3gp,video/3gpp2,3g2,video/vnd.rn-realvideo,rv,video/ogg,ogv,video/x-matroska,mkv,application/vnd.oasis.opendocument.formula-template,otf,application/octet-stream,exe";
+            var mimes = {};
+            var extensions = {};
+            var addMimeType = function(mimeData2) {
+              var items = mimeData2.split(/,/), i, ii, ext;
+              for (i = 0; i < items.length; i += 2) {
+                ext = items[i + 1].split(/ /);
+                for (ii = 0; ii < ext.length; ii++) {
+                  mimes[ext[ii]] = items[i];
+                }
+                extensions[items[i]] = ext;
+              }
+            };
+            var extList2mimes = function(filters, addMissingExtensions) {
+              var ext, i, ii, type, mimes2 = [];
+              for (i = 0; i < filters.length; i++) {
+                ext = filters[i].extensions.toLowerCase().split(/\s*,\s*/);
+                for (ii = 0; ii < ext.length; ii++) {
+                  if (ext[ii] === "*") {
+                    return [];
+                  }
+                  type = mimes2[ext[ii]];
+                  if (addMissingExtensions && /^\w+$/.test(ext[ii])) {
+                    mimes2.push("." + ext[ii]);
+                  } else if (type && Basic.inArray(type, mimes2) === -1) {
+                    mimes2.push(type);
+                  } else if (!type) {
+                    return [];
+                  }
+                }
+              }
+              return mimes2;
+            };
+            var mimes2exts = function(mimes2) {
+              var exts = [];
+              Basic.each(mimes2, function(mime) {
+                mime = mime.toLowerCase();
+                if (mime === "*") {
+                  exts = [];
+                  return false;
+                }
+                var m2 = mime.match(/^(\w+)\/(\*|\w+)$/);
+                if (m2) {
+                  if (m2[2] === "*") {
+                    Basic.each(extensions, function(arr, mime2) {
+                      if (new RegExp("^" + m2[1] + "/").test(mime2)) {
+                        [].push.apply(exts, extensions[mime2]);
+                      }
+                    });
+                  } else if (extensions[mime]) {
+                    [].push.apply(exts, extensions[mime]);
+                  }
+                }
+              });
+              return exts;
+            };
+            var mimes2extList = function(mimes2) {
+              var accept = [], exts = [];
+              if (Basic.typeOf(mimes2) === "string") {
+                mimes2 = Basic.trim(mimes2).split(/\s*,\s*/);
+              }
+              exts = mimes2exts(mimes2);
+              accept.push({
+                title: I18n.translate("Files"),
+                extensions: exts.length ? exts.join(",") : "*"
+              });
+              return accept;
+            };
+            var getFileExtension = function(fileName) {
+              var matches3 = fileName && fileName.match(/\.([^.]+)$/);
+              if (matches3) {
+                return matches3[1].toLowerCase();
+              }
+              return "";
+            };
+            var getFileMime = function(fileName) {
+              return mimes[getFileExtension(fileName)] || "";
+            };
+            addMimeType(mimeData);
+            return {
+              mimes,
+              extensions,
+              addMimeType,
+              extList2mimes,
+              mimes2exts,
+              mimes2extList,
+              getFileExtension,
+              getFileMime
+            };
+          });
+          define2("moxie/file/FileInput", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Env",
+            "moxie/core/utils/Mime",
+            "moxie/core/utils/Dom",
+            "moxie/core/Exceptions",
+            "moxie/core/EventTarget",
+            "moxie/core/I18n",
+            "moxie/runtime/Runtime",
+            "moxie/runtime/RuntimeClient"
+          ], function(Basic, Env, Mime, Dom, x, EventTarget, I18n, Runtime, RuntimeClient) {
+            var dispatches = [
+              /**
+              		Dispatched when runtime is connected and file-picker is ready to be used.
+              
+              		@event ready
+              		@param {Object} event
+              		*/
+              "ready",
+              /**
+              		Dispatched right after [ready](#event_ready) event, and whenever [refresh()](#method_refresh) is invoked.
+              		Check [corresponding documentation entry](#method_refresh) for more info.
+              
+              		@event refresh
+              		@param {Object} event
+              		*/
+              /**
+              		Dispatched when selection of files in the dialog is complete.
+              
+              		@event change
+              		@param {Object} event
+              		*/
+              "change",
+              "cancel",
+              // TODO: might be useful
+              /**
+              		Dispatched when mouse cursor enters file-picker area. Can be used to style element
+              		accordingly.
+              
+              		@event mouseenter
+              		@param {Object} event
+              		*/
+              "mouseenter",
+              /**
+              		Dispatched when mouse cursor leaves file-picker area. Can be used to style element
+              		accordingly.
+              
+              		@event mouseleave
+              		@param {Object} event
+              		*/
+              "mouseleave",
+              /**
+              		Dispatched when functional mouse button is pressed on top of file-picker area.
+              
+              		@event mousedown
+              		@param {Object} event
+              		*/
+              "mousedown",
+              /**
+              		Dispatched when functional mouse button is released on top of file-picker area.
+              
+              		@event mouseup
+              		@param {Object} event
+              		*/
+              "mouseup"
+            ];
+            function FileInput(options) {
+              if (MXI_DEBUG) {
+                Env.log("Instantiating FileInput...");
+              }
+              var container, browseButton, defaults2;
+              if (Basic.inArray(Basic.typeOf(options), ["string", "node"]) !== -1) {
+                options = { browse_button: options };
+              }
+              browseButton = Dom.get(options.browse_button);
+              if (!browseButton) {
+                throw new x.DOMException(x.DOMException.NOT_FOUND_ERR);
+              }
+              defaults2 = {
+                accept: [{
+                  title: I18n.translate("All Files"),
+                  extensions: "*"
+                }],
+                multiple: false,
+                required_caps: false,
+                container: browseButton.parentNode || document.body
+              };
+              options = Basic.extend({}, defaults2, options);
+              if (typeof options.required_caps === "string") {
+                options.required_caps = Runtime.parseCaps(options.required_caps);
+              }
+              if (typeof options.accept === "string") {
+                options.accept = Mime.mimes2extList(options.accept);
+              }
+              container = Dom.get(options.container);
+              if (!container) {
+                container = document.body;
+              }
+              if (Dom.getStyle(container, "position") === "static") {
+                container.style.position = "relative";
+              }
+              container = browseButton = null;
+              RuntimeClient.call(this);
+              Basic.extend(this, {
+                /**
+                			Unique id of the component
+                
+                			@property uid
+                			@protected
+                			@readOnly
+                			@type {String}
+                			@default UID
+                			*/
+                uid: Basic.guid("uid_"),
+                /**
+                			Unique id of the connected runtime, if any.
+                
+                			@property ruid
+                			@protected
+                			@type {String}
+                			*/
+                ruid: null,
+                /**
+                			Unique id of the runtime container. Useful to get hold of it for various manipulations.
+                
+                			@property shimid
+                			@protected
+                			@type {String}
+                			*/
+                shimid: null,
+                /**
+                			Array of selected moxie.file.File objects
+                
+                			@property files
+                			@type {Array}
+                			@default null
+                			*/
+                files: null,
+                /**
+                			Initializes the file-picker, connects it to runtime and dispatches event ready when done.
+                
+                			@method init
+                			*/
+                init: function() {
+                  var self2 = this;
+                  self2.bind("RuntimeInit", function(e, runtime) {
+                    self2.ruid = runtime.uid;
+                    self2.shimid = runtime.shimid;
+                    self2.bind("Ready", function() {
+                      self2.trigger("Refresh");
+                    }, 999);
+                    self2.bind("Refresh", function() {
+                      var pos, size, browseButton2, shimContainer, zIndex;
+                      browseButton2 = Dom.get(options.browse_button);
+                      shimContainer = Dom.get(runtime.shimid);
+                      if (browseButton2) {
+                        pos = Dom.getPos(browseButton2, Dom.get(options.container));
+                        size = Dom.getSize(browseButton2);
+                        zIndex = parseInt(Dom.getStyle(browseButton2, "z-index"), 10) || 0;
+                        if (shimContainer) {
+                          Basic.extend(shimContainer.style, {
+                            top: pos.y + "px",
+                            left: pos.x + "px",
+                            width: size.w + "px",
+                            height: size.h + "px",
+                            zIndex: zIndex + 1
+                          });
+                        }
+                      }
+                      shimContainer = browseButton2 = null;
+                    });
+                    runtime.exec.call(self2, "FileInput", "init", options);
+                  });
+                  self2.connectRuntime(Basic.extend({}, options, {
+                    required_caps: {
+                      select_file: true
+                    }
+                  }));
+                },
+                /**
+                 * Get current option value by its name
+                 *
+                 * @method getOption
+                 * @param name
+                 * @return {Mixed}
+                 */
+                getOption: function(name2) {
+                  return options[name2];
+                },
+                /**
+                 * Sets a new value for the option specified by name
+                 *
+                 * @method setOption
+                 * @param name
+                 * @param value
+                 */
+                setOption: function(name2, value) {
+                  if (!options.hasOwnProperty(name2)) {
+                    return;
+                  }
+                  var oldValue = options[name2];
+                  switch (name2) {
+                    case "accept":
+                      if (typeof value === "string") {
+                        value = Mime.mimes2extList(value);
+                      }
+                      break;
+                    case "container":
+                    case "required_caps":
+                      throw new x.FileException(x.FileException.NO_MODIFICATION_ALLOWED_ERR);
+                  }
+                  options[name2] = value;
+                  this.exec("FileInput", "setOption", name2, value);
+                  this.trigger("OptionChanged", name2, value, oldValue);
+                },
+                /**
+                			Disables file-picker element, so that it doesn't react to mouse clicks.
+                
+                			@method disable
+                			@param {Boolean} [state=true] Disable component if - true, enable if - false
+                			*/
+                disable: function(state) {
+                  var runtime = this.getRuntime();
+                  if (runtime) {
+                    this.exec("FileInput", "disable", Basic.typeOf(state) === "undefined" ? true : state);
+                  }
+                },
+                /**
+                			Reposition and resize dialog trigger to match the position and size of browse_button element.
+                
+                			@method refresh
+                			*/
+                refresh: function() {
+                  this.trigger("Refresh");
+                },
+                /**
+                			Destroy component.
+                
+                			@method destroy
+                			*/
+                destroy: function() {
+                  var runtime = this.getRuntime();
+                  if (runtime) {
+                    runtime.exec.call(this, "FileInput", "destroy");
+                    this.disconnectRuntime();
+                  }
+                  if (Basic.typeOf(this.files) === "array") {
+                    Basic.each(this.files, function(file) {
+                      file.destroy();
+                    });
+                  }
+                  this.files = null;
+                  this.unbindAll();
+                }
+              });
+              this.handleEventProps(dispatches);
+            }
+            FileInput.prototype = EventTarget.instance;
+            return FileInput;
+          });
+          define2("moxie/file/File", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Mime",
+            "moxie/file/Blob"
+          ], function(Basic, Mime, Blob) {
+            function File2(ruid, file) {
+              if (!file) {
+                file = {};
+              }
+              Blob.apply(this, arguments);
+              if (!this.type) {
+                this.type = Mime.getFileMime(file.name);
+              }
+              var name2;
+              if (file.name) {
+                name2 = file.name.replace(/\\/g, "/");
+                name2 = name2.substr(name2.lastIndexOf("/") + 1);
+              } else if (this.type) {
+                var prefix = this.type.split("/")[0];
+                name2 = Basic.guid((prefix !== "" ? prefix : "file") + "_");
+                if (Mime.extensions[this.type]) {
+                  name2 += "." + Mime.extensions[this.type][0];
+                }
+              }
+              Basic.extend(this, {
+                /**
+                			File name
+                
+                			@property name
+                			@type {String}
+                			@default UID
+                			*/
+                name: name2 || Basic.guid("file_"),
+                /**
+                			Relative path to the file inside a directory
+                
+                			@property relativePath
+                			@type {String}
+                			@default ''
+                			*/
+                relativePath: "",
+                /**
+                			Date of last modification
+                
+                			@property lastModifiedDate
+                			@type {String}
+                			@default now
+                			*/
+                lastModifiedDate: file.lastModifiedDate || (/* @__PURE__ */ new Date()).toLocaleString()
+                // Thu Aug 23 2012 19:40:00 GMT+0400 (GET)
+              });
+            }
+            File2.prototype = Blob.prototype;
+            return File2;
+          });
+          define2("moxie/file/FileDrop", [
+            "moxie/core/I18n",
+            "moxie/core/utils/Dom",
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Env",
+            "moxie/file/File",
+            "moxie/runtime/RuntimeClient",
+            "moxie/core/EventTarget",
+            "moxie/core/utils/Mime"
+          ], function(I18n, Dom, x, Basic, Env, File2, RuntimeClient, EventTarget, Mime) {
+            var dispatches = [
+              /**
+              		Dispatched when runtime is connected and drop zone is ready to accept files.
+              
+              		@event ready
+              		@param {Object} event
+              		*/
+              "ready",
+              /**
+              		Dispatched when dragging cursor enters the drop zone.
+              
+              		@event dragenter
+              		@param {Object} event
+              		*/
+              "dragenter",
+              /**
+              		Dispatched when dragging cursor leaves the drop zone.
+              
+              		@event dragleave
+              		@param {Object} event
+              		*/
+              "dragleave",
+              /**
+              		Dispatched when file is dropped onto the drop zone.
+              
+              		@event drop
+              		@param {Object} event
+              		*/
+              "drop",
+              /**
+              		Dispatched if error occurs.
+              
+              		@event error
+              		@param {Object} event
+              		*/
+              "error"
+            ];
+            function FileDrop(options) {
+              if (MXI_DEBUG) {
+                Env.log("Instantiating FileDrop...");
+              }
+              var self2 = this, defaults2;
+              if (typeof options === "string") {
+                options = { drop_zone: options };
+              }
+              defaults2 = {
+                accept: [{
+                  title: I18n.translate("All Files"),
+                  extensions: "*"
+                }],
+                required_caps: {
+                  drag_and_drop: true
+                }
+              };
+              options = typeof options === "object" ? Basic.extend({}, defaults2, options) : defaults2;
+              options.container = Dom.get(options.drop_zone) || document.body;
+              if (Dom.getStyle(options.container, "position") === "static") {
+                options.container.style.position = "relative";
+              }
+              if (typeof options.accept === "string") {
+                options.accept = Mime.mimes2extList(options.accept);
+              }
+              RuntimeClient.call(self2);
+              Basic.extend(self2, {
+                uid: Basic.guid("uid_"),
+                ruid: null,
+                files: null,
+                init: function() {
+                  self2.bind("RuntimeInit", function(e, runtime) {
+                    self2.ruid = runtime.uid;
+                    runtime.exec.call(self2, "FileDrop", "init", options);
+                    self2.dispatchEvent("ready");
+                  });
+                  self2.connectRuntime(options);
+                },
+                destroy: function() {
+                  var runtime = this.getRuntime();
+                  if (runtime) {
+                    runtime.exec.call(this, "FileDrop", "destroy");
+                    this.disconnectRuntime();
+                  }
+                  this.files = null;
+                  this.unbindAll();
+                }
+              });
+              this.handleEventProps(dispatches);
+            }
+            FileDrop.prototype = EventTarget.instance;
+            return FileDrop;
+          });
+          define2("moxie/file/FileReader", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Encode",
+            "moxie/core/Exceptions",
+            "moxie/core/EventTarget",
+            "moxie/file/Blob",
+            "moxie/runtime/RuntimeClient"
+          ], function(Basic, Encode, x, EventTarget, Blob, RuntimeClient) {
+            var dispatches = [
+              /** 
+              		Dispatched when the read starts.
+              
+              		@event loadstart
+              		@param {Object} event
+              		*/
+              "loadstart",
+              /** 
+              		Dispatched while reading (and decoding) blob, and reporting partial Blob data (progess.loaded/progress.total).
+              
+              		@event progress
+              		@param {Object} event
+              		*/
+              "progress",
+              /** 
+              		Dispatched when the read has successfully completed.
+              
+              		@event load
+              		@param {Object} event
+              		*/
+              "load",
+              /** 
+              		Dispatched when the read has been aborted. For instance, by invoking the abort() method.
+              
+              		@event abort
+              		@param {Object} event
+              		*/
+              "abort",
+              /** 
+              		Dispatched when the read has failed.
+              
+              		@event error
+              		@param {Object} event
+              		*/
+              "error",
+              /** 
+              		Dispatched when the request has completed (either in success or failure).
+              
+              		@event loadend
+              		@param {Object} event
+              		*/
+              "loadend"
+            ];
+            function FileReader2() {
+              RuntimeClient.call(this);
+              Basic.extend(this, {
+                /**
+                			UID of the component instance.
+                
+                			@property uid
+                			@type {String}
+                			*/
+                uid: Basic.guid("uid_"),
+                /**
+                			Contains current state of FileReader object. Can take values of FileReader.EMPTY, FileReader.LOADING
+                			and FileReader.DONE.
+                
+                			@property readyState
+                			@type {Number}
+                			@default FileReader.EMPTY
+                			*/
+                readyState: FileReader2.EMPTY,
+                /**
+                			Result of the successful read operation.
+                
+                			@property result
+                			@type {String}
+                			*/
+                result: null,
+                /**
+                			Stores the error of failed asynchronous read operation.
+                
+                			@property error
+                			@type {DOMError}
+                			*/
+                error: null,
+                /**
+                			Initiates reading of File/Blob object contents to binary string.
+                
+                			@method readAsBinaryString
+                			@param {Blob|File} blob Object to preload
+                			*/
+                readAsBinaryString: function(blob) {
+                  _read.call(this, "readAsBinaryString", blob);
+                },
+                /**
+                			Initiates reading of File/Blob object contents to dataURL string.
+                
+                			@method readAsDataURL
+                			@param {Blob|File} blob Object to preload
+                			*/
+                readAsDataURL: function(blob) {
+                  _read.call(this, "readAsDataURL", blob);
+                },
+                /**
+                			Initiates reading of File/Blob object contents to string.
+                
+                			@method readAsText
+                			@param {Blob|File} blob Object to preload
+                			*/
+                readAsText: function(blob) {
+                  _read.call(this, "readAsText", blob);
+                },
+                /**
+                			Aborts preloading process.
+                
+                			@method abort
+                			*/
+                abort: function() {
+                  this.result = null;
+                  if (Basic.inArray(this.readyState, [FileReader2.EMPTY, FileReader2.DONE]) !== -1) {
+                    return;
+                  } else if (this.readyState === FileReader2.LOADING) {
+                    this.readyState = FileReader2.DONE;
+                  }
+                  this.exec("FileReader", "abort");
+                  this.trigger("abort");
+                  this.trigger("loadend");
+                },
+                /**
+                			Destroy component and release resources.
+                
+                			@method destroy
+                			*/
+                destroy: function() {
+                  this.abort();
+                  this.exec("FileReader", "destroy");
+                  this.disconnectRuntime();
+                  this.unbindAll();
+                }
+              });
+              this.handleEventProps(dispatches);
+              this.bind("Error", function(e, err) {
+                this.readyState = FileReader2.DONE;
+                this.error = err;
+              }, 999);
+              this.bind("Load", function(e) {
+                this.readyState = FileReader2.DONE;
+              }, 999);
+              function _read(op, blob) {
+                var self2 = this;
+                this.trigger("loadstart");
+                if (this.readyState === FileReader2.LOADING) {
+                  this.trigger("error", new x.DOMException(x.DOMException.INVALID_STATE_ERR));
+                  this.trigger("loadend");
+                  return;
+                }
+                if (!(blob instanceof Blob)) {
+                  this.trigger("error", new x.DOMException(x.DOMException.NOT_FOUND_ERR));
+                  this.trigger("loadend");
+                  return;
+                }
+                this.result = null;
+                this.readyState = FileReader2.LOADING;
+                if (blob.isDetached()) {
+                  var src = blob.getSource();
+                  switch (op) {
+                    case "readAsText":
+                    case "readAsBinaryString":
+                      this.result = src;
+                      break;
+                    case "readAsDataURL":
+                      this.result = "data:" + blob.type + ";base64," + Encode.btoa(src);
+                      break;
+                  }
+                  this.readyState = FileReader2.DONE;
+                  this.trigger("load");
+                  this.trigger("loadend");
+                } else {
+                  this.connectRuntime(blob.ruid);
+                  this.exec("FileReader", "read", op, blob);
+                }
+              }
+            }
+            FileReader2.EMPTY = 0;
+            FileReader2.LOADING = 1;
+            FileReader2.DONE = 2;
+            FileReader2.prototype = EventTarget.instance;
+            return FileReader2;
+          });
+          define2("moxie/core/utils/Url", [
+            "moxie/core/utils/Basic"
+          ], function(Basic) {
+            var parseUrl = function(url, currentUrl) {
+              var key = ["source", "scheme", "authority", "userInfo", "user", "pass", "host", "port", "relative", "path", "directory", "file", "query", "fragment"], i = key.length, ports = {
+                http: 80,
+                https: 443
+              }, uri = {}, regex = /^(?:([^:\/?#]+):)?(?:\/\/()(?:(?:()(?:([^:@\/]*):?([^:@\/]*))?@)?(\[[\da-fA-F:]+\]|[^:\/?#]*)(?::(\d*))?))?()(?:(()(?:(?:[^?#\/]*\/)*)()(?:[^?#]*))(?:\\?([^#]*))?(?:#(.*))?)/, m2 = regex.exec(url || ""), isRelative, isSchemeLess = /^\/\/\w/.test(url);
+              switch (Basic.typeOf(currentUrl)) {
+                case "undefined":
+                  currentUrl = parseUrl(document.location.href, false);
+                  break;
+                case "string":
+                  currentUrl = parseUrl(currentUrl, false);
+                  break;
+              }
+              while (i--) {
+                if (m2[i]) {
+                  uri[key[i]] = m2[i];
+                }
+              }
+              isRelative = !isSchemeLess && !uri.scheme;
+              if (isSchemeLess || isRelative) {
+                uri.scheme = currentUrl.scheme;
+              }
+              if (isRelative) {
+                uri.host = currentUrl.host;
+                uri.port = currentUrl.port;
+                var path = "";
+                if (/^[^\/]/.test(uri.path)) {
+                  path = currentUrl.path;
+                  if (/\/[^\/]*\.[^\/]*$/.test(path)) {
+                    path = path.replace(/\/[^\/]+$/, "/");
+                  } else {
+                    path = path.replace(/\/?$/, "/");
+                  }
+                }
+                uri.path = path + (uri.path || "");
+              }
+              if (!uri.port) {
+                uri.port = ports[uri.scheme] || 80;
+              }
+              uri.port = parseInt(uri.port, 10);
+              if (!uri.path) {
+                uri.path = "/";
+              }
+              delete uri.source;
+              return uri;
+            };
+            var resolveUrl = function(url) {
+              var ports = {
+                // we ignore default ports
+                http: 80,
+                https: 443
+              }, urlp = typeof url === "object" ? url : parseUrl(url);
+              ;
+              return urlp.scheme + "://" + urlp.host + (urlp.port !== ports[urlp.scheme] ? ":" + urlp.port : "") + urlp.path + (urlp.query ? urlp.query : "");
+            };
+            var hasSameOrigin = function(url) {
+              function origin(url2) {
+                return [url2.scheme, url2.host, url2.port].join("/");
+              }
+              if (typeof url === "string") {
+                url = parseUrl(url);
+              }
+              return origin(parseUrl()) === origin(url);
+            };
+            return {
+              parseUrl,
+              resolveUrl,
+              hasSameOrigin
+            };
+          });
+          define2("moxie/runtime/RuntimeTarget", [
+            "moxie/core/utils/Basic",
+            "moxie/runtime/RuntimeClient",
+            "moxie/core/EventTarget"
+          ], function(Basic, RuntimeClient, EventTarget) {
+            function RuntimeTarget() {
+              this.uid = Basic.guid("uid_");
+              RuntimeClient.call(this);
+              this.destroy = function() {
+                this.disconnectRuntime();
+                this.unbindAll();
+              };
+            }
+            RuntimeTarget.prototype = EventTarget.instance;
+            return RuntimeTarget;
+          });
+          define2("moxie/file/FileReaderSync", [
+            "moxie/core/utils/Basic",
+            "moxie/runtime/RuntimeClient",
+            "moxie/core/utils/Encode"
+          ], function(Basic, RuntimeClient, Encode) {
+            return function() {
+              RuntimeClient.call(this);
+              Basic.extend(this, {
+                uid: Basic.guid("uid_"),
+                readAsBinaryString: function(blob) {
+                  return _read.call(this, "readAsBinaryString", blob);
+                },
+                readAsDataURL: function(blob) {
+                  return _read.call(this, "readAsDataURL", blob);
+                },
+                /*readAsArrayBuffer: function(blob) {
+                	return _read.call(this, 'readAsArrayBuffer', blob);
+                },*/
+                readAsText: function(blob) {
+                  return _read.call(this, "readAsText", blob);
+                }
+              });
+              function _read(op, blob) {
+                if (blob.isDetached()) {
+                  var src = blob.getSource();
+                  switch (op) {
+                    case "readAsBinaryString":
+                      return src;
+                    case "readAsDataURL":
+                      return "data:" + blob.type + ";base64," + Encode.btoa(src);
+                    case "readAsText":
+                      var txt = "";
+                      for (var i = 0, length = src.length; i < length; i++) {
+                        txt += String.fromCharCode(src[i]);
+                      }
+                      return txt;
+                  }
+                } else {
+                  var result = this.connectRuntime(blob.ruid).exec.call(this, "FileReaderSync", "read", op, blob);
+                  this.disconnectRuntime();
+                  return result;
+                }
+              }
+            };
+          });
+          define2("moxie/xhr/FormData", [
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Basic",
+            "moxie/file/Blob"
+          ], function(x, Basic, Blob) {
+            function FormData2() {
+              var _blob, _fields = [];
+              Basic.extend(this, {
+                /**
+                			Append another key-value pair to the FormData object
+                
+                			@method append
+                			@param {String} name Name for the new field
+                			@param {String|Blob|Array|Object} value Value for the field
+                			*/
+                append: function(name2, value) {
+                  var self2 = this, valueType = Basic.typeOf(value);
+                  if (value instanceof Blob) {
+                    _blob = {
+                      name: name2,
+                      value
+                      // unfortunately we can only send single Blob in one FormData
+                    };
+                  } else if ("array" === valueType) {
+                    name2 += "[]";
+                    Basic.each(value, function(value2) {
+                      self2.append(name2, value2);
+                    });
+                  } else if ("object" === valueType) {
+                    Basic.each(value, function(value2, key) {
+                      self2.append(name2 + "[" + key + "]", value2);
+                    });
+                  } else if ("null" === valueType || "undefined" === valueType || "number" === valueType && isNaN(value)) {
+                    self2.append(name2, "false");
+                  } else {
+                    _fields.push({
+                      name: name2,
+                      value: value.toString()
+                    });
+                  }
+                },
+                /**
+                			Checks if FormData contains Blob.
+                
+                			@method hasBlob
+                			@return {Boolean}
+                			*/
+                hasBlob: function() {
+                  return !!this.getBlob();
+                },
+                /**
+                			Retrieves blob.
+                
+                			@method getBlob
+                			@return {Object} Either Blob if found or null
+                			*/
+                getBlob: function() {
+                  return _blob && _blob.value || null;
+                },
+                /**
+                			Retrieves blob field name.
+                
+                			@method getBlobName
+                			@return {String} Either Blob field name or null
+                			*/
+                getBlobName: function() {
+                  return _blob && _blob.name || null;
+                },
+                /**
+                			Loop over the fields in FormData and invoke the callback for each of them.
+                
+                			@method each
+                			@param {Function} cb Callback to call for each field
+                			*/
+                each: function(cb) {
+                  Basic.each(_fields, function(field) {
+                    cb(field.value, field.name);
+                  });
+                  if (_blob) {
+                    cb(_blob.value, _blob.name);
+                  }
+                },
+                destroy: function() {
+                  _blob = null;
+                  _fields = [];
+                }
+              });
+            }
+            return FormData2;
+          });
+          define2("moxie/xhr/XMLHttpRequest", [
+            "moxie/core/utils/Basic",
+            "moxie/core/Exceptions",
+            "moxie/core/EventTarget",
+            "moxie/core/utils/Encode",
+            "moxie/core/utils/Url",
+            "moxie/runtime/Runtime",
+            "moxie/runtime/RuntimeTarget",
+            "moxie/file/Blob",
+            "moxie/file/FileReaderSync",
+            "moxie/xhr/FormData",
+            "moxie/core/utils/Env",
+            "moxie/core/utils/Mime"
+          ], function(Basic, x, EventTarget, Encode, Url, Runtime, RuntimeTarget, Blob, FileReaderSync, FormData2, Env, Mime) {
+            var httpCode = {
+              100: "Continue",
+              101: "Switching Protocols",
+              102: "Processing",
+              200: "OK",
+              201: "Created",
+              202: "Accepted",
+              203: "Non-Authoritative Information",
+              204: "No Content",
+              205: "Reset Content",
+              206: "Partial Content",
+              207: "Multi-Status",
+              226: "IM Used",
+              300: "Multiple Choices",
+              301: "Moved Permanently",
+              302: "Found",
+              303: "See Other",
+              304: "Not Modified",
+              305: "Use Proxy",
+              306: "Reserved",
+              307: "Temporary Redirect",
+              400: "Bad Request",
+              401: "Unauthorized",
+              402: "Payment Required",
+              403: "Forbidden",
+              404: "Not Found",
+              405: "Method Not Allowed",
+              406: "Not Acceptable",
+              407: "Proxy Authentication Required",
+              408: "Request Timeout",
+              409: "Conflict",
+              410: "Gone",
+              411: "Length Required",
+              412: "Precondition Failed",
+              413: "Request Entity Too Large",
+              414: "Request-URI Too Long",
+              415: "Unsupported Media Type",
+              416: "Requested Range Not Satisfiable",
+              417: "Expectation Failed",
+              422: "Unprocessable Entity",
+              423: "Locked",
+              424: "Failed Dependency",
+              426: "Upgrade Required",
+              500: "Internal Server Error",
+              501: "Not Implemented",
+              502: "Bad Gateway",
+              503: "Service Unavailable",
+              504: "Gateway Timeout",
+              505: "HTTP Version Not Supported",
+              506: "Variant Also Negotiates",
+              507: "Insufficient Storage",
+              510: "Not Extended"
+            };
+            function XMLHttpRequestUpload() {
+              this.uid = Basic.guid("uid_");
+            }
+            XMLHttpRequestUpload.prototype = EventTarget.instance;
+            var dispatches = [
+              "loadstart",
+              "progress",
+              "abort",
+              "error",
+              "load",
+              "timeout",
+              "loadend"
+              // readystatechange (for historical reasons)
+            ];
+            var NATIVE = 1, RUNTIME = 2;
+            function XMLHttpRequest2() {
+              var self2 = this, props = {
+                /**
+                				The amount of milliseconds a request can take before being terminated. Initially zero. Zero means there is no timeout.
+                
+                				@property timeout
+                				@type Number
+                				@default 0
+                				*/
+                timeout: 0,
+                /**
+                				Current state, can take following values:
+                				UNSENT (numeric value 0)
+                				The object has been constructed.
+                
+                				OPENED (numeric value 1)
+                				The open() method has been successfully invoked. During this state request headers can be set using setRequestHeader() and the request can be made using the send() method.
+                
+                				HEADERS_RECEIVED (numeric value 2)
+                				All redirects (if any) have been followed and all HTTP headers of the final response have been received. Several response members of the object are now available.
+                
+                				LOADING (numeric value 3)
+                				The response entity body is being received.
+                
+                				DONE (numeric value 4)
+                
+                				@property readyState
+                				@type Number
+                				@default 0 (UNSENT)
+                				*/
+                readyState: XMLHttpRequest2.UNSENT,
+                /**
+                				True when user credentials are to be included in a cross-origin request. False when they are to be excluded
+                				in a cross-origin request and when cookies are to be ignored in its response. Initially false.
+                
+                				@property withCredentials
+                				@type Boolean
+                				@default false
+                				*/
+                withCredentials: false,
+                /**
+                				Returns the HTTP status code.
+                
+                				@property status
+                				@type Number
+                				@default 0
+                				*/
+                status: 0,
+                /**
+                				Returns the HTTP status text.
+                
+                				@property statusText
+                				@type String
+                				*/
+                statusText: "",
+                /**
+                				Returns the response type. Can be set to change the response type. Values are:
+                				the empty string (default), "arraybuffer", "blob", "document", "json", and "text".
+                
+                				@property responseType
+                				@type String
+                				*/
+                responseType: "",
+                /**
+                				Returns the document response entity body.
+                
+                				Throws an "InvalidStateError" exception if responseType is not the empty string or "document".
+                
+                				@property responseXML
+                				@type Document
+                				*/
+                responseXML: null,
+                /**
+                				Returns the text response entity body.
+                
+                				Throws an "InvalidStateError" exception if responseType is not the empty string or "text".
+                
+                				@property responseText
+                				@type String
+                				*/
+                responseText: null,
+                /**
+                				Returns the response entity body (http://www.w3.org/TR/XMLHttpRequest/#response-entity-body).
+                				Can become: ArrayBuffer, Blob, Document, JSON, Text
+                
+                				@property response
+                				@type Mixed
+                				*/
+                response: null
+              }, _async = true, _url, _method, _headers = {}, _user, _password, _encoding = null, _mimeType = null, _sync_flag = false, _send_flag = false, _upload_events_flag = false, _upload_complete_flag = false, _error_flag = false, _same_origin_flag = false, _start_time, _timeoutset_time, _finalMime = null, _finalCharset = null, _options = {}, _xhr, _responseHeaders = "", _responseHeadersBag;
+              Basic.extend(this, props, {
+                /**
+                			Unique id of the component
+                
+                			@property uid
+                			@type String
+                			*/
+                uid: Basic.guid("uid_"),
+                /**
+                			Target for Upload events
+                
+                			@property upload
+                			@type XMLHttpRequestUpload
+                			*/
+                upload: new XMLHttpRequestUpload(),
+                /**
+                			Sets the request method, request URL, synchronous flag, request username, and request password.
+                
+                			Throws a "SyntaxError" exception if one of the following is true:
+                
+                			method is not a valid HTTP method.
+                			url cannot be resolved.
+                			url contains the "user:password" format in the userinfo production.
+                			Throws a "SecurityError" exception if method is a case-insensitive match for CONNECT, TRACE or TRACK.
+                
+                			Throws an "InvalidAccessError" exception if one of the following is true:
+                
+                			Either user or password is passed as argument and the origin of url does not match the XMLHttpRequest origin.
+                			There is an associated XMLHttpRequest document and either the timeout attribute is not zero,
+                			the withCredentials attribute is true, or the responseType attribute is not the empty string.
+                
+                
+                			@method open
+                			@param {String} method HTTP method to use on request
+                			@param {String} url URL to request
+                			@param {Boolean} [async=true] If false request will be done in synchronous manner. Asynchronous by default.
+                			@param {String} [user] Username to use in HTTP authentication process on server-side
+                			@param {String} [password] Password to use in HTTP authentication process on server-side
+                			*/
+                open: function(method, url, async, user, password) {
+                  var urlp;
+                  if (!method || !url) {
+                    throw new x.DOMException(x.DOMException.SYNTAX_ERR);
+                  }
+                  if (/[\u0100-\uffff]/.test(method) || Encode.utf8_encode(method) !== method) {
+                    throw new x.DOMException(x.DOMException.SYNTAX_ERR);
+                  }
+                  if (!!~Basic.inArray(method.toUpperCase(), ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "TRACE", "TRACK"])) {
+                    _method = method.toUpperCase();
+                  }
+                  if (!!~Basic.inArray(_method, ["CONNECT", "TRACE", "TRACK"])) {
+                    throw new x.DOMException(x.DOMException.SECURITY_ERR);
+                  }
+                  url = Encode.utf8_encode(url);
+                  urlp = Url.parseUrl(url);
+                  _same_origin_flag = Url.hasSameOrigin(urlp);
+                  _url = Url.resolveUrl(url);
+                  if ((user || password) && !_same_origin_flag) {
+                    throw new x.DOMException(x.DOMException.INVALID_ACCESS_ERR);
+                  }
+                  _user = user || urlp.user;
+                  _password = password || urlp.pass;
+                  _async = async || true;
+                  if (_async === false && (_p("timeout") || _p("withCredentials") || _p("responseType") !== "")) {
+                    throw new x.DOMException(x.DOMException.INVALID_ACCESS_ERR);
+                  }
+                  _sync_flag = !_async;
+                  _send_flag = false;
+                  _headers = {};
+                  _reset.call(this);
+                  _p("readyState", XMLHttpRequest2.OPENED);
+                  this.dispatchEvent("readystatechange");
+                },
+                /**
+                			Appends an header to the list of author request headers, or if header is already
+                			in the list of author request headers, combines its value with value.
+                
+                			Throws an "InvalidStateError" exception if the state is not OPENED or if the send() flag is set.
+                			Throws a "SyntaxError" exception if header is not a valid HTTP header field name or if value
+                			is not a valid HTTP header field value.
+                
+                			@method setRequestHeader
+                			@param {String} header
+                			@param {String|Number} value
+                			*/
+                setRequestHeader: function(header, value) {
+                  var uaHeaders = [
+                    // these headers are controlled by the user agent
+                    "accept-charset",
+                    "accept-encoding",
+                    "access-control-request-headers",
+                    "access-control-request-method",
+                    "connection",
+                    "content-length",
+                    "cookie",
+                    "cookie2",
+                    "content-transfer-encoding",
+                    "date",
+                    "expect",
+                    "host",
+                    "keep-alive",
+                    "origin",
+                    "referer",
+                    "te",
+                    "trailer",
+                    "transfer-encoding",
+                    "upgrade",
+                    "user-agent",
+                    "via"
+                  ];
+                  if (_p("readyState") !== XMLHttpRequest2.OPENED || _send_flag) {
+                    throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                  }
+                  if (/[\u0100-\uffff]/.test(header) || Encode.utf8_encode(header) !== header) {
+                    throw new x.DOMException(x.DOMException.SYNTAX_ERR);
+                  }
+                  header = Basic.trim(header).toLowerCase();
+                  if (!!~Basic.inArray(header, uaHeaders) || /^(proxy\-|sec\-)/.test(header)) {
+                    return false;
+                  }
+                  if (!_headers[header]) {
+                    _headers[header] = value;
+                  } else {
+                    _headers[header] += ", " + value;
+                  }
+                  return true;
+                },
+                /**
+                 * Test if the specified header is already set on this request.
+                 * Returns a header value or boolean false if it's not yet set.
+                 *
+                 * @method hasRequestHeader
+                 * @param {String} header Name of the header to test
+                 * @return {Boolean|String}
+                 */
+                hasRequestHeader: function(header) {
+                  return header && _headers[header.toLowerCase()] || false;
+                },
+                /**
+                			Returns all headers from the response, with the exception of those whose field name is Set-Cookie or Set-Cookie2.
+                
+                			@method getAllResponseHeaders
+                			@return {String} reponse headers or empty string
+                			*/
+                getAllResponseHeaders: function() {
+                  return _responseHeaders || "";
+                },
+                /**
+                			Returns the header field value from the response of which the field name matches header,
+                			unless the field name is Set-Cookie or Set-Cookie2.
+                
+                			@method getResponseHeader
+                			@param {String} header
+                			@return {String} value(s) for the specified header or null
+                			*/
+                getResponseHeader: function(header) {
+                  header = header.toLowerCase();
+                  if (_error_flag || !!~Basic.inArray(header, ["set-cookie", "set-cookie2"])) {
+                    return null;
+                  }
+                  if (_responseHeaders && _responseHeaders !== "") {
+                    if (!_responseHeadersBag) {
+                      _responseHeadersBag = {};
+                      Basic.each(_responseHeaders.split(/\r\n/), function(line) {
+                        var pair = line.split(/:\s+/);
+                        if (pair.length === 2) {
+                          pair[0] = Basic.trim(pair[0]);
+                          _responseHeadersBag[pair[0].toLowerCase()] = {
+                            // simply to retain header name in original form
+                            header: pair[0],
+                            value: Basic.trim(pair[1])
+                          };
+                        }
+                      });
+                    }
+                    if (_responseHeadersBag.hasOwnProperty(header)) {
+                      return _responseHeadersBag[header].header + ": " + _responseHeadersBag[header].value;
+                    }
+                  }
+                  return null;
+                },
+                /**
+                			Sets the Content-Type header for the response to mime.
+                			Throws an "InvalidStateError" exception if the state is LOADING or DONE.
+                			Throws a "SyntaxError" exception if mime is not a valid media type.
+                
+                			@method overrideMimeType
+                			@param String mime Mime type to set
+                			*/
+                overrideMimeType: function(mime) {
+                  var matches3, charset;
+                  if (!!~Basic.inArray(_p("readyState"), [XMLHttpRequest2.LOADING, XMLHttpRequest2.DONE])) {
+                    throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                  }
+                  mime = Basic.trim(mime.toLowerCase());
+                  if (/;/.test(mime) && (matches3 = mime.match(/^([^;]+)(?:;\scharset\=)?(.*)$/))) {
+                    mime = matches3[1];
+                    if (matches3[2]) {
+                      charset = matches3[2];
+                    }
+                  }
+                  if (!Mime.mimes[mime]) {
+                    throw new x.DOMException(x.DOMException.SYNTAX_ERR);
+                  }
+                  _finalMime = mime;
+                  _finalCharset = charset;
+                },
+                /**
+                			Initiates the request. The optional argument provides the request entity body.
+                			The argument is ignored if request method is GET or HEAD.
+                
+                			Throws an "InvalidStateError" exception if the state is not OPENED or if the send() flag is set.
+                
+                			@method send
+                			@param {Blob|Document|String|FormData} [data] Request entity body
+                			@param {Object} [options] Set of requirements and pre-requisities for runtime initialization
+                			*/
+                send: function(data, options) {
+                  if (Basic.typeOf(options) === "string") {
+                    _options = { ruid: options };
+                  } else if (!options) {
+                    _options = {};
+                  } else {
+                    _options = options;
+                  }
+                  if (this.readyState !== XMLHttpRequest2.OPENED || _send_flag) {
+                    throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                  }
+                  if (data instanceof Blob) {
+                    _options.ruid = data.ruid;
+                    _mimeType = data.type || "application/octet-stream";
+                  } else if (data instanceof FormData2) {
+                    if (data.hasBlob()) {
+                      var blob = data.getBlob();
+                      _options.ruid = blob.ruid;
+                      _mimeType = blob.type || "application/octet-stream";
+                    }
+                  } else if (typeof data === "string") {
+                    _encoding = "UTF-8";
+                    _mimeType = "text/plain;charset=UTF-8";
+                    data = Encode.utf8_encode(data);
+                  }
+                  if (!this.withCredentials) {
+                    this.withCredentials = _options.required_caps && _options.required_caps.send_browser_cookies && !_same_origin_flag;
+                  }
+                  _upload_events_flag = !_sync_flag && this.upload.hasEventListener();
+                  _error_flag = false;
+                  _upload_complete_flag = !data;
+                  if (!_sync_flag) {
+                    _send_flag = true;
+                  }
+                  _doXHR.call(this, data);
+                },
+                /**
+                			Cancels any network activity.
+                
+                			@method abort
+                			*/
+                abort: function() {
+                  _error_flag = true;
+                  _sync_flag = false;
+                  if (!~Basic.inArray(_p("readyState"), [XMLHttpRequest2.UNSENT, XMLHttpRequest2.OPENED, XMLHttpRequest2.DONE])) {
+                    _p("readyState", XMLHttpRequest2.DONE);
+                    _send_flag = false;
+                    if (_xhr) {
+                      _xhr.getRuntime().exec.call(_xhr, "XMLHttpRequest", "abort", _upload_complete_flag);
+                    } else {
+                      throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                    }
+                    _upload_complete_flag = true;
+                  } else {
+                    _p("readyState", XMLHttpRequest2.UNSENT);
+                  }
+                },
+                destroy: function() {
+                  if (_xhr) {
+                    if (Basic.typeOf(_xhr.destroy) === "function") {
+                      _xhr.destroy();
+                    }
+                    _xhr = null;
+                  }
+                  this.unbindAll();
+                  if (this.upload) {
+                    this.upload.unbindAll();
+                    this.upload = null;
+                  }
+                }
+              });
+              this.handleEventProps(dispatches.concat(["readystatechange"]));
+              this.upload.handleEventProps(dispatches);
+              function _p(prop, value) {
+                if (!props.hasOwnProperty(prop)) {
+                  return;
+                }
+                if (arguments.length === 1) {
+                  return Env.can("define_property") ? props[prop] : self2[prop];
+                } else {
+                  if (Env.can("define_property")) {
+                    props[prop] = value;
+                  } else {
+                    self2[prop] = value;
+                  }
+                }
+              }
+              function _doXHR(data) {
+                var self3 = this;
+                _start_time = (/* @__PURE__ */ new Date()).getTime();
+                _xhr = new RuntimeTarget();
+                function loadEnd() {
+                  if (_xhr) {
+                    _xhr.destroy();
+                    _xhr = null;
+                  }
+                  self3.dispatchEvent("loadend");
+                  self3 = null;
+                }
+                function exec(runtime) {
+                  _xhr.bind("LoadStart", function(e) {
+                    _p("readyState", XMLHttpRequest2.LOADING);
+                    self3.dispatchEvent("readystatechange");
+                    self3.dispatchEvent(e);
+                    if (_upload_events_flag) {
+                      self3.upload.dispatchEvent(e);
+                    }
+                  });
+                  _xhr.bind("Progress", function(e) {
+                    if (_p("readyState") !== XMLHttpRequest2.LOADING) {
+                      _p("readyState", XMLHttpRequest2.LOADING);
+                      self3.dispatchEvent("readystatechange");
+                    }
+                    self3.dispatchEvent(e);
+                  });
+                  _xhr.bind("UploadProgress", function(e) {
+                    if (_upload_events_flag) {
+                      self3.upload.dispatchEvent({
+                        type: "progress",
+                        lengthComputable: false,
+                        total: e.total,
+                        loaded: e.loaded
+                      });
+                    }
+                  });
+                  _xhr.bind("Load", function(e) {
+                    _p("readyState", XMLHttpRequest2.DONE);
+                    _p("status", Number(runtime.exec.call(_xhr, "XMLHttpRequest", "getStatus") || 0));
+                    _p("statusText", httpCode[_p("status")] || "");
+                    _p("response", runtime.exec.call(_xhr, "XMLHttpRequest", "getResponse", _p("responseType")));
+                    if (!!~Basic.inArray(_p("responseType"), ["text", ""])) {
+                      _p("responseText", _p("response"));
+                    } else if (_p("responseType") === "document") {
+                      _p("responseXML", _p("response"));
+                    }
+                    _responseHeaders = runtime.exec.call(_xhr, "XMLHttpRequest", "getAllResponseHeaders");
+                    self3.dispatchEvent("readystatechange");
+                    if (_p("status") > 0) {
+                      if (_upload_events_flag) {
+                        self3.upload.dispatchEvent(e);
+                      }
+                      self3.dispatchEvent(e);
+                    } else {
+                      _error_flag = true;
+                      self3.dispatchEvent("error");
+                    }
+                    loadEnd();
+                  });
+                  _xhr.bind("Abort", function(e) {
+                    self3.dispatchEvent(e);
+                    loadEnd();
+                  });
+                  _xhr.bind("Error", function(e) {
+                    _error_flag = true;
+                    _p("readyState", XMLHttpRequest2.DONE);
+                    self3.dispatchEvent("readystatechange");
+                    _upload_complete_flag = true;
+                    self3.dispatchEvent(e);
+                    loadEnd();
+                  });
+                  runtime.exec.call(_xhr, "XMLHttpRequest", "send", {
+                    url: _url,
+                    method: _method,
+                    async: _async,
+                    user: _user,
+                    password: _password,
+                    headers: _headers,
+                    mimeType: _mimeType,
+                    encoding: _encoding,
+                    responseType: self3.responseType,
+                    withCredentials: self3.withCredentials,
+                    options: _options
+                  }, data);
+                }
+                if (typeof _options.required_caps === "string") {
+                  _options.required_caps = Runtime.parseCaps(_options.required_caps);
+                }
+                _options.required_caps = Basic.extend({}, _options.required_caps, {
+                  return_response_type: self3.responseType
+                });
+                if (data instanceof FormData2) {
+                  _options.required_caps.send_multipart = true;
+                }
+                if (!Basic.isEmptyObj(_headers)) {
+                  _options.required_caps.send_custom_headers = true;
+                }
+                if (!_same_origin_flag) {
+                  _options.required_caps.do_cors = true;
+                }
+                if (_options.ruid) {
+                  exec(_xhr.connectRuntime(_options));
+                } else {
+                  _xhr.bind("RuntimeInit", function(e, runtime) {
+                    exec(runtime);
+                  });
+                  _xhr.bind("RuntimeError", function(e, err) {
+                    self3.dispatchEvent("RuntimeError", err);
+                  });
+                  _xhr.connectRuntime(_options);
+                }
+              }
+              function _reset() {
+                _p("responseText", "");
+                _p("responseXML", null);
+                _p("response", null);
+                _p("status", 0);
+                _p("statusText", "");
+                _start_time = _timeoutset_time = null;
+              }
+            }
+            XMLHttpRequest2.UNSENT = 0;
+            XMLHttpRequest2.OPENED = 1;
+            XMLHttpRequest2.HEADERS_RECEIVED = 2;
+            XMLHttpRequest2.LOADING = 3;
+            XMLHttpRequest2.DONE = 4;
+            XMLHttpRequest2.prototype = EventTarget.instance;
+            return XMLHttpRequest2;
+          });
+          define2("moxie/runtime/Transporter", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Encode",
+            "moxie/runtime/RuntimeClient",
+            "moxie/core/EventTarget"
+          ], function(Basic, Encode, RuntimeClient, EventTarget) {
+            function Transporter() {
+              var mod, _runtime, _data, _size, _pos, _chunk_size;
+              RuntimeClient.call(this);
+              Basic.extend(this, {
+                uid: Basic.guid("uid_"),
+                state: Transporter.IDLE,
+                result: null,
+                transport: function(data, type, options) {
+                  var self2 = this;
+                  options = Basic.extend({
+                    chunk_size: 204798
+                  }, options);
+                  if (mod = options.chunk_size % 3) {
+                    options.chunk_size += 3 - mod;
+                  }
+                  _chunk_size = options.chunk_size;
+                  _reset.call(this);
+                  _data = data;
+                  _size = data.length;
+                  if (Basic.typeOf(options) === "string" || options.ruid) {
+                    _run.call(self2, type, this.connectRuntime(options));
+                  } else {
+                    var cb = function(e, runtime) {
+                      self2.unbind("RuntimeInit", cb);
+                      _run.call(self2, type, runtime);
+                    };
+                    this.bind("RuntimeInit", cb);
+                    this.connectRuntime(options);
+                  }
+                },
+                abort: function() {
+                  var self2 = this;
+                  self2.state = Transporter.IDLE;
+                  if (_runtime) {
+                    _runtime.exec.call(self2, "Transporter", "clear");
+                    self2.trigger("TransportingAborted");
+                  }
+                  _reset.call(self2);
+                },
+                destroy: function() {
+                  this.unbindAll();
+                  _runtime = null;
+                  this.disconnectRuntime();
+                  _reset.call(this);
+                }
+              });
+              function _reset() {
+                _size = _pos = 0;
+                _data = this.result = null;
+              }
+              function _run(type, runtime) {
+                var self2 = this;
+                _runtime = runtime;
+                self2.bind("TransportingProgress", function(e) {
+                  _pos = e.loaded;
+                  if (_pos < _size && Basic.inArray(self2.state, [Transporter.IDLE, Transporter.DONE]) === -1) {
+                    _transport.call(self2);
+                  }
+                }, 999);
+                self2.bind("TransportingComplete", function() {
+                  _pos = _size;
+                  self2.state = Transporter.DONE;
+                  _data = null;
+                  self2.result = _runtime.exec.call(self2, "Transporter", "getAsBlob", type || "");
+                }, 999);
+                self2.state = Transporter.BUSY;
+                self2.trigger("TransportingStarted");
+                _transport.call(self2);
+              }
+              function _transport() {
+                var self2 = this, chunk, bytesLeft = _size - _pos;
+                if (_chunk_size > bytesLeft) {
+                  _chunk_size = bytesLeft;
+                }
+                chunk = Encode.btoa(_data.substr(_pos, _chunk_size));
+                _runtime.exec.call(self2, "Transporter", "receive", chunk, _size);
+              }
+            }
+            Transporter.IDLE = 0;
+            Transporter.BUSY = 1;
+            Transporter.DONE = 2;
+            Transporter.prototype = EventTarget.instance;
+            return Transporter;
+          });
+          define2("moxie/image/Image", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Dom",
+            "moxie/core/Exceptions",
+            "moxie/file/FileReaderSync",
+            "moxie/xhr/XMLHttpRequest",
+            "moxie/runtime/Runtime",
+            "moxie/runtime/RuntimeClient",
+            "moxie/runtime/Transporter",
+            "moxie/core/utils/Env",
+            "moxie/core/EventTarget",
+            "moxie/file/Blob",
+            "moxie/file/File",
+            "moxie/core/utils/Encode"
+          ], function(Basic, Dom, x, FileReaderSync, XMLHttpRequest2, Runtime, RuntimeClient, Transporter, Env, EventTarget, Blob, File2, Encode) {
+            var dispatches = [
+              "progress",
+              /**
+              		Dispatched when loading is complete.
+              
+              		@event load
+              		@param {Object} event
+              		*/
+              "load",
+              "error",
+              /**
+              		Dispatched when resize operation is complete.
+              
+              		@event resize
+              		@param {Object} event
+              		*/
+              "resize",
+              /**
+              		Dispatched when visual representation of the image is successfully embedded
+              		into the corresponsing container.
+              
+              		@event embedded
+              		@param {Object} event
+              		*/
+              "embedded"
+            ];
+            function Image2() {
+              RuntimeClient.call(this);
+              Basic.extend(this, {
+                /**
+                			Unique id of the component
+                
+                			@property uid
+                			@type {String}
+                			*/
+                uid: Basic.guid("uid_"),
+                /**
+                			Unique id of the connected runtime, if any.
+                
+                			@property ruid
+                			@type {String}
+                			*/
+                ruid: null,
+                /**
+                			Name of the file, that was used to create an image, if available. If not equals to empty string.
+                
+                			@property name
+                			@type {String}
+                			@default ""
+                			*/
+                name: "",
+                /**
+                			Size of the image in bytes. Actual value is set only after image is preloaded.
+                
+                			@property size
+                			@type {Number}
+                			@default 0
+                			*/
+                size: 0,
+                /**
+                			Width of the image. Actual value is set only after image is preloaded.
+                
+                			@property width
+                			@type {Number}
+                			@default 0
+                			*/
+                width: 0,
+                /**
+                			Height of the image. Actual value is set only after image is preloaded.
+                
+                			@property height
+                			@type {Number}
+                			@default 0
+                			*/
+                height: 0,
+                /**
+                			Mime type of the image. Currently only image/jpeg and image/png are supported. Actual value is set only after image is preloaded.
+                
+                			@property type
+                			@type {String}
+                			@default ""
+                			*/
+                type: "",
+                /**
+                			Holds meta info (Exif, GPS). Is populated only for image/jpeg. Actual value is set only after image is preloaded.
+                
+                			@property meta
+                			@type {Object}
+                			@default {}
+                			*/
+                meta: {},
+                /**
+                			Alias for load method, that takes another moxie.image.Image object as a source (see load).
+                
+                			@method clone
+                			@param {Image} src Source for the image
+                			@param {Boolean} [exact=false] Whether to activate in-depth clone mode
+                			*/
+                clone: function() {
+                  this.load.apply(this, arguments);
+                },
+                /**
+                			Loads image from various sources. Currently the source for new image can be: moxie.image.Image,
+                			moxie.file.Blob/moxie.file.File, native Blob/File, dataUrl or URL. Depending on the type of the
+                			source, arguments - differ. When source is URL, Image will be downloaded from remote destination
+                			and loaded in memory.
+                
+                			@example
+                				var img = new moxie.image.Image();
+                				img.onload = function() {
+                					var blob = img.getAsBlob();
+                
+                					var formData = new moxie.xhr.FormData();
+                					formData.append('file', blob);
+                
+                					var xhr = new moxie.xhr.XMLHttpRequest();
+                					xhr.onload = function() {
+                						// upload complete
+                					};
+                					xhr.open('post', 'upload.php');
+                					xhr.send(formData);
+                				};
+                				img.load("http://www.moxiecode.com/images/mox-logo.jpg"); // notice file extension (.jpg)
+                
+                
+                			@method load
+                			@param {Image|Blob|File|String} src Source for the image
+                			@param {Boolean|Object} [mixed]
+                			*/
+                load: function() {
+                  _load.apply(this, arguments);
+                },
+                /**
+                			Resizes the image to fit the specified width/height. If crop is specified, image will also be
+                			cropped to the exact dimensions.
+                
+                			@method resize
+                			@since 3.0
+                			@param {Object} options
+                				@param {Number} options.width Resulting width
+                				@param {Number} [options.height=width] Resulting height (optional, if not supplied will default to width)
+                				@param {String} [options.type='image/jpeg'] MIME type of the resulting image
+                				@param {Number} [options.quality=90] In the case of JPEG, controls the quality of resulting image
+                				@param {Boolean} [options.crop='cc'] If not falsy, image will be cropped, by default from center
+                				@param {Boolean} [options.fit=true] Whether to upscale the image to fit the exact dimensions
+                				@param {Boolean} [options.preserveHeaders=true] Whether to preserve meta headers (on JPEGs after resize)
+                				@param {String} [options.resample='default'] Resampling algorithm to use during resize
+                				@param {Boolean} [options.multipass=true] Whether to scale the image in steps (results in better quality)
+                			*/
+                resize: function(options) {
+                  var self2 = this;
+                  var orientation;
+                  var scale;
+                  var srcRect = {
+                    x: 0,
+                    y: 0,
+                    width: self2.width,
+                    height: self2.height
+                  };
+                  var opts = Basic.extendIf({
+                    width: self2.width,
+                    height: self2.height,
+                    type: self2.type || "image/jpeg",
+                    quality: 90,
+                    crop: false,
+                    fit: true,
+                    preserveHeaders: true,
+                    resample: "default",
+                    multipass: true
+                  }, options);
+                  try {
+                    if (!self2.size) {
+                      throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                    }
+                    if (self2.width > Image2.MAX_RESIZE_WIDTH || self2.height > Image2.MAX_RESIZE_HEIGHT) {
+                      throw new x.ImageError(x.ImageError.MAX_RESOLUTION_ERR);
+                    }
+                    orientation = self2.meta && self2.meta.tiff && self2.meta.tiff.Orientation || 1;
+                    if (Basic.inArray(orientation, [5, 6, 7, 8]) !== -1) {
+                      var tmp = opts.width;
+                      opts.width = opts.height;
+                      opts.height = tmp;
+                    }
+                    if (opts.crop) {
+                      scale = Math.max(opts.width / self2.width, opts.height / self2.height);
+                      if (options.fit) {
+                        srcRect.width = Math.min(Math.ceil(opts.width / scale), self2.width);
+                        srcRect.height = Math.min(Math.ceil(opts.height / scale), self2.height);
+                        scale = opts.width / srcRect.width;
+                      } else {
+                        srcRect.width = Math.min(opts.width, self2.width);
+                        srcRect.height = Math.min(opts.height, self2.height);
+                        scale = 1;
+                      }
+                      if (typeof opts.crop === "boolean") {
+                        opts.crop = "cc";
+                      }
+                      switch (opts.crop.toLowerCase().replace(/_/, "-")) {
+                        case "rb":
+                        case "right-bottom":
+                          srcRect.x = self2.width - srcRect.width;
+                          srcRect.y = self2.height - srcRect.height;
+                          break;
+                        case "cb":
+                        case "center-bottom":
+                          srcRect.x = Math.floor((self2.width - srcRect.width) / 2);
+                          srcRect.y = self2.height - srcRect.height;
+                          break;
+                        case "lb":
+                        case "left-bottom":
+                          srcRect.x = 0;
+                          srcRect.y = self2.height - srcRect.height;
+                          break;
+                        case "lt":
+                        case "left-top":
+                          srcRect.x = 0;
+                          srcRect.y = 0;
+                          break;
+                        case "ct":
+                        case "center-top":
+                          srcRect.x = Math.floor((self2.width - srcRect.width) / 2);
+                          srcRect.y = 0;
+                          break;
+                        case "rt":
+                        case "right-top":
+                          srcRect.x = self2.width - srcRect.width;
+                          srcRect.y = 0;
+                          break;
+                        case "rc":
+                        case "right-center":
+                        case "right-middle":
+                          srcRect.x = self2.width - srcRect.width;
+                          srcRect.y = Math.floor((self2.height - srcRect.height) / 2);
+                          break;
+                        case "lc":
+                        case "left-center":
+                        case "left-middle":
+                          srcRect.x = 0;
+                          srcRect.y = Math.floor((self2.height - srcRect.height) / 2);
+                          break;
+                        case "cc":
+                        case "center-center":
+                        case "center-middle":
+                        default:
+                          srcRect.x = Math.floor((self2.width - srcRect.width) / 2);
+                          srcRect.y = Math.floor((self2.height - srcRect.height) / 2);
+                      }
+                      srcRect.x = Math.max(srcRect.x, 0);
+                      srcRect.y = Math.max(srcRect.y, 0);
+                    } else {
+                      scale = Math.min(opts.width / self2.width, opts.height / self2.height);
+                      if (scale > 1 && !opts.fit) {
+                        scale = 1;
+                      }
+                    }
+                    this.exec("Image", "resize", srcRect, scale, opts);
+                  } catch (ex) {
+                    self2.trigger("error", ex.code);
+                  }
+                },
+                /**
+                			Downsizes the image to fit the specified width/height. If crop is supplied, image will be cropped to exact dimensions.
+                
+                			@method downsize
+                			@deprecated use resize()
+                			*/
+                downsize: function(options) {
+                  var defaults2 = {
+                    width: this.width,
+                    height: this.height,
+                    type: this.type || "image/jpeg",
+                    quality: 90,
+                    crop: false,
+                    fit: false,
+                    preserveHeaders: true,
+                    resample: "default"
+                  }, opts;
+                  if (typeof options === "object") {
+                    opts = Basic.extend(defaults2, options);
+                  } else {
+                    opts = Basic.extend(defaults2, {
+                      width: arguments[0],
+                      height: arguments[1],
+                      crop: arguments[2],
+                      preserveHeaders: arguments[3]
+                    });
+                  }
+                  this.resize(opts);
+                },
+                /**
+                			Alias for downsize(width, height, true). (see downsize)
+                
+                			@method crop
+                			@param {Number} width Resulting width
+                			@param {Number} [height=width] Resulting height (optional, if not supplied will default to width)
+                			@param {Boolean} [preserveHeaders=true] Whether to preserve meta headers (on JPEGs after resize)
+                			*/
+                crop: function(width2, height2, preserveHeaders) {
+                  this.downsize(width2, height2, true, preserveHeaders);
+                },
+                getAsCanvas: function() {
+                  if (!Env.can("create_canvas")) {
+                    throw new x.RuntimeError(x.RuntimeError.NOT_SUPPORTED_ERR);
+                  }
+                  return this.exec("Image", "getAsCanvas");
+                },
+                /**
+                			Retrieves image in it's current state as moxie.file.Blob object. Cannot be run on empty or image in progress (throws
+                			DOMException.INVALID_STATE_ERR).
+                
+                			@method getAsBlob
+                			@param {String} [type="image/jpeg"] Mime type of resulting blob. Can either be image/jpeg or image/png
+                			@param {Number} [quality=90] Applicable only together with mime type image/jpeg
+                			@return {Blob} Image as Blob
+                			*/
+                getAsBlob: function(type, quality) {
+                  if (!this.size) {
+                    throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                  }
+                  return this.exec("Image", "getAsBlob", type || "image/jpeg", quality || 90);
+                },
+                /**
+                			Retrieves image in it's current state as dataURL string. Cannot be run on empty or image in progress (throws
+                			DOMException.INVALID_STATE_ERR).
+                
+                			@method getAsDataURL
+                			@param {String} [type="image/jpeg"] Mime type of resulting blob. Can either be image/jpeg or image/png
+                			@param {Number} [quality=90] Applicable only together with mime type image/jpeg
+                			@return {String} Image as dataURL string
+                			*/
+                getAsDataURL: function(type, quality) {
+                  if (!this.size) {
+                    throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                  }
+                  return this.exec("Image", "getAsDataURL", type || "image/jpeg", quality || 90);
+                },
+                /**
+                			Retrieves image in it's current state as binary string. Cannot be run on empty or image in progress (throws
+                			DOMException.INVALID_STATE_ERR).
+                
+                			@method getAsBinaryString
+                			@param {String} [type="image/jpeg"] Mime type of resulting blob. Can either be image/jpeg or image/png
+                			@param {Number} [quality=90] Applicable only together with mime type image/jpeg
+                			@return {String} Image as binary string
+                			*/
+                getAsBinaryString: function(type, quality) {
+                  var dataUrl = this.getAsDataURL(type, quality);
+                  return Encode.atob(dataUrl.substring(dataUrl.indexOf("base64,") + 7));
+                },
+                /**
+                			Embeds a visual representation of the image into the specified node. Depending on the runtime,
+                			it might be a canvas, an img node or a thrid party shim object (Flash or SilverLight - very rare,
+                			can be used in legacy browsers that do not have canvas or proper dataURI support).
+                
+                			@method embed
+                			@param {DOMElement} el DOM element to insert the image object into
+                			@param {Object} [options]
+                				@param {Number} [options.width] The width of an embed (defaults to the image width)
+                				@param {Number} [options.height] The height of an embed (defaults to the image height)
+                				@param {String} [options.type="image/jpeg"] Mime type
+                				@param {Number} [options.quality=90] Quality of an embed, if mime type is image/jpeg
+                				@param {Boolean} [options.crop=false] Whether to crop an embed to the specified dimensions
+                				@param {Boolean} [options.fit=true] By default thumbs will be up- or downscaled as necessary to fit the dimensions
+                			*/
+                embed: function(el, options) {
+                  var self2 = this, runtime;
+                  var opts = Basic.extend({
+                    width: this.width,
+                    height: this.height,
+                    type: this.type || "image/jpeg",
+                    quality: 90,
+                    fit: true,
+                    resample: "nearest"
+                  }, options);
+                  function render(type, quality) {
+                    var img = this;
+                    if (Env.can("create_canvas")) {
+                      var canvas = img.getAsCanvas();
+                      if (canvas) {
+                        el.appendChild(canvas);
+                        canvas = null;
+                        img.destroy();
+                        self2.trigger("embedded");
+                        return;
+                      }
+                    }
+                    var dataUrl = img.getAsDataURL(type, quality);
+                    if (!dataUrl) {
+                      throw new x.ImageError(x.ImageError.WRONG_FORMAT);
+                    }
+                    if (Env.can("use_data_uri_of", dataUrl.length)) {
+                      el.innerHTML = '<img src="' + dataUrl + '" width="' + img.width + '" height="' + img.height + '" alt="" />';
+                      img.destroy();
+                      self2.trigger("embedded");
+                    } else {
+                      var tr = new Transporter();
+                      tr.bind("TransportingComplete", function() {
+                        runtime = self2.connectRuntime(this.result.ruid);
+                        self2.bind("Embedded", function() {
+                          Basic.extend(runtime.getShimContainer().style, {
+                            //position: 'relative',
+                            top: "0px",
+                            left: "0px",
+                            width: img.width + "px",
+                            height: img.height + "px"
+                          });
+                          runtime = null;
+                        }, 999);
+                        runtime.exec.call(self2, "ImageView", "display", this.result.uid, width, height);
+                        img.destroy();
+                      });
+                      tr.transport(Encode.atob(dataUrl.substring(dataUrl.indexOf("base64,") + 7)), type, {
+                        required_caps: {
+                          display_media: true
+                        },
+                        runtime_order: "flash,silverlight",
+                        container: el
+                      });
+                    }
+                  }
+                  try {
+                    if (!(el = Dom.get(el))) {
+                      throw new x.DOMException(x.DOMException.INVALID_NODE_TYPE_ERR);
+                    }
+                    if (!this.size) {
+                      throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                    }
+                    if (this.width > Image2.MAX_RESIZE_WIDTH || this.height > Image2.MAX_RESIZE_HEIGHT) {
+                    }
+                    var imgCopy = new Image2();
+                    imgCopy.bind("Resize", function() {
+                      render.call(this, opts.type, opts.quality);
+                    });
+                    imgCopy.bind("Load", function() {
+                      this.downsize(opts);
+                    });
+                    if (this.meta.thumb && this.meta.thumb.width >= opts.width && this.meta.thumb.height >= opts.height) {
+                      imgCopy.load(this.meta.thumb.data);
+                    } else {
+                      imgCopy.clone(this, false);
+                    }
+                    return imgCopy;
+                  } catch (ex) {
+                    this.trigger("error", ex.code);
+                  }
+                },
+                /**
+                			Properly destroys the image and frees resources in use. If any. Recommended way to dispose
+                			moxie.image.Image object.
+                
+                			@method destroy
+                			*/
+                destroy: function() {
+                  if (this.ruid) {
+                    this.getRuntime().exec.call(this, "Image", "destroy");
+                    this.disconnectRuntime();
+                  }
+                  if (this.meta && this.meta.thumb) {
+                    this.meta.thumb.data.destroy();
+                  }
+                  this.unbindAll();
+                }
+              });
+              this.handleEventProps(dispatches);
+              this.bind("Load Resize", function() {
+                return _updateInfo.call(this);
+              }, 999);
+              function _updateInfo(info) {
+                try {
+                  if (!info) {
+                    info = this.exec("Image", "getInfo");
+                  }
+                  this.size = info.size;
+                  this.width = info.width;
+                  this.height = info.height;
+                  this.type = info.type;
+                  this.meta = info.meta;
+                  if (this.name === "") {
+                    this.name = info.name;
+                  }
+                  return true;
+                } catch (ex) {
+                  this.trigger("error", ex.code);
+                  return false;
+                }
+              }
+              function _load(src) {
+                var srcType = Basic.typeOf(src);
+                try {
+                  if (src instanceof Image2) {
+                    if (!src.size) {
+                      throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
+                    }
+                    _loadFromImage.apply(this, arguments);
+                  } else if (src instanceof Blob) {
+                    if (!~Basic.inArray(src.type, ["image/jpeg", "image/png"])) {
+                      throw new x.ImageError(x.ImageError.WRONG_FORMAT);
+                    }
+                    _loadFromBlob.apply(this, arguments);
+                  } else if (Basic.inArray(srcType, ["blob", "file"]) !== -1) {
+                    _load.call(this, new File2(null, src), arguments[1]);
+                  } else if (srcType === "string") {
+                    if (src.substr(0, 5) === "data:") {
+                      _load.call(this, new Blob(null, { data: src }), arguments[1]);
+                    } else {
+                      _loadFromUrl.apply(this, arguments);
+                    }
+                  } else if (srcType === "node" && src.nodeName.toLowerCase() === "img") {
+                    _load.call(this, src.src, arguments[1]);
+                  } else {
+                    throw new x.DOMException(x.DOMException.TYPE_MISMATCH_ERR);
+                  }
+                } catch (ex) {
+                  this.trigger("error", ex.code);
+                }
+              }
+              function _loadFromImage(img, exact) {
+                var runtime = this.connectRuntime(img.ruid);
+                this.ruid = runtime.uid;
+                runtime.exec.call(this, "Image", "loadFromImage", img, Basic.typeOf(exact) === "undefined" ? true : exact);
+              }
+              function _loadFromBlob(blob, options) {
+                var self2 = this;
+                self2.name = blob.name || "";
+                function exec(runtime) {
+                  self2.ruid = runtime.uid;
+                  runtime.exec.call(self2, "Image", "loadFromBlob", blob);
+                }
+                if (blob.isDetached()) {
+                  this.bind("RuntimeInit", function(e, runtime) {
+                    exec(runtime);
+                  });
+                  if (options && typeof options.required_caps === "string") {
+                    options.required_caps = Runtime.parseCaps(options.required_caps);
+                  }
+                  this.connectRuntime(Basic.extend({
+                    required_caps: {
+                      access_image_binary: true,
+                      resize_image: true
+                    }
+                  }, options));
+                } else {
+                  exec(this.connectRuntime(blob.ruid));
+                }
+              }
+              function _loadFromUrl(url, options) {
+                var self2 = this, xhr;
+                xhr = new XMLHttpRequest2();
+                xhr.open("get", url);
+                xhr.responseType = "blob";
+                xhr.onprogress = function(e) {
+                  self2.trigger(e);
+                };
+                xhr.onload = function() {
+                  _loadFromBlob.call(self2, xhr.response, true);
+                };
+                xhr.onerror = function(e) {
+                  self2.trigger(e);
+                };
+                xhr.onloadend = function() {
+                  xhr.destroy();
+                };
+                xhr.bind("RuntimeError", function(e, err) {
+                  self2.trigger("RuntimeError", err);
+                });
+                xhr.send(null, options);
+              }
+            }
+            Image2.MAX_RESIZE_WIDTH = 8192;
+            Image2.MAX_RESIZE_HEIGHT = 8192;
+            Image2.prototype = EventTarget.instance;
+            return Image2;
+          });
+          define2("moxie/runtime/html5/Runtime", [
+            "moxie/core/utils/Basic",
+            "moxie/core/Exceptions",
+            "moxie/runtime/Runtime",
+            "moxie/core/utils/Env"
+          ], function(Basic, x, Runtime, Env) {
+            var type = "html5", extensions = {};
+            function Html5Runtime(options) {
+              var I = this, Test = Runtime.capTest, True = Runtime.capTrue;
+              var caps = Basic.extend(
+                {
+                  access_binary: Test(window.FileReader || window.File && window.File.getAsDataURL),
+                  access_image_binary: function() {
+                    return I.can("access_binary") && !!extensions.Image;
+                  },
+                  display_media: Test(
+                    (Env.can("create_canvas") || Env.can("use_data_uri_over32kb")) && defined("moxie/image/Image")
+                  ),
+                  do_cors: Test(window.XMLHttpRequest && "withCredentials" in new XMLHttpRequest()),
+                  drag_and_drop: Test(function() {
+                    var div = document.createElement("div");
+                    return ("draggable" in div || "ondragstart" in div && "ondrop" in div) && (Env.browser !== "IE" || Env.verComp(Env.version, 9, ">"));
+                  }()),
+                  filter_by_extension: Test(function() {
+                    return !(Env.browser === "Chrome" && Env.verComp(Env.version, 28, "<") || Env.browser === "IE" && Env.verComp(Env.version, 10, "<") || Env.browser === "Safari" && Env.verComp(Env.version, 7, "<") || Env.browser === "Firefox" && Env.verComp(Env.version, 37, "<"));
+                  }()),
+                  return_response_headers: True,
+                  return_response_type: function(responseType) {
+                    if (responseType === "json" && !!window.JSON) {
+                      return true;
+                    }
+                    return Env.can("return_response_type", responseType);
+                  },
+                  return_status_code: True,
+                  report_upload_progress: Test(window.XMLHttpRequest && new XMLHttpRequest().upload),
+                  resize_image: function() {
+                    return I.can("access_binary") && Env.can("create_canvas");
+                  },
+                  select_file: function() {
+                    return Env.can("use_fileinput") && window.File;
+                  },
+                  select_folder: function() {
+                    return I.can("select_file") && (Env.browser === "Chrome" && Env.verComp(Env.version, 21, ">=") || Env.browser === "Firefox" && Env.verComp(Env.version, 42, ">="));
+                  },
+                  select_multiple: function() {
+                    return I.can("select_file") && !(Env.browser === "Safari" && Env.os === "Windows") && !(Env.os === "iOS" && Env.verComp(Env.osVersion, "7.0.0", ">") && Env.verComp(Env.osVersion, "8.0.0", "<"));
+                  },
+                  send_binary_string: Test(window.XMLHttpRequest && (new XMLHttpRequest().sendAsBinary || window.Uint8Array && window.ArrayBuffer)),
+                  send_custom_headers: Test(window.XMLHttpRequest),
+                  send_multipart: function() {
+                    return !!(window.XMLHttpRequest && new XMLHttpRequest().upload && window.FormData) || I.can("send_binary_string");
+                  },
+                  slice_blob: Test(window.File && (File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice)),
+                  stream_upload: function() {
+                    return I.can("slice_blob") && I.can("send_multipart");
+                  },
+                  summon_file_dialog: function() {
+                    return I.can("select_file") && !(Env.browser === "Firefox" && Env.verComp(Env.version, 4, "<") || Env.browser === "Opera" && Env.verComp(Env.version, 12, "<") || Env.browser === "IE" && Env.verComp(Env.version, 10, "<"));
+                  },
+                  upload_filesize: True,
+                  use_http_method: True
+                },
+                arguments[2]
+              );
+              Runtime.call(this, options, arguments[1] || type, caps);
+              Basic.extend(this, {
+                init: function() {
+                  this.trigger("Init");
+                },
+                destroy: /* @__PURE__ */ function(destroy3) {
+                  return function() {
+                    destroy3.call(I);
+                    destroy3 = I = null;
+                  };
+                }(this.destroy)
+              });
+              Basic.extend(this.getShim(), extensions);
+            }
+            Runtime.addConstructor(type, Html5Runtime);
+            return extensions;
+          });
+          define2("moxie/runtime/html5/file/Blob", [
+            "moxie/runtime/html5/Runtime",
+            "moxie/file/Blob"
+          ], function(extensions, Blob) {
+            function HTML5Blob() {
+              function w3cBlobSlice(blob, start2, end) {
+                var blobSlice;
+                if (window.File.prototype.slice) {
+                  try {
+                    blob.slice();
+                    return blob.slice(start2, end);
+                  } catch (e) {
+                    return blob.slice(start2, end - start2);
+                  }
+                } else if (blobSlice = window.File.prototype.webkitSlice || window.File.prototype.mozSlice) {
+                  return blobSlice.call(blob, start2, end);
+                } else {
+                  return null;
+                }
+              }
+              this.slice = function() {
+                return new Blob(this.getRuntime().uid, w3cBlobSlice.apply(this, arguments));
+              };
+              this.destroy = function() {
+                this.getRuntime().getShim().removeInstance(this.uid);
+              };
+            }
+            return extensions.Blob = HTML5Blob;
+          });
+          define2("moxie/core/utils/Events", [
+            "moxie/core/utils/Basic"
+          ], function(Basic) {
+            var eventhash = {}, uid = "moxie_" + Basic.guid();
+            function preventDefault2() {
+              this.returnValue = false;
+            }
+            function stopPropagation() {
+              this.cancelBubble = true;
+            }
+            var addEvent = function(obj, name2, callback, key) {
+              var func, events;
+              name2 = name2.toLowerCase();
+              if (obj.addEventListener) {
+                func = callback;
+                obj.addEventListener(name2, func, false);
+              } else if (obj.attachEvent) {
+                func = function() {
+                  var evt = window.event;
+                  if (!evt.target) {
+                    evt.target = evt.srcElement;
+                  }
+                  evt.preventDefault = preventDefault2;
+                  evt.stopPropagation = stopPropagation;
+                  callback(evt);
+                };
+                obj.attachEvent("on" + name2, func);
+              }
+              if (!obj[uid]) {
+                obj[uid] = Basic.guid();
+              }
+              if (!eventhash.hasOwnProperty(obj[uid])) {
+                eventhash[obj[uid]] = {};
+              }
+              events = eventhash[obj[uid]];
+              if (!events.hasOwnProperty(name2)) {
+                events[name2] = [];
+              }
+              events[name2].push({
+                func,
+                orig: callback,
+                // store original callback for IE
+                key
+              });
+            };
+            var removeEvent = function(obj, name2, callback) {
+              var type, undef;
+              name2 = name2.toLowerCase();
+              if (obj[uid] && eventhash[obj[uid]] && eventhash[obj[uid]][name2]) {
+                type = eventhash[obj[uid]][name2];
+              } else {
+                return;
+              }
+              for (var i = type.length - 1; i >= 0; i--) {
+                if (type[i].orig === callback || type[i].key === callback) {
+                  if (obj.removeEventListener) {
+                    obj.removeEventListener(name2, type[i].func, false);
+                  } else if (obj.detachEvent) {
+                    obj.detachEvent("on" + name2, type[i].func);
+                  }
+                  type[i].orig = null;
+                  type[i].func = null;
+                  type.splice(i, 1);
+                  if (callback !== undef) {
+                    break;
+                  }
+                }
+              }
+              if (!type.length) {
+                delete eventhash[obj[uid]][name2];
+              }
+              if (Basic.isEmptyObj(eventhash[obj[uid]])) {
+                delete eventhash[obj[uid]];
+                try {
+                  delete obj[uid];
+                } catch (e) {
+                  obj[uid] = undef;
+                }
+              }
+            };
+            var removeAllEvents = function(obj, key) {
+              if (!obj || !obj[uid]) {
+                return;
+              }
+              Basic.each(eventhash[obj[uid]], function(events, name2) {
+                removeEvent(obj, name2, key);
+              });
+            };
+            return {
+              addEvent,
+              removeEvent,
+              removeAllEvents
+            };
+          });
+          define2("moxie/runtime/html5/file/FileInput", [
+            "moxie/runtime/html5/Runtime",
+            "moxie/file/File",
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Dom",
+            "moxie/core/utils/Events",
+            "moxie/core/utils/Mime",
+            "moxie/core/utils/Env"
+          ], function(extensions, File2, Basic, Dom, Events, Mime, Env) {
+            function FileInput() {
+              var _options, _browseBtnZIndex;
+              Basic.extend(this, {
+                init: function(options) {
+                  var comp = this, I = comp.getRuntime(), input, shimContainer, mimes, browseButton, zIndex, top2;
+                  _options = options;
+                  mimes = Mime.extList2mimes(_options.accept, I.can("filter_by_extension"));
+                  shimContainer = I.getShimContainer();
+                  shimContainer.innerHTML = '<input id="' + I.uid + '" type="file" style="font-size:999px;opacity:0;"' + (_options.multiple && I.can("select_multiple") ? "multiple" : "") + (_options.directory && I.can("select_folder") ? "webkitdirectory directory" : "") + // Chrome 11+
+                  (mimes ? ' accept="' + mimes.join(",") + '"' : "") + " />";
+                  input = Dom.get(I.uid);
+                  Basic.extend(input.style, {
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%"
+                  });
+                  browseButton = Dom.get(_options.browse_button);
+                  _browseBtnZIndex = Dom.getStyle(browseButton, "z-index") || "auto";
+                  if (I.can("summon_file_dialog")) {
+                    if (Dom.getStyle(browseButton, "position") === "static") {
+                      browseButton.style.position = "relative";
+                    }
+                    Events.addEvent(browseButton, "click", function(e) {
+                      var input2 = Dom.get(I.uid);
+                      if (input2 && !input2.disabled) {
+                        input2.click();
+                      }
+                      e.preventDefault();
+                    }, comp.uid);
+                    comp.bind("Refresh", function() {
+                      zIndex = parseInt(_browseBtnZIndex, 10) || 1;
+                      Dom.get(_options.browse_button).style.zIndex = zIndex;
+                      this.getRuntime().getShimContainer().style.zIndex = zIndex - 1;
+                    });
+                  }
+                  top2 = I.can("summon_file_dialog") ? browseButton : shimContainer;
+                  Events.addEvent(top2, "mouseover", function() {
+                    comp.trigger("mouseenter");
+                  }, comp.uid);
+                  Events.addEvent(top2, "mouseout", function() {
+                    comp.trigger("mouseleave");
+                  }, comp.uid);
+                  Events.addEvent(top2, "mousedown", function() {
+                    comp.trigger("mousedown");
+                  }, comp.uid);
+                  Events.addEvent(Dom.get(_options.container), "mouseup", function() {
+                    comp.trigger("mouseup");
+                  }, comp.uid);
+                  (I.can("summon_file_dialog") ? input : browseButton).setAttribute("tabindex", -1);
+                  input.onchange = function onChange() {
+                    comp.files = [];
+                    Basic.each(this.files, function(file) {
+                      var relativePath = "";
+                      if (_options.directory) {
+                        if (file.name == ".") {
+                          return true;
+                        }
+                      }
+                      if (file.webkitRelativePath) {
+                        relativePath = "/" + file.webkitRelativePath.replace(/^\//, "");
+                      }
+                      file = new File2(I.uid, file);
+                      file.relativePath = relativePath;
+                      comp.files.push(file);
+                    });
+                    if (Env.browser !== "IE" && Env.browser !== "IEMobile") {
+                      this.value = "";
+                    } else {
+                      var clone2 = this.cloneNode(true);
+                      this.parentNode.replaceChild(clone2, this);
+                      clone2.onchange = onChange;
+                    }
+                    if (comp.files.length) {
+                      comp.trigger("change");
+                    }
+                  };
+                  comp.trigger({
+                    type: "ready",
+                    async: true
+                  });
+                  shimContainer = null;
+                },
+                setOption: function(name2, value) {
+                  var I = this.getRuntime();
+                  var input = Dom.get(I.uid);
+                  switch (name2) {
+                    case "accept":
+                      if (value) {
+                        var mimes = value.mimes || Mime.extList2mimes(value, I.can("filter_by_extension"));
+                        input.setAttribute("accept", mimes.join(","));
+                      } else {
+                        input.removeAttribute("accept");
+                      }
+                      break;
+                    case "directory":
+                      if (value && I.can("select_folder")) {
+                        input.setAttribute("directory", "");
+                        input.setAttribute("webkitdirectory", "");
+                      } else {
+                        input.removeAttribute("directory");
+                        input.removeAttribute("webkitdirectory");
+                      }
+                      break;
+                    case "multiple":
+                      if (value && I.can("select_multiple")) {
+                        input.setAttribute("multiple", "");
+                      } else {
+                        input.removeAttribute("multiple");
+                      }
+                  }
+                },
+                disable: function(state) {
+                  var I = this.getRuntime(), input;
+                  if (input = Dom.get(I.uid)) {
+                    input.disabled = !!state;
+                  }
+                },
+                destroy: function() {
+                  var I = this.getRuntime(), shim = I.getShim(), shimContainer = I.getShimContainer(), container = _options && Dom.get(_options.container), browseButton = _options && Dom.get(_options.browse_button);
+                  if (container) {
+                    Events.removeAllEvents(container, this.uid);
+                  }
+                  if (browseButton) {
+                    Events.removeAllEvents(browseButton, this.uid);
+                    browseButton.style.zIndex = _browseBtnZIndex;
+                  }
+                  if (shimContainer) {
+                    Events.removeAllEvents(shimContainer, this.uid);
+                    shimContainer.innerHTML = "";
+                  }
+                  shim.removeInstance(this.uid);
+                  _options = shimContainer = container = browseButton = shim = null;
+                }
+              });
+            }
+            return extensions.FileInput = FileInput;
+          });
+          define2("moxie/runtime/html5/file/FileDrop", [
+            "moxie/runtime/html5/Runtime",
+            "moxie/file/File",
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Dom",
+            "moxie/core/utils/Events",
+            "moxie/core/utils/Mime"
+          ], function(extensions, File2, Basic, Dom, Events, Mime) {
+            function FileDrop() {
+              var _files = [], _allowedExts = [], _options, _ruid;
+              Basic.extend(this, {
+                init: function(options) {
+                  var comp = this, dropZone;
+                  _options = options;
+                  _ruid = comp.ruid;
+                  _allowedExts = _extractExts(_options.accept);
+                  dropZone = _options.container;
+                  Events.addEvent(dropZone, "dragover", function(e) {
+                    if (!_hasFiles(e)) {
+                      return;
+                    }
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "copy";
+                  }, comp.uid);
+                  Events.addEvent(dropZone, "drop", function(e) {
+                    if (!_hasFiles(e)) {
+                      return;
+                    }
+                    e.preventDefault();
+                    _files = [];
+                    if (e.dataTransfer.items && e.dataTransfer.items[0].webkitGetAsEntry) {
+                      _readItems(e.dataTransfer.items, function() {
+                        comp.files = _files;
+                        comp.trigger("drop");
+                      });
+                    } else {
+                      Basic.each(e.dataTransfer.files, function(file) {
+                        _addFile(file);
+                      });
+                      comp.files = _files;
+                      comp.trigger("drop");
+                    }
+                  }, comp.uid);
+                  Events.addEvent(dropZone, "dragenter", function(e) {
+                    comp.trigger("dragenter");
+                  }, comp.uid);
+                  Events.addEvent(dropZone, "dragleave", function(e) {
+                    comp.trigger("dragleave");
+                  }, comp.uid);
+                },
+                destroy: function() {
+                  Events.removeAllEvents(_options && Dom.get(_options.container), this.uid);
+                  _ruid = _files = _allowedExts = _options = null;
+                  this.getRuntime().getShim().removeInstance(this.uid);
+                }
+              });
+              function _hasFiles(e) {
+                if (!e.dataTransfer || !e.dataTransfer.types) {
+                  return false;
+                }
+                var types2 = Basic.toArray(e.dataTransfer.types || []);
+                return Basic.inArray("Files", types2) !== -1 || Basic.inArray("public.file-url", types2) !== -1 || // Safari < 5
+                Basic.inArray("application/x-moz-file", types2) !== -1;
+              }
+              function _addFile(file, relativePath) {
+                if (_isAcceptable(file)) {
+                  var fileObj = new File2(_ruid, file);
+                  fileObj.relativePath = relativePath || "";
+                  _files.push(fileObj);
+                }
+              }
+              function _extractExts(accept) {
+                var exts = [];
+                for (var i = 0; i < accept.length; i++) {
+                  [].push.apply(exts, accept[i].extensions.split(/\s*,\s*/));
+                }
+                return Basic.inArray("*", exts) === -1 ? exts : [];
+              }
+              function _isAcceptable(file) {
+                if (!_allowedExts.length) {
+                  return true;
+                }
+                var ext = Mime.getFileExtension(file.name);
+                return !ext || Basic.inArray(ext, _allowedExts) !== -1;
+              }
+              function _readItems(items, cb) {
+                var entries = [];
+                Basic.each(items, function(item) {
+                  var entry = item.webkitGetAsEntry();
+                  if (entry) {
+                    if (entry.isFile) {
+                      _addFile(item.getAsFile(), entry.fullPath);
+                    } else {
+                      entries.push(entry);
+                    }
+                  }
+                });
+                if (entries.length) {
+                  _readEntries(entries, cb);
+                } else {
+                  cb();
+                }
+              }
+              function _readEntries(entries, cb) {
+                var queue = [];
+                Basic.each(entries, function(entry) {
+                  queue.push(function(cbcb) {
+                    _readEntry(entry, cbcb);
+                  });
+                });
+                Basic.inSeries(queue, function() {
+                  cb();
+                });
+              }
+              function _readEntry(entry, cb) {
+                if (entry.isFile) {
+                  entry.file(function(file) {
+                    _addFile(file, entry.fullPath);
+                    cb();
+                  }, function() {
+                    cb();
+                  });
+                } else if (entry.isDirectory) {
+                  _readDirEntry(entry, cb);
+                } else {
+                  cb();
+                }
+              }
+              function _readDirEntry(dirEntry, cb) {
+                var entries = [], dirReader = dirEntry.createReader();
+                function getEntries(cbcb) {
+                  dirReader.readEntries(function(moreEntries) {
+                    if (moreEntries.length) {
+                      [].push.apply(entries, moreEntries);
+                      getEntries(cbcb);
+                    } else {
+                      cbcb();
+                    }
+                  }, cbcb);
+                }
+                getEntries(function() {
+                  _readEntries(entries, cb);
+                });
+              }
+            }
+            return extensions.FileDrop = FileDrop;
+          });
+          define2("moxie/runtime/html5/file/FileReader", [
+            "moxie/runtime/html5/Runtime",
+            "moxie/core/utils/Encode",
+            "moxie/core/utils/Basic"
+          ], function(extensions, Encode, Basic) {
+            function FileReader2() {
+              var _fr, _convertToBinary = false;
+              Basic.extend(this, {
+                read: function(op, blob) {
+                  var comp = this;
+                  comp.result = "";
+                  _fr = new window.FileReader();
+                  _fr.addEventListener("progress", function(e) {
+                    comp.trigger(e);
+                  });
+                  _fr.addEventListener("load", function(e) {
+                    comp.result = _convertToBinary ? _toBinary(_fr.result) : _fr.result;
+                    comp.trigger(e);
+                  });
+                  _fr.addEventListener("error", function(e) {
+                    comp.trigger(e, _fr.error);
+                  });
+                  _fr.addEventListener("loadend", function(e) {
+                    _fr = null;
+                    comp.trigger(e);
+                  });
+                  if (Basic.typeOf(_fr[op]) === "function") {
+                    _convertToBinary = false;
+                    _fr[op](blob.getSource());
+                  } else if (op === "readAsBinaryString") {
+                    _convertToBinary = true;
+                    _fr.readAsDataURL(blob.getSource());
+                  }
+                },
+                abort: function() {
+                  if (_fr) {
+                    _fr.abort();
+                  }
+                },
+                destroy: function() {
+                  _fr = null;
+                  this.getRuntime().getShim().removeInstance(this.uid);
+                }
+              });
+              function _toBinary(str) {
+                return Encode.atob(str.substring(str.indexOf("base64,") + 7));
+              }
+            }
+            return extensions.FileReader = FileReader2;
+          });
+          define2("moxie/runtime/html5/xhr/XMLHttpRequest", [
+            "moxie/runtime/html5/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Mime",
+            "moxie/core/utils/Url",
+            "moxie/file/File",
+            "moxie/file/Blob",
+            "moxie/xhr/FormData",
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Env"
+          ], function(extensions, Basic, Mime, Url, File2, Blob, FormData2, x, Env) {
+            function XMLHttpRequest2() {
+              var self2 = this, _xhr, _filename;
+              Basic.extend(this, {
+                send: function(meta, data) {
+                  var target = this, isGecko2_5_6 = Env.browser === "Mozilla" && Env.verComp(Env.version, 4, ">=") && Env.verComp(Env.version, 7, "<"), isAndroidBrowser = Env.browser === "Android Browser", mustSendAsBinary = false;
+                  _filename = meta.url.replace(/^.+?\/([\w\-\.]+)$/, "$1").toLowerCase();
+                  _xhr = _getNativeXHR();
+                  _xhr.open(meta.method, meta.url, meta.async, meta.user, meta.password);
+                  if (data instanceof Blob) {
+                    if (data.isDetached()) {
+                      mustSendAsBinary = true;
+                    }
+                    data = data.getSource();
+                  } else if (data instanceof FormData2) {
+                    if (data.hasBlob()) {
+                      if (data.getBlob().isDetached()) {
+                        data = _prepareMultipart.call(target, data);
+                        mustSendAsBinary = true;
+                      } else if ((isGecko2_5_6 || isAndroidBrowser) && Basic.typeOf(data.getBlob().getSource()) === "blob" && window.FileReader) {
+                        _preloadAndSend.call(target, meta, data);
+                        return;
+                      }
+                    }
+                    if (data instanceof FormData2) {
+                      var fd = new window.FormData();
+                      data.each(function(value, name2) {
+                        if (value instanceof Blob) {
+                          fd.append(name2, value.getSource());
+                        } else {
+                          fd.append(name2, value);
+                        }
+                      });
+                      data = fd;
+                    }
+                  }
+                  if (_xhr.upload) {
+                    if (meta.withCredentials) {
+                      _xhr.withCredentials = true;
+                    }
+                    _xhr.addEventListener("load", function(e) {
+                      target.trigger(e);
+                    });
+                    _xhr.addEventListener("error", function(e) {
+                      target.trigger(e);
+                    });
+                    _xhr.addEventListener("progress", function(e) {
+                      target.trigger(e);
+                    });
+                    _xhr.upload.addEventListener("progress", function(e) {
+                      target.trigger({
+                        type: "UploadProgress",
+                        loaded: e.loaded,
+                        total: e.total
+                      });
+                    });
+                  } else {
+                    _xhr.onreadystatechange = function onReadyStateChange() {
+                      switch (_xhr.readyState) {
+                        case 1:
+                          break;
+                        // looks like HEADERS_RECEIVED (state 2) is not reported in Opera (or it's old versions) - neu
+                        case 2:
+                          break;
+                        case 3:
+                          var total, loaded;
+                          try {
+                            if (Url.hasSameOrigin(meta.url)) {
+                              total = _xhr.getResponseHeader("Content-Length") || 0;
+                            }
+                            if (_xhr.responseText) {
+                              loaded = _xhr.responseText.length;
+                            }
+                          } catch (ex) {
+                            total = loaded = 0;
+                          }
+                          target.trigger({
+                            type: "progress",
+                            lengthComputable: !!total,
+                            total: parseInt(total, 10),
+                            loaded
+                          });
+                          break;
+                        case 4:
+                          _xhr.onreadystatechange = function() {
+                          };
+                          try {
+                            if (_xhr.status >= 200 && _xhr.status < 400) {
+                              target.trigger("load");
+                              break;
+                            }
+                          } catch (ex) {
+                          }
+                          target.trigger("error");
+                          break;
+                      }
+                    };
+                  }
+                  if (!Basic.isEmptyObj(meta.headers)) {
+                    Basic.each(meta.headers, function(value, header) {
+                      _xhr.setRequestHeader(header, value);
+                    });
+                  }
+                  if ("" !== meta.responseType && "responseType" in _xhr) {
+                    if ("json" === meta.responseType && !Env.can("return_response_type", "json")) {
+                      _xhr.responseType = "text";
+                    } else {
+                      _xhr.responseType = meta.responseType;
+                    }
+                  }
+                  if (!mustSendAsBinary) {
+                    _xhr.send(data);
+                  } else {
+                    if (_xhr.sendAsBinary) {
+                      _xhr.sendAsBinary(data);
+                    } else {
+                      (function() {
+                        var ui8a = new Uint8Array(data.length);
+                        for (var i = 0; i < data.length; i++) {
+                          ui8a[i] = data.charCodeAt(i) & 255;
+                        }
+                        _xhr.send(ui8a.buffer);
+                      })();
+                    }
+                  }
+                  target.trigger("loadstart");
+                },
+                getStatus: function() {
+                  try {
+                    if (_xhr) {
+                      return _xhr.status;
+                    }
+                  } catch (ex) {
+                  }
+                  return 0;
+                },
+                getResponse: function(responseType) {
+                  var I = this.getRuntime();
+                  try {
+                    switch (responseType) {
+                      case "blob":
+                        var file = new File2(I.uid, _xhr.response);
+                        var disposition = _xhr.getResponseHeader("Content-Disposition");
+                        if (disposition) {
+                          var match = disposition.match(/filename=([\'\"'])([^\1]+)\1/);
+                          if (match) {
+                            _filename = match[2];
+                          }
+                        }
+                        file.name = _filename;
+                        if (!file.type) {
+                          file.type = Mime.getFileMime(_filename);
+                        }
+                        return file;
+                      case "json":
+                        if (!Env.can("return_response_type", "json")) {
+                          return _xhr.status === 200 && !!window.JSON ? JSON.parse(_xhr.responseText) : null;
+                        }
+                        return _xhr.response;
+                      case "document":
+                        return _getDocument(_xhr);
+                      default:
+                        return _xhr.responseText !== "" ? _xhr.responseText : null;
+                    }
+                  } catch (ex) {
+                    return null;
+                  }
+                },
+                getAllResponseHeaders: function() {
+                  try {
+                    return _xhr.getAllResponseHeaders();
+                  } catch (ex) {
+                  }
+                  return "";
+                },
+                abort: function() {
+                  if (_xhr) {
+                    _xhr.abort();
+                  }
+                },
+                destroy: function() {
+                  self2 = _filename = null;
+                  this.getRuntime().getShim().removeInstance(this.uid);
+                }
+              });
+              function _preloadAndSend(meta, data) {
+                var target = this, blob, fr;
+                blob = data.getBlob().getSource();
+                fr = new window.FileReader();
+                fr.onload = function() {
+                  data.append(data.getBlobName(), new Blob(null, {
+                    type: blob.type,
+                    data: fr.result
+                  }));
+                  self2.send.call(target, meta, data);
+                };
+                fr.readAsBinaryString(blob);
+              }
+              function _getNativeXHR() {
+                if (window.XMLHttpRequest && !(Env.browser === "IE" && Env.verComp(Env.version, 8, "<"))) {
+                  return new window.XMLHttpRequest();
+                } else {
+                  return function() {
+                    var progIDs = ["Msxml2.XMLHTTP.6.0", "Microsoft.XMLHTTP"];
+                    for (var i = 0; i < progIDs.length; i++) {
+                      try {
+                        return new ActiveXObject(progIDs[i]);
+                      } catch (ex) {
+                      }
+                    }
+                  }();
+                }
+              }
+              function _getDocument(xhr) {
+                var rXML = xhr.responseXML;
+                var rText = xhr.responseText;
+                if (Env.browser === "IE" && rText && rXML && !rXML.documentElement && /[^\/]+\/[^\+]+\+xml/.test(xhr.getResponseHeader("Content-Type"))) {
+                  rXML = new window.ActiveXObject("Microsoft.XMLDOM");
+                  rXML.async = false;
+                  rXML.validateOnParse = false;
+                  rXML.loadXML(rText);
+                }
+                if (rXML) {
+                  if (Env.browser === "IE" && rXML.parseError !== 0 || !rXML.documentElement || rXML.documentElement.tagName === "parsererror") {
+                    return null;
+                  }
+                }
+                return rXML;
+              }
+              function _prepareMultipart(fd) {
+                var boundary = "----moxieboundary" + (/* @__PURE__ */ new Date()).getTime(), dashdash = "--", crlf = "\r\n", multipart = "", I = this.getRuntime();
+                if (!I.can("send_binary_string")) {
+                  throw new x.RuntimeError(x.RuntimeError.NOT_SUPPORTED_ERR);
+                }
+                _xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+                fd.each(function(value, name2) {
+                  if (value instanceof Blob) {
+                    multipart += dashdash + boundary + crlf + 'Content-Disposition: form-data; name="' + name2 + '"; filename="' + unescape(encodeURIComponent(value.name || "blob")) + '"' + crlf + "Content-Type: " + (value.type || "application/octet-stream") + crlf + crlf + value.getSource() + crlf;
+                  } else {
+                    multipart += dashdash + boundary + crlf + 'Content-Disposition: form-data; name="' + name2 + '"' + crlf + crlf + unescape(encodeURIComponent(value)) + crlf;
+                  }
+                });
+                multipart += dashdash + boundary + dashdash + crlf;
+                return multipart;
+              }
+            }
+            return extensions.XMLHttpRequest = XMLHttpRequest2;
+          });
+          define2("moxie/runtime/html5/utils/BinaryReader", [
+            "moxie/core/utils/Basic"
+          ], function(Basic) {
+            function BinaryReader(data) {
+              if (data instanceof ArrayBuffer) {
+                ArrayBufferReader.apply(this, arguments);
+              } else {
+                UTF16StringReader.apply(this, arguments);
+              }
+            }
+            Basic.extend(BinaryReader.prototype, {
+              littleEndian: false,
+              read: function(idx, size) {
+                var sum, mv, i;
+                if (idx + size > this.length()) {
+                  throw new Error("You are trying to read outside the source boundaries.");
+                }
+                mv = this.littleEndian ? 0 : -8 * (size - 1);
+                for (i = 0, sum = 0; i < size; i++) {
+                  sum |= this.readByteAt(idx + i) << Math.abs(mv + i * 8);
+                }
+                return sum;
+              },
+              write: function(idx, num, size) {
+                var mv, i, str = "";
+                if (idx > this.length()) {
+                  throw new Error("You are trying to write outside the source boundaries.");
+                }
+                mv = this.littleEndian ? 0 : -8 * (size - 1);
+                for (i = 0; i < size; i++) {
+                  this.writeByteAt(idx + i, num >> Math.abs(mv + i * 8) & 255);
+                }
+              },
+              BYTE: function(idx) {
+                return this.read(idx, 1);
+              },
+              SHORT: function(idx) {
+                return this.read(idx, 2);
+              },
+              LONG: function(idx) {
+                return this.read(idx, 4);
+              },
+              SLONG: function(idx) {
+                var num = this.read(idx, 4);
+                return num > 2147483647 ? num - 4294967296 : num;
+              },
+              CHAR: function(idx) {
+                return String.fromCharCode(this.read(idx, 1));
+              },
+              STRING: function(idx, count) {
+                return this.asArray("CHAR", idx, count).join("");
+              },
+              asArray: function(type, idx, count) {
+                var values = [];
+                for (var i = 0; i < count; i++) {
+                  values[i] = this[type](idx + i);
+                }
+                return values;
+              }
+            });
+            function ArrayBufferReader(data) {
+              var _dv = new DataView(data);
+              Basic.extend(this, {
+                readByteAt: function(idx) {
+                  return _dv.getUint8(idx);
+                },
+                writeByteAt: function(idx, value) {
+                  _dv.setUint8(idx, value);
+                },
+                SEGMENT: function(idx, size, value) {
+                  switch (arguments.length) {
+                    case 2:
+                      return data.slice(idx, idx + size);
+                    case 1:
+                      return data.slice(idx);
+                    case 3:
+                      if (value === null) {
+                        value = new ArrayBuffer();
+                      }
+                      if (value instanceof ArrayBuffer) {
+                        var arr = new Uint8Array(this.length() - size + value.byteLength);
+                        if (idx > 0) {
+                          arr.set(new Uint8Array(data.slice(0, idx)), 0);
+                        }
+                        arr.set(new Uint8Array(value), idx);
+                        arr.set(new Uint8Array(data.slice(idx + size)), idx + value.byteLength);
+                        this.clear();
+                        data = arr.buffer;
+                        _dv = new DataView(data);
+                        break;
+                      }
+                    default:
+                      return data;
+                  }
+                },
+                length: function() {
+                  return data ? data.byteLength : 0;
+                },
+                clear: function() {
+                  _dv = data = null;
+                }
+              });
+            }
+            function UTF16StringReader(data) {
+              Basic.extend(this, {
+                readByteAt: function(idx) {
+                  return data.charCodeAt(idx);
+                },
+                writeByteAt: function(idx, value) {
+                  putstr(String.fromCharCode(value), idx, 1);
+                },
+                SEGMENT: function(idx, length, segment) {
+                  switch (arguments.length) {
+                    case 1:
+                      return data.substr(idx);
+                    case 2:
+                      return data.substr(idx, length);
+                    case 3:
+                      putstr(segment !== null ? segment : "", idx, length);
+                      break;
+                    default:
+                      return data;
+                  }
+                },
+                length: function() {
+                  return data ? data.length : 0;
+                },
+                clear: function() {
+                  data = null;
+                }
+              });
+              function putstr(segment, idx, length) {
+                length = arguments.length === 3 ? length : data.length - idx - 1;
+                data = data.substr(0, idx) + segment + data.substr(length + idx);
+              }
+            }
+            return BinaryReader;
+          });
+          define2("moxie/runtime/html5/image/JPEGHeaders", [
+            "moxie/runtime/html5/utils/BinaryReader",
+            "moxie/core/Exceptions"
+          ], function(BinaryReader, x) {
+            return function JPEGHeaders(data) {
+              var headers = [], _br, idx, marker, length = 0;
+              _br = new BinaryReader(data);
+              if (_br.SHORT(0) !== 65496) {
+                _br.clear();
+                throw new x.ImageError(x.ImageError.WRONG_FORMAT);
+              }
+              idx = 2;
+              while (idx <= _br.length()) {
+                marker = _br.SHORT(idx);
+                if (marker >= 65488 && marker <= 65495) {
+                  idx += 2;
+                  continue;
+                }
+                if (marker === 65498 || marker === 65497) {
+                  break;
+                }
+                length = _br.SHORT(idx + 2) + 2;
+                if (marker >= 65505 && marker <= 65519) {
+                  headers.push({
+                    hex: marker,
+                    name: "APP" + (marker & 15),
+                    start: idx,
+                    length,
+                    segment: _br.SEGMENT(idx, length)
+                  });
+                }
+                idx += length;
+              }
+              _br.clear();
+              return {
+                headers,
+                restore: function(data2) {
+                  var max, i, br;
+                  br = new BinaryReader(data2);
+                  idx = br.SHORT(2) == 65504 ? 4 + br.SHORT(4) : 2;
+                  for (i = 0, max = headers.length; i < max; i++) {
+                    br.SEGMENT(idx, 0, headers[i].segment);
+                    idx += headers[i].length;
+                  }
+                  data2 = br.SEGMENT();
+                  br.clear();
+                  return data2;
+                },
+                strip: function(data2) {
+                  var br, headers2, jpegHeaders, i;
+                  jpegHeaders = new JPEGHeaders(data2);
+                  headers2 = jpegHeaders.headers;
+                  jpegHeaders.purge();
+                  br = new BinaryReader(data2);
+                  i = headers2.length;
+                  while (i--) {
+                    br.SEGMENT(headers2[i].start, headers2[i].length, "");
+                  }
+                  data2 = br.SEGMENT();
+                  br.clear();
+                  return data2;
+                },
+                get: function(name2) {
+                  var array = [];
+                  for (var i = 0, max = headers.length; i < max; i++) {
+                    if (headers[i].name === name2.toUpperCase()) {
+                      array.push(headers[i].segment);
+                    }
+                  }
+                  return array;
+                },
+                set: function(name2, segment) {
+                  var array = [], i, ii, max;
+                  if (typeof segment === "string") {
+                    array.push(segment);
+                  } else {
+                    array = segment;
+                  }
+                  for (i = ii = 0, max = headers.length; i < max; i++) {
+                    if (headers[i].name === name2.toUpperCase()) {
+                      headers[i].segment = array[ii];
+                      headers[i].length = array[ii].length;
+                      ii++;
+                    }
+                    if (ii >= array.length) {
+                      break;
+                    }
+                  }
+                },
+                purge: function() {
+                  this.headers = headers = [];
+                }
+              };
+            };
+          });
+          define2("moxie/runtime/html5/image/ExifParser", [
+            "moxie/core/utils/Basic",
+            "moxie/runtime/html5/utils/BinaryReader",
+            "moxie/core/Exceptions"
+          ], function(Basic, BinaryReader, x) {
+            function ExifParser(data) {
+              var __super__, tags, tagDescs, offsets, idx, Tiff;
+              BinaryReader.call(this, data);
+              tags = {
+                tiff: {
+                  /*
+                  				The image orientation viewed in terms of rows and columns.
+                  
+                  				1 = The 0th row is at the visual top of the image, and the 0th column is the visual left-hand side.
+                  				2 = The 0th row is at the visual top of the image, and the 0th column is the visual right-hand side.
+                  				3 = The 0th row is at the visual bottom of the image, and the 0th column is the visual right-hand side.
+                  				4 = The 0th row is at the visual bottom of the image, and the 0th column is the visual left-hand side.
+                  				5 = The 0th row is the visual left-hand side of the image, and the 0th column is the visual top.
+                  				6 = The 0th row is the visual right-hand side of the image, and the 0th column is the visual top.
+                  				7 = The 0th row is the visual right-hand side of the image, and the 0th column is the visual bottom.
+                  				8 = The 0th row is the visual left-hand side of the image, and the 0th column is the visual bottom.
+                  				*/
+                  274: "Orientation",
+                  270: "ImageDescription",
+                  271: "Make",
+                  272: "Model",
+                  305: "Software",
+                  34665: "ExifIFDPointer",
+                  34853: "GPSInfoIFDPointer"
+                },
+                exif: {
+                  36864: "ExifVersion",
+                  40961: "ColorSpace",
+                  40962: "PixelXDimension",
+                  40963: "PixelYDimension",
+                  36867: "DateTimeOriginal",
+                  33434: "ExposureTime",
+                  33437: "FNumber",
+                  34855: "ISOSpeedRatings",
+                  37377: "ShutterSpeedValue",
+                  37378: "ApertureValue",
+                  37383: "MeteringMode",
+                  37384: "LightSource",
+                  37385: "Flash",
+                  37386: "FocalLength",
+                  41986: "ExposureMode",
+                  41987: "WhiteBalance",
+                  41990: "SceneCaptureType",
+                  41988: "DigitalZoomRatio",
+                  41992: "Contrast",
+                  41993: "Saturation",
+                  41994: "Sharpness"
+                },
+                gps: {
+                  0: "GPSVersionID",
+                  1: "GPSLatitudeRef",
+                  2: "GPSLatitude",
+                  3: "GPSLongitudeRef",
+                  4: "GPSLongitude"
+                },
+                thumb: {
+                  513: "JPEGInterchangeFormat",
+                  514: "JPEGInterchangeFormatLength"
+                }
+              };
+              tagDescs = {
+                "ColorSpace": {
+                  1: "sRGB",
+                  0: "Uncalibrated"
+                },
+                "MeteringMode": {
+                  0: "Unknown",
+                  1: "Average",
+                  2: "CenterWeightedAverage",
+                  3: "Spot",
+                  4: "MultiSpot",
+                  5: "Pattern",
+                  6: "Partial",
+                  255: "Other"
+                },
+                "LightSource": {
+                  1: "Daylight",
+                  2: "Fliorescent",
+                  3: "Tungsten",
+                  4: "Flash",
+                  9: "Fine weather",
+                  10: "Cloudy weather",
+                  11: "Shade",
+                  12: "Daylight fluorescent (D 5700 - 7100K)",
+                  13: "Day white fluorescent (N 4600 -5400K)",
+                  14: "Cool white fluorescent (W 3900 - 4500K)",
+                  15: "White fluorescent (WW 3200 - 3700K)",
+                  17: "Standard light A",
+                  18: "Standard light B",
+                  19: "Standard light C",
+                  20: "D55",
+                  21: "D65",
+                  22: "D75",
+                  23: "D50",
+                  24: "ISO studio tungsten",
+                  255: "Other"
+                },
+                "Flash": {
+                  0: "Flash did not fire",
+                  1: "Flash fired",
+                  5: "Strobe return light not detected",
+                  7: "Strobe return light detected",
+                  9: "Flash fired, compulsory flash mode",
+                  13: "Flash fired, compulsory flash mode, return light not detected",
+                  15: "Flash fired, compulsory flash mode, return light detected",
+                  16: "Flash did not fire, compulsory flash mode",
+                  24: "Flash did not fire, auto mode",
+                  25: "Flash fired, auto mode",
+                  29: "Flash fired, auto mode, return light not detected",
+                  31: "Flash fired, auto mode, return light detected",
+                  32: "No flash function",
+                  65: "Flash fired, red-eye reduction mode",
+                  69: "Flash fired, red-eye reduction mode, return light not detected",
+                  71: "Flash fired, red-eye reduction mode, return light detected",
+                  73: "Flash fired, compulsory flash mode, red-eye reduction mode",
+                  77: "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",
+                  79: "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",
+                  89: "Flash fired, auto mode, red-eye reduction mode",
+                  93: "Flash fired, auto mode, return light not detected, red-eye reduction mode",
+                  95: "Flash fired, auto mode, return light detected, red-eye reduction mode"
+                },
+                "ExposureMode": {
+                  0: "Auto exposure",
+                  1: "Manual exposure",
+                  2: "Auto bracket"
+                },
+                "WhiteBalance": {
+                  0: "Auto white balance",
+                  1: "Manual white balance"
+                },
+                "SceneCaptureType": {
+                  0: "Standard",
+                  1: "Landscape",
+                  2: "Portrait",
+                  3: "Night scene"
+                },
+                "Contrast": {
+                  0: "Normal",
+                  1: "Soft",
+                  2: "Hard"
+                },
+                "Saturation": {
+                  0: "Normal",
+                  1: "Low saturation",
+                  2: "High saturation"
+                },
+                "Sharpness": {
+                  0: "Normal",
+                  1: "Soft",
+                  2: "Hard"
+                },
+                // GPS related
+                "GPSLatitudeRef": {
+                  N: "North latitude",
+                  S: "South latitude"
+                },
+                "GPSLongitudeRef": {
+                  E: "East longitude",
+                  W: "West longitude"
+                }
+              };
+              offsets = {
+                tiffHeader: 10
+              };
+              idx = offsets.tiffHeader;
+              __super__ = {
+                clear: this.clear
+              };
+              Basic.extend(this, {
+                read: function() {
+                  try {
+                    return ExifParser.prototype.read.apply(this, arguments);
+                  } catch (ex) {
+                    throw new x.ImageError(x.ImageError.INVALID_META_ERR);
+                  }
+                },
+                write: function() {
+                  try {
+                    return ExifParser.prototype.write.apply(this, arguments);
+                  } catch (ex) {
+                    throw new x.ImageError(x.ImageError.INVALID_META_ERR);
+                  }
+                },
+                UNDEFINED: function() {
+                  return this.BYTE.apply(this, arguments);
+                },
+                RATIONAL: function(idx2) {
+                  return this.LONG(idx2) / this.LONG(idx2 + 4);
+                },
+                SRATIONAL: function(idx2) {
+                  return this.SLONG(idx2) / this.SLONG(idx2 + 4);
+                },
+                ASCII: function(idx2) {
+                  return this.CHAR(idx2);
+                },
+                TIFF: function() {
+                  return Tiff || null;
+                },
+                EXIF: function() {
+                  var Exif = null;
+                  if (offsets.exifIFD) {
+                    try {
+                      Exif = extractTags.call(this, offsets.exifIFD, tags.exif);
+                    } catch (ex) {
+                      return null;
+                    }
+                    if (Exif.ExifVersion && Basic.typeOf(Exif.ExifVersion) === "array") {
+                      for (var i = 0, exifVersion = ""; i < Exif.ExifVersion.length; i++) {
+                        exifVersion += String.fromCharCode(Exif.ExifVersion[i]);
+                      }
+                      Exif.ExifVersion = exifVersion;
+                    }
+                  }
+                  return Exif;
+                },
+                GPS: function() {
+                  var GPS = null;
+                  if (offsets.gpsIFD) {
+                    try {
+                      GPS = extractTags.call(this, offsets.gpsIFD, tags.gps);
+                    } catch (ex) {
+                      return null;
+                    }
+                    if (GPS.GPSVersionID && Basic.typeOf(GPS.GPSVersionID) === "array") {
+                      GPS.GPSVersionID = GPS.GPSVersionID.join(".");
+                    }
+                  }
+                  return GPS;
+                },
+                thumb: function() {
+                  if (offsets.IFD1) {
+                    try {
+                      var IFD1Tags = extractTags.call(this, offsets.IFD1, tags.thumb);
+                      if ("JPEGInterchangeFormat" in IFD1Tags) {
+                        return this.SEGMENT(offsets.tiffHeader + IFD1Tags.JPEGInterchangeFormat, IFD1Tags.JPEGInterchangeFormatLength);
+                      }
+                    } catch (ex) {
+                    }
+                  }
+                  return null;
+                },
+                setExif: function(tag, value) {
+                  if (tag !== "PixelXDimension" && tag !== "PixelYDimension") {
+                    return false;
+                  }
+                  return setTag.call(this, "exif", tag, value);
+                },
+                clear: function() {
+                  __super__.clear();
+                  data = tags = tagDescs = Tiff = offsets = __super__ = null;
+                }
+              });
+              if (this.SHORT(0) !== 65505 || this.STRING(4, 5).toUpperCase() !== "EXIF\0") {
+                throw new x.ImageError(x.ImageError.INVALID_META_ERR);
+              }
+              this.littleEndian = this.SHORT(idx) == 18761;
+              if (this.SHORT(idx += 2) !== 42) {
+                throw new x.ImageError(x.ImageError.INVALID_META_ERR);
+              }
+              offsets.IFD0 = offsets.tiffHeader + this.LONG(idx += 2);
+              Tiff = extractTags.call(this, offsets.IFD0, tags.tiff);
+              if ("ExifIFDPointer" in Tiff) {
+                offsets.exifIFD = offsets.tiffHeader + Tiff.ExifIFDPointer;
+                delete Tiff.ExifIFDPointer;
+              }
+              if ("GPSInfoIFDPointer" in Tiff) {
+                offsets.gpsIFD = offsets.tiffHeader + Tiff.GPSInfoIFDPointer;
+                delete Tiff.GPSInfoIFDPointer;
+              }
+              if (Basic.isEmptyObj(Tiff)) {
+                Tiff = null;
+              }
+              var IFD1Offset = this.LONG(offsets.IFD0 + this.SHORT(offsets.IFD0) * 12 + 2);
+              if (IFD1Offset) {
+                offsets.IFD1 = offsets.tiffHeader + IFD1Offset;
+              }
+              function extractTags(IFD_offset, tags2extract) {
+                var data2 = this;
+                var length, i, tag, type, count, size, offset2, value, values = [], hash = {};
+                var types2 = {
+                  1: "BYTE",
+                  7: "UNDEFINED",
+                  2: "ASCII",
+                  3: "SHORT",
+                  4: "LONG",
+                  5: "RATIONAL",
+                  9: "SLONG",
+                  10: "SRATIONAL"
+                };
+                var sizes = {
+                  "BYTE": 1,
+                  "UNDEFINED": 1,
+                  "ASCII": 1,
+                  "SHORT": 2,
+                  "LONG": 4,
+                  "RATIONAL": 8,
+                  "SLONG": 4,
+                  "SRATIONAL": 8
+                };
+                length = data2.SHORT(IFD_offset);
+                for (i = 0; i < length; i++) {
+                  values = [];
+                  offset2 = IFD_offset + 2 + i * 12;
+                  tag = tags2extract[data2.SHORT(offset2)];
+                  if (tag === undefined2) {
+                    continue;
+                  }
+                  type = types2[data2.SHORT(offset2 += 2)];
+                  count = data2.LONG(offset2 += 2);
+                  size = sizes[type];
+                  if (!size) {
+                    throw new x.ImageError(x.ImageError.INVALID_META_ERR);
+                  }
+                  offset2 += 4;
+                  if (size * count > 4) {
+                    offset2 = data2.LONG(offset2) + offsets.tiffHeader;
+                  }
+                  if (offset2 + size * count >= this.length()) {
+                    throw new x.ImageError(x.ImageError.INVALID_META_ERR);
+                  }
+                  if (type === "ASCII") {
+                    hash[tag] = Basic.trim(data2.STRING(offset2, count).replace(/\0$/, ""));
+                    continue;
+                  } else {
+                    values = data2.asArray(type, offset2, count);
+                    value = count == 1 ? values[0] : values;
+                    if (tagDescs.hasOwnProperty(tag) && typeof value != "object") {
+                      hash[tag] = tagDescs[tag][value];
+                    } else {
+                      hash[tag] = value;
+                    }
+                  }
+                }
+                return hash;
+              }
+              function setTag(ifd, tag, value) {
+                var offset2, length, tagOffset, valueOffset = 0;
+                if (typeof tag === "string") {
+                  var tmpTags = tags[ifd.toLowerCase()];
+                  for (var hex in tmpTags) {
+                    if (tmpTags[hex] === tag) {
+                      tag = hex;
+                      break;
+                    }
+                  }
+                }
+                offset2 = offsets[ifd.toLowerCase() + "IFD"];
+                length = this.SHORT(offset2);
+                for (var i = 0; i < length; i++) {
+                  tagOffset = offset2 + 12 * i + 2;
+                  if (this.SHORT(tagOffset) == tag) {
+                    valueOffset = tagOffset + 8;
+                    break;
+                  }
+                }
+                if (!valueOffset) {
+                  return false;
+                }
+                try {
+                  this.write(valueOffset, value, 4);
+                } catch (ex) {
+                  return false;
+                }
+                return true;
+              }
+            }
+            ExifParser.prototype = BinaryReader.prototype;
+            return ExifParser;
+          });
+          define2("moxie/runtime/html5/image/JPEG", [
+            "moxie/core/utils/Basic",
+            "moxie/core/Exceptions",
+            "moxie/runtime/html5/image/JPEGHeaders",
+            "moxie/runtime/html5/utils/BinaryReader",
+            "moxie/runtime/html5/image/ExifParser"
+          ], function(Basic, x, JPEGHeaders, BinaryReader, ExifParser) {
+            function JPEG(data) {
+              var _br, _hm, _ep, _info;
+              _br = new BinaryReader(data);
+              if (_br.SHORT(0) !== 65496) {
+                throw new x.ImageError(x.ImageError.WRONG_FORMAT);
+              }
+              _hm = new JPEGHeaders(data);
+              try {
+                _ep = new ExifParser(_hm.get("app1")[0]);
+              } catch (ex) {
+              }
+              _info = _getDimensions.call(this);
+              Basic.extend(this, {
+                type: "image/jpeg",
+                size: _br.length(),
+                width: _info && _info.width || 0,
+                height: _info && _info.height || 0,
+                setExif: function(tag, value) {
+                  if (!_ep) {
+                    return false;
+                  }
+                  if (Basic.typeOf(tag) === "object") {
+                    Basic.each(tag, function(value2, tag2) {
+                      _ep.setExif(tag2, value2);
+                    });
+                  } else {
+                    _ep.setExif(tag, value);
+                  }
+                  _hm.set("app1", _ep.SEGMENT());
+                },
+                writeHeaders: function() {
+                  if (!arguments.length) {
+                    return _hm.restore(data);
+                  }
+                  return _hm.restore(arguments[0]);
+                },
+                stripHeaders: function(data2) {
+                  return _hm.strip(data2);
+                },
+                purge: function() {
+                  _purge.call(this);
+                }
+              });
+              if (_ep) {
+                this.meta = {
+                  tiff: _ep.TIFF(),
+                  exif: _ep.EXIF(),
+                  gps: _ep.GPS(),
+                  thumb: _getThumb()
+                };
+              }
+              function _getDimensions(br) {
+                var idx = 0, marker, length;
+                if (!br) {
+                  br = _br;
+                }
+                while (idx <= br.length()) {
+                  marker = br.SHORT(idx += 2);
+                  if (marker >= 65472 && marker <= 65475) {
+                    idx += 5;
+                    return {
+                      height: br.SHORT(idx),
+                      width: br.SHORT(idx += 2)
+                    };
+                  }
+                  length = br.SHORT(idx += 2);
+                  idx += length - 2;
+                }
+                return null;
+              }
+              function _getThumb() {
+                var data2 = _ep.thumb(), br, info;
+                if (data2) {
+                  br = new BinaryReader(data2);
+                  info = _getDimensions(br);
+                  br.clear();
+                  if (info) {
+                    info.data = data2;
+                    return info;
+                  }
+                }
+                return null;
+              }
+              function _purge() {
+                if (!_ep || !_hm || !_br) {
+                  return;
+                }
+                _ep.clear();
+                _hm.purge();
+                _br.clear();
+                _info = _hm = _ep = _br = null;
+              }
+            }
+            return JPEG;
+          });
+          define2("moxie/runtime/html5/image/PNG", [
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/html5/utils/BinaryReader"
+          ], function(x, Basic, BinaryReader) {
+            function PNG(data) {
+              var _br, _hm, _ep, _info;
+              _br = new BinaryReader(data);
+              (function() {
+                var idx = 0, i = 0, signature = [35152, 20039, 3338, 6666];
+                for (i = 0; i < signature.length; i++, idx += 2) {
+                  if (signature[i] != _br.SHORT(idx)) {
+                    throw new x.ImageError(x.ImageError.WRONG_FORMAT);
+                  }
+                }
+              })();
+              function _getDimensions() {
+                var chunk, idx;
+                chunk = _getChunkAt.call(this, 8);
+                if (chunk.type == "IHDR") {
+                  idx = chunk.start;
+                  return {
+                    width: _br.LONG(idx),
+                    height: _br.LONG(idx += 4)
+                  };
+                }
+                return null;
+              }
+              function _purge() {
+                if (!_br) {
+                  return;
+                }
+                _br.clear();
+                data = _info = _hm = _ep = _br = null;
+              }
+              _info = _getDimensions.call(this);
+              Basic.extend(this, {
+                type: "image/png",
+                size: _br.length(),
+                width: _info.width,
+                height: _info.height,
+                purge: function() {
+                  _purge.call(this);
+                }
+              });
+              _purge.call(this);
+              function _getChunkAt(idx) {
+                var length, type, start2, CRC;
+                length = _br.LONG(idx);
+                type = _br.STRING(idx += 4, 4);
+                start2 = idx += 4;
+                CRC = _br.LONG(idx + length);
+                return {
+                  length,
+                  type,
+                  start: start2,
+                  CRC
+                };
+              }
+            }
+            return PNG;
+          });
+          define2("moxie/runtime/html5/image/ImageInfo", [
+            "moxie/core/utils/Basic",
+            "moxie/core/Exceptions",
+            "moxie/runtime/html5/image/JPEG",
+            "moxie/runtime/html5/image/PNG"
+          ], function(Basic, x, JPEG, PNG) {
+            return function(data) {
+              var _cs = [JPEG, PNG], _img;
+              _img = function() {
+                for (var i = 0; i < _cs.length; i++) {
+                  try {
+                    return new _cs[i](data);
+                  } catch (ex) {
+                  }
+                }
+                throw new x.ImageError(x.ImageError.WRONG_FORMAT);
+              }();
+              Basic.extend(this, {
+                /**
+                			Image Mime Type extracted from it's depths
+                
+                			@property type
+                			@type {String}
+                			@default ''
+                			*/
+                type: "",
+                /**
+                			Image size in bytes
+                
+                			@property size
+                			@type {Number}
+                			@default 0
+                			*/
+                size: 0,
+                /**
+                			Image width extracted from image source
+                
+                			@property width
+                			@type {Number}
+                			@default 0
+                			*/
+                width: 0,
+                /**
+                			Image height extracted from image source
+                
+                			@property height
+                			@type {Number}
+                			@default 0
+                			*/
+                height: 0,
+                /**
+                			Sets Exif tag. Currently applicable only for width and height tags. Obviously works only with JPEGs.
+                
+                			@method setExif
+                			@param {String} tag Tag to set
+                			@param {Mixed} value Value to assign to the tag
+                			*/
+                setExif: function() {
+                },
+                /**
+                			Restores headers to the source.
+                
+                			@method writeHeaders
+                			@param {String} data Image source as binary string
+                			@return {String} Updated binary string
+                			*/
+                writeHeaders: function(data2) {
+                  return data2;
+                },
+                /**
+                			Strip all headers from the source.
+                
+                			@method stripHeaders
+                			@param {String} data Image source as binary string
+                			@return {String} Updated binary string
+                			*/
+                stripHeaders: function(data2) {
+                  return data2;
+                },
+                /**
+                			Dispose resources.
+                
+                			@method purge
+                			*/
+                purge: function() {
+                  data = null;
+                }
+              });
+              Basic.extend(this, _img);
+              this.purge = function() {
+                _img.purge();
+                _img = null;
+              };
+            };
+          });
+          define2("moxie/runtime/html5/image/ResizerCanvas", [], function() {
+            function scale(image, ratio, resample) {
+              var sD = image.width > image.height ? "width" : "height";
+              var dD = Math.round(image[sD] * ratio);
+              var scaleCapped = false;
+              if (resample !== "nearest" && (ratio < 0.5 || ratio > 2)) {
+                ratio = ratio < 0.5 ? 0.5 : 2;
+                scaleCapped = true;
+              }
+              var tCanvas = _scale(image, ratio);
+              if (scaleCapped) {
+                return scale(tCanvas, dD / tCanvas[sD], resample);
+              } else {
+                return tCanvas;
+              }
+            }
+            function _scale(image, ratio) {
+              var sW = image.width;
+              var sH = image.height;
+              var dW = Math.round(sW * ratio);
+              var dH = Math.round(sH * ratio);
+              var canvas = document.createElement("canvas");
+              canvas.width = dW;
+              canvas.height = dH;
+              canvas.getContext("2d").drawImage(image, 0, 0, sW, sH, 0, 0, dW, dH);
+              image = null;
+              return canvas;
+            }
+            return {
+              scale
+            };
+          });
+          define2("moxie/runtime/html5/image/Image", [
+            "moxie/runtime/html5/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Encode",
+            "moxie/file/Blob",
+            "moxie/file/File",
+            "moxie/runtime/html5/image/ImageInfo",
+            "moxie/runtime/html5/image/ResizerCanvas",
+            "moxie/core/utils/Mime",
+            "moxie/core/utils/Env"
+          ], function(extensions, Basic, x, Encode, Blob, File2, ImageInfo, ResizerCanvas, Mime, Env) {
+            function HTML5Image() {
+              var me = this, _img, _imgInfo, _canvas, _binStr, _blob, _modified = false, _preserveHeaders = true;
+              Basic.extend(this, {
+                loadFromBlob: function(blob) {
+                  var I = this.getRuntime(), asBinary = arguments.length > 1 ? arguments[1] : true;
+                  if (!I.can("access_binary")) {
+                    throw new x.RuntimeError(x.RuntimeError.NOT_SUPPORTED_ERR);
+                  }
+                  _blob = blob;
+                  if (blob.isDetached()) {
+                    _binStr = blob.getSource();
+                    _preload.call(this, _binStr);
+                    return;
+                  } else {
+                    _readAsDataUrl.call(this, blob.getSource(), function(dataUrl) {
+                      if (asBinary) {
+                        _binStr = _toBinary(dataUrl);
+                      }
+                      _preload.call(this, dataUrl);
+                    });
+                  }
+                },
+                loadFromImage: function(img, exact) {
+                  this.meta = img.meta;
+                  _blob = new File2(null, {
+                    name: img.name,
+                    size: img.size,
+                    type: img.type
+                  });
+                  _preload.call(this, exact ? _binStr = img.getAsBinaryString() : img.getAsDataURL());
+                },
+                getInfo: function() {
+                  var I = this.getRuntime(), info;
+                  if (!_imgInfo && _binStr && I.can("access_image_binary")) {
+                    _imgInfo = new ImageInfo(_binStr);
+                  }
+                  info = {
+                    width: _getImg().width || 0,
+                    height: _getImg().height || 0,
+                    type: _blob.type || Mime.getFileMime(_blob.name),
+                    size: _binStr && _binStr.length || _blob.size || 0,
+                    name: _blob.name || "",
+                    meta: null
+                  };
+                  if (_preserveHeaders) {
+                    info.meta = _imgInfo && _imgInfo.meta || this.meta || {};
+                    if (info.meta && info.meta.thumb && !(info.meta.thumb.data instanceof Blob)) {
+                      info.meta.thumb.data = new Blob(null, {
+                        type: "image/jpeg",
+                        data: info.meta.thumb.data
+                      });
+                    }
+                  }
+                  return info;
+                },
+                resize: function(rect, ratio, options) {
+                  var canvas = document.createElement("canvas");
+                  canvas.width = rect.width;
+                  canvas.height = rect.height;
+                  canvas.getContext("2d").drawImage(_getImg(), rect.x, rect.y, rect.width, rect.height, 0, 0, canvas.width, canvas.height);
+                  _canvas = ResizerCanvas.scale(canvas, ratio);
+                  _preserveHeaders = options.preserveHeaders;
+                  if (!_preserveHeaders) {
+                    var orientation = this.meta && this.meta.tiff && this.meta.tiff.Orientation || 1;
+                    _canvas = _rotateToOrientaion(_canvas, orientation);
+                  }
+                  this.width = _canvas.width;
+                  this.height = _canvas.height;
+                  _modified = true;
+                  this.trigger("Resize");
+                },
+                getAsCanvas: function() {
+                  if (!_canvas) {
+                    _canvas = _getCanvas();
+                  }
+                  _canvas.id = this.uid + "_canvas";
+                  return _canvas;
+                },
+                getAsBlob: function(type, quality) {
+                  if (type !== this.type) {
+                    _modified = true;
+                    return new File2(null, {
+                      name: _blob.name || "",
+                      type,
+                      data: me.getAsDataURL(type, quality)
+                    });
+                  }
+                  return new File2(null, {
+                    name: _blob.name || "",
+                    type,
+                    data: me.getAsBinaryString(type, quality)
+                  });
+                },
+                getAsDataURL: function(type) {
+                  var quality = arguments[1] || 90;
+                  if (!_modified) {
+                    return _img.src;
+                  }
+                  _getCanvas();
+                  if ("image/jpeg" !== type) {
+                    return _canvas.toDataURL("image/png");
+                  } else {
+                    try {
+                      return _canvas.toDataURL("image/jpeg", quality / 100);
+                    } catch (ex) {
+                      return _canvas.toDataURL("image/jpeg");
+                    }
+                  }
+                },
+                getAsBinaryString: function(type, quality) {
+                  if (!_modified) {
+                    if (!_binStr) {
+                      _binStr = _toBinary(me.getAsDataURL(type, quality));
+                    }
+                    return _binStr;
+                  }
+                  if ("image/jpeg" !== type) {
+                    _binStr = _toBinary(me.getAsDataURL(type, quality));
+                  } else {
+                    var dataUrl;
+                    if (!quality) {
+                      quality = 90;
+                    }
+                    _getCanvas();
+                    try {
+                      dataUrl = _canvas.toDataURL("image/jpeg", quality / 100);
+                    } catch (ex) {
+                      dataUrl = _canvas.toDataURL("image/jpeg");
+                    }
+                    _binStr = _toBinary(dataUrl);
+                    if (_imgInfo) {
+                      _binStr = _imgInfo.stripHeaders(_binStr);
+                      if (_preserveHeaders) {
+                        if (_imgInfo.meta && _imgInfo.meta.exif) {
+                          _imgInfo.setExif({
+                            PixelXDimension: this.width,
+                            PixelYDimension: this.height
+                          });
+                        }
+                        _binStr = _imgInfo.writeHeaders(_binStr);
+                      }
+                      _imgInfo.purge();
+                      _imgInfo = null;
+                    }
+                  }
+                  _modified = false;
+                  return _binStr;
+                },
+                destroy: function() {
+                  me = null;
+                  _purge.call(this);
+                  this.getRuntime().getShim().removeInstance(this.uid);
+                }
+              });
+              function _getImg() {
+                if (!_canvas && !_img) {
+                  throw new x.ImageError(x.DOMException.INVALID_STATE_ERR);
+                }
+                return _canvas || _img;
+              }
+              function _getCanvas() {
+                var canvas = _getImg();
+                if (canvas.nodeName.toLowerCase() == "canvas") {
+                  return canvas;
+                }
+                _canvas = document.createElement("canvas");
+                _canvas.width = canvas.width;
+                _canvas.height = canvas.height;
+                _canvas.getContext("2d").drawImage(canvas, 0, 0);
+                return _canvas;
+              }
+              function _toBinary(str) {
+                return Encode.atob(str.substring(str.indexOf("base64,") + 7));
+              }
+              function _toDataUrl(str, type) {
+                return "data:" + (type || "") + ";base64," + Encode.btoa(str);
+              }
+              function _preload(str) {
+                var comp = this;
+                _img = new Image();
+                _img.onerror = function() {
+                  _purge.call(this);
+                  comp.trigger("error", x.ImageError.WRONG_FORMAT);
+                };
+                _img.onload = function() {
+                  comp.trigger("load");
+                };
+                _img.src = str.substr(0, 5) == "data:" ? str : _toDataUrl(str, _blob.type);
+              }
+              function _readAsDataUrl(file, callback) {
+                var comp = this, fr;
+                if (window.FileReader) {
+                  fr = new FileReader();
+                  fr.onload = function() {
+                    callback.call(comp, this.result);
+                  };
+                  fr.onerror = function() {
+                    comp.trigger("error", x.ImageError.WRONG_FORMAT);
+                  };
+                  fr.readAsDataURL(file);
+                } else {
+                  return callback.call(this, file.getAsDataURL());
+                }
+              }
+              function _rotateToOrientaion(img, orientation) {
+                var RADIANS = Math.PI / 180;
+                var canvas = document.createElement("canvas");
+                var ctx = canvas.getContext("2d");
+                var width2 = img.width;
+                var height2 = img.height;
+                if (Basic.inArray(orientation, [5, 6, 7, 8]) > -1) {
+                  canvas.width = height2;
+                  canvas.height = width2;
+                } else {
+                  canvas.width = width2;
+                  canvas.height = height2;
+                }
+                switch (orientation) {
+                  case 2:
+                    ctx.translate(width2, 0);
+                    ctx.scale(-1, 1);
+                    break;
+                  case 3:
+                    ctx.translate(width2, height2);
+                    ctx.rotate(180 * RADIANS);
+                    break;
+                  case 4:
+                    ctx.translate(0, height2);
+                    ctx.scale(1, -1);
+                    break;
+                  case 5:
+                    ctx.rotate(90 * RADIANS);
+                    ctx.scale(1, -1);
+                    break;
+                  case 6:
+                    ctx.rotate(90 * RADIANS);
+                    ctx.translate(0, -height2);
+                    break;
+                  case 7:
+                    ctx.rotate(90 * RADIANS);
+                    ctx.translate(width2, -height2);
+                    ctx.scale(-1, 1);
+                    break;
+                  case 8:
+                    ctx.rotate(-90 * RADIANS);
+                    ctx.translate(-width2, 0);
+                    break;
+                }
+                ctx.drawImage(img, 0, 0, width2, height2);
+                return canvas;
+              }
+              function _purge() {
+                if (_imgInfo) {
+                  _imgInfo.purge();
+                  _imgInfo = null;
+                }
+                _binStr = _img = _canvas = _blob = null;
+                _modified = false;
+              }
+            }
+            return extensions.Image = HTML5Image;
+          });
+          define2("moxie/runtime/flash/Runtime", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Env",
+            "moxie/core/utils/Dom",
+            "moxie/core/Exceptions",
+            "moxie/runtime/Runtime"
+          ], function(Basic, Env, Dom, x, Runtime) {
+            var type = "flash", extensions = {};
+            function getShimVersion() {
+              var version2;
+              try {
+                version2 = navigator.plugins["Shockwave Flash"];
+                version2 = version2.description;
+              } catch (e1) {
+                try {
+                  version2 = new ActiveXObject("ShockwaveFlash.ShockwaveFlash").GetVariable("$version");
+                } catch (e2) {
+                  version2 = "0.0";
+                }
+              }
+              version2 = version2.match(/\d+/g);
+              return parseFloat(version2[0] + "." + version2[1]);
+            }
+            function removeSWF(id) {
+              var obj = Dom.get(id);
+              if (obj && obj.nodeName == "OBJECT") {
+                if (Env.browser === "IE") {
+                  obj.style.display = "none";
+                  (function onInit() {
+                    if (obj.readyState == 4) {
+                      removeObjectInIE(id);
+                    } else {
+                      setTimeout(onInit, 10);
+                    }
+                  })();
+                } else {
+                  obj.parentNode.removeChild(obj);
+                }
+              }
+            }
+            function removeObjectInIE(id) {
+              var obj = Dom.get(id);
+              if (obj) {
+                for (var i in obj) {
+                  if (typeof obj[i] == "function") {
+                    obj[i] = null;
+                  }
+                }
+                obj.parentNode.removeChild(obj);
+              }
+            }
+            function FlashRuntime(options) {
+              var I = this, initTimer;
+              options = Basic.extend({ swf_url: Env.swf_url }, options);
+              Runtime.call(this, options, type, {
+                access_binary: function(value) {
+                  return value && I.mode === "browser";
+                },
+                access_image_binary: function(value) {
+                  return value && I.mode === "browser";
+                },
+                display_media: Runtime.capTest(defined("moxie/image/Image")),
+                do_cors: Runtime.capTrue,
+                drag_and_drop: false,
+                report_upload_progress: function() {
+                  return I.mode === "client";
+                },
+                resize_image: Runtime.capTrue,
+                return_response_headers: false,
+                return_response_type: function(responseType) {
+                  if (responseType === "json" && !!window.JSON) {
+                    return true;
+                  }
+                  return !Basic.arrayDiff(responseType, ["", "text", "document"]) || I.mode === "browser";
+                },
+                return_status_code: function(code) {
+                  return I.mode === "browser" || !Basic.arrayDiff(code, [200, 404]);
+                },
+                select_file: Runtime.capTrue,
+                select_multiple: Runtime.capTrue,
+                send_binary_string: function(value) {
+                  return value && I.mode === "browser";
+                },
+                send_browser_cookies: function(value) {
+                  return value && I.mode === "browser";
+                },
+                send_custom_headers: function(value) {
+                  return value && I.mode === "browser";
+                },
+                send_multipart: Runtime.capTrue,
+                slice_blob: function(value) {
+                  return value && I.mode === "browser";
+                },
+                stream_upload: function(value) {
+                  return value && I.mode === "browser";
+                },
+                summon_file_dialog: false,
+                upload_filesize: function(size) {
+                  return Basic.parseSizeStr(size) <= 2097152 || I.mode === "client";
+                },
+                use_http_method: function(methods) {
+                  return !Basic.arrayDiff(methods, ["GET", "POST"]);
+                }
+              }, {
+                // capabilities that require specific mode
+                access_binary: function(value) {
+                  return value ? "browser" : "client";
+                },
+                access_image_binary: function(value) {
+                  return value ? "browser" : "client";
+                },
+                report_upload_progress: function(value) {
+                  return value ? "browser" : "client";
+                },
+                return_response_type: function(responseType) {
+                  return Basic.arrayDiff(responseType, ["", "text", "json", "document"]) ? "browser" : ["client", "browser"];
+                },
+                return_status_code: function(code) {
+                  return Basic.arrayDiff(code, [200, 404]) ? "browser" : ["client", "browser"];
+                },
+                send_binary_string: function(value) {
+                  return value ? "browser" : "client";
+                },
+                send_browser_cookies: function(value) {
+                  return value ? "browser" : "client";
+                },
+                send_custom_headers: function(value) {
+                  return value ? "browser" : "client";
+                },
+                slice_blob: function(value) {
+                  return value ? "browser" : "client";
+                },
+                stream_upload: function(value) {
+                  return value ? "client" : "browser";
+                },
+                upload_filesize: function(size) {
+                  return Basic.parseSizeStr(size) >= 2097152 ? "client" : "browser";
+                }
+              }, "client");
+              if (getShimVersion() < 11.3) {
+                if (MXI_DEBUG && Env.debug.runtime) {
+                  Env.log("	Flash didn't meet minimal version requirement (11.3).");
+                }
+                this.mode = false;
+              }
+              Basic.extend(this, {
+                getShim: function() {
+                  return Dom.get(this.uid);
+                },
+                shimExec: function(component, action) {
+                  var args = [].slice.call(arguments, 2);
+                  return I.getShim().exec(this.uid, component, action, args);
+                },
+                init: function() {
+                  var html, el, container;
+                  container = this.getShimContainer();
+                  Basic.extend(container.style, {
+                    position: "absolute",
+                    top: "-8px",
+                    left: "-8px",
+                    width: "9px",
+                    height: "9px",
+                    overflow: "hidden"
+                  });
+                  html = '<object id="' + this.uid + '" type="application/x-shockwave-flash" data="' + options.swf_url + '" ';
+                  if (Env.browser === "IE") {
+                    html += 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ';
+                  }
+                  html += 'width="100%" height="100%" style="outline:0"><param name="movie" value="' + options.swf_url + '" /><param name="flashvars" value="uid=' + escape(this.uid) + "&target=" + Runtime.getGlobalEventTarget() + '" /><param name="wmode" value="transparent" /><param name="allowscriptaccess" value="always" /></object>';
+                  if (Env.browser === "IE") {
+                    el = document.createElement("div");
+                    container.appendChild(el);
+                    el.outerHTML = html;
+                    el = container = null;
+                  } else {
+                    container.innerHTML = html;
+                  }
+                  initTimer = setTimeout(function() {
+                    if (I && !I.initialized) {
+                      I.trigger("Error", new x.RuntimeError(x.RuntimeError.NOT_INIT_ERR));
+                      if (MXI_DEBUG && Env.debug.runtime) {
+                        Env.log("	Flash failed to initialize within a specified period of time (typically 5s).");
+                      }
+                    }
+                  }, 5e3);
+                },
+                destroy: /* @__PURE__ */ function(destroy3) {
+                  return function() {
+                    removeSWF(I.uid);
+                    destroy3.call(I);
+                    clearTimeout(initTimer);
+                    options = initTimer = destroy3 = I = null;
+                  };
+                }(this.destroy)
+              }, extensions);
+            }
+            Runtime.addConstructor(type, FlashRuntime);
+            return extensions;
+          });
+          define2("moxie/runtime/flash/file/Blob", [
+            "moxie/runtime/flash/Runtime",
+            "moxie/file/Blob"
+          ], function(extensions, Blob) {
+            var FlashBlob = {
+              slice: function(blob, start2, end, type) {
+                var self2 = this.getRuntime();
+                if (start2 < 0) {
+                  start2 = Math.max(blob.size + start2, 0);
+                } else if (start2 > 0) {
+                  start2 = Math.min(start2, blob.size);
+                }
+                if (end < 0) {
+                  end = Math.max(blob.size + end, 0);
+                } else if (end > 0) {
+                  end = Math.min(end, blob.size);
+                }
+                blob = self2.shimExec.call(this, "Blob", "slice", start2, end, type || "");
+                if (blob) {
+                  blob = new Blob(self2.uid, blob);
+                }
+                return blob;
+              }
+            };
+            return extensions.Blob = FlashBlob;
+          });
+          define2("moxie/runtime/flash/file/FileInput", [
+            "moxie/runtime/flash/Runtime",
+            "moxie/file/File",
+            "moxie/core/utils/Dom",
+            "moxie/core/utils/Basic"
+          ], function(extensions, File2, Dom, Basic) {
+            var FileInput = {
+              init: function(options) {
+                var comp = this, I = this.getRuntime();
+                var browseButton = Dom.get(options.browse_button);
+                if (browseButton) {
+                  browseButton.setAttribute("tabindex", -1);
+                  browseButton = null;
+                }
+                this.bind("Change", function() {
+                  var files = I.shimExec.call(comp, "FileInput", "getFiles");
+                  comp.files = [];
+                  Basic.each(files, function(file) {
+                    comp.files.push(new File2(I.uid, file));
+                  });
+                }, 999);
+                this.getRuntime().shimExec.call(this, "FileInput", "init", {
+                  accept: options.accept,
+                  multiple: options.multiple
+                });
+                this.trigger("ready");
+              }
+            };
+            return extensions.FileInput = FileInput;
+          });
+          define2("moxie/runtime/flash/file/FileReader", [
+            "moxie/runtime/flash/Runtime",
+            "moxie/core/utils/Encode"
+          ], function(extensions, Encode) {
+            function _formatData(data, op) {
+              switch (op) {
+                case "readAsText":
+                  return Encode.atob(data, "utf8");
+                case "readAsBinaryString":
+                  return Encode.atob(data);
+                case "readAsDataURL":
+                  return data;
+              }
+              return null;
+            }
+            var FileReader2 = {
+              read: function(op, blob) {
+                var comp = this;
+                comp.result = "";
+                if (op === "readAsDataURL") {
+                  comp.result = "data:" + (blob.type || "") + ";base64,";
+                }
+                comp.bind("Progress", function(e, data) {
+                  if (data) {
+                    comp.result += _formatData(data, op);
+                  }
+                }, 999);
+                return comp.getRuntime().shimExec.call(this, "FileReader", "readAsBase64", blob.uid);
+              }
+            };
+            return extensions.FileReader = FileReader2;
+          });
+          define2("moxie/runtime/flash/file/FileReaderSync", [
+            "moxie/runtime/flash/Runtime",
+            "moxie/core/utils/Encode"
+          ], function(extensions, Encode) {
+            function _formatData(data, op) {
+              switch (op) {
+                case "readAsText":
+                  return Encode.atob(data, "utf8");
+                case "readAsBinaryString":
+                  return Encode.atob(data);
+                case "readAsDataURL":
+                  return data;
+              }
+              return null;
+            }
+            var FileReaderSync = {
+              read: function(op, blob) {
+                var result, self2 = this.getRuntime();
+                result = self2.shimExec.call(this, "FileReaderSync", "readAsBase64", blob.uid);
+                if (!result) {
+                  return null;
+                }
+                if (op === "readAsDataURL") {
+                  result = "data:" + (blob.type || "") + ";base64," + result;
+                }
+                return _formatData(result, op, blob.type);
+              }
+            };
+            return extensions.FileReaderSync = FileReaderSync;
+          });
+          define2("moxie/runtime/flash/runtime/Transporter", [
+            "moxie/runtime/flash/Runtime",
+            "moxie/file/Blob"
+          ], function(extensions, Blob) {
+            var Transporter = {
+              getAsBlob: function(type) {
+                var self2 = this.getRuntime(), blob = self2.shimExec.call(this, "Transporter", "getAsBlob", type);
+                if (blob) {
+                  return new Blob(self2.uid, blob);
+                }
+                return null;
+              }
+            };
+            return extensions.Transporter = Transporter;
+          });
+          define2("moxie/runtime/flash/xhr/XMLHttpRequest", [
+            "moxie/runtime/flash/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/file/Blob",
+            "moxie/file/File",
+            "moxie/file/FileReaderSync",
+            "moxie/runtime/flash/file/FileReaderSync",
+            "moxie/xhr/FormData",
+            "moxie/runtime/Transporter",
+            "moxie/runtime/flash/runtime/Transporter"
+          ], function(extensions, Basic, Blob, File2, FileReaderSync, FileReaderSyncFlash, FormData2, Transporter, TransporterFlash) {
+            var XMLHttpRequest2 = {
+              send: function(meta, data) {
+                var target = this, self2 = target.getRuntime();
+                function send() {
+                  meta.transport = self2.mode;
+                  self2.shimExec.call(target, "XMLHttpRequest", "send", meta, data);
+                }
+                function appendBlob(name2, blob2) {
+                  self2.shimExec.call(target, "XMLHttpRequest", "appendBlob", name2, blob2.uid);
+                  data = null;
+                  send();
+                }
+                function attachBlob(blob2, cb) {
+                  var tr = new Transporter();
+                  tr.bind("TransportingComplete", function() {
+                    cb(this.result);
+                  });
+                  tr.transport(blob2.getSource(), blob2.type, {
+                    ruid: self2.uid
+                  });
+                }
+                if (!Basic.isEmptyObj(meta.headers)) {
+                  Basic.each(meta.headers, function(value, header) {
+                    self2.shimExec.call(target, "XMLHttpRequest", "setRequestHeader", header, value.toString());
+                  });
+                }
+                if (data instanceof FormData2) {
+                  var blobField;
+                  data.each(function(value, name2) {
+                    if (value instanceof Blob) {
+                      blobField = name2;
+                    } else {
+                      self2.shimExec.call(target, "XMLHttpRequest", "append", name2, value);
+                    }
+                  });
+                  if (!data.hasBlob()) {
+                    data = null;
+                    send();
+                  } else {
+                    var blob = data.getBlob();
+                    if (blob.isDetached()) {
+                      attachBlob(blob, function(attachedBlob) {
+                        blob.destroy();
+                        appendBlob(blobField, attachedBlob);
+                      });
+                    } else {
+                      appendBlob(blobField, blob);
+                    }
+                  }
+                } else if (data instanceof Blob) {
+                  if (data.isDetached()) {
+                    attachBlob(data, function(attachedBlob) {
+                      data.destroy();
+                      data = attachedBlob.uid;
+                      send();
+                    });
+                  } else {
+                    data = data.uid;
+                    send();
+                  }
+                } else {
+                  send();
+                }
+              },
+              getResponse: function(responseType) {
+                var frs, blob, self2 = this.getRuntime();
+                blob = self2.shimExec.call(this, "XMLHttpRequest", "getResponseAsBlob");
+                if (blob) {
+                  blob = new File2(self2.uid, blob);
+                  if ("blob" === responseType) {
+                    return blob;
+                  }
+                  try {
+                    frs = new FileReaderSync();
+                    if (!!~Basic.inArray(responseType, ["", "text"])) {
+                      return frs.readAsText(blob);
+                    } else if ("json" === responseType && !!window.JSON) {
+                      return JSON.parse(frs.readAsText(blob));
+                    }
+                  } finally {
+                    blob.destroy();
+                  }
+                }
+                return null;
+              },
+              abort: function(upload_complete_flag) {
+                var self2 = this.getRuntime();
+                self2.shimExec.call(this, "XMLHttpRequest", "abort");
+                this.dispatchEvent("readystatechange");
+                this.dispatchEvent("abort");
+              }
+            };
+            return extensions.XMLHttpRequest = XMLHttpRequest2;
+          });
+          define2("moxie/runtime/flash/image/Image", [
+            "moxie/runtime/flash/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/Transporter",
+            "moxie/file/Blob",
+            "moxie/file/FileReaderSync"
+          ], function(extensions, Basic, Transporter, Blob, FileReaderSync) {
+            var Image2 = {
+              loadFromBlob: function(blob) {
+                var comp = this, self2 = comp.getRuntime();
+                function exec(srcBlob) {
+                  self2.shimExec.call(comp, "Image", "loadFromBlob", srcBlob.uid);
+                  comp = self2 = null;
+                }
+                if (blob.isDetached()) {
+                  var tr = new Transporter();
+                  tr.bind("TransportingComplete", function() {
+                    exec(tr.result.getSource());
+                  });
+                  tr.transport(blob.getSource(), blob.type, { ruid: self2.uid });
+                } else {
+                  exec(blob.getSource());
+                }
+              },
+              loadFromImage: function(img) {
+                var self2 = this.getRuntime();
+                return self2.shimExec.call(this, "Image", "loadFromImage", img.uid);
+              },
+              getInfo: function() {
+                var self2 = this.getRuntime(), info = self2.shimExec.call(this, "Image", "getInfo");
+                if (info.meta && info.meta.thumb && info.meta.thumb.data && !(self2.meta.thumb.data instanceof Blob)) {
+                  info.meta.thumb.data = new Blob(self2.uid, info.meta.thumb.data);
+                }
+                return info;
+              },
+              getAsBlob: function(type, quality) {
+                var self2 = this.getRuntime(), blob = self2.shimExec.call(this, "Image", "getAsBlob", type, quality);
+                if (blob) {
+                  return new Blob(self2.uid, blob);
+                }
+                return null;
+              },
+              getAsDataURL: function() {
+                var self2 = this.getRuntime(), blob = self2.Image.getAsBlob.apply(this, arguments), frs;
+                if (!blob) {
+                  return null;
+                }
+                frs = new FileReaderSync();
+                return frs.readAsDataURL(blob);
+              }
+            };
+            return extensions.Image = Image2;
+          });
+          define2("moxie/runtime/silverlight/Runtime", [
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Env",
+            "moxie/core/utils/Dom",
+            "moxie/core/Exceptions",
+            "moxie/runtime/Runtime"
+          ], function(Basic, Env, Dom, x, Runtime) {
+            var type = "silverlight", extensions = {};
+            function isInstalled(version2) {
+              var isVersionSupported = false, control = null, actualVer, actualVerArray, reqVerArray, requiredVersionPart, actualVersionPart, index2 = 0;
+              try {
+                try {
+                  control = new ActiveXObject("AgControl.AgControl");
+                  if (control.IsVersionSupported(version2)) {
+                    isVersionSupported = true;
+                  }
+                  control = null;
+                } catch (e) {
+                  var plugin = navigator.plugins["Silverlight Plug-In"];
+                  if (plugin) {
+                    actualVer = plugin.description;
+                    if (actualVer === "1.0.30226.2") {
+                      actualVer = "2.0.30226.2";
+                    }
+                    actualVerArray = actualVer.split(".");
+                    while (actualVerArray.length > 3) {
+                      actualVerArray.pop();
+                    }
+                    while (actualVerArray.length < 4) {
+                      actualVerArray.push(0);
+                    }
+                    reqVerArray = version2.split(".");
+                    while (reqVerArray.length > 4) {
+                      reqVerArray.pop();
+                    }
+                    do {
+                      requiredVersionPart = parseInt(reqVerArray[index2], 10);
+                      actualVersionPart = parseInt(actualVerArray[index2], 10);
+                      index2++;
+                    } while (index2 < reqVerArray.length && requiredVersionPart === actualVersionPart);
+                    if (requiredVersionPart <= actualVersionPart && !isNaN(requiredVersionPart)) {
+                      isVersionSupported = true;
+                    }
+                  }
+                }
+              } catch (e2) {
+                isVersionSupported = false;
+              }
+              return isVersionSupported;
+            }
+            function SilverlightRuntime(options) {
+              var I = this, initTimer;
+              options = Basic.extend({ xap_url: Env.xap_url }, options);
+              Runtime.call(this, options, type, {
+                access_binary: Runtime.capTrue,
+                access_image_binary: Runtime.capTrue,
+                display_media: Runtime.capTest(defined("moxie/image/Image")),
+                do_cors: Runtime.capTrue,
+                drag_and_drop: false,
+                report_upload_progress: Runtime.capTrue,
+                resize_image: Runtime.capTrue,
+                return_response_headers: function(value) {
+                  return value && I.mode === "client";
+                },
+                return_response_type: function(responseType) {
+                  if (responseType !== "json") {
+                    return true;
+                  } else {
+                    return !!window.JSON;
+                  }
+                },
+                return_status_code: function(code) {
+                  return I.mode === "client" || !Basic.arrayDiff(code, [200, 404]);
+                },
+                select_file: Runtime.capTrue,
+                select_multiple: Runtime.capTrue,
+                send_binary_string: Runtime.capTrue,
+                send_browser_cookies: function(value) {
+                  return value && I.mode === "browser";
+                },
+                send_custom_headers: function(value) {
+                  return value && I.mode === "client";
+                },
+                send_multipart: Runtime.capTrue,
+                slice_blob: Runtime.capTrue,
+                stream_upload: true,
+                summon_file_dialog: false,
+                upload_filesize: Runtime.capTrue,
+                use_http_method: function(methods) {
+                  return I.mode === "client" || !Basic.arrayDiff(methods, ["GET", "POST"]);
+                }
+              }, {
+                // capabilities that require specific mode
+                return_response_headers: function(value) {
+                  return value ? "client" : "browser";
+                },
+                return_status_code: function(code) {
+                  return Basic.arrayDiff(code, [200, 404]) ? "client" : ["client", "browser"];
+                },
+                send_browser_cookies: function(value) {
+                  return value ? "browser" : "client";
+                },
+                send_custom_headers: function(value) {
+                  return value ? "client" : "browser";
+                },
+                use_http_method: function(methods) {
+                  return Basic.arrayDiff(methods, ["GET", "POST"]) ? "client" : ["client", "browser"];
+                }
+              });
+              if (!isInstalled("2.0.31005.0") || Env.browser === "Opera") {
+                if (MXI_DEBUG && Env.debug.runtime) {
+                  Env.log("	Silverlight is not installed or minimal version (2.0.31005.0) requirement not met (not likely).");
+                }
+                this.mode = false;
+              }
+              Basic.extend(this, {
+                getShim: function() {
+                  return Dom.get(this.uid).content.Moxie;
+                },
+                shimExec: function(component, action) {
+                  var args = [].slice.call(arguments, 2);
+                  return I.getShim().exec(this.uid, component, action, args);
+                },
+                init: function() {
+                  var container;
+                  container = this.getShimContainer();
+                  container.innerHTML = '<object id="' + this.uid + '" data="data:application/x-silverlight," type="application/x-silverlight-2" width="100%" height="100%" style="outline:none;"><param name="source" value="' + options.xap_url + '"/><param name="background" value="Transparent"/><param name="windowless" value="true"/><param name="enablehtmlaccess" value="true"/><param name="initParams" value="uid=' + this.uid + ",target=" + Runtime.getGlobalEventTarget() + '"/></object>';
+                  initTimer = setTimeout(function() {
+                    if (I && !I.initialized) {
+                      I.trigger("Error", new x.RuntimeError(x.RuntimeError.NOT_INIT_ERR));
+                      if (MXI_DEBUG && Env.debug.runtime) {
+                        Env.log("Silverlight failed to initialize within a specified period of time (5-10s).");
+                      }
+                    }
+                  }, Env.OS !== "Windows" ? 1e4 : 5e3);
+                },
+                destroy: /* @__PURE__ */ function(destroy3) {
+                  return function() {
+                    destroy3.call(I);
+                    clearTimeout(initTimer);
+                    options = initTimer = destroy3 = I = null;
+                  };
+                }(this.destroy)
+              }, extensions);
+            }
+            Runtime.addConstructor(type, SilverlightRuntime);
+            return extensions;
+          });
+          define2("moxie/runtime/silverlight/file/Blob", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/flash/file/Blob"
+          ], function(extensions, Basic, Blob) {
+            return extensions.Blob = Basic.extend({}, Blob);
+          });
+          define2("moxie/runtime/silverlight/file/FileInput", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/file/File",
+            "moxie/core/utils/Dom",
+            "moxie/core/utils/Basic"
+          ], function(extensions, File2, Dom, Basic) {
+            function toFilters(accept) {
+              var filter = "";
+              for (var i = 0; i < accept.length; i++) {
+                filter += (filter !== "" ? "|" : "") + accept[i].title + " | *." + accept[i].extensions.replace(/,/g, ";*.");
+              }
+              return filter;
+            }
+            var FileInput = {
+              init: function(options) {
+                var comp = this, I = this.getRuntime();
+                var browseButton = Dom.get(options.browse_button);
+                if (browseButton) {
+                  browseButton.setAttribute("tabindex", -1);
+                  browseButton = null;
+                }
+                this.bind("Change", function() {
+                  var files = I.shimExec.call(comp, "FileInput", "getFiles");
+                  comp.files = [];
+                  Basic.each(files, function(file) {
+                    comp.files.push(new File2(I.uid, file));
+                  });
+                }, 999);
+                I.shimExec.call(this, "FileInput", "init", toFilters(options.accept), options.multiple);
+                this.trigger("ready");
+              },
+              setOption: function(name2, value) {
+                if (name2 == "accept") {
+                  value = toFilters(value);
+                }
+                this.getRuntime().shimExec.call(this, "FileInput", "setOption", name2, value);
+              }
+            };
+            return extensions.FileInput = FileInput;
+          });
+          define2("moxie/runtime/silverlight/file/FileDrop", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/core/utils/Dom",
+            "moxie/core/utils/Events"
+          ], function(extensions, Dom, Events) {
+            var FileDrop = {
+              init: function() {
+                var comp = this, self2 = comp.getRuntime(), dropZone;
+                dropZone = self2.getShimContainer();
+                Events.addEvent(dropZone, "dragover", function(e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  e.dataTransfer.dropEffect = "copy";
+                }, comp.uid);
+                Events.addEvent(dropZone, "dragenter", function(e) {
+                  e.preventDefault();
+                  var flag = Dom.get(self2.uid).dragEnter(e);
+                  if (flag) {
+                    e.stopPropagation();
+                  }
+                }, comp.uid);
+                Events.addEvent(dropZone, "drop", function(e) {
+                  e.preventDefault();
+                  var flag = Dom.get(self2.uid).dragDrop(e);
+                  if (flag) {
+                    e.stopPropagation();
+                  }
+                }, comp.uid);
+                return self2.shimExec.call(this, "FileDrop", "init");
+              }
+            };
+            return extensions.FileDrop = FileDrop;
+          });
+          define2("moxie/runtime/silverlight/file/FileReader", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/flash/file/FileReader"
+          ], function(extensions, Basic, FileReader2) {
+            return extensions.FileReader = Basic.extend({}, FileReader2);
+          });
+          define2("moxie/runtime/silverlight/file/FileReaderSync", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/flash/file/FileReaderSync"
+          ], function(extensions, Basic, FileReaderSync) {
+            return extensions.FileReaderSync = Basic.extend({}, FileReaderSync);
+          });
+          define2("moxie/runtime/silverlight/runtime/Transporter", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/flash/runtime/Transporter"
+          ], function(extensions, Basic, Transporter) {
+            return extensions.Transporter = Basic.extend({}, Transporter);
+          });
+          define2("moxie/runtime/silverlight/xhr/XMLHttpRequest", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/runtime/flash/xhr/XMLHttpRequest",
+            "moxie/runtime/silverlight/file/FileReaderSync",
+            "moxie/runtime/silverlight/runtime/Transporter"
+          ], function(extensions, Basic, XMLHttpRequest2, FileReaderSyncSilverlight, TransporterSilverlight) {
+            return extensions.XMLHttpRequest = Basic.extend({}, XMLHttpRequest2);
+          });
+          define2("moxie/runtime/silverlight/image/Image", [
+            "moxie/runtime/silverlight/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/file/Blob",
+            "moxie/runtime/flash/image/Image"
+          ], function(extensions, Basic, Blob, Image2) {
+            return extensions.Image = Basic.extend({}, Image2, {
+              getInfo: function() {
+                var self2 = this.getRuntime(), grps = ["tiff", "exif", "gps", "thumb"], info = { meta: {} }, rawInfo = self2.shimExec.call(this, "Image", "getInfo");
+                if (rawInfo.meta) {
+                  Basic.each(grps, function(grp) {
+                    var meta = rawInfo.meta[grp], tag, i, length, value;
+                    if (meta && meta.keys) {
+                      info.meta[grp] = {};
+                      for (i = 0, length = meta.keys.length; i < length; i++) {
+                        tag = meta.keys[i];
+                        value = meta[tag];
+                        if (value) {
+                          if (/^(\d|[1-9]\d+)$/.test(value)) {
+                            value = parseInt(value, 10);
+                          } else if (/^\d*\.\d+$/.test(value)) {
+                            value = parseFloat(value);
+                          }
+                          info.meta[grp][tag] = value;
+                        }
+                      }
+                    }
+                  });
+                  if (info.meta && info.meta.thumb && info.meta.thumb.data && !(self2.meta.thumb.data instanceof Blob)) {
+                    info.meta.thumb.data = new Blob(self2.uid, info.meta.thumb.data);
+                  }
+                }
+                info.width = parseInt(rawInfo.width, 10);
+                info.height = parseInt(rawInfo.height, 10);
+                info.size = parseInt(rawInfo.size, 10);
+                info.type = rawInfo.type;
+                info.name = rawInfo.name;
+                return info;
+              },
+              resize: function(rect, ratio, opts) {
+                this.getRuntime().shimExec.call(this, "Image", "resize", rect.x, rect.y, rect.width, rect.height, ratio, opts.preserveHeaders, opts.resample);
+              }
+            });
+          });
+          define2("moxie/runtime/html4/Runtime", [
+            "moxie/core/utils/Basic",
+            "moxie/core/Exceptions",
+            "moxie/runtime/Runtime",
+            "moxie/core/utils/Env"
+          ], function(Basic, x, Runtime, Env) {
+            var type = "html4", extensions = {};
+            function Html4Runtime(options) {
+              var I = this, Test = Runtime.capTest, True = Runtime.capTrue;
+              Runtime.call(this, options, type, {
+                access_binary: Test(window.FileReader || window.File && File.getAsDataURL),
+                access_image_binary: false,
+                display_media: Test(
+                  (Env.can("create_canvas") || Env.can("use_data_uri_over32kb")) && defined("moxie/image/Image")
+                ),
+                do_cors: false,
+                drag_and_drop: false,
+                filter_by_extension: Test(function() {
+                  return !(Env.browser === "Chrome" && Env.verComp(Env.version, 28, "<") || Env.browser === "IE" && Env.verComp(Env.version, 10, "<") || Env.browser === "Safari" && Env.verComp(Env.version, 7, "<") || Env.browser === "Firefox" && Env.verComp(Env.version, 37, "<"));
+                }()),
+                resize_image: function() {
+                  return extensions.Image && I.can("access_binary") && Env.can("create_canvas");
+                },
+                report_upload_progress: false,
+                return_response_headers: false,
+                return_response_type: function(responseType) {
+                  if (responseType === "json" && !!window.JSON) {
+                    return true;
+                  }
+                  return !!~Basic.inArray(responseType, ["text", "document", ""]);
+                },
+                return_status_code: function(code) {
+                  return !Basic.arrayDiff(code, [200, 404]);
+                },
+                select_file: function() {
+                  return Env.can("use_fileinput");
+                },
+                select_multiple: false,
+                send_binary_string: false,
+                send_custom_headers: false,
+                send_multipart: true,
+                slice_blob: false,
+                stream_upload: function() {
+                  return I.can("select_file");
+                },
+                summon_file_dialog: function() {
+                  return I.can("select_file") && !(Env.browser === "Firefox" && Env.verComp(Env.version, 4, "<") || Env.browser === "Opera" && Env.verComp(Env.version, 12, "<") || Env.browser === "IE" && Env.verComp(Env.version, 10, "<"));
+                },
+                upload_filesize: True,
+                use_http_method: function(methods) {
+                  return !Basic.arrayDiff(methods, ["GET", "POST"]);
+                }
+              });
+              Basic.extend(this, {
+                init: function() {
+                  this.trigger("Init");
+                },
+                destroy: /* @__PURE__ */ function(destroy3) {
+                  return function() {
+                    destroy3.call(I);
+                    destroy3 = I = null;
+                  };
+                }(this.destroy)
+              });
+              Basic.extend(this.getShim(), extensions);
+            }
+            Runtime.addConstructor(type, Html4Runtime);
+            return extensions;
+          });
+          define2("moxie/runtime/html4/file/FileInput", [
+            "moxie/runtime/html4/Runtime",
+            "moxie/file/File",
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Dom",
+            "moxie/core/utils/Events",
+            "moxie/core/utils/Mime",
+            "moxie/core/utils/Env"
+          ], function(extensions, File2, Basic, Dom, Events, Mime, Env) {
+            function FileInput() {
+              var _uid, _mimes = [], _options, _browseBtnZIndex;
+              function addInput() {
+                var comp = this, I = comp.getRuntime(), shimContainer, browseButton, currForm, form, input, uid;
+                uid = Basic.guid("uid_");
+                shimContainer = I.getShimContainer();
+                if (_uid) {
+                  currForm = Dom.get(_uid + "_form");
+                  if (currForm) {
+                    Basic.extend(currForm.style, { top: "100%" });
+                    currForm.firstChild.setAttribute("tabindex", -1);
+                  }
+                }
+                form = document.createElement("form");
+                form.setAttribute("id", uid + "_form");
+                form.setAttribute("method", "post");
+                form.setAttribute("enctype", "multipart/form-data");
+                form.setAttribute("encoding", "multipart/form-data");
+                Basic.extend(form.style, {
+                  overflow: "hidden",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%"
+                });
+                input = document.createElement("input");
+                input.setAttribute("id", uid);
+                input.setAttribute("type", "file");
+                input.setAttribute("accept", _mimes.join(","));
+                if (I.can("summon_file_dialog")) {
+                  input.setAttribute("tabindex", -1);
+                }
+                Basic.extend(input.style, {
+                  fontSize: "999px",
+                  opacity: 0
+                });
+                form.appendChild(input);
+                shimContainer.appendChild(form);
+                Basic.extend(input.style, {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%"
+                });
+                if (Env.browser === "IE" && Env.verComp(Env.version, 10, "<")) {
+                  Basic.extend(input.style, {
+                    filter: "progid:DXImageTransform.Microsoft.Alpha(opacity=0)"
+                  });
+                }
+                input.onchange = function() {
+                  var file;
+                  if (!this.value) {
+                    return;
+                  }
+                  if (this.files) {
+                    file = this.files[0];
+                  } else {
+                    file = {
+                      name: this.value
+                    };
+                  }
+                  file = new File2(I.uid, file);
+                  this.onchange = function() {
+                  };
+                  addInput.call(comp);
+                  comp.files = [file];
+                  input.setAttribute("id", file.uid);
+                  form.setAttribute("id", file.uid + "_form");
+                  comp.trigger("change");
+                  input = form = null;
+                };
+                if (I.can("summon_file_dialog")) {
+                  browseButton = Dom.get(_options.browse_button);
+                  Events.removeEvent(browseButton, "click", comp.uid);
+                  Events.addEvent(browseButton, "click", function(e) {
+                    if (input && !input.disabled) {
+                      input.click();
+                    }
+                    e.preventDefault();
+                  }, comp.uid);
+                }
+                _uid = uid;
+                shimContainer = currForm = browseButton = null;
+              }
+              Basic.extend(this, {
+                init: function(options) {
+                  var comp = this, I = comp.getRuntime(), shimContainer;
+                  _options = options;
+                  _mimes = Mime.extList2mimes(options.accept, I.can("filter_by_extension"));
+                  shimContainer = I.getShimContainer();
+                  (function() {
+                    var browseButton, zIndex, top2;
+                    browseButton = Dom.get(options.browse_button);
+                    _browseBtnZIndex = Dom.getStyle(browseButton, "z-index") || "auto";
+                    if (I.can("summon_file_dialog")) {
+                      if (Dom.getStyle(browseButton, "position") === "static") {
+                        browseButton.style.position = "relative";
+                      }
+                      comp.bind("Refresh", function() {
+                        zIndex = parseInt(_browseBtnZIndex, 10) || 1;
+                        Dom.get(_options.browse_button).style.zIndex = zIndex;
+                        this.getRuntime().getShimContainer().style.zIndex = zIndex - 1;
+                      });
+                    } else {
+                      browseButton.setAttribute("tabindex", -1);
+                    }
+                    top2 = I.can("summon_file_dialog") ? browseButton : shimContainer;
+                    Events.addEvent(top2, "mouseover", function() {
+                      comp.trigger("mouseenter");
+                    }, comp.uid);
+                    Events.addEvent(top2, "mouseout", function() {
+                      comp.trigger("mouseleave");
+                    }, comp.uid);
+                    Events.addEvent(top2, "mousedown", function() {
+                      comp.trigger("mousedown");
+                    }, comp.uid);
+                    Events.addEvent(Dom.get(options.container), "mouseup", function() {
+                      comp.trigger("mouseup");
+                    }, comp.uid);
+                    browseButton = null;
+                  })();
+                  addInput.call(this);
+                  shimContainer = null;
+                  comp.trigger({
+                    type: "ready",
+                    async: true
+                  });
+                },
+                setOption: function(name2, value) {
+                  var I = this.getRuntime();
+                  var input;
+                  if (name2 == "accept") {
+                    _mimes = value.mimes || Mime.extList2mimes(value, I.can("filter_by_extension"));
+                  }
+                  input = Dom.get(_uid);
+                  if (input) {
+                    input.setAttribute("accept", _mimes.join(","));
+                  }
+                },
+                disable: function(state) {
+                  var input;
+                  if (input = Dom.get(_uid)) {
+                    input.disabled = !!state;
+                  }
+                },
+                destroy: function() {
+                  var I = this.getRuntime(), shim = I.getShim(), shimContainer = I.getShimContainer(), container = _options && Dom.get(_options.container), browseButton = _options && Dom.get(_options.browse_button);
+                  if (container) {
+                    Events.removeAllEvents(container, this.uid);
+                  }
+                  if (browseButton) {
+                    Events.removeAllEvents(browseButton, this.uid);
+                    browseButton.style.zIndex = _browseBtnZIndex;
+                  }
+                  if (shimContainer) {
+                    Events.removeAllEvents(shimContainer, this.uid);
+                    shimContainer.innerHTML = "";
+                  }
+                  shim.removeInstance(this.uid);
+                  _uid = _mimes = _options = shimContainer = container = browseButton = shim = null;
+                }
+              });
+            }
+            return extensions.FileInput = FileInput;
+          });
+          define2("moxie/runtime/html4/file/FileReader", [
+            "moxie/runtime/html4/Runtime",
+            "moxie/runtime/html5/file/FileReader"
+          ], function(extensions, FileReader2) {
+            return extensions.FileReader = FileReader2;
+          });
+          define2("moxie/runtime/html4/xhr/XMLHttpRequest", [
+            "moxie/runtime/html4/Runtime",
+            "moxie/core/utils/Basic",
+            "moxie/core/utils/Dom",
+            "moxie/core/utils/Url",
+            "moxie/core/Exceptions",
+            "moxie/core/utils/Events",
+            "moxie/file/Blob",
+            "moxie/xhr/FormData"
+          ], function(extensions, Basic, Dom, Url, x, Events, Blob, FormData2) {
+            function XMLHttpRequest2() {
+              var _status, _response, _iframe;
+              function cleanup(cb) {
+                var target = this, uid, form, inputs, i, hasFile = false;
+                if (!_iframe) {
+                  return;
+                }
+                uid = _iframe.id.replace(/_iframe$/, "");
+                form = Dom.get(uid + "_form");
+                if (form) {
+                  inputs = form.getElementsByTagName("input");
+                  i = inputs.length;
+                  while (i--) {
+                    switch (inputs[i].getAttribute("type")) {
+                      case "hidden":
+                        inputs[i].parentNode.removeChild(inputs[i]);
+                        break;
+                      case "file":
+                        hasFile = true;
+                        break;
+                    }
+                  }
+                  inputs = [];
+                  if (!hasFile) {
+                    form.parentNode.removeChild(form);
+                  }
+                  form = null;
+                }
+                setTimeout(function() {
+                  Events.removeEvent(_iframe, "load", target.uid);
+                  if (_iframe.parentNode) {
+                    _iframe.parentNode.removeChild(_iframe);
+                  }
+                  var shimContainer = target.getRuntime().getShimContainer();
+                  if (!shimContainer.children.length) {
+                    shimContainer.parentNode.removeChild(shimContainer);
+                  }
+                  shimContainer = _iframe = null;
+                  cb();
+                }, 1);
+              }
+              Basic.extend(this, {
+                send: function(meta, data) {
+                  var target = this, I = target.getRuntime(), uid, form, input, blob;
+                  _status = _response = null;
+                  function createIframe() {
+                    var container = I.getShimContainer() || document.body, temp = document.createElement("div");
+                    temp.innerHTML = '<iframe id="' + uid + '_iframe" name="' + uid + '_iframe" src="javascript:&quot;&quot;" style="display:none"></iframe>';
+                    _iframe = temp.firstChild;
+                    container.appendChild(_iframe);
+                    Events.addEvent(_iframe, "load", function() {
+                      var el;
+                      try {
+                        el = _iframe.contentWindow.document || _iframe.contentDocument || window.frames[_iframe.id].document;
+                        if (/^4(0[0-9]|1[0-7]|2[2346])\s/.test(el.title)) {
+                          _status = el.title.replace(/^(\d+).*$/, "$1");
+                        } else {
+                          _status = 200;
+                          _response = Basic.trim(el.body.innerHTML);
+                          target.trigger({
+                            type: "progress",
+                            loaded: _response.length,
+                            total: _response.length
+                          });
+                          if (blob) {
+                            target.trigger({
+                              type: "uploadprogress",
+                              loaded: blob.size || 1025,
+                              total: blob.size || 1025
+                            });
+                          }
+                        }
+                      } catch (ex) {
+                        if (Url.hasSameOrigin(meta.url)) {
+                          _status = 404;
+                        } else {
+                          cleanup.call(target, function() {
+                            target.trigger("error");
+                          });
+                          return;
+                        }
+                      }
+                      cleanup.call(target, function() {
+                        target.trigger("load");
+                      });
+                    }, target.uid);
+                  }
+                  if (data instanceof FormData2 && data.hasBlob()) {
+                    blob = data.getBlob();
+                    uid = blob.uid;
+                    input = Dom.get(uid);
+                    form = Dom.get(uid + "_form");
+                    if (!form) {
+                      throw new x.DOMException(x.DOMException.NOT_FOUND_ERR);
+                    }
+                  } else {
+                    uid = Basic.guid("uid_");
+                    form = document.createElement("form");
+                    form.setAttribute("id", uid + "_form");
+                    form.setAttribute("method", meta.method);
+                    form.setAttribute("enctype", "multipart/form-data");
+                    form.setAttribute("encoding", "multipart/form-data");
+                    I.getShimContainer().appendChild(form);
+                  }
+                  form.setAttribute("target", uid + "_iframe");
+                  if (data instanceof FormData2) {
+                    data.each(function(value, name2) {
+                      if (value instanceof Blob) {
+                        if (input) {
+                          input.setAttribute("name", name2);
+                        }
+                      } else {
+                        var hidden = document.createElement("input");
+                        Basic.extend(hidden, {
+                          type: "hidden",
+                          name: name2,
+                          value
+                        });
+                        if (input) {
+                          form.insertBefore(hidden, input);
+                        } else {
+                          form.appendChild(hidden);
+                        }
+                      }
+                    });
+                  }
+                  form.setAttribute("action", meta.url);
+                  createIframe();
+                  form.submit();
+                  target.trigger("loadstart");
+                },
+                getStatus: function() {
+                  return _status;
+                },
+                getResponse: function(responseType) {
+                  if ("json" === responseType) {
+                    if (Basic.typeOf(_response) === "string" && !!window.JSON) {
+                      try {
+                        return JSON.parse(_response.replace(/^\s*<pre[^>]*>/, "").replace(/<\/pre>\s*$/, ""));
+                      } catch (ex) {
+                        return null;
+                      }
+                    }
+                  } else if ("document" === responseType) {
+                  }
+                  return _response;
+                },
+                abort: function() {
+                  var target = this;
+                  if (_iframe && _iframe.contentWindow) {
+                    if (_iframe.contentWindow.stop) {
+                      _iframe.contentWindow.stop();
+                    } else if (_iframe.contentWindow.document.execCommand) {
+                      _iframe.contentWindow.document.execCommand("Stop");
+                    } else {
+                      _iframe.src = "about:blank";
+                    }
+                  }
+                  cleanup.call(this, function() {
+                    target.dispatchEvent("abort");
+                  });
+                },
+                destroy: function() {
+                  this.getRuntime().getShim().removeInstance(this.uid);
+                }
+              });
+            }
+            return extensions.XMLHttpRequest = XMLHttpRequest2;
+          });
+          define2("moxie/runtime/html4/image/Image", [
+            "moxie/runtime/html4/Runtime",
+            "moxie/runtime/html5/image/Image"
+          ], function(extensions, Image2) {
+            return extensions.Image = Image2;
+          });
+          expose(["moxie/core/utils/Basic", "moxie/core/utils/Encode", "moxie/core/utils/Env", "moxie/core/Exceptions", "moxie/core/utils/Dom", "moxie/core/EventTarget", "moxie/runtime/Runtime", "moxie/runtime/RuntimeClient", "moxie/file/Blob", "moxie/core/I18n", "moxie/core/utils/Mime", "moxie/file/FileInput", "moxie/file/File", "moxie/file/FileDrop", "moxie/file/FileReader", "moxie/core/utils/Url", "moxie/runtime/RuntimeTarget", "moxie/xhr/FormData", "moxie/xhr/XMLHttpRequest", "moxie/image/Image", "moxie/core/utils/Events", "moxie/runtime/html5/image/ResizerCanvas"]);
+        })(this);
+      });
+    }
+  });
+
+  // node_modules/plupload/js/plupload.full.min.js
+  var require_plupload_full_min = __commonJS({
+    "node_modules/plupload/js/plupload.full.min.js"(exports, module) {
+      !function(e, t) {
+        var i = function() {
+          var e2 = {};
+          return t.apply(e2, arguments), e2.moxie;
+        };
+        "function" == typeof define && define.amd ? define("moxie", [], i) : "object" == typeof module && module.exports ? module.exports = i() : e.moxie = i();
+      }(exports || window, function() {
+        !function(e, t) {
+          "use strict";
+          function i(e2, t2) {
+            for (var i2, n2 = [], r2 = 0; r2 < e2.length; ++r2) {
+              if (i2 = s[e2[r2]] || o(e2[r2]), !i2) throw "module definition dependecy not found: " + e2[r2];
+              n2.push(i2);
+            }
+            t2.apply(null, n2);
+          }
+          function n(e2, n2, r2) {
+            if ("string" != typeof e2) throw "invalid module definition, module id must be defined and be a string";
+            if (n2 === t) throw "invalid module definition, dependencies must be specified";
+            if (r2 === t) throw "invalid module definition, definition function must be specified";
+            i(n2, function() {
+              s[e2] = r2.apply(null, arguments);
+            });
+          }
+          function r(e2) {
+            return !!s[e2];
+          }
+          function o(t2) {
+            for (var i2 = e, n2 = t2.split(/[.\/]/), r2 = 0; r2 < n2.length; ++r2) {
+              if (!i2[n2[r2]]) return;
+              i2 = i2[n2[r2]];
+            }
+            return i2;
+          }
+          function a(i2) {
+            for (var n2 = 0; n2 < i2.length; n2++) {
+              for (var r2 = e, o2 = i2[n2], a2 = o2.split(/[.\/]/), u = 0; u < a2.length - 1; ++u) r2[a2[u]] === t && (r2[a2[u]] = {}), r2 = r2[a2[u]];
+              r2[a2[a2.length - 1]] = s[o2];
+            }
+          }
+          var s = {};
+          n("moxie/core/utils/Basic", [], function() {
+            function e2(e3) {
+              var t3;
+              return e3 === t3 ? "undefined" : null === e3 ? "null" : e3.nodeType ? "node" : {}.toString.call(e3).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
+            }
+            function t2() {
+              return s2(false, false, arguments);
+            }
+            function i2() {
+              return s2(true, false, arguments);
+            }
+            function n2() {
+              return s2(false, true, arguments);
+            }
+            function r2() {
+              return s2(true, true, arguments);
+            }
+            function o2(t3) {
+              switch (e2(t3)) {
+                case "array":
+                  return s2(false, true, [[], t3]);
+                case "object":
+                  return s2(false, true, [{}, t3]);
+                default:
+                  return t3;
+              }
+            }
+            function a2(i3) {
+              switch (e2(i3)) {
+                case "array":
+                  return Array.prototype.slice.call(i3);
+                case "object":
+                  return t2({}, i3);
+              }
+              return i3;
+            }
+            function s2(t3, i3, n3) {
+              var r3, o3 = n3[0];
+              return c(n3, function(n4, u2) {
+                u2 > 0 && c(n4, function(n5, u3) {
+                  var c2 = -1 !== h(e2(n5), ["array", "object"]);
+                  return n5 === r3 || t3 && o3[u3] === r3 ? true : (c2 && i3 && (n5 = a2(n5)), e2(o3[u3]) === e2(n5) && c2 ? s2(t3, i3, [o3[u3], n5]) : o3[u3] = n5, void 0);
+                });
+              }), o3;
+            }
+            function u(e3, t3) {
+              function i3() {
+                this.constructor = e3;
+              }
+              for (var n3 in t3) ({}).hasOwnProperty.call(t3, n3) && (e3[n3] = t3[n3]);
+              return i3.prototype = t3.prototype, e3.prototype = new i3(), e3.parent = t3.prototype, e3;
+            }
+            function c(e3, t3) {
+              var i3, n3, r3, o3;
+              if (e3) {
+                try {
+                  i3 = e3.length;
+                } catch (a3) {
+                  i3 = o3;
+                }
+                if (i3 === o3 || "number" != typeof i3) {
+                  for (n3 in e3) if (e3.hasOwnProperty(n3) && t3(e3[n3], n3) === false) return;
+                } else for (r3 = 0; i3 > r3; r3++) if (t3(e3[r3], r3) === false) return;
+              }
+            }
+            function l(t3) {
+              var i3;
+              if (!t3 || "object" !== e2(t3)) return true;
+              for (i3 in t3) return false;
+              return true;
+            }
+            function d(t3, i3) {
+              function n3(r4) {
+                "function" === e2(t3[r4]) && t3[r4](function(e3) {
+                  ++r4 < o3 && !e3 ? n3(r4) : i3(e3);
+                });
+              }
+              var r3 = 0, o3 = t3.length;
+              "function" !== e2(i3) && (i3 = function() {
+              }), t3 && t3.length || i3(), n3(r3);
+            }
+            function m2(e3, t3) {
+              var i3 = 0, n3 = e3.length, r3 = new Array(n3);
+              c(e3, function(e4, o3) {
+                e4(function(e5) {
+                  if (e5) return t3(e5);
+                  var a3 = [].slice.call(arguments);
+                  a3.shift(), r3[o3] = a3, i3++, i3 === n3 && (r3.unshift(null), t3.apply(this, r3));
+                });
+              });
+            }
+            function h(e3, t3) {
+              if (t3) {
+                if (Array.prototype.indexOf) return Array.prototype.indexOf.call(t3, e3);
+                for (var i3 = 0, n3 = t3.length; n3 > i3; i3++) if (t3[i3] === e3) return i3;
+              }
+              return -1;
+            }
+            function f(t3, i3) {
+              var n3 = [];
+              "array" !== e2(t3) && (t3 = [t3]), "array" !== e2(i3) && (i3 = [i3]);
+              for (var r3 in t3) -1 === h(t3[r3], i3) && n3.push(t3[r3]);
+              return n3.length ? n3 : false;
+            }
+            function p(e3, t3) {
+              var i3 = [];
+              return c(e3, function(e4) {
+                -1 !== h(e4, t3) && i3.push(e4);
+              }), i3.length ? i3 : null;
+            }
+            function g(e3) {
+              var t3, i3 = [];
+              for (t3 = 0; t3 < e3.length; t3++) i3[t3] = e3[t3];
+              return i3;
+            }
+            function x(e3) {
+              return e3 ? String.prototype.trim ? String.prototype.trim.call(e3) : e3.toString().replace(/^\s*/, "").replace(/\s*$/, "") : e3;
+            }
+            function v(e3) {
+              if ("string" != typeof e3) return e3;
+              var t3, i3 = { t: 1099511627776, g: 1073741824, m: 1048576, k: 1024 };
+              return e3 = /^([0-9\.]+)([tmgk]?)$/.exec(e3.toLowerCase().replace(/[^0-9\.tmkg]/g, "")), t3 = e3[2], e3 = +e3[1], i3.hasOwnProperty(t3) && (e3 *= i3[t3]), Math.floor(e3);
+            }
+            function w(e3) {
+              var t3 = [].slice.call(arguments, 1);
+              return e3.replace(/%([a-z])/g, function(e4, i3) {
+                var n3 = t3.shift();
+                switch (i3) {
+                  case "s":
+                    return n3 + "";
+                  case "d":
+                    return parseInt(n3, 10);
+                  case "f":
+                    return parseFloat(n3);
+                  case "c":
+                    return "";
+                  default:
+                    return n3;
+                }
+              });
+            }
+            function y(e3, t3) {
+              var i3 = this;
+              setTimeout(function() {
+                e3.call(i3);
+              }, t3 || 1);
+            }
+            var E = /* @__PURE__ */ function() {
+              var e3 = 0;
+              return function(t3) {
+                var i3, n3 = (/* @__PURE__ */ new Date()).getTime().toString(32);
+                for (i3 = 0; 5 > i3; i3++) n3 += Math.floor(65535 * Math.random()).toString(32);
+                return (t3 || "o_") + n3 + (e3++).toString(32);
+              };
+            }();
+            return { guid: E, typeOf: e2, extend: t2, extendIf: i2, extendImmutable: n2, extendImmutableIf: r2, clone: o2, inherit: u, each: c, isEmptyObj: l, inSeries: d, inParallel: m2, inArray: h, arrayDiff: f, arrayIntersect: p, toArray: g, trim: x, sprintf: w, parseSizeStr: v, delay: y };
+          }), n("moxie/core/utils/Encode", [], function() {
+            var e2 = function(e3) {
+              return unescape(encodeURIComponent(e3));
+            }, t2 = function(e3) {
+              return decodeURIComponent(escape(e3));
+            }, i2 = function(e3, i3) {
+              if ("function" == typeof window.atob) return i3 ? t2(window.atob(e3)) : window.atob(e3);
+              var n3, r2, o2, a2, s2, u, c, l, d = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", m2 = 0, h = 0, f = "", p = [];
+              if (!e3) return e3;
+              e3 += "";
+              do
+                a2 = d.indexOf(e3.charAt(m2++)), s2 = d.indexOf(e3.charAt(m2++)), u = d.indexOf(e3.charAt(m2++)), c = d.indexOf(e3.charAt(m2++)), l = a2 << 18 | s2 << 12 | u << 6 | c, n3 = 255 & l >> 16, r2 = 255 & l >> 8, o2 = 255 & l, p[h++] = 64 == u ? String.fromCharCode(n3) : 64 == c ? String.fromCharCode(n3, r2) : String.fromCharCode(n3, r2, o2);
+              while (m2 < e3.length);
+              return f = p.join(""), i3 ? t2(f) : f;
+            }, n2 = function(t3, i3) {
+              if (i3 && (t3 = e2(t3)), "function" == typeof window.btoa) return window.btoa(t3);
+              var n3, r2, o2, a2, s2, u, c, l, d = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", m2 = 0, h = 0, f = "", p = [];
+              if (!t3) return t3;
+              do
+                n3 = t3.charCodeAt(m2++), r2 = t3.charCodeAt(m2++), o2 = t3.charCodeAt(m2++), l = n3 << 16 | r2 << 8 | o2, a2 = 63 & l >> 18, s2 = 63 & l >> 12, u = 63 & l >> 6, c = 63 & l, p[h++] = d.charAt(a2) + d.charAt(s2) + d.charAt(u) + d.charAt(c);
+              while (m2 < t3.length);
+              f = p.join("");
+              var g = t3.length % 3;
+              return (g ? f.slice(0, g - 3) : f) + "===".slice(g || 3);
+            };
+            return { utf8_encode: e2, utf8_decode: t2, atob: i2, btoa: n2 };
+          }), n("moxie/core/utils/Env", ["moxie/core/utils/Basic"], function(e2) {
+            function i2(e3, t2, i3) {
+              var n3 = 0, r3 = 0, o3 = 0, a3 = { dev: -6, alpha: -5, a: -5, beta: -4, b: -4, RC: -3, rc: -3, "#": -2, p: 1, pl: 1 }, s2 = function(e4) {
+                return e4 = ("" + e4).replace(/[_\-+]/g, "."), e4 = e4.replace(/([^.\d]+)/g, ".$1.").replace(/\.{2,}/g, "."), e4.length ? e4.split(".") : [-8];
+              }, u = function(e4) {
+                return e4 ? isNaN(e4) ? a3[e4] || -7 : parseInt(e4, 10) : 0;
+              };
+              for (e3 = s2(e3), t2 = s2(t2), r3 = Math.max(e3.length, t2.length), n3 = 0; r3 > n3; n3++) if (e3[n3] != t2[n3]) {
+                if (e3[n3] = u(e3[n3]), t2[n3] = u(t2[n3]), e3[n3] < t2[n3]) {
+                  o3 = -1;
+                  break;
+                }
+                if (e3[n3] > t2[n3]) {
+                  o3 = 1;
+                  break;
+                }
+              }
+              if (!i3) return o3;
+              switch (i3) {
+                case ">":
+                case "gt":
+                  return o3 > 0;
+                case ">=":
+                case "ge":
+                  return o3 >= 0;
+                case "<=":
+                case "le":
+                  return 0 >= o3;
+                case "==":
+                case "=":
+                case "eq":
+                  return 0 === o3;
+                case "<>":
+                case "!=":
+                case "ne":
+                  return 0 !== o3;
+                case "":
+                case "<":
+                case "lt":
+                  return 0 > o3;
+                default:
+                  return null;
+              }
+            }
+            var n2 = function(e3) {
+              var t2 = "", i3 = "?", n3 = "function", r3 = "undefined", o3 = "object", a3 = "name", s2 = "version", u = { has: function(e4, t3) {
+                return -1 !== t3.toLowerCase().indexOf(e4.toLowerCase());
+              }, lowerize: function(e4) {
+                return e4.toLowerCase();
+              } }, c = { rgx: function() {
+                for (var t3, i4, a4, s3, u2, c2, l2, d2 = 0, m3 = arguments; d2 < m3.length; d2 += 2) {
+                  var h = m3[d2], f = m3[d2 + 1];
+                  if (typeof t3 === r3) {
+                    t3 = {};
+                    for (s3 in f) u2 = f[s3], typeof u2 === o3 ? t3[u2[0]] = e3 : t3[u2] = e3;
+                  }
+                  for (i4 = a4 = 0; i4 < h.length; i4++) if (c2 = h[i4].exec(this.getUA())) {
+                    for (s3 = 0; s3 < f.length; s3++) l2 = c2[++a4], u2 = f[s3], typeof u2 === o3 && u2.length > 0 ? 2 == u2.length ? t3[u2[0]] = typeof u2[1] == n3 ? u2[1].call(this, l2) : u2[1] : 3 == u2.length ? t3[u2[0]] = typeof u2[1] !== n3 || u2[1].exec && u2[1].test ? l2 ? l2.replace(u2[1], u2[2]) : e3 : l2 ? u2[1].call(this, l2, u2[2]) : e3 : 4 == u2.length && (t3[u2[0]] = l2 ? u2[3].call(this, l2.replace(u2[1], u2[2])) : e3) : t3[u2] = l2 ? l2 : e3;
+                    break;
+                  }
+                  if (c2) break;
+                }
+                return t3;
+              }, str: function(t3, n4) {
+                for (var r4 in n4) if (typeof n4[r4] === o3 && n4[r4].length > 0) {
+                  for (var a4 = 0; a4 < n4[r4].length; a4++) if (u.has(n4[r4][a4], t3)) return r4 === i3 ? e3 : r4;
+                } else if (u.has(n4[r4], t3)) return r4 === i3 ? e3 : r4;
+                return t3;
+              } }, l = { browser: { oldsafari: { major: { 1: ["/8", "/1", "/3"], 2: "/4", "?": "/" }, version: { "1.0": "/8", 1.2: "/1", 1.3: "/3", "2.0": "/412", "2.0.2": "/416", "2.0.3": "/417", "2.0.4": "/419", "?": "/" } } }, device: { sprint: { model: { "Evo Shift 4G": "7373KT" }, vendor: { HTC: "APA", Sprint: "Sprint" } } }, os: { windows: { version: { ME: "4.90", "NT 3.11": "NT3.51", "NT 4.0": "NT4.0", 2e3: "NT 5.0", XP: ["NT 5.1", "NT 5.2"], Vista: "NT 6.0", 7: "NT 6.1", 8: "NT 6.2", 8.1: "NT 6.3", RT: "ARM" } } } }, d = { browser: [[/(opera\smini)\/([\w\.-]+)/i, /(opera\s[mobiletab]+).+version\/([\w\.-]+)/i, /(opera).+version\/([\w\.]+)/i, /(opera)[\/\s]+([\w\.]+)/i], [a3, s2], [/\s(opr)\/([\w\.]+)/i], [[a3, "Opera"], s2], [/(kindle)\/([\w\.]+)/i, /(lunascape|maxthon|netfront|jasmine|blazer)[\/\s]?([\w\.]+)*/i, /(avant\s|iemobile|slim|baidu)(?:browser)?[\/\s]?([\w\.]*)/i, /(?:ms|\()(ie)\s([\w\.]+)/i, /(rekonq)\/([\w\.]+)*/i, /(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi)\/([\w\.-]+)/i], [a3, s2], [/(trident).+rv[:\s]([\w\.]+).+like\sgecko/i], [[a3, "IE"], s2], [/(edge)\/((\d+)?[\w\.]+)/i], [a3, s2], [/(yabrowser)\/([\w\.]+)/i], [[a3, "Yandex"], s2], [/(comodo_dragon)\/([\w\.]+)/i], [[a3, /_/g, " "], s2], [/(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i, /(uc\s?browser|qqbrowser)[\/\s]?([\w\.]+)/i], [a3, s2], [/(dolfin)\/([\w\.]+)/i], [[a3, "Dolphin"], s2], [/((?:android.+)crmo|crios)\/([\w\.]+)/i], [[a3, "Chrome"], s2], [/XiaoMi\/MiuiBrowser\/([\w\.]+)/i], [s2, [a3, "MIUI Browser"]], [/android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)/i], [s2, [a3, "Android Browser"]], [/FBAV\/([\w\.]+);/i], [s2, [a3, "Facebook"]], [/version\/([\w\.]+).+?mobile\/\w+\s(safari)/i], [s2, [a3, "Mobile Safari"]], [/version\/([\w\.]+).+?(mobile\s?safari|safari)/i], [s2, a3], [/webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i], [a3, [s2, c.str, l.browser.oldsafari.version]], [/(konqueror)\/([\w\.]+)/i, /(webkit|khtml)\/([\w\.]+)/i], [a3, s2], [/(navigator|netscape)\/([\w\.-]+)/i], [[a3, "Netscape"], s2], [/(swiftfox)/i, /(icedragon|iceweasel|camino|chimera|fennec|maemo\sbrowser|minimo|conkeror)[\/\s]?([\w\.\+]+)/i, /(firefox|seamonkey|k-meleon|icecat|iceape|firebird|phoenix)\/([\w\.-]+)/i, /(mozilla)\/([\w\.]+).+rv\:.+gecko\/\d+/i, /(polaris|lynx|dillo|icab|doris|amaya|w3m|netsurf)[\/\s]?([\w\.]+)/i, /(links)\s\(([\w\.]+)/i, /(gobrowser)\/?([\w\.]+)*/i, /(ice\s?browser)\/v?([\w\._]+)/i, /(mosaic)[\/\s]([\w\.]+)/i], [a3, s2]], engine: [[/windows.+\sedge\/([\w\.]+)/i], [s2, [a3, "EdgeHTML"]], [/(presto)\/([\w\.]+)/i, /(webkit|trident|netfront|netsurf|amaya|lynx|w3m)\/([\w\.]+)/i, /(khtml|tasman|links)[\/\s]\(?([\w\.]+)/i, /(icab)[\/\s]([23]\.[\d\.]+)/i], [a3, s2], [/rv\:([\w\.]+).*(gecko)/i], [s2, a3]], os: [[/microsoft\s(windows)\s(vista|xp)/i], [a3, s2], [/(windows)\snt\s6\.2;\s(arm)/i, /(windows\sphone(?:\sos)*|windows\smobile|windows)[\s\/]?([ntce\d\.\s]+\w)/i], [a3, [s2, c.str, l.os.windows.version]], [/(win(?=3|9|n)|win\s9x\s)([nt\d\.]+)/i], [[a3, "Windows"], [s2, c.str, l.os.windows.version]], [/\((bb)(10);/i], [[a3, "BlackBerry"], s2], [/(blackberry)\w*\/?([\w\.]+)*/i, /(tizen)[\/\s]([\w\.]+)/i, /(android|webos|palm\os|qnx|bada|rim\stablet\sos|meego|contiki)[\/\s-]?([\w\.]+)*/i, /linux;.+(sailfish);/i], [a3, s2], [/(symbian\s?os|symbos|s60(?=;))[\/\s-]?([\w\.]+)*/i], [[a3, "Symbian"], s2], [/\((series40);/i], [a3], [/mozilla.+\(mobile;.+gecko.+firefox/i], [[a3, "Firefox OS"], s2], [/(nintendo|playstation)\s([wids3portablevu]+)/i, /(mint)[\/\s\(]?(\w+)*/i, /(mageia|vectorlinux)[;\s]/i, /(joli|[kxln]?ubuntu|debian|[open]*suse|gentoo|arch|slackware|fedora|mandriva|centos|pclinuxos|redhat|zenwalk|linpus)[\/\s-]?([\w\.-]+)*/i, /(hurd|linux)\s?([\w\.]+)*/i, /(gnu)\s?([\w\.]+)*/i], [a3, s2], [/(cros)\s[\w]+\s([\w\.]+\w)/i], [[a3, "Chromium OS"], s2], [/(sunos)\s?([\w\.]+\d)*/i], [[a3, "Solaris"], s2], [/\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i], [a3, s2], [/(ip[honead]+)(?:.*os\s*([\w]+)*\slike\smac|;\sopera)/i], [[a3, "iOS"], [s2, /_/g, "."]], [/(mac\sos\sx)\s?([\w\s\.]+\w)*/i, /(macintosh|mac(?=_powerpc)\s)/i], [[a3, "Mac OS"], [s2, /_/g, "."]], [/((?:open)?solaris)[\/\s-]?([\w\.]+)*/i, /(haiku)\s(\w+)/i, /(aix)\s((\d)(?=\.|\)|\s)[\w\.]*)*/i, /(plan\s9|minix|beos|os\/2|amigaos|morphos|risc\sos|openvms)/i, /(unix)\s?([\w\.]+)*/i], [a3, s2]] }, m2 = function(e4) {
+                var i4 = e4 || (window && window.navigator && window.navigator.userAgent ? window.navigator.userAgent : t2);
+                this.getBrowser = function() {
+                  return c.rgx.apply(this, d.browser);
+                }, this.getEngine = function() {
+                  return c.rgx.apply(this, d.engine);
+                }, this.getOS = function() {
+                  return c.rgx.apply(this, d.os);
+                }, this.getResult = function() {
+                  return { ua: this.getUA(), browser: this.getBrowser(), engine: this.getEngine(), os: this.getOS() };
+                }, this.getUA = function() {
+                  return i4;
+                }, this.setUA = function(e5) {
+                  return i4 = e5, this;
+                }, this.setUA(i4);
+              };
+              return m2;
+            }(), r2 = function() {
+              var i3 = { access_global_ns: function() {
+                return !!window.moxie;
+              }, define_property: /* @__PURE__ */ function() {
+                return false;
+              }(), create_canvas: function() {
+                var e3 = document.createElement("canvas"), t2 = !(!e3.getContext || !e3.getContext("2d"));
+                return i3.create_canvas = t2, t2;
+              }, return_response_type: function(t2) {
+                try {
+                  if (-1 !== e2.inArray(t2, ["", "text", "document"])) return true;
+                  if (window.XMLHttpRequest) {
+                    var i4 = new XMLHttpRequest();
+                    if (i4.open("get", "/"), "responseType" in i4) return i4.responseType = t2, i4.responseType !== t2 ? false : true;
+                  }
+                } catch (n3) {
+                }
+                return false;
+              }, use_blob_uri: function() {
+                var e3 = window.URL;
+                return i3.use_blob_uri = e3 && "createObjectURL" in e3 && "revokeObjectURL" in e3 && ("IE" !== a2.browser || a2.verComp(a2.version, "11.0.46", ">=")), i3.use_blob_uri;
+              }, use_data_uri: function() {
+                var e3 = new Image();
+                return e3.onload = function() {
+                  i3.use_data_uri = 1 === e3.width && 1 === e3.height;
+                }, setTimeout(function() {
+                  e3.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP8AAAAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
+                }, 1), false;
+              }(), use_data_uri_over32kb: function() {
+                return i3.use_data_uri && ("IE" !== a2.browser || a2.version >= 9);
+              }, use_data_uri_of: function(e3) {
+                return i3.use_data_uri && 33e3 > e3 || i3.use_data_uri_over32kb();
+              }, use_fileinput: function() {
+                if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\/(1.0|2.0|2.5|3.0))/)) return false;
+                var e3 = document.createElement("input");
+                return e3.setAttribute("type", "file"), i3.use_fileinput = !e3.disabled;
+              }, use_webgl: function() {
+                var e3, n3 = document.createElement("canvas"), r3 = null;
+                try {
+                  r3 = n3.getContext("webgl") || n3.getContext("experimental-webgl");
+                } catch (o3) {
+                }
+                return r3 || (r3 = null), e3 = !!r3, i3.use_webgl = e3, n3 = t, e3;
+              } };
+              return function(t2) {
+                var n3 = [].slice.call(arguments);
+                return n3.shift(), "function" === e2.typeOf(i3[t2]) ? i3[t2].apply(this, n3) : !!i3[t2];
+              };
+            }(), o2 = new n2().getResult(), a2 = { can: r2, uaParser: n2, browser: o2.browser.name, version: o2.browser.version, os: o2.os.name, osVersion: o2.os.version, verComp: i2, swf_url: "../flash/Moxie.swf", xap_url: "../silverlight/Moxie.xap", global_event_dispatcher: "moxie.core.EventTarget.instance.dispatchEvent" };
+            return a2.OS = a2.os, a2;
+          }), n("moxie/core/Exceptions", ["moxie/core/utils/Basic"], function(e2) {
+            function t2(e3, t3) {
+              var i2;
+              for (i2 in e3) if (e3[i2] === t3) return i2;
+              return null;
+            }
+            return { RuntimeError: function() {
+              function i2(e3, i3) {
+                this.code = e3, this.name = t2(n2, e3), this.message = this.name + (i3 || ": RuntimeError " + this.code);
+              }
+              var n2 = { NOT_INIT_ERR: 1, EXCEPTION_ERR: 3, NOT_SUPPORTED_ERR: 9, JS_ERR: 4 };
+              return e2.extend(i2, n2), i2.prototype = Error.prototype, i2;
+            }(), OperationNotAllowedException: function() {
+              function t3(e3) {
+                this.code = e3, this.name = "OperationNotAllowedException";
+              }
+              return e2.extend(t3, { NOT_ALLOWED_ERR: 1 }), t3.prototype = Error.prototype, t3;
+            }(), ImageError: function() {
+              function i2(e3) {
+                this.code = e3, this.name = t2(n2, e3), this.message = this.name + ": ImageError " + this.code;
+              }
+              var n2 = { WRONG_FORMAT: 1, MAX_RESOLUTION_ERR: 2, INVALID_META_ERR: 3 };
+              return e2.extend(i2, n2), i2.prototype = Error.prototype, i2;
+            }(), FileException: function() {
+              function i2(e3) {
+                this.code = e3, this.name = t2(n2, e3), this.message = this.name + ": FileException " + this.code;
+              }
+              var n2 = { NOT_FOUND_ERR: 1, SECURITY_ERR: 2, ABORT_ERR: 3, NOT_READABLE_ERR: 4, ENCODING_ERR: 5, NO_MODIFICATION_ALLOWED_ERR: 6, INVALID_STATE_ERR: 7, SYNTAX_ERR: 8 };
+              return e2.extend(i2, n2), i2.prototype = Error.prototype, i2;
+            }(), DOMException: function() {
+              function i2(e3) {
+                this.code = e3, this.name = t2(n2, e3), this.message = this.name + ": DOMException " + this.code;
+              }
+              var n2 = { INDEX_SIZE_ERR: 1, DOMSTRING_SIZE_ERR: 2, HIERARCHY_REQUEST_ERR: 3, WRONG_DOCUMENT_ERR: 4, INVALID_CHARACTER_ERR: 5, NO_DATA_ALLOWED_ERR: 6, NO_MODIFICATION_ALLOWED_ERR: 7, NOT_FOUND_ERR: 8, NOT_SUPPORTED_ERR: 9, INUSE_ATTRIBUTE_ERR: 10, INVALID_STATE_ERR: 11, SYNTAX_ERR: 12, INVALID_MODIFICATION_ERR: 13, NAMESPACE_ERR: 14, INVALID_ACCESS_ERR: 15, VALIDATION_ERR: 16, TYPE_MISMATCH_ERR: 17, SECURITY_ERR: 18, NETWORK_ERR: 19, ABORT_ERR: 20, URL_MISMATCH_ERR: 21, QUOTA_EXCEEDED_ERR: 22, TIMEOUT_ERR: 23, INVALID_NODE_TYPE_ERR: 24, DATA_CLONE_ERR: 25 };
+              return e2.extend(i2, n2), i2.prototype = Error.prototype, i2;
+            }(), EventException: function() {
+              function t3(e3) {
+                this.code = e3, this.name = "EventException";
+              }
+              return e2.extend(t3, { UNSPECIFIED_EVENT_TYPE_ERR: 0 }), t3.prototype = Error.prototype, t3;
+            }() };
+          }), n("moxie/core/utils/Dom", ["moxie/core/utils/Env"], function(e2) {
+            var t2 = function(e3) {
+              return "string" != typeof e3 ? e3 : document.getElementById(e3);
+            }, i2 = function(e3, t3) {
+              if (!e3.className) return false;
+              var i3 = new RegExp("(^|\\s+)" + t3 + "(\\s+|$)");
+              return i3.test(e3.className);
+            }, n2 = function(e3, t3) {
+              i2(e3, t3) || (e3.className = e3.className ? e3.className.replace(/\s+$/, "") + " " + t3 : t3);
+            }, r2 = function(e3, t3) {
+              if (e3.className) {
+                var i3 = new RegExp("(^|\\s+)" + t3 + "(\\s+|$)");
+                e3.className = e3.className.replace(i3, function(e4, t4, i4) {
+                  return " " === t4 && " " === i4 ? " " : "";
+                });
+              }
+            }, o2 = function(e3, t3) {
+              return e3.currentStyle ? e3.currentStyle[t3] : window.getComputedStyle ? window.getComputedStyle(e3, null)[t3] : void 0;
+            }, a2 = function(t3, i3) {
+              function n3(e3) {
+                var t4, i4, n4 = 0, r4 = 0;
+                return e3 && (i4 = e3.getBoundingClientRect(), t4 = "CSS1Compat" === c.compatMode ? c.documentElement : c.body, n4 = i4.left + t4.scrollLeft, r4 = i4.top + t4.scrollTop), { x: n4, y: r4 };
+              }
+              var r3, o3, a3, s3 = 0, u = 0, c = document;
+              if (t3 = t3, i3 = i3 || c.body, t3 && t3.getBoundingClientRect && "IE" === e2.browser && (!c.documentMode || c.documentMode < 8)) return o3 = n3(t3), a3 = n3(i3), { x: o3.x - a3.x, y: o3.y - a3.y };
+              for (r3 = t3; r3 && r3 != i3 && r3.nodeType; ) s3 += r3.offsetLeft || 0, u += r3.offsetTop || 0, r3 = r3.offsetParent;
+              for (r3 = t3.parentNode; r3 && r3 != i3 && r3.nodeType; ) s3 -= r3.scrollLeft || 0, u -= r3.scrollTop || 0, r3 = r3.parentNode;
+              return { x: s3, y: u };
+            }, s2 = function(e3) {
+              return { w: e3.offsetWidth || e3.clientWidth, h: e3.offsetHeight || e3.clientHeight };
+            };
+            return { get: t2, hasClass: i2, addClass: n2, removeClass: r2, getStyle: o2, getPos: a2, getSize: s2 };
+          }), n("moxie/core/EventTarget", ["moxie/core/utils/Env", "moxie/core/Exceptions", "moxie/core/utils/Basic"], function(e2, t2, i2) {
+            function n2() {
+              this.uid = i2.guid();
+            }
+            var r2 = {};
+            return i2.extend(n2.prototype, { init: function() {
+              this.uid || (this.uid = i2.guid("uid_"));
+            }, addEventListener: function(e3, t3, n3, o2) {
+              var a2, s2 = this;
+              return this.hasOwnProperty("uid") || (this.uid = i2.guid("uid_")), e3 = i2.trim(e3), /\s/.test(e3) ? (i2.each(e3.split(/\s+/), function(e4) {
+                s2.addEventListener(e4, t3, n3, o2);
+              }), void 0) : (e3 = e3.toLowerCase(), n3 = parseInt(n3, 10) || 0, a2 = r2[this.uid] && r2[this.uid][e3] || [], a2.push({ fn: t3, priority: n3, scope: o2 || this }), r2[this.uid] || (r2[this.uid] = {}), r2[this.uid][e3] = a2, void 0);
+            }, hasEventListener: function(e3) {
+              var t3;
+              return e3 ? (e3 = e3.toLowerCase(), t3 = r2[this.uid] && r2[this.uid][e3]) : t3 = r2[this.uid], t3 ? t3 : false;
+            }, removeEventListener: function(e3, t3) {
+              var n3, o2, a2 = this;
+              if (e3 = e3.toLowerCase(), /\s/.test(e3)) return i2.each(e3.split(/\s+/), function(e4) {
+                a2.removeEventListener(e4, t3);
+              }), void 0;
+              if (n3 = r2[this.uid] && r2[this.uid][e3]) {
+                if (t3) {
+                  for (o2 = n3.length - 1; o2 >= 0; o2--) if (n3[o2].fn === t3) {
+                    n3.splice(o2, 1);
+                    break;
+                  }
+                } else n3 = [];
+                n3.length || (delete r2[this.uid][e3], i2.isEmptyObj(r2[this.uid]) && delete r2[this.uid]);
+              }
+            }, removeAllEventListeners: function() {
+              r2[this.uid] && delete r2[this.uid];
+            }, dispatchEvent: function(e3) {
+              var n3, o2, a2, s2, u, c = {}, l = true;
+              if ("string" !== i2.typeOf(e3)) {
+                if (s2 = e3, "string" !== i2.typeOf(s2.type)) throw new t2.EventException(t2.EventException.UNSPECIFIED_EVENT_TYPE_ERR);
+                e3 = s2.type, s2.total !== u && s2.loaded !== u && (c.total = s2.total, c.loaded = s2.loaded), c.async = s2.async || false;
+              }
+              if (-1 !== e3.indexOf("::") ? function(t3) {
+                n3 = t3[0], e3 = t3[1];
+              }(e3.split("::")) : n3 = this.uid, e3 = e3.toLowerCase(), o2 = r2[n3] && r2[n3][e3]) {
+                o2.sort(function(e4, t3) {
+                  return t3.priority - e4.priority;
+                }), a2 = [].slice.call(arguments), a2.shift(), c.type = e3, a2.unshift(c);
+                var d = [];
+                i2.each(o2, function(e4) {
+                  a2[0].target = e4.scope, c.async ? d.push(function(t3) {
+                    setTimeout(function() {
+                      t3(e4.fn.apply(e4.scope, a2) === false);
+                    }, 1);
+                  }) : d.push(function(t3) {
+                    t3(e4.fn.apply(e4.scope, a2) === false);
+                  });
+                }), d.length && i2.inSeries(d, function(e4) {
+                  l = !e4;
+                });
+              }
+              return l;
+            }, bindOnce: function(e3, t3, i3, n3) {
+              var r3 = this;
+              r3.bind.call(this, e3, function o2() {
+                return r3.unbind(e3, o2), t3.apply(this, arguments);
+              }, i3, n3);
+            }, bind: function() {
+              this.addEventListener.apply(this, arguments);
+            }, unbind: function() {
+              this.removeEventListener.apply(this, arguments);
+            }, unbindAll: function() {
+              this.removeAllEventListeners.apply(this, arguments);
+            }, trigger: function() {
+              return this.dispatchEvent.apply(this, arguments);
+            }, handleEventProps: function(e3) {
+              var t3 = this;
+              this.bind(e3.join(" "), function(e4) {
+                var t4 = "on" + e4.type.toLowerCase();
+                "function" === i2.typeOf(this[t4]) && this[t4].apply(this, arguments);
+              }), i2.each(e3, function(e4) {
+                e4 = "on" + e4.toLowerCase(e4), "undefined" === i2.typeOf(t3[e4]) && (t3[e4] = null);
+              });
+            } }), n2.instance = new n2(), n2;
+          }), n("moxie/runtime/Runtime", ["moxie/core/utils/Env", "moxie/core/utils/Basic", "moxie/core/utils/Dom", "moxie/core/EventTarget"], function(e2, t2, i2, n2) {
+            function r2(e3, n3, o3, s2, u) {
+              var c, l = this, d = t2.guid(n3 + "_"), m2 = u || "browser";
+              e3 = e3 || {}, a2[d] = this, o3 = t2.extend({ access_binary: false, access_image_binary: false, display_media: false, do_cors: false, drag_and_drop: false, filter_by_extension: true, resize_image: false, report_upload_progress: false, return_response_headers: false, return_response_type: false, return_status_code: true, send_custom_headers: false, select_file: false, select_folder: false, select_multiple: true, send_binary_string: false, send_browser_cookies: true, send_multipart: true, slice_blob: false, stream_upload: false, summon_file_dialog: false, upload_filesize: true, use_http_method: true }, o3), e3.preferred_caps && (m2 = r2.getMode(s2, e3.preferred_caps, m2)), c = /* @__PURE__ */ function() {
+                var e4 = {};
+                return { exec: function(t3, i3, n4, r3) {
+                  return c[i3] && (e4[t3] || (e4[t3] = { context: this, instance: new c[i3]() }), e4[t3].instance[n4]) ? e4[t3].instance[n4].apply(this, r3) : void 0;
+                }, removeInstance: function(t3) {
+                  delete e4[t3];
+                }, removeAllInstances: function() {
+                  var i3 = this;
+                  t2.each(e4, function(e5, n4) {
+                    "function" === t2.typeOf(e5.instance.destroy) && e5.instance.destroy.call(e5.context), i3.removeInstance(n4);
+                  });
+                } };
+              }(), t2.extend(this, { initialized: false, uid: d, type: n3, mode: r2.getMode(s2, e3.required_caps, m2), shimid: d + "_container", clients: 0, options: e3, can: function(e4, i3) {
+                var n4 = arguments[2] || o3;
+                if ("string" === t2.typeOf(e4) && "undefined" === t2.typeOf(i3) && (e4 = r2.parseCaps(e4)), "object" === t2.typeOf(e4)) {
+                  for (var a3 in e4) if (!this.can(a3, e4[a3], n4)) return false;
+                  return true;
+                }
+                return "function" === t2.typeOf(n4[e4]) ? n4[e4].call(this, i3) : i3 === n4[e4];
+              }, getShimContainer: function() {
+                var e4, n4 = i2.get(this.shimid);
+                return n4 || (e4 = i2.get(this.options.container) || document.body, n4 = document.createElement("div"), n4.id = this.shimid, n4.className = "moxie-shim moxie-shim-" + this.type, t2.extend(n4.style, { position: "absolute", top: "0px", left: "0px", width: "1px", height: "1px", overflow: "hidden" }), e4.appendChild(n4), e4 = null), n4;
+              }, getShim: function() {
+                return c;
+              }, shimExec: function(e4, t3) {
+                var i3 = [].slice.call(arguments, 2);
+                return l.getShim().exec.call(this, this.uid, e4, t3, i3);
+              }, exec: function(e4, t3) {
+                var i3 = [].slice.call(arguments, 2);
+                return l[e4] && l[e4][t3] ? l[e4][t3].apply(this, i3) : l.shimExec.apply(this, arguments);
+              }, destroy: function() {
+                if (l) {
+                  var e4 = i2.get(this.shimid);
+                  e4 && e4.parentNode.removeChild(e4), c && c.removeAllInstances(), this.unbindAll(), delete a2[this.uid], this.uid = null, d = l = c = e4 = null;
+                }
+              } }), this.mode && e3.required_caps && !this.can(e3.required_caps) && (this.mode = false);
+            }
+            var o2 = {}, a2 = {};
+            return r2.order = "html5,flash,silverlight,html4", r2.getRuntime = function(e3) {
+              return a2[e3] ? a2[e3] : false;
+            }, r2.addConstructor = function(e3, t3) {
+              t3.prototype = n2.instance, o2[e3] = t3;
+            }, r2.getConstructor = function(e3) {
+              return o2[e3] || null;
+            }, r2.getInfo = function(e3) {
+              var t3 = r2.getRuntime(e3);
+              return t3 ? { uid: t3.uid, type: t3.type, mode: t3.mode, can: function() {
+                return t3.can.apply(t3, arguments);
+              } } : null;
+            }, r2.parseCaps = function(e3) {
+              var i3 = {};
+              return "string" !== t2.typeOf(e3) ? e3 || {} : (t2.each(e3.split(","), function(e4) {
+                i3[e4] = true;
+              }), i3);
+            }, r2.can = function(e3, t3) {
+              var i3, n3, o3 = r2.getConstructor(e3);
+              return o3 ? (i3 = new o3({ required_caps: t3 }), n3 = i3.mode, i3.destroy(), !!n3) : false;
+            }, r2.thatCan = function(e3, t3) {
+              var i3 = (t3 || r2.order).split(/\s*,\s*/);
+              for (var n3 in i3) if (r2.can(i3[n3], e3)) return i3[n3];
+              return null;
+            }, r2.getMode = function(e3, i3, n3) {
+              var r3 = null;
+              if ("undefined" === t2.typeOf(n3) && (n3 = "browser"), i3 && !t2.isEmptyObj(e3)) {
+                if (t2.each(i3, function(i4, n4) {
+                  if (e3.hasOwnProperty(n4)) {
+                    var o3 = e3[n4](i4);
+                    if ("string" == typeof o3 && (o3 = [o3]), r3) {
+                      if (!(r3 = t2.arrayIntersect(r3, o3))) return r3 = false;
+                    } else r3 = o3;
+                  }
+                }), r3) return -1 !== t2.inArray(n3, r3) ? n3 : r3[0];
+                if (r3 === false) return false;
+              }
+              return n3;
+            }, r2.getGlobalEventTarget = function() {
+              if (/^moxie\./.test(e2.global_event_dispatcher) && !e2.can("access_global_ns")) {
+                var i3 = t2.guid("moxie_event_target_");
+                window[i3] = function(e3, t3) {
+                  n2.instance.dispatchEvent(e3, t3);
+                }, e2.global_event_dispatcher = i3;
+              }
+              return e2.global_event_dispatcher;
+            }, r2.capTrue = function() {
+              return true;
+            }, r2.capFalse = function() {
+              return false;
+            }, r2.capTest = function(e3) {
+              return function() {
+                return !!e3;
+              };
+            }, r2;
+          }), n("moxie/runtime/RuntimeClient", ["moxie/core/utils/Env", "moxie/core/Exceptions", "moxie/core/utils/Basic", "moxie/runtime/Runtime"], function(e2, t2, i2, n2) {
+            return function() {
+              var e3;
+              i2.extend(this, { connectRuntime: function(r2) {
+                function o2(i3) {
+                  var a3, u;
+                  return i3.length ? (a3 = i3.shift().toLowerCase(), (u = n2.getConstructor(a3)) ? (e3 = new u(r2), e3.bind("Init", function() {
+                    e3.initialized = true, setTimeout(function() {
+                      e3.clients++, s2.ruid = e3.uid, s2.trigger("RuntimeInit", e3);
+                    }, 1);
+                  }), e3.bind("Error", function() {
+                    e3.destroy(), o2(i3);
+                  }), e3.bind("Exception", function(e4, i4) {
+                    var n3 = i4.name + "(#" + i4.code + ")" + (i4.message ? ", from: " + i4.message : "");
+                    s2.trigger("RuntimeError", new t2.RuntimeError(t2.RuntimeError.EXCEPTION_ERR, n3));
+                  }), e3.mode ? (e3.init(), void 0) : (e3.trigger("Error"), void 0)) : (o2(i3), void 0)) : (s2.trigger("RuntimeError", new t2.RuntimeError(t2.RuntimeError.NOT_INIT_ERR)), e3 = null, void 0);
+                }
+                var a2, s2 = this;
+                if ("string" === i2.typeOf(r2) ? a2 = r2 : "string" === i2.typeOf(r2.ruid) && (a2 = r2.ruid), a2) {
+                  if (e3 = n2.getRuntime(a2)) return s2.ruid = a2, e3.clients++, e3;
+                  throw new t2.RuntimeError(t2.RuntimeError.NOT_INIT_ERR);
+                }
+                o2((r2.runtime_order || n2.order).split(/\s*,\s*/));
+              }, disconnectRuntime: function() {
+                e3 && --e3.clients <= 0 && e3.destroy(), e3 = null;
+              }, getRuntime: function() {
+                return e3 && e3.uid ? e3 : e3 = null;
+              }, exec: function() {
+                return e3 ? e3.exec.apply(this, arguments) : null;
+              }, can: function(t3) {
+                return e3 ? e3.can(t3) : false;
+              } });
+            };
+          }), n("moxie/file/Blob", ["moxie/core/utils/Basic", "moxie/core/utils/Encode", "moxie/runtime/RuntimeClient"], function(e2, t2, i2) {
+            function n2(o2, a2) {
+              function s2(t3, i3, o3) {
+                var a3, s3 = r2[this.uid];
+                return "string" === e2.typeOf(s3) && s3.length ? (a3 = new n2(null, { type: o3, size: i3 - t3 }), a3.detach(s3.substr(t3, a3.size)), a3) : null;
+              }
+              i2.call(this), o2 && this.connectRuntime(o2), a2 ? "string" === e2.typeOf(a2) && (a2 = { data: a2 }) : a2 = {}, e2.extend(this, { uid: a2.uid || e2.guid("uid_"), ruid: o2, size: a2.size || 0, type: a2.type || "", slice: function(e3, t3, i3) {
+                return this.isDetached() ? s2.apply(this, arguments) : this.getRuntime().exec.call(this, "Blob", "slice", this.getSource(), e3, t3, i3);
+              }, getSource: function() {
+                return r2[this.uid] ? r2[this.uid] : null;
+              }, detach: function(e3) {
+                if (this.ruid && (this.getRuntime().exec.call(this, "Blob", "destroy"), this.disconnectRuntime(), this.ruid = null), e3 = e3 || "", "data:" == e3.substr(0, 5)) {
+                  var i3 = e3.indexOf(";base64,");
+                  this.type = e3.substring(5, i3), e3 = t2.atob(e3.substring(i3 + 8));
+                }
+                this.size = e3.length, r2[this.uid] = e3;
+              }, isDetached: function() {
+                return !this.ruid && "string" === e2.typeOf(r2[this.uid]);
+              }, destroy: function() {
+                this.detach(), delete r2[this.uid];
+              } }), a2.data ? this.detach(a2.data) : r2[this.uid] = a2;
+            }
+            var r2 = {};
+            return n2;
+          }), n("moxie/core/I18n", ["moxie/core/utils/Basic"], function(e2) {
+            var t2 = {};
+            return { addI18n: function(i2) {
+              return e2.extend(t2, i2);
+            }, translate: function(e3) {
+              return t2[e3] || e3;
+            }, _: function(e3) {
+              return this.translate(e3);
+            }, sprintf: function(t3) {
+              var i2 = [].slice.call(arguments, 1);
+              return t3.replace(/%[a-z]/g, function() {
+                var t4 = i2.shift();
+                return "undefined" !== e2.typeOf(t4) ? t4 : "";
+              });
+            } };
+          }), n("moxie/core/utils/Mime", ["moxie/core/utils/Basic", "moxie/core/I18n"], function(e2, t2) {
+            var i2 = "application/msword,doc dot,application/pdf,pdf,application/pgp-signature,pgp,application/postscript,ps ai eps,application/rtf,rtf,application/vnd.ms-excel,xls xlb xlt xla,application/vnd.ms-powerpoint,ppt pps pot ppa,application/zip,zip,application/x-shockwave-flash,swf swfl,application/vnd.openxmlformats-officedocument.wordprocessingml.document,docx,application/vnd.openxmlformats-officedocument.wordprocessingml.template,dotx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,xlsx,application/vnd.openxmlformats-officedocument.presentationml.presentation,pptx,application/vnd.openxmlformats-officedocument.presentationml.template,potx,application/vnd.openxmlformats-officedocument.presentationml.slideshow,ppsx,application/x-javascript,js,application/json,json,audio/mpeg,mp3 mpga mpega mp2,audio/x-wav,wav,audio/x-m4a,m4a,audio/ogg,oga ogg,audio/aiff,aiff aif,audio/flac,flac,audio/aac,aac,audio/ac3,ac3,audio/x-ms-wma,wma,image/bmp,bmp,image/gif,gif,image/jpeg,jpg jpeg jpe,image/photoshop,psd,image/png,png,image/svg+xml,svg svgz,image/tiff,tiff tif,text/plain,asc txt text diff log,text/html,htm html xhtml,text/css,css,text/csv,csv,text/rtf,rtf,video/mpeg,mpeg mpg mpe m2v,video/quicktime,qt mov,video/mp4,mp4,video/x-m4v,m4v,video/x-flv,flv,video/x-ms-wmv,wmv,video/avi,avi,video/webm,webm,video/3gpp,3gpp 3gp,video/3gpp2,3g2,video/vnd.rn-realvideo,rv,video/ogg,ogv,video/x-matroska,mkv,application/vnd.oasis.opendocument.formula-template,otf,application/octet-stream,exe", n2 = {}, r2 = {}, o2 = function(e3) {
+              var t3, i3, o3, a3 = e3.split(/,/);
+              for (t3 = 0; t3 < a3.length; t3 += 2) {
+                for (o3 = a3[t3 + 1].split(/ /), i3 = 0; i3 < o3.length; i3++) n2[o3[i3]] = a3[t3];
+                r2[a3[t3]] = o3;
+              }
+            }, a2 = function(t3, i3) {
+              var n3, r3, o3, a3, s3 = [];
+              for (r3 = 0; r3 < t3.length; r3++) for (n3 = t3[r3].extensions.toLowerCase().split(/\s*,\s*/), o3 = 0; o3 < n3.length; o3++) {
+                if ("*" === n3[o3]) return [];
+                if (a3 = s3[n3[o3]], i3 && /^\w+$/.test(n3[o3])) s3.push("." + n3[o3]);
+                else if (a3 && -1 === e2.inArray(a3, s3)) s3.push(a3);
+                else if (!a3) return [];
+              }
+              return s3;
+            }, s2 = function(t3) {
+              var i3 = [];
+              return e2.each(t3, function(t4) {
+                if (t4 = t4.toLowerCase(), "*" === t4) return i3 = [], false;
+                var n3 = t4.match(/^(\w+)\/(\*|\w+)$/);
+                n3 && ("*" === n3[2] ? e2.each(r2, function(e3, t5) {
+                  new RegExp("^" + n3[1] + "/").test(t5) && [].push.apply(i3, r2[t5]);
+                }) : r2[t4] && [].push.apply(i3, r2[t4]));
+              }), i3;
+            }, u = function(i3) {
+              var n3 = [], r3 = [];
+              return "string" === e2.typeOf(i3) && (i3 = e2.trim(i3).split(/\s*,\s*/)), r3 = s2(i3), n3.push({ title: t2.translate("Files"), extensions: r3.length ? r3.join(",") : "*" }), n3;
+            }, c = function(e3) {
+              var t3 = e3 && e3.match(/\.([^.]+)$/);
+              return t3 ? t3[1].toLowerCase() : "";
+            }, l = function(e3) {
+              return n2[c(e3)] || "";
+            };
+            return o2(i2), { mimes: n2, extensions: r2, addMimeType: o2, extList2mimes: a2, mimes2exts: s2, mimes2extList: u, getFileExtension: c, getFileMime: l };
+          }), n("moxie/file/FileInput", ["moxie/core/utils/Basic", "moxie/core/utils/Env", "moxie/core/utils/Mime", "moxie/core/utils/Dom", "moxie/core/Exceptions", "moxie/core/EventTarget", "moxie/core/I18n", "moxie/runtime/Runtime", "moxie/runtime/RuntimeClient"], function(e2, t2, i2, n2, r2, o2, a2, s2, u) {
+            function c(t3) {
+              var o3, c2, d;
+              if (-1 !== e2.inArray(e2.typeOf(t3), ["string", "node"]) && (t3 = { browse_button: t3 }), c2 = n2.get(t3.browse_button), !c2) throw new r2.DOMException(r2.DOMException.NOT_FOUND_ERR);
+              d = { accept: [{ title: a2.translate("All Files"), extensions: "*" }], multiple: false, required_caps: false, container: c2.parentNode || document.body }, t3 = e2.extend({}, d, t3), "string" == typeof t3.required_caps && (t3.required_caps = s2.parseCaps(t3.required_caps)), "string" == typeof t3.accept && (t3.accept = i2.mimes2extList(t3.accept)), o3 = n2.get(t3.container), o3 || (o3 = document.body), "static" === n2.getStyle(o3, "position") && (o3.style.position = "relative"), o3 = c2 = null, u.call(this), e2.extend(this, { uid: e2.guid("uid_"), ruid: null, shimid: null, files: null, init: function() {
+                var i3 = this;
+                i3.bind("RuntimeInit", function(r3, o4) {
+                  i3.ruid = o4.uid, i3.shimid = o4.shimid, i3.bind("Ready", function() {
+                    i3.trigger("Refresh");
+                  }, 999), i3.bind("Refresh", function() {
+                    var i4, r4, a3, s3, u2;
+                    a3 = n2.get(t3.browse_button), s3 = n2.get(o4.shimid), a3 && (i4 = n2.getPos(a3, n2.get(t3.container)), r4 = n2.getSize(a3), u2 = parseInt(n2.getStyle(a3, "z-index"), 10) || 0, s3 && e2.extend(s3.style, { top: i4.y + "px", left: i4.x + "px", width: r4.w + "px", height: r4.h + "px", zIndex: u2 + 1 })), s3 = a3 = null;
+                  }), o4.exec.call(i3, "FileInput", "init", t3);
+                }), i3.connectRuntime(e2.extend({}, t3, { required_caps: { select_file: true } }));
+              }, getOption: function(e3) {
+                return t3[e3];
+              }, setOption: function(e3, n3) {
+                if (t3.hasOwnProperty(e3)) {
+                  var o4 = t3[e3];
+                  switch (e3) {
+                    case "accept":
+                      "string" == typeof n3 && (n3 = i2.mimes2extList(n3));
+                      break;
+                    case "container":
+                    case "required_caps":
+                      throw new r2.FileException(r2.FileException.NO_MODIFICATION_ALLOWED_ERR);
+                  }
+                  t3[e3] = n3, this.exec("FileInput", "setOption", e3, n3), this.trigger("OptionChanged", e3, n3, o4);
+                }
+              }, disable: function(t4) {
+                var i3 = this.getRuntime();
+                i3 && this.exec("FileInput", "disable", "undefined" === e2.typeOf(t4) ? true : t4);
+              }, refresh: function() {
+                this.trigger("Refresh");
+              }, destroy: function() {
+                var t4 = this.getRuntime();
+                t4 && (t4.exec.call(this, "FileInput", "destroy"), this.disconnectRuntime()), "array" === e2.typeOf(this.files) && e2.each(this.files, function(e3) {
+                  e3.destroy();
+                }), this.files = null, this.unbindAll();
+              } }), this.handleEventProps(l);
+            }
+            var l = ["ready", "change", "cancel", "mouseenter", "mouseleave", "mousedown", "mouseup"];
+            return c.prototype = o2.instance, c;
+          }), n("moxie/file/File", ["moxie/core/utils/Basic", "moxie/core/utils/Mime", "moxie/file/Blob"], function(e2, t2, i2) {
+            function n2(n3, r2) {
+              r2 || (r2 = {}), i2.apply(this, arguments), this.type || (this.type = t2.getFileMime(r2.name));
+              var o2;
+              if (r2.name) o2 = r2.name.replace(/\\/g, "/"), o2 = o2.substr(o2.lastIndexOf("/") + 1);
+              else if (this.type) {
+                var a2 = this.type.split("/")[0];
+                o2 = e2.guid(("" !== a2 ? a2 : "file") + "_"), t2.extensions[this.type] && (o2 += "." + t2.extensions[this.type][0]);
+              }
+              e2.extend(this, { name: o2 || e2.guid("file_"), relativePath: "", lastModifiedDate: r2.lastModifiedDate || (/* @__PURE__ */ new Date()).toLocaleString() });
+            }
+            return n2.prototype = i2.prototype, n2;
+          }), n("moxie/file/FileDrop", ["moxie/core/I18n", "moxie/core/utils/Dom", "moxie/core/Exceptions", "moxie/core/utils/Basic", "moxie/core/utils/Env", "moxie/file/File", "moxie/runtime/RuntimeClient", "moxie/core/EventTarget", "moxie/core/utils/Mime"], function(e2, t2, i2, n2, r2, o2, a2, s2, u) {
+            function c(i3) {
+              var r3, o3 = this;
+              "string" == typeof i3 && (i3 = { drop_zone: i3 }), r3 = { accept: [{ title: e2.translate("All Files"), extensions: "*" }], required_caps: { drag_and_drop: true } }, i3 = "object" == typeof i3 ? n2.extend({}, r3, i3) : r3, i3.container = t2.get(i3.drop_zone) || document.body, "static" === t2.getStyle(i3.container, "position") && (i3.container.style.position = "relative"), "string" == typeof i3.accept && (i3.accept = u.mimes2extList(i3.accept)), a2.call(o3), n2.extend(o3, { uid: n2.guid("uid_"), ruid: null, files: null, init: function() {
+                o3.bind("RuntimeInit", function(e3, t3) {
+                  o3.ruid = t3.uid, t3.exec.call(o3, "FileDrop", "init", i3), o3.dispatchEvent("ready");
+                }), o3.connectRuntime(i3);
+              }, destroy: function() {
+                var e3 = this.getRuntime();
+                e3 && (e3.exec.call(this, "FileDrop", "destroy"), this.disconnectRuntime()), this.files = null, this.unbindAll();
+              } }), this.handleEventProps(l);
+            }
+            var l = ["ready", "dragenter", "dragleave", "drop", "error"];
+            return c.prototype = s2.instance, c;
+          }), n("moxie/file/FileReader", ["moxie/core/utils/Basic", "moxie/core/utils/Encode", "moxie/core/Exceptions", "moxie/core/EventTarget", "moxie/file/Blob", "moxie/runtime/RuntimeClient"], function(e2, t2, i2, n2, r2, o2) {
+            function a2() {
+              function n3(e3, n4) {
+                if (this.trigger("loadstart"), this.readyState === a2.LOADING) return this.trigger("error", new i2.DOMException(i2.DOMException.INVALID_STATE_ERR)), this.trigger("loadend"), void 0;
+                if (!(n4 instanceof r2)) return this.trigger("error", new i2.DOMException(i2.DOMException.NOT_FOUND_ERR)), this.trigger("loadend"), void 0;
+                if (this.result = null, this.readyState = a2.LOADING, n4.isDetached()) {
+                  var o3 = n4.getSource();
+                  switch (e3) {
+                    case "readAsText":
+                    case "readAsBinaryString":
+                      this.result = o3;
+                      break;
+                    case "readAsDataURL":
+                      this.result = "data:" + n4.type + ";base64," + t2.btoa(o3);
+                  }
+                  this.readyState = a2.DONE, this.trigger("load"), this.trigger("loadend");
+                } else this.connectRuntime(n4.ruid), this.exec("FileReader", "read", e3, n4);
+              }
+              o2.call(this), e2.extend(this, { uid: e2.guid("uid_"), readyState: a2.EMPTY, result: null, error: null, readAsBinaryString: function(e3) {
+                n3.call(this, "readAsBinaryString", e3);
+              }, readAsDataURL: function(e3) {
+                n3.call(this, "readAsDataURL", e3);
+              }, readAsText: function(e3) {
+                n3.call(this, "readAsText", e3);
+              }, abort: function() {
+                this.result = null, -1 === e2.inArray(this.readyState, [a2.EMPTY, a2.DONE]) && (this.readyState === a2.LOADING && (this.readyState = a2.DONE), this.exec("FileReader", "abort"), this.trigger("abort"), this.trigger("loadend"));
+              }, destroy: function() {
+                this.abort(), this.exec("FileReader", "destroy"), this.disconnectRuntime(), this.unbindAll();
+              } }), this.handleEventProps(s2), this.bind("Error", function(e3, t3) {
+                this.readyState = a2.DONE, this.error = t3;
+              }, 999), this.bind("Load", function() {
+                this.readyState = a2.DONE;
+              }, 999);
+            }
+            var s2 = ["loadstart", "progress", "load", "abort", "error", "loadend"];
+            return a2.EMPTY = 0, a2.LOADING = 1, a2.DONE = 2, a2.prototype = n2.instance, a2;
+          }), n("moxie/core/utils/Url", ["moxie/core/utils/Basic"], function(e2) {
+            var t2 = function(i3, n3) {
+              var r2, o2 = ["source", "scheme", "authority", "userInfo", "user", "pass", "host", "port", "relative", "path", "directory", "file", "query", "fragment"], a2 = o2.length, s2 = { http: 80, https: 443 }, u = {}, c = /^(?:([^:\/?#]+):)?(?:\/\/()(?:(?:()(?:([^:@\/]*):?([^:@\/]*))?@)?(\[[\da-fA-F:]+\]|[^:\/?#]*)(?::(\d*))?))?()(?:(()(?:(?:[^?#\/]*\/)*)()(?:[^?#]*))(?:\\?([^#]*))?(?:#(.*))?)/, l = c.exec(i3 || ""), d = /^\/\/\w/.test(i3);
+              switch (e2.typeOf(n3)) {
+                case "undefined":
+                  n3 = t2(document.location.href, false);
+                  break;
+                case "string":
+                  n3 = t2(n3, false);
+              }
+              for (; a2--; ) l[a2] && (u[o2[a2]] = l[a2]);
+              if (r2 = !d && !u.scheme, (d || r2) && (u.scheme = n3.scheme), r2) {
+                u.host = n3.host, u.port = n3.port;
+                var m2 = "";
+                /^[^\/]/.test(u.path) && (m2 = n3.path, m2 = /\/[^\/]*\.[^\/]*$/.test(m2) ? m2.replace(/\/[^\/]+$/, "/") : m2.replace(/\/?$/, "/")), u.path = m2 + (u.path || "");
+              }
+              return u.port || (u.port = s2[u.scheme] || 80), u.port = parseInt(u.port, 10), u.path || (u.path = "/"), delete u.source, u;
+            }, i2 = function(e3) {
+              var i3 = { http: 80, https: 443 }, n3 = "object" == typeof e3 ? e3 : t2(e3);
+              return n3.scheme + "://" + n3.host + (n3.port !== i3[n3.scheme] ? ":" + n3.port : "") + n3.path + (n3.query ? n3.query : "");
+            }, n2 = function(e3) {
+              function i3(e4) {
+                return [e4.scheme, e4.host, e4.port].join("/");
+              }
+              return "string" == typeof e3 && (e3 = t2(e3)), i3(t2()) === i3(e3);
+            };
+            return { parseUrl: t2, resolveUrl: i2, hasSameOrigin: n2 };
+          }), n("moxie/runtime/RuntimeTarget", ["moxie/core/utils/Basic", "moxie/runtime/RuntimeClient", "moxie/core/EventTarget"], function(e2, t2, i2) {
+            function n2() {
+              this.uid = e2.guid("uid_"), t2.call(this), this.destroy = function() {
+                this.disconnectRuntime(), this.unbindAll();
+              };
+            }
+            return n2.prototype = i2.instance, n2;
+          }), n("moxie/file/FileReaderSync", ["moxie/core/utils/Basic", "moxie/runtime/RuntimeClient", "moxie/core/utils/Encode"], function(e2, t2, i2) {
+            return function() {
+              function n2(e3, t3) {
+                if (!t3.isDetached()) {
+                  var n3 = this.connectRuntime(t3.ruid).exec.call(this, "FileReaderSync", "read", e3, t3);
+                  return this.disconnectRuntime(), n3;
+                }
+                var r2 = t3.getSource();
+                switch (e3) {
+                  case "readAsBinaryString":
+                    return r2;
+                  case "readAsDataURL":
+                    return "data:" + t3.type + ";base64," + i2.btoa(r2);
+                  case "readAsText":
+                    for (var o2 = "", a2 = 0, s2 = r2.length; s2 > a2; a2++) o2 += String.fromCharCode(r2[a2]);
+                    return o2;
+                }
+              }
+              t2.call(this), e2.extend(this, { uid: e2.guid("uid_"), readAsBinaryString: function(e3) {
+                return n2.call(this, "readAsBinaryString", e3);
+              }, readAsDataURL: function(e3) {
+                return n2.call(this, "readAsDataURL", e3);
+              }, readAsText: function(e3) {
+                return n2.call(this, "readAsText", e3);
+              } });
+            };
+          }), n("moxie/xhr/FormData", ["moxie/core/Exceptions", "moxie/core/utils/Basic", "moxie/file/Blob"], function(e2, t2, i2) {
+            function n2() {
+              var e3, n3 = [];
+              t2.extend(this, { append: function(r2, o2) {
+                var a2 = this, s2 = t2.typeOf(o2);
+                o2 instanceof i2 ? e3 = { name: r2, value: o2 } : "array" === s2 ? (r2 += "[]", t2.each(o2, function(e4) {
+                  a2.append(r2, e4);
+                })) : "object" === s2 ? t2.each(o2, function(e4, t3) {
+                  a2.append(r2 + "[" + t3 + "]", e4);
+                }) : "null" === s2 || "undefined" === s2 || "number" === s2 && isNaN(o2) ? a2.append(r2, "false") : n3.push({ name: r2, value: o2.toString() });
+              }, hasBlob: function() {
+                return !!this.getBlob();
+              }, getBlob: function() {
+                return e3 && e3.value || null;
+              }, getBlobName: function() {
+                return e3 && e3.name || null;
+              }, each: function(i3) {
+                t2.each(n3, function(e4) {
+                  i3(e4.value, e4.name);
+                }), e3 && i3(e3.value, e3.name);
+              }, destroy: function() {
+                e3 = null, n3 = [];
+              } });
+            }
+            return n2;
+          }), n("moxie/xhr/XMLHttpRequest", ["moxie/core/utils/Basic", "moxie/core/Exceptions", "moxie/core/EventTarget", "moxie/core/utils/Encode", "moxie/core/utils/Url", "moxie/runtime/Runtime", "moxie/runtime/RuntimeTarget", "moxie/file/Blob", "moxie/file/FileReaderSync", "moxie/xhr/FormData", "moxie/core/utils/Env", "moxie/core/utils/Mime"], function(e2, t2, i2, n2, r2, o2, a2, s2, u, c, l, d) {
+            function m2() {
+              this.uid = e2.guid("uid_");
+            }
+            function h() {
+              function i3(e3, t3) {
+                return I.hasOwnProperty(e3) ? 1 === arguments.length ? l.can("define_property") ? I[e3] : A[e3] : (l.can("define_property") ? I[e3] = t3 : A[e3] = t3, void 0) : void 0;
+              }
+              function u2(t3) {
+                function n3() {
+                  _ && (_.destroy(), _ = null), s3.dispatchEvent("loadend"), s3 = null;
+                }
+                function r3(r4) {
+                  _.bind("LoadStart", function(e3) {
+                    i3("readyState", h.LOADING), s3.dispatchEvent("readystatechange"), s3.dispatchEvent(e3), L && s3.upload.dispatchEvent(e3);
+                  }), _.bind("Progress", function(e3) {
+                    i3("readyState") !== h.LOADING && (i3("readyState", h.LOADING), s3.dispatchEvent("readystatechange")), s3.dispatchEvent(e3);
+                  }), _.bind("UploadProgress", function(e3) {
+                    L && s3.upload.dispatchEvent({ type: "progress", lengthComputable: false, total: e3.total, loaded: e3.loaded });
+                  }), _.bind("Load", function(t4) {
+                    i3("readyState", h.DONE), i3("status", Number(r4.exec.call(_, "XMLHttpRequest", "getStatus") || 0)), i3("statusText", f[i3("status")] || ""), i3("response", r4.exec.call(_, "XMLHttpRequest", "getResponse", i3("responseType"))), ~e2.inArray(i3("responseType"), ["text", ""]) ? i3("responseText", i3("response")) : "document" === i3("responseType") && i3("responseXML", i3("response")), U = r4.exec.call(_, "XMLHttpRequest", "getAllResponseHeaders"), s3.dispatchEvent("readystatechange"), i3("status") > 0 ? (L && s3.upload.dispatchEvent(t4), s3.dispatchEvent(t4)) : (F = true, s3.dispatchEvent("error")), n3();
+                  }), _.bind("Abort", function(e3) {
+                    s3.dispatchEvent(e3), n3();
+                  }), _.bind("Error", function(e3) {
+                    F = true, i3("readyState", h.DONE), s3.dispatchEvent("readystatechange"), M = true, s3.dispatchEvent(e3), n3();
+                  }), r4.exec.call(_, "XMLHttpRequest", "send", { url: x, method: v, async: T, user: w, password: y, headers: S, mimeType: D, encoding: O, responseType: s3.responseType, withCredentials: s3.withCredentials, options: k }, t3);
+                }
+                var s3 = this;
+                E = (/* @__PURE__ */ new Date()).getTime(), _ = new a2(), "string" == typeof k.required_caps && (k.required_caps = o2.parseCaps(k.required_caps)), k.required_caps = e2.extend({}, k.required_caps, { return_response_type: s3.responseType }), t3 instanceof c && (k.required_caps.send_multipart = true), e2.isEmptyObj(S) || (k.required_caps.send_custom_headers = true), B || (k.required_caps.do_cors = true), k.ruid ? r3(_.connectRuntime(k)) : (_.bind("RuntimeInit", function(e3, t4) {
+                  r3(t4);
+                }), _.bind("RuntimeError", function(e3, t4) {
+                  s3.dispatchEvent("RuntimeError", t4);
+                }), _.connectRuntime(k));
+              }
+              function g() {
+                i3("responseText", ""), i3("responseXML", null), i3("response", null), i3("status", 0), i3("statusText", ""), E = b = null;
+              }
+              var x, v, w, y, E, b, _, R, A = this, I = { timeout: 0, readyState: h.UNSENT, withCredentials: false, status: 0, statusText: "", responseType: "", responseXML: null, responseText: null, response: null }, T = true, S = {}, O = null, D = null, N = false, C2 = false, L = false, M = false, F = false, B = false, P = null, H = null, k = {}, U = "";
+              e2.extend(this, I, { uid: e2.guid("uid_"), upload: new m2(), open: function(o3, a3, s3, u3, c2) {
+                var l2;
+                if (!o3 || !a3) throw new t2.DOMException(t2.DOMException.SYNTAX_ERR);
+                if (/[\u0100-\uffff]/.test(o3) || n2.utf8_encode(o3) !== o3) throw new t2.DOMException(t2.DOMException.SYNTAX_ERR);
+                if (~e2.inArray(o3.toUpperCase(), ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "TRACE", "TRACK"]) && (v = o3.toUpperCase()), ~e2.inArray(v, ["CONNECT", "TRACE", "TRACK"])) throw new t2.DOMException(t2.DOMException.SECURITY_ERR);
+                if (a3 = n2.utf8_encode(a3), l2 = r2.parseUrl(a3), B = r2.hasSameOrigin(l2), x = r2.resolveUrl(a3), (u3 || c2) && !B) throw new t2.DOMException(t2.DOMException.INVALID_ACCESS_ERR);
+                if (w = u3 || l2.user, y = c2 || l2.pass, T = s3 || true, T === false && (i3("timeout") || i3("withCredentials") || "" !== i3("responseType"))) throw new t2.DOMException(t2.DOMException.INVALID_ACCESS_ERR);
+                N = !T, C2 = false, S = {}, g.call(this), i3("readyState", h.OPENED), this.dispatchEvent("readystatechange");
+              }, setRequestHeader: function(r3, o3) {
+                var a3 = ["accept-charset", "accept-encoding", "access-control-request-headers", "access-control-request-method", "connection", "content-length", "cookie", "cookie2", "content-transfer-encoding", "date", "expect", "host", "keep-alive", "origin", "referer", "te", "trailer", "transfer-encoding", "upgrade", "user-agent", "via"];
+                if (i3("readyState") !== h.OPENED || C2) throw new t2.DOMException(t2.DOMException.INVALID_STATE_ERR);
+                if (/[\u0100-\uffff]/.test(r3) || n2.utf8_encode(r3) !== r3) throw new t2.DOMException(t2.DOMException.SYNTAX_ERR);
+                return r3 = e2.trim(r3).toLowerCase(), ~e2.inArray(r3, a3) || /^(proxy\-|sec\-)/.test(r3) ? false : (S[r3] ? S[r3] += ", " + o3 : S[r3] = o3, true);
+              }, hasRequestHeader: function(e3) {
+                return e3 && S[e3.toLowerCase()] || false;
+              }, getAllResponseHeaders: function() {
+                return U || "";
+              }, getResponseHeader: function(t3) {
+                return t3 = t3.toLowerCase(), F || ~e2.inArray(t3, ["set-cookie", "set-cookie2"]) ? null : U && "" !== U && (R || (R = {}, e2.each(U.split(/\r\n/), function(t4) {
+                  var i4 = t4.split(/:\s+/);
+                  2 === i4.length && (i4[0] = e2.trim(i4[0]), R[i4[0].toLowerCase()] = { header: i4[0], value: e2.trim(i4[1]) });
+                })), R.hasOwnProperty(t3)) ? R[t3].header + ": " + R[t3].value : null;
+              }, overrideMimeType: function(n3) {
+                var r3, o3;
+                if (~e2.inArray(i3("readyState"), [h.LOADING, h.DONE])) throw new t2.DOMException(t2.DOMException.INVALID_STATE_ERR);
+                if (n3 = e2.trim(n3.toLowerCase()), /;/.test(n3) && (r3 = n3.match(/^([^;]+)(?:;\scharset\=)?(.*)$/)) && (n3 = r3[1], r3[2] && (o3 = r3[2])), !d.mimes[n3]) throw new t2.DOMException(t2.DOMException.SYNTAX_ERR);
+                P = n3, H = o3;
+              }, send: function(i4, r3) {
+                if (k = "string" === e2.typeOf(r3) ? { ruid: r3 } : r3 ? r3 : {}, this.readyState !== h.OPENED || C2) throw new t2.DOMException(t2.DOMException.INVALID_STATE_ERR);
+                if (i4 instanceof s2) k.ruid = i4.ruid, D = i4.type || "application/octet-stream";
+                else if (i4 instanceof c) {
+                  if (i4.hasBlob()) {
+                    var o3 = i4.getBlob();
+                    k.ruid = o3.ruid, D = o3.type || "application/octet-stream";
+                  }
+                } else "string" == typeof i4 && (O = "UTF-8", D = "text/plain;charset=UTF-8", i4 = n2.utf8_encode(i4));
+                this.withCredentials || (this.withCredentials = k.required_caps && k.required_caps.send_browser_cookies && !B), L = !N && this.upload.hasEventListener(), F = false, M = !i4, N || (C2 = true), u2.call(this, i4);
+              }, abort: function() {
+                if (F = true, N = false, ~e2.inArray(i3("readyState"), [h.UNSENT, h.OPENED, h.DONE])) i3("readyState", h.UNSENT);
+                else {
+                  if (i3("readyState", h.DONE), C2 = false, !_) throw new t2.DOMException(t2.DOMException.INVALID_STATE_ERR);
+                  _.getRuntime().exec.call(_, "XMLHttpRequest", "abort", M), M = true;
+                }
+              }, destroy: function() {
+                _ && ("function" === e2.typeOf(_.destroy) && _.destroy(), _ = null), this.unbindAll(), this.upload && (this.upload.unbindAll(), this.upload = null);
+              } }), this.handleEventProps(p.concat(["readystatechange"])), this.upload.handleEventProps(p);
+            }
+            var f = { 100: "Continue", 101: "Switching Protocols", 102: "Processing", 200: "OK", 201: "Created", 202: "Accepted", 203: "Non-Authoritative Information", 204: "No Content", 205: "Reset Content", 206: "Partial Content", 207: "Multi-Status", 226: "IM Used", 300: "Multiple Choices", 301: "Moved Permanently", 302: "Found", 303: "See Other", 304: "Not Modified", 305: "Use Proxy", 306: "Reserved", 307: "Temporary Redirect", 400: "Bad Request", 401: "Unauthorized", 402: "Payment Required", 403: "Forbidden", 404: "Not Found", 405: "Method Not Allowed", 406: "Not Acceptable", 407: "Proxy Authentication Required", 408: "Request Timeout", 409: "Conflict", 410: "Gone", 411: "Length Required", 412: "Precondition Failed", 413: "Request Entity Too Large", 414: "Request-URI Too Long", 415: "Unsupported Media Type", 416: "Requested Range Not Satisfiable", 417: "Expectation Failed", 422: "Unprocessable Entity", 423: "Locked", 424: "Failed Dependency", 426: "Upgrade Required", 500: "Internal Server Error", 501: "Not Implemented", 502: "Bad Gateway", 503: "Service Unavailable", 504: "Gateway Timeout", 505: "HTTP Version Not Supported", 506: "Variant Also Negotiates", 507: "Insufficient Storage", 510: "Not Extended" };
+            m2.prototype = i2.instance;
+            var p = ["loadstart", "progress", "abort", "error", "load", "timeout", "loadend"];
+            return h.UNSENT = 0, h.OPENED = 1, h.HEADERS_RECEIVED = 2, h.LOADING = 3, h.DONE = 4, h.prototype = i2.instance, h;
+          }), n("moxie/runtime/Transporter", ["moxie/core/utils/Basic", "moxie/core/utils/Encode", "moxie/runtime/RuntimeClient", "moxie/core/EventTarget"], function(e2, t2, i2, n2) {
+            function r2() {
+              function n3() {
+                l = d = 0, c = this.result = null;
+              }
+              function o2(t3, i3) {
+                var n4 = this;
+                u = i3, n4.bind("TransportingProgress", function(t4) {
+                  d = t4.loaded, l > d && -1 === e2.inArray(n4.state, [r2.IDLE, r2.DONE]) && a2.call(n4);
+                }, 999), n4.bind("TransportingComplete", function() {
+                  d = l, n4.state = r2.DONE, c = null, n4.result = u.exec.call(n4, "Transporter", "getAsBlob", t3 || "");
+                }, 999), n4.state = r2.BUSY, n4.trigger("TransportingStarted"), a2.call(n4);
+              }
+              function a2() {
+                var e3, i3 = this, n4 = l - d;
+                m2 > n4 && (m2 = n4), e3 = t2.btoa(c.substr(d, m2)), u.exec.call(i3, "Transporter", "receive", e3, l);
+              }
+              var s2, u, c, l, d, m2;
+              i2.call(this), e2.extend(this, { uid: e2.guid("uid_"), state: r2.IDLE, result: null, transport: function(t3, i3, r3) {
+                var a3 = this;
+                if (r3 = e2.extend({ chunk_size: 204798 }, r3), (s2 = r3.chunk_size % 3) && (r3.chunk_size += 3 - s2), m2 = r3.chunk_size, n3.call(this), c = t3, l = t3.length, "string" === e2.typeOf(r3) || r3.ruid) o2.call(a3, i3, this.connectRuntime(r3));
+                else {
+                  var u2 = function(e3, t4) {
+                    a3.unbind("RuntimeInit", u2), o2.call(a3, i3, t4);
+                  };
+                  this.bind("RuntimeInit", u2), this.connectRuntime(r3);
+                }
+              }, abort: function() {
+                var e3 = this;
+                e3.state = r2.IDLE, u && (u.exec.call(e3, "Transporter", "clear"), e3.trigger("TransportingAborted")), n3.call(e3);
+              }, destroy: function() {
+                this.unbindAll(), u = null, this.disconnectRuntime(), n3.call(this);
+              } });
+            }
+            return r2.IDLE = 0, r2.BUSY = 1, r2.DONE = 2, r2.prototype = n2.instance, r2;
+          }), n("moxie/image/Image", ["moxie/core/utils/Basic", "moxie/core/utils/Dom", "moxie/core/Exceptions", "moxie/file/FileReaderSync", "moxie/xhr/XMLHttpRequest", "moxie/runtime/Runtime", "moxie/runtime/RuntimeClient", "moxie/runtime/Transporter", "moxie/core/utils/Env", "moxie/core/EventTarget", "moxie/file/Blob", "moxie/file/File", "moxie/core/utils/Encode"], function(e2, t2, i2, n2, r2, o2, a2, s2, u, c, l, d, m2) {
+            function h() {
+              function n3(e3) {
+                try {
+                  return e3 || (e3 = this.exec("Image", "getInfo")), this.size = e3.size, this.width = e3.width, this.height = e3.height, this.type = e3.type, this.meta = e3.meta, "" === this.name && (this.name = e3.name), true;
+                } catch (t3) {
+                  return this.trigger("error", t3.code), false;
+                }
+              }
+              function c2(t3) {
+                var n4 = e2.typeOf(t3);
+                try {
+                  if (t3 instanceof h) {
+                    if (!t3.size) throw new i2.DOMException(i2.DOMException.INVALID_STATE_ERR);
+                    p.apply(this, arguments);
+                  } else if (t3 instanceof l) {
+                    if (!~e2.inArray(t3.type, ["image/jpeg", "image/png"])) throw new i2.ImageError(i2.ImageError.WRONG_FORMAT);
+                    g.apply(this, arguments);
+                  } else if (-1 !== e2.inArray(n4, ["blob", "file"])) c2.call(this, new d(null, t3), arguments[1]);
+                  else if ("string" === n4) "data:" === t3.substr(0, 5) ? c2.call(this, new l(null, { data: t3 }), arguments[1]) : x.apply(this, arguments);
+                  else {
+                    if ("node" !== n4 || "img" !== t3.nodeName.toLowerCase()) throw new i2.DOMException(i2.DOMException.TYPE_MISMATCH_ERR);
+                    c2.call(this, t3.src, arguments[1]);
+                  }
+                } catch (r3) {
+                  this.trigger("error", r3.code);
+                }
+              }
+              function p(t3, i3) {
+                var n4 = this.connectRuntime(t3.ruid);
+                this.ruid = n4.uid, n4.exec.call(this, "Image", "loadFromImage", t3, "undefined" === e2.typeOf(i3) ? true : i3);
+              }
+              function g(t3, i3) {
+                function n4(e3) {
+                  r3.ruid = e3.uid, e3.exec.call(r3, "Image", "loadFromBlob", t3);
+                }
+                var r3 = this;
+                r3.name = t3.name || "", t3.isDetached() ? (this.bind("RuntimeInit", function(e3, t4) {
+                  n4(t4);
+                }), i3 && "string" == typeof i3.required_caps && (i3.required_caps = o2.parseCaps(i3.required_caps)), this.connectRuntime(e2.extend({ required_caps: { access_image_binary: true, resize_image: true } }, i3))) : n4(this.connectRuntime(t3.ruid));
+              }
+              function x(e3, t3) {
+                var i3, n4 = this;
+                i3 = new r2(), i3.open("get", e3), i3.responseType = "blob", i3.onprogress = function(e4) {
+                  n4.trigger(e4);
+                }, i3.onload = function() {
+                  g.call(n4, i3.response, true);
+                }, i3.onerror = function(e4) {
+                  n4.trigger(e4);
+                }, i3.onloadend = function() {
+                  i3.destroy();
+                }, i3.bind("RuntimeError", function(e4, t4) {
+                  n4.trigger("RuntimeError", t4);
+                }), i3.send(null, t3);
+              }
+              a2.call(this), e2.extend(this, { uid: e2.guid("uid_"), ruid: null, name: "", size: 0, width: 0, height: 0, type: "", meta: {}, clone: function() {
+                this.load.apply(this, arguments);
+              }, load: function() {
+                c2.apply(this, arguments);
+              }, resize: function(t3) {
+                var n4, r3, o3 = this, a3 = { x: 0, y: 0, width: o3.width, height: o3.height }, s3 = e2.extendIf({ width: o3.width, height: o3.height, type: o3.type || "image/jpeg", quality: 90, crop: false, fit: true, preserveHeaders: true, resample: "default", multipass: true }, t3);
+                try {
+                  if (!o3.size) throw new i2.DOMException(i2.DOMException.INVALID_STATE_ERR);
+                  if (o3.width > h.MAX_RESIZE_WIDTH || o3.height > h.MAX_RESIZE_HEIGHT) throw new i2.ImageError(i2.ImageError.MAX_RESOLUTION_ERR);
+                  if (n4 = o3.meta && o3.meta.tiff && o3.meta.tiff.Orientation || 1, -1 !== e2.inArray(n4, [5, 6, 7, 8])) {
+                    var u2 = s3.width;
+                    s3.width = s3.height, s3.height = u2;
+                  }
+                  if (s3.crop) {
+                    switch (r3 = Math.max(s3.width / o3.width, s3.height / o3.height), t3.fit ? (a3.width = Math.min(Math.ceil(s3.width / r3), o3.width), a3.height = Math.min(Math.ceil(s3.height / r3), o3.height), r3 = s3.width / a3.width) : (a3.width = Math.min(s3.width, o3.width), a3.height = Math.min(s3.height, o3.height), r3 = 1), "boolean" == typeof s3.crop && (s3.crop = "cc"), s3.crop.toLowerCase().replace(/_/, "-")) {
+                      case "rb":
+                      case "right-bottom":
+                        a3.x = o3.width - a3.width, a3.y = o3.height - a3.height;
+                        break;
+                      case "cb":
+                      case "center-bottom":
+                        a3.x = Math.floor((o3.width - a3.width) / 2), a3.y = o3.height - a3.height;
+                        break;
+                      case "lb":
+                      case "left-bottom":
+                        a3.x = 0, a3.y = o3.height - a3.height;
+                        break;
+                      case "lt":
+                      case "left-top":
+                        a3.x = 0, a3.y = 0;
+                        break;
+                      case "ct":
+                      case "center-top":
+                        a3.x = Math.floor((o3.width - a3.width) / 2), a3.y = 0;
+                        break;
+                      case "rt":
+                      case "right-top":
+                        a3.x = o3.width - a3.width, a3.y = 0;
+                        break;
+                      case "rc":
+                      case "right-center":
+                      case "right-middle":
+                        a3.x = o3.width - a3.width, a3.y = Math.floor((o3.height - a3.height) / 2);
+                        break;
+                      case "lc":
+                      case "left-center":
+                      case "left-middle":
+                        a3.x = 0, a3.y = Math.floor((o3.height - a3.height) / 2);
+                        break;
+                      case "cc":
+                      case "center-center":
+                      case "center-middle":
+                      default:
+                        a3.x = Math.floor((o3.width - a3.width) / 2), a3.y = Math.floor((o3.height - a3.height) / 2);
+                    }
+                    a3.x = Math.max(a3.x, 0), a3.y = Math.max(a3.y, 0);
+                  } else r3 = Math.min(s3.width / o3.width, s3.height / o3.height), r3 > 1 && !s3.fit && (r3 = 1);
+                  this.exec("Image", "resize", a3, r3, s3);
+                } catch (c3) {
+                  o3.trigger("error", c3.code);
+                }
+              }, downsize: function(t3) {
+                var i3, n4 = { width: this.width, height: this.height, type: this.type || "image/jpeg", quality: 90, crop: false, fit: false, preserveHeaders: true, resample: "default" };
+                i3 = "object" == typeof t3 ? e2.extend(n4, t3) : e2.extend(n4, { width: arguments[0], height: arguments[1], crop: arguments[2], preserveHeaders: arguments[3] }), this.resize(i3);
+              }, crop: function(e3, t3, i3) {
+                this.downsize(e3, t3, true, i3);
+              }, getAsCanvas: function() {
+                if (!u.can("create_canvas")) throw new i2.RuntimeError(i2.RuntimeError.NOT_SUPPORTED_ERR);
+                return this.exec("Image", "getAsCanvas");
+              }, getAsBlob: function(e3, t3) {
+                if (!this.size) throw new i2.DOMException(i2.DOMException.INVALID_STATE_ERR);
+                return this.exec("Image", "getAsBlob", e3 || "image/jpeg", t3 || 90);
+              }, getAsDataURL: function(e3, t3) {
+                if (!this.size) throw new i2.DOMException(i2.DOMException.INVALID_STATE_ERR);
+                return this.exec("Image", "getAsDataURL", e3 || "image/jpeg", t3 || 90);
+              }, getAsBinaryString: function(e3, t3) {
+                var i3 = this.getAsDataURL(e3, t3);
+                return m2.atob(i3.substring(i3.indexOf("base64,") + 7));
+              }, embed: function(n4, r3) {
+                function o3(t3, r4) {
+                  var o4 = this;
+                  if (u.can("create_canvas")) {
+                    var l3 = o4.getAsCanvas();
+                    if (l3) return n4.appendChild(l3), l3 = null, o4.destroy(), c3.trigger("embedded"), void 0;
+                  }
+                  var d3 = o4.getAsDataURL(t3, r4);
+                  if (!d3) throw new i2.ImageError(i2.ImageError.WRONG_FORMAT);
+                  if (u.can("use_data_uri_of", d3.length)) n4.innerHTML = '<img src="' + d3 + '" width="' + o4.width + '" height="' + o4.height + '" alt="" />', o4.destroy(), c3.trigger("embedded");
+                  else {
+                    var h2 = new s2();
+                    h2.bind("TransportingComplete", function() {
+                      a3 = c3.connectRuntime(this.result.ruid), c3.bind("Embedded", function() {
+                        e2.extend(a3.getShimContainer().style, { top: "0px", left: "0px", width: o4.width + "px", height: o4.height + "px" }), a3 = null;
+                      }, 999), a3.exec.call(c3, "ImageView", "display", this.result.uid, width, height), o4.destroy();
+                    }), h2.transport(m2.atob(d3.substring(d3.indexOf("base64,") + 7)), t3, { required_caps: { display_media: true }, runtime_order: "flash,silverlight", container: n4 });
+                  }
+                }
+                var a3, c3 = this, l2 = e2.extend({ width: this.width, height: this.height, type: this.type || "image/jpeg", quality: 90, fit: true, resample: "nearest" }, r3);
+                try {
+                  if (!(n4 = t2.get(n4))) throw new i2.DOMException(i2.DOMException.INVALID_NODE_TYPE_ERR);
+                  if (!this.size) throw new i2.DOMException(i2.DOMException.INVALID_STATE_ERR);
+                  this.width > h.MAX_RESIZE_WIDTH || this.height > h.MAX_RESIZE_HEIGHT;
+                  var d2 = new h();
+                  return d2.bind("Resize", function() {
+                    o3.call(this, l2.type, l2.quality);
+                  }), d2.bind("Load", function() {
+                    this.downsize(l2);
+                  }), this.meta.thumb && this.meta.thumb.width >= l2.width && this.meta.thumb.height >= l2.height ? d2.load(this.meta.thumb.data) : d2.clone(this, false), d2;
+                } catch (f2) {
+                  this.trigger("error", f2.code);
+                }
+              }, destroy: function() {
+                this.ruid && (this.getRuntime().exec.call(this, "Image", "destroy"), this.disconnectRuntime()), this.meta && this.meta.thumb && this.meta.thumb.data.destroy(), this.unbindAll();
+              } }), this.handleEventProps(f), this.bind("Load Resize", function() {
+                return n3.call(this);
+              }, 999);
+            }
+            var f = ["progress", "load", "error", "resize", "embedded"];
+            return h.MAX_RESIZE_WIDTH = 8192, h.MAX_RESIZE_HEIGHT = 8192, h.prototype = c.instance, h;
+          }), n("moxie/runtime/html5/Runtime", ["moxie/core/utils/Basic", "moxie/core/Exceptions", "moxie/runtime/Runtime", "moxie/core/utils/Env"], function(e2, t2, i2, n2) {
+            function o2(t3) {
+              var o3 = this, u = i2.capTest, c = i2.capTrue, l = e2.extend({ access_binary: u(window.FileReader || window.File && window.File.getAsDataURL), access_image_binary: function() {
+                return o3.can("access_binary") && !!s2.Image;
+              }, display_media: u((n2.can("create_canvas") || n2.can("use_data_uri_over32kb")) && r("moxie/image/Image")), do_cors: u(window.XMLHttpRequest && "withCredentials" in new XMLHttpRequest()), drag_and_drop: u(function() {
+                var e3 = document.createElement("div");
+                return ("draggable" in e3 || "ondragstart" in e3 && "ondrop" in e3) && ("IE" !== n2.browser || n2.verComp(n2.version, 9, ">"));
+              }()), filter_by_extension: u(function() {
+                return !("Chrome" === n2.browser && n2.verComp(n2.version, 28, "<") || "IE" === n2.browser && n2.verComp(n2.version, 10, "<") || "Safari" === n2.browser && n2.verComp(n2.version, 7, "<") || "Firefox" === n2.browser && n2.verComp(n2.version, 37, "<"));
+              }()), return_response_headers: c, return_response_type: function(e3) {
+                return "json" === e3 && window.JSON ? true : n2.can("return_response_type", e3);
+              }, return_status_code: c, report_upload_progress: u(window.XMLHttpRequest && new XMLHttpRequest().upload), resize_image: function() {
+                return o3.can("access_binary") && n2.can("create_canvas");
+              }, select_file: function() {
+                return n2.can("use_fileinput") && window.File;
+              }, select_folder: function() {
+                return o3.can("select_file") && ("Chrome" === n2.browser && n2.verComp(n2.version, 21, ">=") || "Firefox" === n2.browser && n2.verComp(n2.version, 42, ">="));
+              }, select_multiple: function() {
+                return !(!o3.can("select_file") || "Safari" === n2.browser && "Windows" === n2.os || "iOS" === n2.os && n2.verComp(n2.osVersion, "7.0.0", ">") && n2.verComp(n2.osVersion, "8.0.0", "<"));
+              }, send_binary_string: u(window.XMLHttpRequest && (new XMLHttpRequest().sendAsBinary || window.Uint8Array && window.ArrayBuffer)), send_custom_headers: u(window.XMLHttpRequest), send_multipart: function() {
+                return !!(window.XMLHttpRequest && new XMLHttpRequest().upload && window.FormData) || o3.can("send_binary_string");
+              }, slice_blob: u(window.File && (File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice)), stream_upload: function() {
+                return o3.can("slice_blob") && o3.can("send_multipart");
+              }, summon_file_dialog: function() {
+                return o3.can("select_file") && !("Firefox" === n2.browser && n2.verComp(n2.version, 4, "<") || "Opera" === n2.browser && n2.verComp(n2.version, 12, "<") || "IE" === n2.browser && n2.verComp(n2.version, 10, "<"));
+              }, upload_filesize: c, use_http_method: c }, arguments[2]);
+              i2.call(this, t3, arguments[1] || a2, l), e2.extend(this, { init: function() {
+                this.trigger("Init");
+              }, destroy: /* @__PURE__ */ function(e3) {
+                return function() {
+                  e3.call(o3), e3 = o3 = null;
+                };
+              }(this.destroy) }), e2.extend(this.getShim(), s2);
+            }
+            var a2 = "html5", s2 = {};
+            return i2.addConstructor(a2, o2), s2;
+          }), n("moxie/runtime/html5/file/Blob", ["moxie/runtime/html5/Runtime", "moxie/file/Blob"], function(e2, t2) {
+            function i2() {
+              function e3(e4, t3, i3) {
+                var n2;
+                if (!window.File.prototype.slice) return (n2 = window.File.prototype.webkitSlice || window.File.prototype.mozSlice) ? n2.call(e4, t3, i3) : null;
+                try {
+                  return e4.slice(), e4.slice(t3, i3);
+                } catch (r2) {
+                  return e4.slice(t3, i3 - t3);
+                }
+              }
+              this.slice = function() {
+                return new t2(this.getRuntime().uid, e3.apply(this, arguments));
+              }, this.destroy = function() {
+                this.getRuntime().getShim().removeInstance(this.uid);
+              };
+            }
+            return e2.Blob = i2;
+          }), n("moxie/core/utils/Events", ["moxie/core/utils/Basic"], function(e2) {
+            function t2() {
+              this.returnValue = false;
+            }
+            function i2() {
+              this.cancelBubble = true;
+            }
+            var n2 = {}, r2 = "moxie_" + e2.guid(), o2 = function(o3, a3, s3, u) {
+              var c, l;
+              a3 = a3.toLowerCase(), o3.addEventListener ? (c = s3, o3.addEventListener(a3, c, false)) : o3.attachEvent && (c = function() {
+                var e3 = window.event;
+                e3.target || (e3.target = e3.srcElement), e3.preventDefault = t2, e3.stopPropagation = i2, s3(e3);
+              }, o3.attachEvent("on" + a3, c)), o3[r2] || (o3[r2] = e2.guid()), n2.hasOwnProperty(o3[r2]) || (n2[o3[r2]] = {}), l = n2[o3[r2]], l.hasOwnProperty(a3) || (l[a3] = []), l[a3].push({ func: c, orig: s3, key: u });
+            }, a2 = function(t3, i3, o3) {
+              var a3, s3;
+              if (i3 = i3.toLowerCase(), t3[r2] && n2[t3[r2]] && n2[t3[r2]][i3]) {
+                a3 = n2[t3[r2]][i3];
+                for (var u = a3.length - 1; u >= 0 && (a3[u].orig !== o3 && a3[u].key !== o3 || (t3.removeEventListener ? t3.removeEventListener(i3, a3[u].func, false) : t3.detachEvent && t3.detachEvent("on" + i3, a3[u].func), a3[u].orig = null, a3[u].func = null, a3.splice(u, 1), o3 === s3)); u--) ;
+                if (a3.length || delete n2[t3[r2]][i3], e2.isEmptyObj(n2[t3[r2]])) {
+                  delete n2[t3[r2]];
+                  try {
+                    delete t3[r2];
+                  } catch (c) {
+                    t3[r2] = s3;
+                  }
+                }
+              }
+            }, s2 = function(t3, i3) {
+              t3 && t3[r2] && e2.each(n2[t3[r2]], function(e3, n3) {
+                a2(t3, n3, i3);
+              });
+            };
+            return { addEvent: o2, removeEvent: a2, removeAllEvents: s2 };
+          }), n("moxie/runtime/html5/file/FileInput", ["moxie/runtime/html5/Runtime", "moxie/file/File", "moxie/core/utils/Basic", "moxie/core/utils/Dom", "moxie/core/utils/Events", "moxie/core/utils/Mime", "moxie/core/utils/Env"], function(e2, t2, i2, n2, r2, o2, a2) {
+            function s2() {
+              var e3, s3;
+              i2.extend(this, { init: function(u) {
+                var c, l, d, m2, h, f, p = this, g = p.getRuntime();
+                e3 = u, d = o2.extList2mimes(e3.accept, g.can("filter_by_extension")), l = g.getShimContainer(), l.innerHTML = '<input id="' + g.uid + '" type="file" style="font-size:999px;opacity:0;"' + (e3.multiple && g.can("select_multiple") ? "multiple" : "") + (e3.directory && g.can("select_folder") ? "webkitdirectory directory" : "") + (d ? ' accept="' + d.join(",") + '"' : "") + " />", c = n2.get(g.uid), i2.extend(c.style, { position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }), m2 = n2.get(e3.browse_button), s3 = n2.getStyle(m2, "z-index") || "auto", g.can("summon_file_dialog") && ("static" === n2.getStyle(m2, "position") && (m2.style.position = "relative"), r2.addEvent(m2, "click", function(e4) {
+                  var t3 = n2.get(g.uid);
+                  t3 && !t3.disabled && t3.click(), e4.preventDefault();
+                }, p.uid), p.bind("Refresh", function() {
+                  h = parseInt(s3, 10) || 1, n2.get(e3.browse_button).style.zIndex = h, this.getRuntime().getShimContainer().style.zIndex = h - 1;
+                })), f = g.can("summon_file_dialog") ? m2 : l, r2.addEvent(f, "mouseover", function() {
+                  p.trigger("mouseenter");
+                }, p.uid), r2.addEvent(f, "mouseout", function() {
+                  p.trigger("mouseleave");
+                }, p.uid), r2.addEvent(f, "mousedown", function() {
+                  p.trigger("mousedown");
+                }, p.uid), r2.addEvent(n2.get(e3.container), "mouseup", function() {
+                  p.trigger("mouseup");
+                }, p.uid), (g.can("summon_file_dialog") ? c : m2).setAttribute("tabindex", -1), c.onchange = function x() {
+                  if (p.files = [], i2.each(this.files, function(i3) {
+                    var n4 = "";
+                    return e3.directory && "." == i3.name ? true : (i3.webkitRelativePath && (n4 = "/" + i3.webkitRelativePath.replace(/^\//, "")), i3 = new t2(g.uid, i3), i3.relativePath = n4, p.files.push(i3), void 0);
+                  }), "IE" !== a2.browser && "IEMobile" !== a2.browser) this.value = "";
+                  else {
+                    var n3 = this.cloneNode(true);
+                    this.parentNode.replaceChild(n3, this), n3.onchange = x;
+                  }
+                  p.files.length && p.trigger("change");
+                }, p.trigger({ type: "ready", async: true }), l = null;
+              }, setOption: function(e4, t3) {
+                var i3 = this.getRuntime(), r3 = n2.get(i3.uid);
+                switch (e4) {
+                  case "accept":
+                    if (t3) {
+                      var a3 = t3.mimes || o2.extList2mimes(t3, i3.can("filter_by_extension"));
+                      r3.setAttribute("accept", a3.join(","));
+                    } else r3.removeAttribute("accept");
+                    break;
+                  case "directory":
+                    t3 && i3.can("select_folder") ? (r3.setAttribute("directory", ""), r3.setAttribute("webkitdirectory", "")) : (r3.removeAttribute("directory"), r3.removeAttribute("webkitdirectory"));
+                    break;
+                  case "multiple":
+                    t3 && i3.can("select_multiple") ? r3.setAttribute("multiple", "") : r3.removeAttribute("multiple");
+                }
+              }, disable: function(e4) {
+                var t3, i3 = this.getRuntime();
+                (t3 = n2.get(i3.uid)) && (t3.disabled = !!e4);
+              }, destroy: function() {
+                var t3 = this.getRuntime(), i3 = t3.getShim(), o3 = t3.getShimContainer(), a3 = e3 && n2.get(e3.container), u = e3 && n2.get(e3.browse_button);
+                a3 && r2.removeAllEvents(a3, this.uid), u && (r2.removeAllEvents(u, this.uid), u.style.zIndex = s3), o3 && (r2.removeAllEvents(o3, this.uid), o3.innerHTML = ""), i3.removeInstance(this.uid), e3 = o3 = a3 = u = i3 = null;
+              } });
+            }
+            return e2.FileInput = s2;
+          }), n("moxie/runtime/html5/file/FileDrop", ["moxie/runtime/html5/Runtime", "moxie/file/File", "moxie/core/utils/Basic", "moxie/core/utils/Dom", "moxie/core/utils/Events", "moxie/core/utils/Mime"], function(e2, t2, i2, n2, r2, o2) {
+            function a2() {
+              function e3(e4) {
+                if (!e4.dataTransfer || !e4.dataTransfer.types) return false;
+                var t3 = i2.toArray(e4.dataTransfer.types || []);
+                return -1 !== i2.inArray("Files", t3) || -1 !== i2.inArray("public.file-url", t3) || -1 !== i2.inArray("application/x-moz-file", t3);
+              }
+              function a3(e4, i3) {
+                if (u(e4)) {
+                  var n3 = new t2(f, e4);
+                  n3.relativePath = i3 || "", p.push(n3);
+                }
+              }
+              function s2(e4) {
+                for (var t3 = [], n3 = 0; n3 < e4.length; n3++) [].push.apply(t3, e4[n3].extensions.split(/\s*,\s*/));
+                return -1 === i2.inArray("*", t3) ? t3 : [];
+              }
+              function u(e4) {
+                if (!g.length) return true;
+                var t3 = o2.getFileExtension(e4.name);
+                return !t3 || -1 !== i2.inArray(t3, g);
+              }
+              function c(e4, t3) {
+                var n3 = [];
+                i2.each(e4, function(e5) {
+                  var t4 = e5.webkitGetAsEntry();
+                  t4 && (t4.isFile ? a3(e5.getAsFile(), t4.fullPath) : n3.push(t4));
+                }), n3.length ? l(n3, t3) : t3();
+              }
+              function l(e4, t3) {
+                var n3 = [];
+                i2.each(e4, function(e5) {
+                  n3.push(function(t4) {
+                    d(e5, t4);
+                  });
+                }), i2.inSeries(n3, function() {
+                  t3();
+                });
+              }
+              function d(e4, t3) {
+                e4.isFile ? e4.file(function(i3) {
+                  a3(i3, e4.fullPath), t3();
+                }, function() {
+                  t3();
+                }) : e4.isDirectory ? m2(e4, t3) : t3();
+              }
+              function m2(e4, t3) {
+                function i3(e5) {
+                  r3.readEntries(function(t4) {
+                    t4.length ? ([].push.apply(n3, t4), i3(e5)) : e5();
+                  }, e5);
+                }
+                var n3 = [], r3 = e4.createReader();
+                i3(function() {
+                  l(n3, t3);
+                });
+              }
+              var h, f, p = [], g = [];
+              i2.extend(this, { init: function(t3) {
+                var n3, o3 = this;
+                h = t3, f = o3.ruid, g = s2(h.accept), n3 = h.container, r2.addEvent(n3, "dragover", function(t4) {
+                  e3(t4) && (t4.preventDefault(), t4.dataTransfer.dropEffect = "copy");
+                }, o3.uid), r2.addEvent(n3, "drop", function(t4) {
+                  e3(t4) && (t4.preventDefault(), p = [], t4.dataTransfer.items && t4.dataTransfer.items[0].webkitGetAsEntry ? c(t4.dataTransfer.items, function() {
+                    o3.files = p, o3.trigger("drop");
+                  }) : (i2.each(t4.dataTransfer.files, function(e4) {
+                    a3(e4);
+                  }), o3.files = p, o3.trigger("drop")));
+                }, o3.uid), r2.addEvent(n3, "dragenter", function() {
+                  o3.trigger("dragenter");
+                }, o3.uid), r2.addEvent(n3, "dragleave", function() {
+                  o3.trigger("dragleave");
+                }, o3.uid);
+              }, destroy: function() {
+                r2.removeAllEvents(h && n2.get(h.container), this.uid), f = p = g = h = null, this.getRuntime().getShim().removeInstance(this.uid);
+              } });
+            }
+            return e2.FileDrop = a2;
+          }), n("moxie/runtime/html5/file/FileReader", ["moxie/runtime/html5/Runtime", "moxie/core/utils/Encode", "moxie/core/utils/Basic"], function(e2, t2, i2) {
+            function n2() {
+              function e3(e4) {
+                return t2.atob(e4.substring(e4.indexOf("base64,") + 7));
+              }
+              var n3, r2 = false;
+              i2.extend(this, { read: function(t3, o2) {
+                var a2 = this;
+                a2.result = "", n3 = new window.FileReader(), n3.addEventListener("progress", function(e4) {
+                  a2.trigger(e4);
+                }), n3.addEventListener("load", function(t4) {
+                  a2.result = r2 ? e3(n3.result) : n3.result, a2.trigger(t4);
+                }), n3.addEventListener("error", function(e4) {
+                  a2.trigger(e4, n3.error);
+                }), n3.addEventListener("loadend", function(e4) {
+                  n3 = null, a2.trigger(e4);
+                }), "function" === i2.typeOf(n3[t3]) ? (r2 = false, n3[t3](o2.getSource())) : "readAsBinaryString" === t3 && (r2 = true, n3.readAsDataURL(o2.getSource()));
+              }, abort: function() {
+                n3 && n3.abort();
+              }, destroy: function() {
+                n3 = null, this.getRuntime().getShim().removeInstance(this.uid);
+              } });
+            }
+            return e2.FileReader = n2;
+          }), n("moxie/runtime/html5/xhr/XMLHttpRequest", ["moxie/runtime/html5/Runtime", "moxie/core/utils/Basic", "moxie/core/utils/Mime", "moxie/core/utils/Url", "moxie/file/File", "moxie/file/Blob", "moxie/xhr/FormData", "moxie/core/Exceptions", "moxie/core/utils/Env"], function(e2, t2, i2, n2, r2, o2, a2, s2, u) {
+            function c() {
+              function e3(e4, t3) {
+                var i3, n3, r3 = this;
+                i3 = t3.getBlob().getSource(), n3 = new window.FileReader(), n3.onload = function() {
+                  t3.append(t3.getBlobName(), new o2(null, { type: i3.type, data: n3.result })), f.send.call(r3, e4, t3);
+                }, n3.readAsBinaryString(i3);
+              }
+              function c2() {
+                return !window.XMLHttpRequest || "IE" === u.browser && u.verComp(u.version, 8, "<") ? function() {
+                  for (var e4 = ["Msxml2.XMLHTTP.6.0", "Microsoft.XMLHTTP"], t3 = 0; t3 < e4.length; t3++) try {
+                    return new ActiveXObject(e4[t3]);
+                  } catch (i3) {
+                  }
+                }() : new window.XMLHttpRequest();
+              }
+              function l(e4) {
+                var t3 = e4.responseXML, i3 = e4.responseText;
+                return "IE" === u.browser && i3 && t3 && !t3.documentElement && /[^\/]+\/[^\+]+\+xml/.test(e4.getResponseHeader("Content-Type")) && (t3 = new window.ActiveXObject("Microsoft.XMLDOM"), t3.async = false, t3.validateOnParse = false, t3.loadXML(i3)), t3 && ("IE" === u.browser && 0 !== t3.parseError || !t3.documentElement || "parsererror" === t3.documentElement.tagName) ? null : t3;
+              }
+              function d(e4) {
+                var t3 = "----moxieboundary" + (/* @__PURE__ */ new Date()).getTime(), i3 = "--", n3 = "\r\n", r3 = "", a3 = this.getRuntime();
+                if (!a3.can("send_binary_string")) throw new s2.RuntimeError(s2.RuntimeError.NOT_SUPPORTED_ERR);
+                return m2.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + t3), e4.each(function(e5, a4) {
+                  r3 += e5 instanceof o2 ? i3 + t3 + n3 + 'Content-Disposition: form-data; name="' + a4 + '"; filename="' + unescape(encodeURIComponent(e5.name || "blob")) + '"' + n3 + "Content-Type: " + (e5.type || "application/octet-stream") + n3 + n3 + e5.getSource() + n3 : i3 + t3 + n3 + 'Content-Disposition: form-data; name="' + a4 + '"' + n3 + n3 + unescape(encodeURIComponent(e5)) + n3;
+                }), r3 += i3 + t3 + i3 + n3;
+              }
+              var m2, h, f = this;
+              t2.extend(this, { send: function(i3, r3) {
+                var s3 = this, l2 = "Mozilla" === u.browser && u.verComp(u.version, 4, ">=") && u.verComp(u.version, 7, "<"), f2 = "Android Browser" === u.browser, p = false;
+                if (h = i3.url.replace(/^.+?\/([\w\-\.]+)$/, "$1").toLowerCase(), m2 = c2(), m2.open(i3.method, i3.url, i3.async, i3.user, i3.password), r3 instanceof o2) r3.isDetached() && (p = true), r3 = r3.getSource();
+                else if (r3 instanceof a2) {
+                  if (r3.hasBlob()) {
+                    if (r3.getBlob().isDetached()) r3 = d.call(s3, r3), p = true;
+                    else if ((l2 || f2) && "blob" === t2.typeOf(r3.getBlob().getSource()) && window.FileReader) return e3.call(s3, i3, r3), void 0;
+                  }
+                  if (r3 instanceof a2) {
+                    var g = new window.FormData();
+                    r3.each(function(e4, t3) {
+                      e4 instanceof o2 ? g.append(t3, e4.getSource()) : g.append(t3, e4);
+                    }), r3 = g;
+                  }
+                }
+                m2.upload ? (i3.withCredentials && (m2.withCredentials = true), m2.addEventListener("load", function(e4) {
+                  s3.trigger(e4);
+                }), m2.addEventListener("error", function(e4) {
+                  s3.trigger(e4);
+                }), m2.addEventListener("progress", function(e4) {
+                  s3.trigger(e4);
+                }), m2.upload.addEventListener("progress", function(e4) {
+                  s3.trigger({ type: "UploadProgress", loaded: e4.loaded, total: e4.total });
+                })) : m2.onreadystatechange = function() {
+                  switch (m2.readyState) {
+                    case 1:
+                      break;
+                    case 2:
+                      break;
+                    case 3:
+                      var e4, t3;
+                      try {
+                        n2.hasSameOrigin(i3.url) && (e4 = m2.getResponseHeader("Content-Length") || 0), m2.responseText && (t3 = m2.responseText.length);
+                      } catch (r4) {
+                        e4 = t3 = 0;
+                      }
+                      s3.trigger({ type: "progress", lengthComputable: !!e4, total: parseInt(e4, 10), loaded: t3 });
+                      break;
+                    case 4:
+                      m2.onreadystatechange = function() {
+                      };
+                      try {
+                        if (m2.status >= 200 && m2.status < 400) {
+                          s3.trigger("load");
+                          break;
+                        }
+                      } catch (r4) {
+                      }
+                      s3.trigger("error");
+                  }
+                }, t2.isEmptyObj(i3.headers) || t2.each(i3.headers, function(e4, t3) {
+                  m2.setRequestHeader(t3, e4);
+                }), "" !== i3.responseType && "responseType" in m2 && (m2.responseType = "json" !== i3.responseType || u.can("return_response_type", "json") ? i3.responseType : "text"), p ? m2.sendAsBinary ? m2.sendAsBinary(r3) : function() {
+                  for (var e4 = new Uint8Array(r3.length), t3 = 0; t3 < r3.length; t3++) e4[t3] = 255 & r3.charCodeAt(t3);
+                  m2.send(e4.buffer);
+                }() : m2.send(r3), s3.trigger("loadstart");
+              }, getStatus: function() {
+                try {
+                  if (m2) return m2.status;
+                } catch (e4) {
+                }
+                return 0;
+              }, getResponse: function(e4) {
+                var t3 = this.getRuntime();
+                try {
+                  switch (e4) {
+                    case "blob":
+                      var n3 = new r2(t3.uid, m2.response), o3 = m2.getResponseHeader("Content-Disposition");
+                      if (o3) {
+                        var a3 = o3.match(/filename=([\'\"'])([^\1]+)\1/);
+                        a3 && (h = a3[2]);
+                      }
+                      return n3.name = h, n3.type || (n3.type = i2.getFileMime(h)), n3;
+                    case "json":
+                      return u.can("return_response_type", "json") ? m2.response : 200 === m2.status && window.JSON ? JSON.parse(m2.responseText) : null;
+                    case "document":
+                      return l(m2);
+                    default:
+                      return "" !== m2.responseText ? m2.responseText : null;
+                  }
+                } catch (s3) {
+                  return null;
+                }
+              }, getAllResponseHeaders: function() {
+                try {
+                  return m2.getAllResponseHeaders();
+                } catch (e4) {
+                }
+                return "";
+              }, abort: function() {
+                m2 && m2.abort();
+              }, destroy: function() {
+                f = h = null, this.getRuntime().getShim().removeInstance(this.uid);
+              } });
+            }
+            return e2.XMLHttpRequest = c;
+          }), n("moxie/runtime/html5/utils/BinaryReader", ["moxie/core/utils/Basic"], function(e2) {
+            function t2(e3) {
+              e3 instanceof ArrayBuffer ? i2.apply(this, arguments) : n2.apply(this, arguments);
+            }
+            function i2(t3) {
+              var i3 = new DataView(t3);
+              e2.extend(this, { readByteAt: function(e3) {
+                return i3.getUint8(e3);
+              }, writeByteAt: function(e3, t4) {
+                i3.setUint8(e3, t4);
+              }, SEGMENT: function(e3, n3, r2) {
+                switch (arguments.length) {
+                  case 2:
+                    return t3.slice(e3, e3 + n3);
+                  case 1:
+                    return t3.slice(e3);
+                  case 3:
+                    if (null === r2 && (r2 = new ArrayBuffer()), r2 instanceof ArrayBuffer) {
+                      var o2 = new Uint8Array(this.length() - n3 + r2.byteLength);
+                      e3 > 0 && o2.set(new Uint8Array(t3.slice(0, e3)), 0), o2.set(new Uint8Array(r2), e3), o2.set(new Uint8Array(t3.slice(e3 + n3)), e3 + r2.byteLength), this.clear(), t3 = o2.buffer, i3 = new DataView(t3);
+                      break;
+                    }
+                  default:
+                    return t3;
+                }
+              }, length: function() {
+                return t3 ? t3.byteLength : 0;
+              }, clear: function() {
+                i3 = t3 = null;
+              } });
+            }
+            function n2(t3) {
+              function i3(e3, i4, n3) {
+                n3 = 3 === arguments.length ? n3 : t3.length - i4 - 1, t3 = t3.substr(0, i4) + e3 + t3.substr(n3 + i4);
+              }
+              e2.extend(this, { readByteAt: function(e3) {
+                return t3.charCodeAt(e3);
+              }, writeByteAt: function(e3, t4) {
+                i3(String.fromCharCode(t4), e3, 1);
+              }, SEGMENT: function(e3, n3, r2) {
+                switch (arguments.length) {
+                  case 1:
+                    return t3.substr(e3);
+                  case 2:
+                    return t3.substr(e3, n3);
+                  case 3:
+                    i3(null !== r2 ? r2 : "", e3, n3);
+                    break;
+                  default:
+                    return t3;
+                }
+              }, length: function() {
+                return t3 ? t3.length : 0;
+              }, clear: function() {
+                t3 = null;
+              } });
+            }
+            return e2.extend(t2.prototype, { littleEndian: false, read: function(e3, t3) {
+              var i3, n3, r2;
+              if (e3 + t3 > this.length()) throw new Error("You are trying to read outside the source boundaries.");
+              for (n3 = this.littleEndian ? 0 : -8 * (t3 - 1), r2 = 0, i3 = 0; t3 > r2; r2++) i3 |= this.readByteAt(e3 + r2) << Math.abs(n3 + 8 * r2);
+              return i3;
+            }, write: function(e3, t3, i3) {
+              var n3, r2;
+              if (e3 > this.length()) throw new Error("You are trying to write outside the source boundaries.");
+              for (n3 = this.littleEndian ? 0 : -8 * (i3 - 1), r2 = 0; i3 > r2; r2++) this.writeByteAt(e3 + r2, 255 & t3 >> Math.abs(n3 + 8 * r2));
+            }, BYTE: function(e3) {
+              return this.read(e3, 1);
+            }, SHORT: function(e3) {
+              return this.read(e3, 2);
+            }, LONG: function(e3) {
+              return this.read(e3, 4);
+            }, SLONG: function(e3) {
+              var t3 = this.read(e3, 4);
+              return t3 > 2147483647 ? t3 - 4294967296 : t3;
+            }, CHAR: function(e3) {
+              return String.fromCharCode(this.read(e3, 1));
+            }, STRING: function(e3, t3) {
+              return this.asArray("CHAR", e3, t3).join("");
+            }, asArray: function(e3, t3, i3) {
+              for (var n3 = [], r2 = 0; i3 > r2; r2++) n3[r2] = this[e3](t3 + r2);
+              return n3;
+            } }), t2;
+          }), n("moxie/runtime/html5/image/JPEGHeaders", ["moxie/runtime/html5/utils/BinaryReader", "moxie/core/Exceptions"], function(e2, t2) {
+            return function i2(n2) {
+              var r2, o2, a2, s2 = [], u = 0;
+              if (r2 = new e2(n2), 65496 !== r2.SHORT(0)) throw r2.clear(), new t2.ImageError(t2.ImageError.WRONG_FORMAT);
+              for (o2 = 2; o2 <= r2.length(); ) if (a2 = r2.SHORT(o2), a2 >= 65488 && 65495 >= a2) o2 += 2;
+              else {
+                if (65498 === a2 || 65497 === a2) break;
+                u = r2.SHORT(o2 + 2) + 2, a2 >= 65505 && 65519 >= a2 && s2.push({ hex: a2, name: "APP" + (15 & a2), start: o2, length: u, segment: r2.SEGMENT(o2, u) }), o2 += u;
+              }
+              return r2.clear(), { headers: s2, restore: function(t3) {
+                var i3, n3, r3;
+                for (r3 = new e2(t3), o2 = 65504 == r3.SHORT(2) ? 4 + r3.SHORT(4) : 2, n3 = 0, i3 = s2.length; i3 > n3; n3++) r3.SEGMENT(o2, 0, s2[n3].segment), o2 += s2[n3].length;
+                return t3 = r3.SEGMENT(), r3.clear(), t3;
+              }, strip: function(t3) {
+                var n3, r3, o3, a3;
+                for (o3 = new i2(t3), r3 = o3.headers, o3.purge(), n3 = new e2(t3), a3 = r3.length; a3--; ) n3.SEGMENT(r3[a3].start, r3[a3].length, "");
+                return t3 = n3.SEGMENT(), n3.clear(), t3;
+              }, get: function(e3) {
+                for (var t3 = [], i3 = 0, n3 = s2.length; n3 > i3; i3++) s2[i3].name === e3.toUpperCase() && t3.push(s2[i3].segment);
+                return t3;
+              }, set: function(e3, t3) {
+                var i3, n3, r3, o3 = [];
+                for ("string" == typeof t3 ? o3.push(t3) : o3 = t3, i3 = n3 = 0, r3 = s2.length; r3 > i3 && (s2[i3].name === e3.toUpperCase() && (s2[i3].segment = o3[n3], s2[i3].length = o3[n3].length, n3++), !(n3 >= o3.length)); i3++) ;
+              }, purge: function() {
+                this.headers = s2 = [];
+              } };
+            };
+          }), n("moxie/runtime/html5/image/ExifParser", ["moxie/core/utils/Basic", "moxie/runtime/html5/utils/BinaryReader", "moxie/core/Exceptions"], function(e2, i2, n2) {
+            function r2(o2) {
+              function a2(i3, r3) {
+                var o3, a3, s3, u2, c2, m3, h2, f2, p = this, g = [], x = {}, v = { 1: "BYTE", 7: "UNDEFINED", 2: "ASCII", 3: "SHORT", 4: "LONG", 5: "RATIONAL", 9: "SLONG", 10: "SRATIONAL" }, w = { BYTE: 1, UNDEFINED: 1, ASCII: 1, SHORT: 2, LONG: 4, RATIONAL: 8, SLONG: 4, SRATIONAL: 8 };
+                for (o3 = p.SHORT(i3), a3 = 0; o3 > a3; a3++) if (g = [], h2 = i3 + 2 + 12 * a3, s3 = r3[p.SHORT(h2)], s3 !== t) {
+                  if (u2 = v[p.SHORT(h2 += 2)], c2 = p.LONG(h2 += 2), m3 = w[u2], !m3) throw new n2.ImageError(n2.ImageError.INVALID_META_ERR);
+                  if (h2 += 4, m3 * c2 > 4 && (h2 = p.LONG(h2) + d.tiffHeader), h2 + m3 * c2 >= this.length()) throw new n2.ImageError(n2.ImageError.INVALID_META_ERR);
+                  "ASCII" !== u2 ? (g = p.asArray(u2, h2, c2), f2 = 1 == c2 ? g[0] : g, x[s3] = l.hasOwnProperty(s3) && "object" != typeof f2 ? l[s3][f2] : f2) : x[s3] = e2.trim(p.STRING(h2, c2).replace(/\0$/, ""));
+                }
+                return x;
+              }
+              function s2(e3, t2, i3) {
+                var n3, r3, o3, a3 = 0;
+                if ("string" == typeof t2) {
+                  var s3 = c[e3.toLowerCase()];
+                  for (var u2 in s3) if (s3[u2] === t2) {
+                    t2 = u2;
+                    break;
+                  }
+                }
+                n3 = d[e3.toLowerCase() + "IFD"], r3 = this.SHORT(n3);
+                for (var l2 = 0; r3 > l2; l2++) if (o3 = n3 + 12 * l2 + 2, this.SHORT(o3) == t2) {
+                  a3 = o3 + 8;
+                  break;
+                }
+                if (!a3) return false;
+                try {
+                  this.write(a3, i3, 4);
+                } catch (m3) {
+                  return false;
+                }
+                return true;
+              }
+              var u, c, l, d, m2, h;
+              if (i2.call(this, o2), c = { tiff: { 274: "Orientation", 270: "ImageDescription", 271: "Make", 272: "Model", 305: "Software", 34665: "ExifIFDPointer", 34853: "GPSInfoIFDPointer" }, exif: { 36864: "ExifVersion", 40961: "ColorSpace", 40962: "PixelXDimension", 40963: "PixelYDimension", 36867: "DateTimeOriginal", 33434: "ExposureTime", 33437: "FNumber", 34855: "ISOSpeedRatings", 37377: "ShutterSpeedValue", 37378: "ApertureValue", 37383: "MeteringMode", 37384: "LightSource", 37385: "Flash", 37386: "FocalLength", 41986: "ExposureMode", 41987: "WhiteBalance", 41990: "SceneCaptureType", 41988: "DigitalZoomRatio", 41992: "Contrast", 41993: "Saturation", 41994: "Sharpness" }, gps: { 0: "GPSVersionID", 1: "GPSLatitudeRef", 2: "GPSLatitude", 3: "GPSLongitudeRef", 4: "GPSLongitude" }, thumb: { 513: "JPEGInterchangeFormat", 514: "JPEGInterchangeFormatLength" } }, l = { ColorSpace: { 1: "sRGB", 0: "Uncalibrated" }, MeteringMode: { 0: "Unknown", 1: "Average", 2: "CenterWeightedAverage", 3: "Spot", 4: "MultiSpot", 5: "Pattern", 6: "Partial", 255: "Other" }, LightSource: { 1: "Daylight", 2: "Fliorescent", 3: "Tungsten", 4: "Flash", 9: "Fine weather", 10: "Cloudy weather", 11: "Shade", 12: "Daylight fluorescent (D 5700 - 7100K)", 13: "Day white fluorescent (N 4600 -5400K)", 14: "Cool white fluorescent (W 3900 - 4500K)", 15: "White fluorescent (WW 3200 - 3700K)", 17: "Standard light A", 18: "Standard light B", 19: "Standard light C", 20: "D55", 21: "D65", 22: "D75", 23: "D50", 24: "ISO studio tungsten", 255: "Other" }, Flash: { 0: "Flash did not fire", 1: "Flash fired", 5: "Strobe return light not detected", 7: "Strobe return light detected", 9: "Flash fired, compulsory flash mode", 13: "Flash fired, compulsory flash mode, return light not detected", 15: "Flash fired, compulsory flash mode, return light detected", 16: "Flash did not fire, compulsory flash mode", 24: "Flash did not fire, auto mode", 25: "Flash fired, auto mode", 29: "Flash fired, auto mode, return light not detected", 31: "Flash fired, auto mode, return light detected", 32: "No flash function", 65: "Flash fired, red-eye reduction mode", 69: "Flash fired, red-eye reduction mode, return light not detected", 71: "Flash fired, red-eye reduction mode, return light detected", 73: "Flash fired, compulsory flash mode, red-eye reduction mode", 77: "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected", 79: "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected", 89: "Flash fired, auto mode, red-eye reduction mode", 93: "Flash fired, auto mode, return light not detected, red-eye reduction mode", 95: "Flash fired, auto mode, return light detected, red-eye reduction mode" }, ExposureMode: { 0: "Auto exposure", 1: "Manual exposure", 2: "Auto bracket" }, WhiteBalance: { 0: "Auto white balance", 1: "Manual white balance" }, SceneCaptureType: { 0: "Standard", 1: "Landscape", 2: "Portrait", 3: "Night scene" }, Contrast: { 0: "Normal", 1: "Soft", 2: "Hard" }, Saturation: { 0: "Normal", 1: "Low saturation", 2: "High saturation" }, Sharpness: { 0: "Normal", 1: "Soft", 2: "Hard" }, GPSLatitudeRef: { N: "North latitude", S: "South latitude" }, GPSLongitudeRef: { E: "East longitude", W: "West longitude" } }, d = { tiffHeader: 10 }, m2 = d.tiffHeader, u = { clear: this.clear }, e2.extend(this, { read: function() {
+                try {
+                  return r2.prototype.read.apply(this, arguments);
+                } catch (e3) {
+                  throw new n2.ImageError(n2.ImageError.INVALID_META_ERR);
+                }
+              }, write: function() {
+                try {
+                  return r2.prototype.write.apply(this, arguments);
+                } catch (e3) {
+                  throw new n2.ImageError(n2.ImageError.INVALID_META_ERR);
+                }
+              }, UNDEFINED: function() {
+                return this.BYTE.apply(this, arguments);
+              }, RATIONAL: function(e3) {
+                return this.LONG(e3) / this.LONG(e3 + 4);
+              }, SRATIONAL: function(e3) {
+                return this.SLONG(e3) / this.SLONG(e3 + 4);
+              }, ASCII: function(e3) {
+                return this.CHAR(e3);
+              }, TIFF: function() {
+                return h || null;
+              }, EXIF: function() {
+                var t2 = null;
+                if (d.exifIFD) {
+                  try {
+                    t2 = a2.call(this, d.exifIFD, c.exif);
+                  } catch (i3) {
+                    return null;
+                  }
+                  if (t2.ExifVersion && "array" === e2.typeOf(t2.ExifVersion)) {
+                    for (var n3 = 0, r3 = ""; n3 < t2.ExifVersion.length; n3++) r3 += String.fromCharCode(t2.ExifVersion[n3]);
+                    t2.ExifVersion = r3;
+                  }
+                }
+                return t2;
+              }, GPS: function() {
+                var t2 = null;
+                if (d.gpsIFD) {
+                  try {
+                    t2 = a2.call(this, d.gpsIFD, c.gps);
+                  } catch (i3) {
+                    return null;
+                  }
+                  t2.GPSVersionID && "array" === e2.typeOf(t2.GPSVersionID) && (t2.GPSVersionID = t2.GPSVersionID.join("."));
+                }
+                return t2;
+              }, thumb: function() {
+                if (d.IFD1) try {
+                  var e3 = a2.call(this, d.IFD1, c.thumb);
+                  if ("JPEGInterchangeFormat" in e3) return this.SEGMENT(d.tiffHeader + e3.JPEGInterchangeFormat, e3.JPEGInterchangeFormatLength);
+                } catch (t2) {
+                }
+                return null;
+              }, setExif: function(e3, t2) {
+                return "PixelXDimension" !== e3 && "PixelYDimension" !== e3 ? false : s2.call(this, "exif", e3, t2);
+              }, clear: function() {
+                u.clear(), o2 = c = l = h = d = u = null;
+              } }), 65505 !== this.SHORT(0) || "EXIF\0" !== this.STRING(4, 5).toUpperCase()) throw new n2.ImageError(n2.ImageError.INVALID_META_ERR);
+              if (this.littleEndian = 18761 == this.SHORT(m2), 42 !== this.SHORT(m2 += 2)) throw new n2.ImageError(n2.ImageError.INVALID_META_ERR);
+              d.IFD0 = d.tiffHeader + this.LONG(m2 += 2), h = a2.call(this, d.IFD0, c.tiff), "ExifIFDPointer" in h && (d.exifIFD = d.tiffHeader + h.ExifIFDPointer, delete h.ExifIFDPointer), "GPSInfoIFDPointer" in h && (d.gpsIFD = d.tiffHeader + h.GPSInfoIFDPointer, delete h.GPSInfoIFDPointer), e2.isEmptyObj(h) && (h = null);
+              var f = this.LONG(d.IFD0 + 12 * this.SHORT(d.IFD0) + 2);
+              f && (d.IFD1 = d.tiffHeader + f);
+            }
+            return r2.prototype = i2.prototype, r2;
+          }), n("moxie/runtime/html5/image/JPEG", ["moxie/core/utils/Basic", "moxie/core/Exceptions", "moxie/runtime/html5/image/JPEGHeaders", "moxie/runtime/html5/utils/BinaryReader", "moxie/runtime/html5/image/ExifParser"], function(e2, t2, i2, n2, r2) {
+            function o2(o3) {
+              function a2(e3) {
+                var t3, i3, n3 = 0;
+                for (e3 || (e3 = c); n3 <= e3.length(); ) {
+                  if (t3 = e3.SHORT(n3 += 2), t3 >= 65472 && 65475 >= t3) return n3 += 5, { height: e3.SHORT(n3), width: e3.SHORT(n3 += 2) };
+                  i3 = e3.SHORT(n3 += 2), n3 += i3 - 2;
+                }
+                return null;
+              }
+              function s2() {
+                var e3, t3, i3 = d.thumb();
+                return i3 && (e3 = new n2(i3), t3 = a2(e3), e3.clear(), t3) ? (t3.data = i3, t3) : null;
+              }
+              function u() {
+                d && l && c && (d.clear(), l.purge(), c.clear(), m2 = l = d = c = null);
+              }
+              var c, l, d, m2;
+              if (c = new n2(o3), 65496 !== c.SHORT(0)) throw new t2.ImageError(t2.ImageError.WRONG_FORMAT);
+              l = new i2(o3);
+              try {
+                d = new r2(l.get("app1")[0]);
+              } catch (h) {
+              }
+              m2 = a2.call(this), e2.extend(this, { type: "image/jpeg", size: c.length(), width: m2 && m2.width || 0, height: m2 && m2.height || 0, setExif: function(t3, i3) {
+                return d ? ("object" === e2.typeOf(t3) ? e2.each(t3, function(e3, t4) {
+                  d.setExif(t4, e3);
+                }) : d.setExif(t3, i3), l.set("app1", d.SEGMENT()), void 0) : false;
+              }, writeHeaders: function() {
+                return arguments.length ? l.restore(arguments[0]) : l.restore(o3);
+              }, stripHeaders: function(e3) {
+                return l.strip(e3);
+              }, purge: function() {
+                u.call(this);
+              } }), d && (this.meta = { tiff: d.TIFF(), exif: d.EXIF(), gps: d.GPS(), thumb: s2() });
+            }
+            return o2;
+          }), n("moxie/runtime/html5/image/PNG", ["moxie/core/Exceptions", "moxie/core/utils/Basic", "moxie/runtime/html5/utils/BinaryReader"], function(e2, t2, i2) {
+            function n2(n3) {
+              function r2() {
+                var e3, t3;
+                return e3 = a2.call(this, 8), "IHDR" == e3.type ? (t3 = e3.start, { width: s2.LONG(t3), height: s2.LONG(t3 += 4) }) : null;
+              }
+              function o2() {
+                s2 && (s2.clear(), n3 = l = u = c = s2 = null);
+              }
+              function a2(e3) {
+                var t3, i3, n4, r3;
+                return t3 = s2.LONG(e3), i3 = s2.STRING(e3 += 4, 4), n4 = e3 += 4, r3 = s2.LONG(e3 + t3), { length: t3, type: i3, start: n4, CRC: r3 };
+              }
+              var s2, u, c, l;
+              s2 = new i2(n3), function() {
+                var t3 = 0, i3 = 0, n4 = [35152, 20039, 3338, 6666];
+                for (i3 = 0; i3 < n4.length; i3++, t3 += 2) if (n4[i3] != s2.SHORT(t3)) throw new e2.ImageError(e2.ImageError.WRONG_FORMAT);
+              }(), l = r2.call(this), t2.extend(this, { type: "image/png", size: s2.length(), width: l.width, height: l.height, purge: function() {
+                o2.call(this);
+              } }), o2.call(this);
+            }
+            return n2;
+          }), n("moxie/runtime/html5/image/ImageInfo", ["moxie/core/utils/Basic", "moxie/core/Exceptions", "moxie/runtime/html5/image/JPEG", "moxie/runtime/html5/image/PNG"], function(e2, t2, i2, n2) {
+            return function(r2) {
+              var o2, a2 = [i2, n2];
+              o2 = function() {
+                for (var e3 = 0; e3 < a2.length; e3++) try {
+                  return new a2[e3](r2);
+                } catch (i3) {
+                }
+                throw new t2.ImageError(t2.ImageError.WRONG_FORMAT);
+              }(), e2.extend(this, { type: "", size: 0, width: 0, height: 0, setExif: function() {
+              }, writeHeaders: function(e3) {
+                return e3;
+              }, stripHeaders: function(e3) {
+                return e3;
+              }, purge: function() {
+                r2 = null;
+              } }), e2.extend(this, o2), this.purge = function() {
+                o2.purge(), o2 = null;
+              };
+            };
+          }), n("moxie/runtime/html5/image/ResizerCanvas", [], function() {
+            function e2(i2, n2, r2) {
+              var o2 = i2.width > i2.height ? "width" : "height", a2 = Math.round(i2[o2] * n2), s2 = false;
+              "nearest" !== r2 && (0.5 > n2 || n2 > 2) && (n2 = 0.5 > n2 ? 0.5 : 2, s2 = true);
+              var u = t2(i2, n2);
+              return s2 ? e2(u, a2 / u[o2], r2) : u;
+            }
+            function t2(e3, t3) {
+              var i2 = e3.width, n2 = e3.height, r2 = Math.round(i2 * t3), o2 = Math.round(n2 * t3), a2 = document.createElement("canvas");
+              return a2.width = r2, a2.height = o2, a2.getContext("2d").drawImage(e3, 0, 0, i2, n2, 0, 0, r2, o2), e3 = null, a2;
+            }
+            return { scale: e2 };
+          }), n("moxie/runtime/html5/image/Image", ["moxie/runtime/html5/Runtime", "moxie/core/utils/Basic", "moxie/core/Exceptions", "moxie/core/utils/Encode", "moxie/file/Blob", "moxie/file/File", "moxie/runtime/html5/image/ImageInfo", "moxie/runtime/html5/image/ResizerCanvas", "moxie/core/utils/Mime", "moxie/core/utils/Env"], function(e2, t2, i2, n2, r2, o2, a2, s2, u) {
+            function c() {
+              function e3() {
+                if (!v && !g) throw new i2.ImageError(i2.DOMException.INVALID_STATE_ERR);
+                return v || g;
+              }
+              function c2() {
+                var t3 = e3();
+                return "canvas" == t3.nodeName.toLowerCase() ? t3 : (v = document.createElement("canvas"), v.width = t3.width, v.height = t3.height, v.getContext("2d").drawImage(t3, 0, 0), v);
+              }
+              function l(e4) {
+                return n2.atob(e4.substring(e4.indexOf("base64,") + 7));
+              }
+              function d(e4, t3) {
+                return "data:" + (t3 || "") + ";base64," + n2.btoa(e4);
+              }
+              function m2(e4) {
+                var t3 = this;
+                g = new Image(), g.onerror = function() {
+                  p.call(this), t3.trigger("error", i2.ImageError.WRONG_FORMAT);
+                }, g.onload = function() {
+                  t3.trigger("load");
+                }, g.src = "data:" == e4.substr(0, 5) ? e4 : d(e4, y.type);
+              }
+              function h(e4, t3) {
+                var n3, r3 = this;
+                return window.FileReader ? (n3 = new FileReader(), n3.onload = function() {
+                  t3.call(r3, this.result);
+                }, n3.onerror = function() {
+                  r3.trigger("error", i2.ImageError.WRONG_FORMAT);
+                }, n3.readAsDataURL(e4), void 0) : t3.call(this, e4.getAsDataURL());
+              }
+              function f(e4, i3) {
+                var n3 = Math.PI / 180, r3 = document.createElement("canvas"), o3 = r3.getContext("2d"), a3 = e4.width, s3 = e4.height;
+                switch (t2.inArray(i3, [5, 6, 7, 8]) > -1 ? (r3.width = s3, r3.height = a3) : (r3.width = a3, r3.height = s3), i3) {
+                  case 2:
+                    o3.translate(a3, 0), o3.scale(-1, 1);
+                    break;
+                  case 3:
+                    o3.translate(a3, s3), o3.rotate(180 * n3);
+                    break;
+                  case 4:
+                    o3.translate(0, s3), o3.scale(1, -1);
+                    break;
+                  case 5:
+                    o3.rotate(90 * n3), o3.scale(1, -1);
+                    break;
+                  case 6:
+                    o3.rotate(90 * n3), o3.translate(0, -s3);
+                    break;
+                  case 7:
+                    o3.rotate(90 * n3), o3.translate(a3, -s3), o3.scale(-1, 1);
+                    break;
+                  case 8:
+                    o3.rotate(-90 * n3), o3.translate(-a3, 0);
+                }
+                return o3.drawImage(e4, 0, 0, a3, s3), r3;
+              }
+              function p() {
+                x && (x.purge(), x = null), w = g = v = y = null, b = false;
+              }
+              var g, x, v, w, y, E = this, b = false, _ = true;
+              t2.extend(this, { loadFromBlob: function(e4) {
+                var t3 = this.getRuntime(), n3 = arguments.length > 1 ? arguments[1] : true;
+                if (!t3.can("access_binary")) throw new i2.RuntimeError(i2.RuntimeError.NOT_SUPPORTED_ERR);
+                return y = e4, e4.isDetached() ? (w = e4.getSource(), m2.call(this, w), void 0) : (h.call(this, e4.getSource(), function(e5) {
+                  n3 && (w = l(e5)), m2.call(this, e5);
+                }), void 0);
+              }, loadFromImage: function(e4, t3) {
+                this.meta = e4.meta, y = new o2(null, { name: e4.name, size: e4.size, type: e4.type }), m2.call(this, t3 ? w = e4.getAsBinaryString() : e4.getAsDataURL());
+              }, getInfo: function() {
+                var t3, i3 = this.getRuntime();
+                return !x && w && i3.can("access_image_binary") && (x = new a2(w)), t3 = { width: e3().width || 0, height: e3().height || 0, type: y.type || u.getFileMime(y.name), size: w && w.length || y.size || 0, name: y.name || "", meta: null }, _ && (t3.meta = x && x.meta || this.meta || {}, !t3.meta || !t3.meta.thumb || t3.meta.thumb.data instanceof r2 || (t3.meta.thumb.data = new r2(null, { type: "image/jpeg", data: t3.meta.thumb.data }))), t3;
+              }, resize: function(t3, i3, n3) {
+                var r3 = document.createElement("canvas");
+                if (r3.width = t3.width, r3.height = t3.height, r3.getContext("2d").drawImage(e3(), t3.x, t3.y, t3.width, t3.height, 0, 0, r3.width, r3.height), v = s2.scale(r3, i3), _ = n3.preserveHeaders, !_) {
+                  var o3 = this.meta && this.meta.tiff && this.meta.tiff.Orientation || 1;
+                  v = f(v, o3);
+                }
+                this.width = v.width, this.height = v.height, b = true, this.trigger("Resize");
+              }, getAsCanvas: function() {
+                return v || (v = c2()), v.id = this.uid + "_canvas", v;
+              }, getAsBlob: function(e4, t3) {
+                return e4 !== this.type ? (b = true, new o2(null, { name: y.name || "", type: e4, data: E.getAsDataURL(e4, t3) })) : new o2(null, { name: y.name || "", type: e4, data: E.getAsBinaryString(e4, t3) });
+              }, getAsDataURL: function(e4) {
+                var t3 = arguments[1] || 90;
+                if (!b) return g.src;
+                if (c2(), "image/jpeg" !== e4) return v.toDataURL("image/png");
+                try {
+                  return v.toDataURL("image/jpeg", t3 / 100);
+                } catch (i3) {
+                  return v.toDataURL("image/jpeg");
+                }
+              }, getAsBinaryString: function(e4, t3) {
+                if (!b) return w || (w = l(E.getAsDataURL(e4, t3))), w;
+                if ("image/jpeg" !== e4) w = l(E.getAsDataURL(e4, t3));
+                else {
+                  var i3;
+                  t3 || (t3 = 90), c2();
+                  try {
+                    i3 = v.toDataURL("image/jpeg", t3 / 100);
+                  } catch (n3) {
+                    i3 = v.toDataURL("image/jpeg");
+                  }
+                  w = l(i3), x && (w = x.stripHeaders(w), _ && (x.meta && x.meta.exif && x.setExif({ PixelXDimension: this.width, PixelYDimension: this.height }), w = x.writeHeaders(w)), x.purge(), x = null);
+                }
+                return b = false, w;
+              }, destroy: function() {
+                E = null, p.call(this), this.getRuntime().getShim().removeInstance(this.uid);
+              } });
+            }
+            return e2.Image = c;
+          }), n("moxie/runtime/flash/Runtime", ["moxie/core/utils/Basic", "moxie/core/utils/Env", "moxie/core/utils/Dom", "moxie/core/Exceptions", "moxie/runtime/Runtime"], function(e2, t2, i2, n2, o2) {
+            function a2() {
+              var e3;
+              try {
+                e3 = navigator.plugins["Shockwave Flash"], e3 = e3.description;
+              } catch (t3) {
+                try {
+                  e3 = new ActiveXObject("ShockwaveFlash.ShockwaveFlash").GetVariable("$version");
+                } catch (i3) {
+                  e3 = "0.0";
+                }
+              }
+              return e3 = e3.match(/\d+/g), parseFloat(e3[0] + "." + e3[1]);
+            }
+            function s2(e3) {
+              var n3 = i2.get(e3);
+              n3 && "OBJECT" == n3.nodeName && ("IE" === t2.browser ? (n3.style.display = "none", function r2() {
+                4 == n3.readyState ? u(e3) : setTimeout(r2, 10);
+              }()) : n3.parentNode.removeChild(n3));
+            }
+            function u(e3) {
+              var t3 = i2.get(e3);
+              if (t3) {
+                for (var n3 in t3) "function" == typeof t3[n3] && (t3[n3] = null);
+                t3.parentNode.removeChild(t3);
+              }
+            }
+            function c(u2) {
+              var c2, m2 = this;
+              u2 = e2.extend({ swf_url: t2.swf_url }, u2), o2.call(this, u2, l, { access_binary: function(e3) {
+                return e3 && "browser" === m2.mode;
+              }, access_image_binary: function(e3) {
+                return e3 && "browser" === m2.mode;
+              }, display_media: o2.capTest(r("moxie/image/Image")), do_cors: o2.capTrue, drag_and_drop: false, report_upload_progress: function() {
+                return "client" === m2.mode;
+              }, resize_image: o2.capTrue, return_response_headers: false, return_response_type: function(t3) {
+                return "json" === t3 && window.JSON ? true : !e2.arrayDiff(t3, ["", "text", "document"]) || "browser" === m2.mode;
+              }, return_status_code: function(t3) {
+                return "browser" === m2.mode || !e2.arrayDiff(t3, [200, 404]);
+              }, select_file: o2.capTrue, select_multiple: o2.capTrue, send_binary_string: function(e3) {
+                return e3 && "browser" === m2.mode;
+              }, send_browser_cookies: function(e3) {
+                return e3 && "browser" === m2.mode;
+              }, send_custom_headers: function(e3) {
+                return e3 && "browser" === m2.mode;
+              }, send_multipart: o2.capTrue, slice_blob: function(e3) {
+                return e3 && "browser" === m2.mode;
+              }, stream_upload: function(e3) {
+                return e3 && "browser" === m2.mode;
+              }, summon_file_dialog: false, upload_filesize: function(t3) {
+                return e2.parseSizeStr(t3) <= 2097152 || "client" === m2.mode;
+              }, use_http_method: function(t3) {
+                return !e2.arrayDiff(t3, ["GET", "POST"]);
+              } }, { access_binary: function(e3) {
+                return e3 ? "browser" : "client";
+              }, access_image_binary: function(e3) {
+                return e3 ? "browser" : "client";
+              }, report_upload_progress: function(e3) {
+                return e3 ? "browser" : "client";
+              }, return_response_type: function(t3) {
+                return e2.arrayDiff(t3, ["", "text", "json", "document"]) ? "browser" : ["client", "browser"];
+              }, return_status_code: function(t3) {
+                return e2.arrayDiff(t3, [200, 404]) ? "browser" : ["client", "browser"];
+              }, send_binary_string: function(e3) {
+                return e3 ? "browser" : "client";
+              }, send_browser_cookies: function(e3) {
+                return e3 ? "browser" : "client";
+              }, send_custom_headers: function(e3) {
+                return e3 ? "browser" : "client";
+              }, slice_blob: function(e3) {
+                return e3 ? "browser" : "client";
+              }, stream_upload: function(e3) {
+                return e3 ? "client" : "browser";
+              }, upload_filesize: function(t3) {
+                return e2.parseSizeStr(t3) >= 2097152 ? "client" : "browser";
+              } }, "client"), a2() < 11.3 && (this.mode = false), e2.extend(this, { getShim: function() {
+                return i2.get(this.uid);
+              }, shimExec: function(e3, t3) {
+                var i3 = [].slice.call(arguments, 2);
+                return m2.getShim().exec(this.uid, e3, t3, i3);
+              }, init: function() {
+                var i3, r2, a3;
+                a3 = this.getShimContainer(), e2.extend(a3.style, { position: "absolute", top: "-8px", left: "-8px", width: "9px", height: "9px", overflow: "hidden" }), i3 = '<object id="' + this.uid + '" type="application/x-shockwave-flash" data="' + u2.swf_url + '" ', "IE" === t2.browser && (i3 += 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" '), i3 += 'width="100%" height="100%" style="outline:0"><param name="movie" value="' + u2.swf_url + '" /><param name="flashvars" value="uid=' + escape(this.uid) + "&target=" + o2.getGlobalEventTarget() + '" /><param name="wmode" value="transparent" /><param name="allowscriptaccess" value="always" /></object>', "IE" === t2.browser ? (r2 = document.createElement("div"), a3.appendChild(r2), r2.outerHTML = i3, r2 = a3 = null) : a3.innerHTML = i3, c2 = setTimeout(function() {
+                  m2 && !m2.initialized && m2.trigger("Error", new n2.RuntimeError(n2.RuntimeError.NOT_INIT_ERR));
+                }, 5e3);
+              }, destroy: /* @__PURE__ */ function(e3) {
+                return function() {
+                  s2(m2.uid), e3.call(m2), clearTimeout(c2), u2 = c2 = e3 = m2 = null;
+                };
+              }(this.destroy) }, d);
+            }
+            var l = "flash", d = {};
+            return o2.addConstructor(l, c), d;
+          }), n("moxie/runtime/flash/file/Blob", ["moxie/runtime/flash/Runtime", "moxie/file/Blob"], function(e2, t2) {
+            var i2 = { slice: function(e3, i3, n2, r2) {
+              var o2 = this.getRuntime();
+              return 0 > i3 ? i3 = Math.max(e3.size + i3, 0) : i3 > 0 && (i3 = Math.min(i3, e3.size)), 0 > n2 ? n2 = Math.max(e3.size + n2, 0) : n2 > 0 && (n2 = Math.min(n2, e3.size)), e3 = o2.shimExec.call(this, "Blob", "slice", i3, n2, r2 || ""), e3 && (e3 = new t2(o2.uid, e3)), e3;
+            } };
+            return e2.Blob = i2;
+          }), n("moxie/runtime/flash/file/FileInput", ["moxie/runtime/flash/Runtime", "moxie/file/File", "moxie/core/utils/Dom", "moxie/core/utils/Basic"], function(e2, t2, i2, n2) {
+            var r2 = { init: function(e3) {
+              var r3 = this, o2 = this.getRuntime(), a2 = i2.get(e3.browse_button);
+              a2 && (a2.setAttribute("tabindex", -1), a2 = null), this.bind("Change", function() {
+                var e4 = o2.shimExec.call(r3, "FileInput", "getFiles");
+                r3.files = [], n2.each(e4, function(e5) {
+                  r3.files.push(new t2(o2.uid, e5));
+                });
+              }, 999), this.getRuntime().shimExec.call(this, "FileInput", "init", { accept: e3.accept, multiple: e3.multiple }), this.trigger("ready");
+            } };
+            return e2.FileInput = r2;
+          }), n("moxie/runtime/flash/file/FileReader", ["moxie/runtime/flash/Runtime", "moxie/core/utils/Encode"], function(e2, t2) {
+            function i2(e3, i3) {
+              switch (i3) {
+                case "readAsText":
+                  return t2.atob(e3, "utf8");
+                case "readAsBinaryString":
+                  return t2.atob(e3);
+                case "readAsDataURL":
+                  return e3;
+              }
+              return null;
+            }
+            var n2 = { read: function(e3, t3) {
+              var n3 = this;
+              return n3.result = "", "readAsDataURL" === e3 && (n3.result = "data:" + (t3.type || "") + ";base64,"), n3.bind("Progress", function(t4, r2) {
+                r2 && (n3.result += i2(r2, e3));
+              }, 999), n3.getRuntime().shimExec.call(this, "FileReader", "readAsBase64", t3.uid);
+            } };
+            return e2.FileReader = n2;
+          }), n("moxie/runtime/flash/file/FileReaderSync", ["moxie/runtime/flash/Runtime", "moxie/core/utils/Encode"], function(e2, t2) {
+            function i2(e3, i3) {
+              switch (i3) {
+                case "readAsText":
+                  return t2.atob(e3, "utf8");
+                case "readAsBinaryString":
+                  return t2.atob(e3);
+                case "readAsDataURL":
+                  return e3;
+              }
+              return null;
+            }
+            var n2 = { read: function(e3, t3) {
+              var n3, r2 = this.getRuntime();
+              return (n3 = r2.shimExec.call(this, "FileReaderSync", "readAsBase64", t3.uid)) ? ("readAsDataURL" === e3 && (n3 = "data:" + (t3.type || "") + ";base64," + n3), i2(n3, e3, t3.type)) : null;
+            } };
+            return e2.FileReaderSync = n2;
+          }), n("moxie/runtime/flash/runtime/Transporter", ["moxie/runtime/flash/Runtime", "moxie/file/Blob"], function(e2, t2) {
+            var i2 = { getAsBlob: function(e3) {
+              var i3 = this.getRuntime(), n2 = i3.shimExec.call(this, "Transporter", "getAsBlob", e3);
+              return n2 ? new t2(i3.uid, n2) : null;
+            } };
+            return e2.Transporter = i2;
+          }), n("moxie/runtime/flash/xhr/XMLHttpRequest", ["moxie/runtime/flash/Runtime", "moxie/core/utils/Basic", "moxie/file/Blob", "moxie/file/File", "moxie/file/FileReaderSync", "moxie/runtime/flash/file/FileReaderSync", "moxie/xhr/FormData", "moxie/runtime/Transporter", "moxie/runtime/flash/runtime/Transporter"], function(e2, t2, i2, n2, r2, o2, a2, s2) {
+            var u = { send: function(e3, n3) {
+              function r3() {
+                e3.transport = l.mode, l.shimExec.call(c, "XMLHttpRequest", "send", e3, n3);
+              }
+              function o3(e4, t3) {
+                l.shimExec.call(c, "XMLHttpRequest", "appendBlob", e4, t3.uid), n3 = null, r3();
+              }
+              function u2(e4, t3) {
+                var i3 = new s2();
+                i3.bind("TransportingComplete", function() {
+                  t3(this.result);
+                }), i3.transport(e4.getSource(), e4.type, { ruid: l.uid });
+              }
+              var c = this, l = c.getRuntime();
+              if (t2.isEmptyObj(e3.headers) || t2.each(e3.headers, function(e4, t3) {
+                l.shimExec.call(c, "XMLHttpRequest", "setRequestHeader", t3, e4.toString());
+              }), n3 instanceof a2) {
+                var d;
+                if (n3.each(function(e4, t3) {
+                  e4 instanceof i2 ? d = t3 : l.shimExec.call(c, "XMLHttpRequest", "append", t3, e4);
+                }), n3.hasBlob()) {
+                  var m2 = n3.getBlob();
+                  m2.isDetached() ? u2(m2, function(e4) {
+                    m2.destroy(), o3(d, e4);
+                  }) : o3(d, m2);
+                } else n3 = null, r3();
+              } else n3 instanceof i2 ? n3.isDetached() ? u2(n3, function(e4) {
+                n3.destroy(), n3 = e4.uid, r3();
+              }) : (n3 = n3.uid, r3()) : r3();
+            }, getResponse: function(e3) {
+              var i3, o3, a3 = this.getRuntime();
+              if (o3 = a3.shimExec.call(this, "XMLHttpRequest", "getResponseAsBlob")) {
+                if (o3 = new n2(a3.uid, o3), "blob" === e3) return o3;
+                try {
+                  if (i3 = new r2(), ~t2.inArray(e3, ["", "text"])) return i3.readAsText(o3);
+                  if ("json" === e3 && window.JSON) return JSON.parse(i3.readAsText(o3));
+                } finally {
+                  o3.destroy();
+                }
+              }
+              return null;
+            }, abort: function() {
+              var e3 = this.getRuntime();
+              e3.shimExec.call(this, "XMLHttpRequest", "abort"), this.dispatchEvent("readystatechange"), this.dispatchEvent("abort");
+            } };
+            return e2.XMLHttpRequest = u;
+          }), n("moxie/runtime/flash/image/Image", ["moxie/runtime/flash/Runtime", "moxie/core/utils/Basic", "moxie/runtime/Transporter", "moxie/file/Blob", "moxie/file/FileReaderSync"], function(e2, t2, i2, n2, r2) {
+            var o2 = { loadFromBlob: function(e3) {
+              function t3(e4) {
+                r3.shimExec.call(n3, "Image", "loadFromBlob", e4.uid), n3 = r3 = null;
+              }
+              var n3 = this, r3 = n3.getRuntime();
+              if (e3.isDetached()) {
+                var o3 = new i2();
+                o3.bind("TransportingComplete", function() {
+                  t3(o3.result.getSource());
+                }), o3.transport(e3.getSource(), e3.type, { ruid: r3.uid });
+              } else t3(e3.getSource());
+            }, loadFromImage: function(e3) {
+              var t3 = this.getRuntime();
+              return t3.shimExec.call(this, "Image", "loadFromImage", e3.uid);
+            }, getInfo: function() {
+              var e3 = this.getRuntime(), t3 = e3.shimExec.call(this, "Image", "getInfo");
+              return t3.meta && t3.meta.thumb && t3.meta.thumb.data && !(e3.meta.thumb.data instanceof n2) && (t3.meta.thumb.data = new n2(e3.uid, t3.meta.thumb.data)), t3;
+            }, getAsBlob: function(e3, t3) {
+              var i3 = this.getRuntime(), r3 = i3.shimExec.call(this, "Image", "getAsBlob", e3, t3);
+              return r3 ? new n2(i3.uid, r3) : null;
+            }, getAsDataURL: function() {
+              var e3, t3 = this.getRuntime(), i3 = t3.Image.getAsBlob.apply(this, arguments);
+              return i3 ? (e3 = new r2(), e3.readAsDataURL(i3)) : null;
+            } };
+            return e2.Image = o2;
+          }), n("moxie/runtime/silverlight/Runtime", ["moxie/core/utils/Basic", "moxie/core/utils/Env", "moxie/core/utils/Dom", "moxie/core/Exceptions", "moxie/runtime/Runtime"], function(e2, t2, i2, n2, o2) {
+            function a2(e3) {
+              var t3, i3, n3, r2, o3, a3 = false, s3 = null, u2 = 0;
+              try {
+                try {
+                  s3 = new ActiveXObject("AgControl.AgControl"), s3.IsVersionSupported(e3) && (a3 = true), s3 = null;
+                } catch (c2) {
+                  var l = navigator.plugins["Silverlight Plug-In"];
+                  if (l) {
+                    for (t3 = l.description, "1.0.30226.2" === t3 && (t3 = "2.0.30226.2"), i3 = t3.split("."); i3.length > 3; ) i3.pop();
+                    for (; i3.length < 4; ) i3.push(0);
+                    for (n3 = e3.split("."); n3.length > 4; ) n3.pop();
+                    do
+                      r2 = parseInt(n3[u2], 10), o3 = parseInt(i3[u2], 10), u2++;
+                    while (u2 < n3.length && r2 === o3);
+                    o3 >= r2 && !isNaN(r2) && (a3 = true);
+                  }
+                }
+              } catch (d) {
+                a3 = false;
+              }
+              return a3;
+            }
+            function s2(s3) {
+              var l, d = this;
+              s3 = e2.extend({ xap_url: t2.xap_url }, s3), o2.call(this, s3, u, { access_binary: o2.capTrue, access_image_binary: o2.capTrue, display_media: o2.capTest(r("moxie/image/Image")), do_cors: o2.capTrue, drag_and_drop: false, report_upload_progress: o2.capTrue, resize_image: o2.capTrue, return_response_headers: function(e3) {
+                return e3 && "client" === d.mode;
+              }, return_response_type: function(e3) {
+                return "json" !== e3 ? true : !!window.JSON;
+              }, return_status_code: function(t3) {
+                return "client" === d.mode || !e2.arrayDiff(t3, [200, 404]);
+              }, select_file: o2.capTrue, select_multiple: o2.capTrue, send_binary_string: o2.capTrue, send_browser_cookies: function(e3) {
+                return e3 && "browser" === d.mode;
+              }, send_custom_headers: function(e3) {
+                return e3 && "client" === d.mode;
+              }, send_multipart: o2.capTrue, slice_blob: o2.capTrue, stream_upload: true, summon_file_dialog: false, upload_filesize: o2.capTrue, use_http_method: function(t3) {
+                return "client" === d.mode || !e2.arrayDiff(t3, ["GET", "POST"]);
+              } }, { return_response_headers: function(e3) {
+                return e3 ? "client" : "browser";
+              }, return_status_code: function(t3) {
+                return e2.arrayDiff(t3, [200, 404]) ? "client" : ["client", "browser"];
+              }, send_browser_cookies: function(e3) {
+                return e3 ? "browser" : "client";
+              }, send_custom_headers: function(e3) {
+                return e3 ? "client" : "browser";
+              }, use_http_method: function(t3) {
+                return e2.arrayDiff(t3, ["GET", "POST"]) ? "client" : ["client", "browser"];
+              } }), a2("2.0.31005.0") && "Opera" !== t2.browser || (this.mode = false), e2.extend(this, { getShim: function() {
+                return i2.get(this.uid).content.Moxie;
+              }, shimExec: function(e3, t3) {
+                var i3 = [].slice.call(arguments, 2);
+                return d.getShim().exec(this.uid, e3, t3, i3);
+              }, init: function() {
+                var e3;
+                e3 = this.getShimContainer(), e3.innerHTML = '<object id="' + this.uid + '" data="data:application/x-silverlight," type="application/x-silverlight-2" width="100%" height="100%" style="outline:none;"><param name="source" value="' + s3.xap_url + '"/><param name="background" value="Transparent"/><param name="windowless" value="true"/><param name="enablehtmlaccess" value="true"/><param name="initParams" value="uid=' + this.uid + ",target=" + o2.getGlobalEventTarget() + '"/></object>', l = setTimeout(function() {
+                  d && !d.initialized && d.trigger("Error", new n2.RuntimeError(n2.RuntimeError.NOT_INIT_ERR));
+                }, "Windows" !== t2.OS ? 1e4 : 5e3);
+              }, destroy: /* @__PURE__ */ function(e3) {
+                return function() {
+                  e3.call(d), clearTimeout(l), s3 = l = e3 = d = null;
+                };
+              }(this.destroy) }, c);
+            }
+            var u = "silverlight", c = {};
+            return o2.addConstructor(u, s2), c;
+          }), n("moxie/runtime/silverlight/file/Blob", ["moxie/runtime/silverlight/Runtime", "moxie/core/utils/Basic", "moxie/runtime/flash/file/Blob"], function(e2, t2, i2) {
+            return e2.Blob = t2.extend({}, i2);
+          }), n("moxie/runtime/silverlight/file/FileInput", ["moxie/runtime/silverlight/Runtime", "moxie/file/File", "moxie/core/utils/Dom", "moxie/core/utils/Basic"], function(e2, t2, i2, n2) {
+            function r2(e3) {
+              for (var t3 = "", i3 = 0; i3 < e3.length; i3++) t3 += ("" !== t3 ? "|" : "") + e3[i3].title + " | *." + e3[i3].extensions.replace(/,/g, ";*.");
+              return t3;
+            }
+            var o2 = { init: function(e3) {
+              var o3 = this, a2 = this.getRuntime(), s2 = i2.get(e3.browse_button);
+              s2 && (s2.setAttribute("tabindex", -1), s2 = null), this.bind("Change", function() {
+                var e4 = a2.shimExec.call(o3, "FileInput", "getFiles");
+                o3.files = [], n2.each(e4, function(e5) {
+                  o3.files.push(new t2(a2.uid, e5));
+                });
+              }, 999), a2.shimExec.call(this, "FileInput", "init", r2(e3.accept), e3.multiple), this.trigger("ready");
+            }, setOption: function(e3, t3) {
+              "accept" == e3 && (t3 = r2(t3)), this.getRuntime().shimExec.call(this, "FileInput", "setOption", e3, t3);
+            } };
+            return e2.FileInput = o2;
+          }), n("moxie/runtime/silverlight/file/FileDrop", ["moxie/runtime/silverlight/Runtime", "moxie/core/utils/Dom", "moxie/core/utils/Events"], function(e2, t2, i2) {
+            var n2 = { init: function() {
+              var e3, n3 = this, r2 = n3.getRuntime();
+              return e3 = r2.getShimContainer(), i2.addEvent(e3, "dragover", function(e4) {
+                e4.preventDefault(), e4.stopPropagation(), e4.dataTransfer.dropEffect = "copy";
+              }, n3.uid), i2.addEvent(e3, "dragenter", function(e4) {
+                e4.preventDefault();
+                var i3 = t2.get(r2.uid).dragEnter(e4);
+                i3 && e4.stopPropagation();
+              }, n3.uid), i2.addEvent(e3, "drop", function(e4) {
+                e4.preventDefault();
+                var i3 = t2.get(r2.uid).dragDrop(e4);
+                i3 && e4.stopPropagation();
+              }, n3.uid), r2.shimExec.call(this, "FileDrop", "init");
+            } };
+            return e2.FileDrop = n2;
+          }), n("moxie/runtime/silverlight/file/FileReader", ["moxie/runtime/silverlight/Runtime", "moxie/core/utils/Basic", "moxie/runtime/flash/file/FileReader"], function(e2, t2, i2) {
+            return e2.FileReader = t2.extend({}, i2);
+          }), n("moxie/runtime/silverlight/file/FileReaderSync", ["moxie/runtime/silverlight/Runtime", "moxie/core/utils/Basic", "moxie/runtime/flash/file/FileReaderSync"], function(e2, t2, i2) {
+            return e2.FileReaderSync = t2.extend({}, i2);
+          }), n("moxie/runtime/silverlight/runtime/Transporter", ["moxie/runtime/silverlight/Runtime", "moxie/core/utils/Basic", "moxie/runtime/flash/runtime/Transporter"], function(e2, t2, i2) {
+            return e2.Transporter = t2.extend({}, i2);
+          }), n("moxie/runtime/silverlight/xhr/XMLHttpRequest", ["moxie/runtime/silverlight/Runtime", "moxie/core/utils/Basic", "moxie/runtime/flash/xhr/XMLHttpRequest", "moxie/runtime/silverlight/file/FileReaderSync", "moxie/runtime/silverlight/runtime/Transporter"], function(e2, t2, i2) {
+            return e2.XMLHttpRequest = t2.extend({}, i2);
+          }), n("moxie/runtime/silverlight/image/Image", ["moxie/runtime/silverlight/Runtime", "moxie/core/utils/Basic", "moxie/file/Blob", "moxie/runtime/flash/image/Image"], function(e2, t2, i2, n2) {
+            return e2.Image = t2.extend({}, n2, { getInfo: function() {
+              var e3 = this.getRuntime(), n3 = ["tiff", "exif", "gps", "thumb"], r2 = { meta: {} }, o2 = e3.shimExec.call(this, "Image", "getInfo");
+              return o2.meta && (t2.each(n3, function(e4) {
+                var t3, i3, n4, a2, s2 = o2.meta[e4];
+                if (s2 && s2.keys) for (r2.meta[e4] = {}, i3 = 0, n4 = s2.keys.length; n4 > i3; i3++) t3 = s2.keys[i3], a2 = s2[t3], a2 && (/^(\d|[1-9]\d+)$/.test(a2) ? a2 = parseInt(a2, 10) : /^\d*\.\d+$/.test(a2) && (a2 = parseFloat(a2)), r2.meta[e4][t3] = a2);
+              }), r2.meta && r2.meta.thumb && r2.meta.thumb.data && !(e3.meta.thumb.data instanceof i2) && (r2.meta.thumb.data = new i2(e3.uid, r2.meta.thumb.data))), r2.width = parseInt(o2.width, 10), r2.height = parseInt(o2.height, 10), r2.size = parseInt(o2.size, 10), r2.type = o2.type, r2.name = o2.name, r2;
+            }, resize: function(e3, t3, i3) {
+              this.getRuntime().shimExec.call(this, "Image", "resize", e3.x, e3.y, e3.width, e3.height, t3, i3.preserveHeaders, i3.resample);
+            } });
+          }), n("moxie/runtime/html4/Runtime", ["moxie/core/utils/Basic", "moxie/core/Exceptions", "moxie/runtime/Runtime", "moxie/core/utils/Env"], function(e2, t2, i2, n2) {
+            function o2(t3) {
+              var o3 = this, u = i2.capTest, c = i2.capTrue;
+              i2.call(this, t3, a2, { access_binary: u(window.FileReader || window.File && File.getAsDataURL), access_image_binary: false, display_media: u((n2.can("create_canvas") || n2.can("use_data_uri_over32kb")) && r("moxie/image/Image")), do_cors: false, drag_and_drop: false, filter_by_extension: u(function() {
+                return !("Chrome" === n2.browser && n2.verComp(n2.version, 28, "<") || "IE" === n2.browser && n2.verComp(n2.version, 10, "<") || "Safari" === n2.browser && n2.verComp(n2.version, 7, "<") || "Firefox" === n2.browser && n2.verComp(n2.version, 37, "<"));
+              }()), resize_image: function() {
+                return s2.Image && o3.can("access_binary") && n2.can("create_canvas");
+              }, report_upload_progress: false, return_response_headers: false, return_response_type: function(t4) {
+                return "json" === t4 && window.JSON ? true : !!~e2.inArray(t4, ["text", "document", ""]);
+              }, return_status_code: function(t4) {
+                return !e2.arrayDiff(t4, [200, 404]);
+              }, select_file: function() {
+                return n2.can("use_fileinput");
+              }, select_multiple: false, send_binary_string: false, send_custom_headers: false, send_multipart: true, slice_blob: false, stream_upload: function() {
+                return o3.can("select_file");
+              }, summon_file_dialog: function() {
+                return o3.can("select_file") && !("Firefox" === n2.browser && n2.verComp(n2.version, 4, "<") || "Opera" === n2.browser && n2.verComp(n2.version, 12, "<") || "IE" === n2.browser && n2.verComp(n2.version, 10, "<"));
+              }, upload_filesize: c, use_http_method: function(t4) {
+                return !e2.arrayDiff(t4, ["GET", "POST"]);
+              } }), e2.extend(this, { init: function() {
+                this.trigger("Init");
+              }, destroy: /* @__PURE__ */ function(e3) {
+                return function() {
+                  e3.call(o3), e3 = o3 = null;
+                };
+              }(this.destroy) }), e2.extend(this.getShim(), s2);
+            }
+            var a2 = "html4", s2 = {};
+            return i2.addConstructor(a2, o2), s2;
+          }), n("moxie/runtime/html4/file/FileInput", ["moxie/runtime/html4/Runtime", "moxie/file/File", "moxie/core/utils/Basic", "moxie/core/utils/Dom", "moxie/core/utils/Events", "moxie/core/utils/Mime", "moxie/core/utils/Env"], function(e2, t2, i2, n2, r2, o2, a2) {
+            function s2() {
+              function e3() {
+                var o3, c2, d, m2, h, f, p = this, g = p.getRuntime();
+                f = i2.guid("uid_"), o3 = g.getShimContainer(), s3 && (d = n2.get(s3 + "_form"), d && (i2.extend(d.style, { top: "100%" }), d.firstChild.setAttribute("tabindex", -1))), m2 = document.createElement("form"), m2.setAttribute("id", f + "_form"), m2.setAttribute("method", "post"), m2.setAttribute("enctype", "multipart/form-data"), m2.setAttribute("encoding", "multipart/form-data"), i2.extend(m2.style, { overflow: "hidden", position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }), h = document.createElement("input"), h.setAttribute("id", f), h.setAttribute("type", "file"), h.setAttribute("accept", l.join(",")), g.can("summon_file_dialog") && h.setAttribute("tabindex", -1), i2.extend(h.style, { fontSize: "999px", opacity: 0 }), m2.appendChild(h), o3.appendChild(m2), i2.extend(h.style, { position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }), "IE" === a2.browser && a2.verComp(a2.version, 10, "<") && i2.extend(h.style, { filter: "progid:DXImageTransform.Microsoft.Alpha(opacity=0)" }), h.onchange = function() {
+                  var i3;
+                  this.value && (i3 = this.files ? this.files[0] : { name: this.value }, i3 = new t2(g.uid, i3), this.onchange = function() {
+                  }, e3.call(p), p.files = [i3], h.setAttribute("id", i3.uid), m2.setAttribute("id", i3.uid + "_form"), p.trigger("change"), h = m2 = null);
+                }, g.can("summon_file_dialog") && (c2 = n2.get(u.browse_button), r2.removeEvent(c2, "click", p.uid), r2.addEvent(c2, "click", function(e4) {
+                  h && !h.disabled && h.click(), e4.preventDefault();
+                }, p.uid)), s3 = f, o3 = d = c2 = null;
+              }
+              var s3, u, c, l = [];
+              i2.extend(this, { init: function(t3) {
+                var i3, a3 = this, s4 = a3.getRuntime();
+                u = t3, l = o2.extList2mimes(t3.accept, s4.can("filter_by_extension")), i3 = s4.getShimContainer(), function() {
+                  var e4, o3, l2;
+                  e4 = n2.get(t3.browse_button), c = n2.getStyle(e4, "z-index") || "auto", s4.can("summon_file_dialog") ? ("static" === n2.getStyle(e4, "position") && (e4.style.position = "relative"), a3.bind("Refresh", function() {
+                    o3 = parseInt(c, 10) || 1, n2.get(u.browse_button).style.zIndex = o3, this.getRuntime().getShimContainer().style.zIndex = o3 - 1;
+                  })) : e4.setAttribute("tabindex", -1), l2 = s4.can("summon_file_dialog") ? e4 : i3, r2.addEvent(l2, "mouseover", function() {
+                    a3.trigger("mouseenter");
+                  }, a3.uid), r2.addEvent(l2, "mouseout", function() {
+                    a3.trigger("mouseleave");
+                  }, a3.uid), r2.addEvent(l2, "mousedown", function() {
+                    a3.trigger("mousedown");
+                  }, a3.uid), r2.addEvent(n2.get(t3.container), "mouseup", function() {
+                    a3.trigger("mouseup");
+                  }, a3.uid), e4 = null;
+                }(), e3.call(this), i3 = null, a3.trigger({ type: "ready", async: true });
+              }, setOption: function(e4, t3) {
+                var i3, r3 = this.getRuntime();
+                "accept" == e4 && (l = t3.mimes || o2.extList2mimes(t3, r3.can("filter_by_extension"))), i3 = n2.get(s3), i3 && i3.setAttribute("accept", l.join(","));
+              }, disable: function(e4) {
+                var t3;
+                (t3 = n2.get(s3)) && (t3.disabled = !!e4);
+              }, destroy: function() {
+                var e4 = this.getRuntime(), t3 = e4.getShim(), i3 = e4.getShimContainer(), o3 = u && n2.get(u.container), a3 = u && n2.get(u.browse_button);
+                o3 && r2.removeAllEvents(o3, this.uid), a3 && (r2.removeAllEvents(a3, this.uid), a3.style.zIndex = c), i3 && (r2.removeAllEvents(i3, this.uid), i3.innerHTML = ""), t3.removeInstance(this.uid), s3 = l = u = i3 = o3 = a3 = t3 = null;
+              } });
+            }
+            return e2.FileInput = s2;
+          }), n("moxie/runtime/html4/file/FileReader", ["moxie/runtime/html4/Runtime", "moxie/runtime/html5/file/FileReader"], function(e2, t2) {
+            return e2.FileReader = t2;
+          }), n("moxie/runtime/html4/xhr/XMLHttpRequest", ["moxie/runtime/html4/Runtime", "moxie/core/utils/Basic", "moxie/core/utils/Dom", "moxie/core/utils/Url", "moxie/core/Exceptions", "moxie/core/utils/Events", "moxie/file/Blob", "moxie/xhr/FormData"], function(e2, t2, i2, n2, r2, o2, a2, s2) {
+            function u() {
+              function e3(e4) {
+                var t3, n3, r3, a3, s3 = this, u3 = false;
+                if (l) {
+                  if (t3 = l.id.replace(/_iframe$/, ""), n3 = i2.get(t3 + "_form")) {
+                    for (r3 = n3.getElementsByTagName("input"), a3 = r3.length; a3--; ) switch (r3[a3].getAttribute("type")) {
+                      case "hidden":
+                        r3[a3].parentNode.removeChild(r3[a3]);
+                        break;
+                      case "file":
+                        u3 = true;
+                    }
+                    r3 = [], u3 || n3.parentNode.removeChild(n3), n3 = null;
+                  }
+                  setTimeout(function() {
+                    o2.removeEvent(l, "load", s3.uid), l.parentNode && l.parentNode.removeChild(l);
+                    var t4 = s3.getRuntime().getShimContainer();
+                    t4.children.length || t4.parentNode.removeChild(t4), t4 = l = null, e4();
+                  }, 1);
+                }
+              }
+              var u2, c, l;
+              t2.extend(this, { send: function(d, m2) {
+                function h() {
+                  var i3 = w.getShimContainer() || document.body, r3 = document.createElement("div");
+                  r3.innerHTML = '<iframe id="' + f + '_iframe" name="' + f + '_iframe" src="javascript:&quot;&quot;" style="display:none"></iframe>', l = r3.firstChild, i3.appendChild(l), o2.addEvent(l, "load", function() {
+                    var i4;
+                    try {
+                      i4 = l.contentWindow.document || l.contentDocument || window.frames[l.id].document, /^4(0[0-9]|1[0-7]|2[2346])\s/.test(i4.title) ? u2 = i4.title.replace(/^(\d+).*$/, "$1") : (u2 = 200, c = t2.trim(i4.body.innerHTML), v.trigger({ type: "progress", loaded: c.length, total: c.length }), x && v.trigger({ type: "uploadprogress", loaded: x.size || 1025, total: x.size || 1025 }));
+                    } catch (r4) {
+                      if (!n2.hasSameOrigin(d.url)) return e3.call(v, function() {
+                        v.trigger("error");
+                      }), void 0;
+                      u2 = 404;
+                    }
+                    e3.call(v, function() {
+                      v.trigger("load");
+                    });
+                  }, v.uid);
+                }
+                var f, p, g, x, v = this, w = v.getRuntime();
+                if (u2 = c = null, m2 instanceof s2 && m2.hasBlob()) {
+                  if (x = m2.getBlob(), f = x.uid, g = i2.get(f), p = i2.get(f + "_form"), !p) throw new r2.DOMException(r2.DOMException.NOT_FOUND_ERR);
+                } else f = t2.guid("uid_"), p = document.createElement("form"), p.setAttribute("id", f + "_form"), p.setAttribute("method", d.method), p.setAttribute("enctype", "multipart/form-data"), p.setAttribute("encoding", "multipart/form-data"), w.getShimContainer().appendChild(p);
+                p.setAttribute("target", f + "_iframe"), m2 instanceof s2 && m2.each(function(e4, i3) {
+                  if (e4 instanceof a2) g && g.setAttribute("name", i3);
+                  else {
+                    var n3 = document.createElement("input");
+                    t2.extend(n3, { type: "hidden", name: i3, value: e4 }), g ? p.insertBefore(n3, g) : p.appendChild(n3);
+                  }
+                }), p.setAttribute("action", d.url), h(), p.submit(), v.trigger("loadstart");
+              }, getStatus: function() {
+                return u2;
+              }, getResponse: function(e4) {
+                if ("json" === e4 && "string" === t2.typeOf(c) && window.JSON) try {
+                  return JSON.parse(c.replace(/^\s*<pre[^>]*>/, "").replace(/<\/pre>\s*$/, ""));
+                } catch (i3) {
+                  return null;
+                }
+                return c;
+              }, abort: function() {
+                var t3 = this;
+                l && l.contentWindow && (l.contentWindow.stop ? l.contentWindow.stop() : l.contentWindow.document.execCommand ? l.contentWindow.document.execCommand("Stop") : l.src = "about:blank"), e3.call(this, function() {
+                  t3.dispatchEvent("abort");
+                });
+              }, destroy: function() {
+                this.getRuntime().getShim().removeInstance(this.uid);
+              } });
+            }
+            return e2.XMLHttpRequest = u;
+          }), n("moxie/runtime/html4/image/Image", ["moxie/runtime/html4/Runtime", "moxie/runtime/html5/image/Image"], function(e2, t2) {
+            return e2.Image = t2;
+          }), a(["moxie/core/utils/Basic", "moxie/core/utils/Encode", "moxie/core/utils/Env", "moxie/core/Exceptions", "moxie/core/utils/Dom", "moxie/core/EventTarget", "moxie/runtime/Runtime", "moxie/runtime/RuntimeClient", "moxie/file/Blob", "moxie/core/I18n", "moxie/core/utils/Mime", "moxie/file/FileInput", "moxie/file/File", "moxie/file/FileDrop", "moxie/file/FileReader", "moxie/core/utils/Url", "moxie/runtime/RuntimeTarget", "moxie/xhr/FormData", "moxie/xhr/XMLHttpRequest", "moxie/image/Image", "moxie/core/utils/Events", "moxie/runtime/html5/image/ResizerCanvas"]);
+        }(this);
+      });
+      !function(e, t) {
+        var i = function() {
+          var e2 = {};
+          return t.apply(e2, arguments), e2.plupload;
+        };
+        "function" == typeof define && define.amd ? define("plupload", ["./moxie"], i) : "object" == typeof module && module.exports ? module.exports = i(require_moxie()) : e.plupload = i(e.moxie);
+      }(exports || window, function(e) {
+        !function(e2, t, i) {
+          function n(e3) {
+            function t2(e4, t3, i3) {
+              var r2 = { chunks: "slice_blob", jpgresize: "send_binary_string", pngresize: "send_binary_string", progress: "report_upload_progress", multi_selection: "select_multiple", dragdrop: "drag_and_drop", drop_element: "drag_and_drop", headers: "send_custom_headers", urlstream_upload: "send_binary_string", canSendBinary: "send_binary", triggerDialog: "summon_file_dialog" };
+              r2[e4] ? n2[r2[e4]] = t3 : i3 || (n2[e4] = t3);
+            }
+            var i2 = e3.required_features, n2 = {};
+            return "string" == typeof i2 ? l.each(i2.split(/\s*,\s*/), function(e4) {
+              t2(e4, true);
+            }) : "object" == typeof i2 ? l.each(i2, function(e4, i3) {
+              t2(i3, e4);
+            }) : i2 === true && (e3.chunk_size && e3.chunk_size > 0 && (n2.slice_blob = true), l.isEmptyObj(e3.resize) && e3.multipart !== false || (n2.send_binary_string = true), e3.http_method && (n2.use_http_method = e3.http_method), l.each(e3, function(e4, i3) {
+              t2(i3, !!e4, true);
+            })), n2;
+          }
+          var r = window.setTimeout, s = {}, a = t.core.utils, o = t.runtime.Runtime, l = { VERSION: "2.3.6", STOPPED: 1, STARTED: 2, QUEUED: 1, UPLOADING: 2, FAILED: 4, DONE: 5, GENERIC_ERROR: -100, HTTP_ERROR: -200, IO_ERROR: -300, SECURITY_ERROR: -400, INIT_ERROR: -500, FILE_SIZE_ERROR: -600, FILE_EXTENSION_ERROR: -601, FILE_DUPLICATE_ERROR: -602, IMAGE_FORMAT_ERROR: -700, MEMORY_ERROR: -701, IMAGE_DIMENSIONS_ERROR: -702, moxie: t, mimeTypes: a.Mime.mimes, ua: a.Env, typeOf: a.Basic.typeOf, extend: a.Basic.extend, guid: a.Basic.guid, getAll: function(e3) {
+            var t2, i2 = [];
+            "array" !== l.typeOf(e3) && (e3 = [e3]);
+            for (var n2 = e3.length; n2--; ) t2 = l.get(e3[n2]), t2 && i2.push(t2);
+            return i2.length ? i2 : null;
+          }, get: a.Dom.get, each: a.Basic.each, getPos: a.Dom.getPos, getSize: a.Dom.getSize, xmlEncode: function(e3) {
+            var t2 = { "<": "lt", ">": "gt", "&": "amp", '"': "quot", "'": "#39" }, i2 = /[<>&\"\']/g;
+            return e3 ? ("" + e3).replace(i2, function(e4) {
+              return t2[e4] ? "&" + t2[e4] + ";" : e4;
+            }) : e3;
+          }, toArray: a.Basic.toArray, inArray: a.Basic.inArray, inSeries: a.Basic.inSeries, addI18n: t.core.I18n.addI18n, translate: t.core.I18n.translate, sprintf: a.Basic.sprintf, isEmptyObj: a.Basic.isEmptyObj, hasClass: a.Dom.hasClass, addClass: a.Dom.addClass, removeClass: a.Dom.removeClass, getStyle: a.Dom.getStyle, addEvent: a.Events.addEvent, removeEvent: a.Events.removeEvent, removeAllEvents: a.Events.removeAllEvents, cleanName: function(e3) {
+            var t2, i2;
+            for (i2 = [/[\300-\306]/g, "A", /[\340-\346]/g, "a", /\307/g, "C", /\347/g, "c", /[\310-\313]/g, "E", /[\350-\353]/g, "e", /[\314-\317]/g, "I", /[\354-\357]/g, "i", /\321/g, "N", /\361/g, "n", /[\322-\330]/g, "O", /[\362-\370]/g, "o", /[\331-\334]/g, "U", /[\371-\374]/g, "u"], t2 = 0; t2 < i2.length; t2 += 2) e3 = e3.replace(i2[t2], i2[t2 + 1]);
+            return e3 = e3.replace(/\s+/g, "_"), e3 = e3.replace(/[^a-z0-9_\-\.]+/gi, "");
+          }, buildUrl: function(e3, t2) {
+            var i2 = "";
+            return l.each(t2, function(e4, t3) {
+              i2 += (i2 ? "&" : "") + encodeURIComponent(t3) + "=" + encodeURIComponent(e4);
+            }), i2 && (e3 += (e3.indexOf("?") > 0 ? "&" : "?") + i2), e3;
+          }, formatSize: function(e3) {
+            function t2(e4, t3) {
+              return Math.round(e4 * Math.pow(10, t3)) / Math.pow(10, t3);
+            }
+            if (e3 === i || /\D/.test(e3)) return l.translate("N/A");
+            var n2 = Math.pow(1024, 4);
+            return e3 > n2 ? t2(e3 / n2, 1) + " " + l.translate("tb") : e3 > (n2 /= 1024) ? t2(e3 / n2, 1) + " " + l.translate("gb") : e3 > (n2 /= 1024) ? t2(e3 / n2, 1) + " " + l.translate("mb") : e3 > 1024 ? Math.round(e3 / 1024) + " " + l.translate("kb") : e3 + " " + l.translate("b");
+          }, parseSize: a.Basic.parseSizeStr, predictRuntime: function(e3, t2) {
+            var i2, n2;
+            return i2 = new l.Uploader(e3), n2 = o.thatCan(i2.getOption().required_features, t2 || e3.runtimes), i2.destroy(), n2;
+          }, addFileFilter: function(e3, t2) {
+            s[e3] = t2;
+          } };
+          l.addFileFilter("mime_types", function(e3, t2, i2) {
+            e3.length && !e3.regexp.test(t2.name) ? (this.trigger("Error", { code: l.FILE_EXTENSION_ERROR, message: l.translate("File extension error."), file: t2 }), i2(false)) : i2(true);
+          }), l.addFileFilter("max_file_size", function(e3, t2, i2) {
+            var n2;
+            e3 = l.parseSize(e3), t2.size !== n2 && e3 && t2.size > e3 ? (this.trigger("Error", { code: l.FILE_SIZE_ERROR, message: l.translate("File size error."), file: t2 }), i2(false)) : i2(true);
+          }), l.addFileFilter("prevent_duplicates", function(e3, t2, i2) {
+            if (e3) {
+              for (var n2 = this.files.length; n2--; ) if (t2.name === this.files[n2].name && t2.size === this.files[n2].size) return this.trigger("Error", { code: l.FILE_DUPLICATE_ERROR, message: l.translate("Duplicate file error."), file: t2 }), i2(false), void 0;
+            }
+            i2(true);
+          }), l.addFileFilter("prevent_empty", function(e3, t2, n2) {
+            e3 && !t2.size && t2.size !== i ? (this.trigger("Error", { code: l.FILE_SIZE_ERROR, message: l.translate("File size error."), file: t2 }), n2(false)) : n2(true);
+          }), l.Uploader = function(e3) {
+            function a2() {
+              var e4, t2, i2 = 0;
+              if (this.state == l.STARTED) {
+                for (t2 = 0; t2 < D.length; t2++) e4 || D[t2].status != l.QUEUED ? i2++ : (e4 = D[t2], this.trigger("BeforeUpload", e4) && (e4.status = l.UPLOADING, this.trigger("UploadFile", e4)));
+                i2 == D.length && (this.state !== l.STOPPED && (this.state = l.STOPPED, this.trigger("StateChanged")), this.trigger("UploadComplete", D));
+              }
+            }
+            function u(e4) {
+              e4.percent = e4.size > 0 ? Math.ceil(100 * (e4.loaded / e4.size)) : 100, d();
+            }
+            function d() {
+              var e4, t2, n2, r2 = 0;
+              for (I.reset(), e4 = 0; e4 < D.length; e4++) t2 = D[e4], t2.size !== i ? (I.size += t2.origSize, n2 = t2.loaded * t2.origSize / t2.size, (!t2.completeTimestamp || t2.completeTimestamp > S) && (r2 += n2), I.loaded += n2) : I.size = i, t2.status == l.DONE ? I.uploaded++ : t2.status == l.FAILED ? I.failed++ : I.queued++;
+              I.size === i ? I.percent = D.length > 0 ? Math.ceil(100 * (I.uploaded / D.length)) : 0 : (I.bytesPerSec = Math.ceil(r2 / ((+/* @__PURE__ */ new Date() - S || 1) / 1e3)), I.percent = I.size > 0 ? Math.ceil(100 * (I.loaded / I.size)) : 0);
+            }
+            function c() {
+              var e4 = F[0] || P[0];
+              return e4 ? e4.getRuntime().uid : false;
+            }
+            function f() {
+              this.bind("FilesAdded FilesRemoved", function(e4) {
+                e4.trigger("QueueChanged"), e4.refresh();
+              }), this.bind("CancelUpload", b), this.bind("BeforeUpload", m2), this.bind("UploadFile", _), this.bind("UploadProgress", E), this.bind("StateChanged", v), this.bind("QueueChanged", d), this.bind("Error", R), this.bind("FileUploaded", y), this.bind("Destroy", z);
+            }
+            function p(e4, i2) {
+              var n2 = this, r2 = 0, s2 = [], a3 = { runtime_order: e4.runtimes, required_caps: e4.required_features, preferred_caps: x, swf_url: e4.flash_swf_url, xap_url: e4.silverlight_xap_url };
+              l.each(e4.runtimes.split(/\s*,\s*/), function(t2) {
+                e4[t2] && (a3[t2] = e4[t2]);
+              }), e4.browse_button && l.each(e4.browse_button, function(i3) {
+                s2.push(function(s3) {
+                  var u2 = new t.file.FileInput(l.extend({}, a3, { accept: e4.filters.mime_types, name: e4.file_data_name, multiple: e4.multi_selection, container: e4.container, browse_button: i3 }));
+                  u2.onready = function() {
+                    var e5 = o.getInfo(this.ruid);
+                    l.extend(n2.features, { chunks: e5.can("slice_blob"), multipart: e5.can("send_multipart"), multi_selection: e5.can("select_multiple") }), r2++, F.push(this), s3();
+                  }, u2.onchange = function() {
+                    n2.addFile(this.files);
+                  }, u2.bind("mouseenter mouseleave mousedown mouseup", function(t2) {
+                    U || (e4.browse_button_hover && ("mouseenter" === t2.type ? l.addClass(i3, e4.browse_button_hover) : "mouseleave" === t2.type && l.removeClass(i3, e4.browse_button_hover)), e4.browse_button_active && ("mousedown" === t2.type ? l.addClass(i3, e4.browse_button_active) : "mouseup" === t2.type && l.removeClass(i3, e4.browse_button_active)));
+                  }), u2.bind("mousedown", function() {
+                    n2.trigger("Browse");
+                  }), u2.bind("error runtimeerror", function() {
+                    u2 = null, s3();
+                  }), u2.init();
+                });
+              }), e4.drop_element && l.each(e4.drop_element, function(e5) {
+                s2.push(function(i3) {
+                  var s3 = new t.file.FileDrop(l.extend({}, a3, { drop_zone: e5 }));
+                  s3.onready = function() {
+                    var e6 = o.getInfo(this.ruid);
+                    l.extend(n2.features, { chunks: e6.can("slice_blob"), multipart: e6.can("send_multipart"), dragdrop: e6.can("drag_and_drop") }), r2++, P.push(this), i3();
+                  }, s3.ondrop = function() {
+                    n2.addFile(this.files);
+                  }, s3.bind("error runtimeerror", function() {
+                    s3 = null, i3();
+                  }), s3.init();
+                });
+              }), l.inSeries(s2, function() {
+                "function" == typeof i2 && i2(r2);
+              });
+            }
+            function g(e4, n2, r2, s2) {
+              var a3 = new t.image.Image();
+              try {
+                a3.onload = function() {
+                  n2.width > this.width && n2.height > this.height && n2.quality === i && n2.preserve_headers && !n2.crop ? (this.destroy(), s2(e4)) : a3.downsize(n2.width, n2.height, n2.crop, n2.preserve_headers);
+                }, a3.onresize = function() {
+                  var t2 = this.getAsBlob(e4.type, n2.quality);
+                  this.destroy(), s2(t2);
+                }, a3.bind("error runtimeerror", function() {
+                  this.destroy(), s2(e4);
+                }), a3.load(e4, r2);
+              } catch (o2) {
+                s2(e4);
+              }
+            }
+            function h(e4, i2, r2) {
+              function s2(e5, i3, n2) {
+                var r3 = O[e5];
+                switch (e5) {
+                  case "max_file_size":
+                    "max_file_size" === e5 && (O.max_file_size = O.filters.max_file_size = i3);
+                    break;
+                  case "chunk_size":
+                    (i3 = l.parseSize(i3)) && (O[e5] = i3, O.send_file_name = true);
+                    break;
+                  case "multipart":
+                    O[e5] = i3, i3 || (O.send_file_name = true);
+                    break;
+                  case "http_method":
+                    O[e5] = "PUT" === i3.toUpperCase() ? "PUT" : "POST";
+                    break;
+                  case "unique_names":
+                    O[e5] = i3, i3 && (O.send_file_name = true);
+                    break;
+                  case "filters":
+                    "array" === l.typeOf(i3) && (i3 = { mime_types: i3 }), n2 ? l.extend(O.filters, i3) : O.filters = i3, i3.mime_types && ("string" === l.typeOf(i3.mime_types) && (i3.mime_types = t.core.utils.Mime.mimes2extList(i3.mime_types)), i3.mime_types.regexp = function(e6) {
+                      var t2 = [];
+                      return l.each(e6, function(e7) {
+                        l.each(e7.extensions.split(/,/), function(e8) {
+                          /^\s*\*\s*$/.test(e8) ? t2.push("\\.*") : t2.push("\\." + e8.replace(new RegExp("[" + "/^$.*+?|()[]{}\\".replace(/./g, "\\$&") + "]", "g"), "\\$&"));
+                        });
+                      }), new RegExp("(" + t2.join("|") + ")$", "i");
+                    }(i3.mime_types), O.filters.mime_types = i3.mime_types);
+                    break;
+                  case "resize":
+                    O.resize = i3 ? l.extend({ preserve_headers: true, crop: false }, i3) : false;
+                    break;
+                  case "prevent_duplicates":
+                    O.prevent_duplicates = O.filters.prevent_duplicates = !!i3;
+                    break;
+                  case "container":
+                  case "browse_button":
+                  case "drop_element":
+                    i3 = "container" === e5 ? l.get(i3) : l.getAll(i3);
+                  case "runtimes":
+                  case "multi_selection":
+                  case "flash_swf_url":
+                  case "silverlight_xap_url":
+                    O[e5] = i3, n2 || (u2 = true);
+                    break;
+                  default:
+                    O[e5] = i3;
+                }
+                n2 || a3.trigger("OptionChanged", e5, i3, r3);
+              }
+              var a3 = this, u2 = false;
+              "object" == typeof e4 ? l.each(e4, function(e5, t2) {
+                s2(t2, e5, r2);
+              }) : s2(e4, i2, r2), r2 ? (O.required_features = n(l.extend({}, O)), x = n(l.extend({}, O, { required_features: true }))) : u2 && (a3.trigger("Destroy"), p.call(a3, O, function(e5) {
+                e5 ? (a3.runtime = o.getInfo(c()).type, a3.trigger("Init", { runtime: a3.runtime }), a3.trigger("PostInit")) : a3.trigger("Error", { code: l.INIT_ERROR, message: l.translate("Init error.") });
+              }));
+            }
+            function m2(e4, t2) {
+              if (e4.settings.unique_names) {
+                var i2 = t2.name.match(/\.([^.]+)$/), n2 = "part";
+                i2 && (n2 = i2[1]), t2.target_name = t2.id + "." + n2;
+              }
+            }
+            function _(e4, i2) {
+              function n2() {
+                c2-- > 0 ? r(s2, 1e3) : (i2.loaded = p2, e4.trigger("Error", { code: l.HTTP_ERROR, message: l.translate("HTTP Error."), file: i2, response: T.responseText, status: T.status, responseHeaders: T.getAllResponseHeaders() }));
+              }
+              function s2() {
+                var t2, n3, r2 = {};
+                i2.status === l.UPLOADING && e4.state !== l.STOPPED && (e4.settings.send_file_name && (r2.name = i2.target_name || i2.name), d2 && f2.chunks && o2.size > d2 ? (n3 = Math.min(d2, o2.size - p2), t2 = o2.slice(p2, p2 + n3)) : (n3 = o2.size, t2 = o2), d2 && f2.chunks && (e4.settings.send_chunk_number ? (r2.chunk = Math.ceil(p2 / d2), r2.chunks = Math.ceil(o2.size / d2)) : (r2.offset = p2, r2.total = o2.size)), e4.trigger("BeforeChunkUpload", i2, r2, t2, p2) && a3(r2, t2, n3));
+              }
+              function a3(a4, d3, g2) {
+                var m3;
+                T = new t.xhr.XMLHttpRequest(), T.upload && (T.upload.onprogress = function(t2) {
+                  i2.loaded = Math.min(i2.size, p2 + t2.loaded), e4.trigger("UploadProgress", i2);
+                }), T.onload = function() {
+                  return T.status < 200 || T.status >= 400 ? (n2(), void 0) : (c2 = e4.settings.max_retries, g2 < o2.size ? (d3.destroy(), p2 += g2, i2.loaded = Math.min(p2, o2.size), e4.trigger("ChunkUploaded", i2, { offset: i2.loaded, total: o2.size, response: T.responseText, status: T.status, responseHeaders: T.getAllResponseHeaders() }), "Android Browser" === l.ua.browser && e4.trigger("UploadProgress", i2)) : i2.loaded = i2.size, d3 = m3 = null, !p2 || p2 >= o2.size ? (i2.size != i2.origSize && (o2.destroy(), o2 = null), e4.trigger("UploadProgress", i2), i2.status = l.DONE, i2.completeTimestamp = +/* @__PURE__ */ new Date(), e4.trigger("FileUploaded", i2, { response: T.responseText, status: T.status, responseHeaders: T.getAllResponseHeaders() })) : r(s2, 1), void 0);
+                }, T.onerror = function() {
+                  n2();
+                }, T.onloadend = function() {
+                  this.destroy();
+                }, e4.settings.multipart && f2.multipart ? (T.open(e4.settings.http_method, u2, true), l.each(e4.settings.headers, function(e5, t2) {
+                  T.setRequestHeader(t2, e5);
+                }), m3 = new t.xhr.FormData(), l.each(l.extend(a4, e4.settings.multipart_params), function(e5, t2) {
+                  m3.append(t2, e5);
+                }), m3.append(e4.settings.file_data_name, d3), T.send(m3, h2)) : (u2 = l.buildUrl(e4.settings.url, l.extend(a4, e4.settings.multipart_params)), T.open(e4.settings.http_method, u2, true), l.each(e4.settings.headers, function(e5, t2) {
+                  T.setRequestHeader(t2, e5);
+                }), T.hasRequestHeader("Content-Type") || T.setRequestHeader("Content-Type", "application/octet-stream"), T.send(d3, h2));
+              }
+              var o2, u2 = e4.settings.url, d2 = e4.settings.chunk_size, c2 = e4.settings.max_retries, f2 = e4.features, p2 = 0, h2 = { runtime_order: e4.settings.runtimes, required_caps: e4.settings.required_features, preferred_caps: x, swf_url: e4.settings.flash_swf_url, xap_url: e4.settings.silverlight_xap_url };
+              i2.loaded && (p2 = i2.loaded = d2 ? d2 * Math.floor(i2.loaded / d2) : 0), o2 = i2.getSource(), l.isEmptyObj(e4.settings.resize) || -1 === l.inArray(o2.type, ["image/jpeg", "image/png"]) ? s2() : g(o2, e4.settings.resize, h2, function(e5) {
+                o2 = e5, i2.size = e5.size, s2();
+              });
+            }
+            function E(e4, t2) {
+              u(t2);
+            }
+            function v(e4) {
+              if (e4.state == l.STARTED) S = +/* @__PURE__ */ new Date();
+              else if (e4.state == l.STOPPED) for (var t2 = e4.files.length - 1; t2 >= 0; t2--) e4.files[t2].status == l.UPLOADING && (e4.files[t2].status = l.QUEUED, d());
+            }
+            function b() {
+              T && T.abort();
+            }
+            function y(e4) {
+              d(), r(function() {
+                a2.call(e4);
+              }, 1);
+            }
+            function R(e4, t2) {
+              t2.code === l.INIT_ERROR ? e4.destroy() : t2.code === l.HTTP_ERROR && (t2.file.status = l.FAILED, t2.file.completeTimestamp = +/* @__PURE__ */ new Date(), u(t2.file), e4.state == l.STARTED && (e4.trigger("CancelUpload"), r(function() {
+                a2.call(e4);
+              }, 1)));
+            }
+            function z(e4) {
+              e4.stop(), l.each(D, function(e5) {
+                e5.destroy();
+              }), D = [], F.length && (l.each(F, function(e5) {
+                e5.destroy();
+              }), F = []), P.length && (l.each(P, function(e5) {
+                e5.destroy();
+              }), P = []), x = {}, U = false, S = T = null, I.reset();
+            }
+            var O, S, I, T, w = l.guid(), D = [], x = {}, F = [], P = [], U = false;
+            O = { chunk_size: 0, file_data_name: "file", filters: { mime_types: [], max_file_size: 0, prevent_duplicates: false, prevent_empty: true }, flash_swf_url: "js/Moxie.swf", http_method: "POST", max_retries: 0, multipart: true, multi_selection: true, resize: false, runtimes: o.order, send_file_name: true, send_chunk_number: true, silverlight_xap_url: "js/Moxie.xap" }, h.call(this, e3, null, true), I = new l.QueueProgress(), l.extend(this, { id: w, uid: w, state: l.STOPPED, features: {}, runtime: null, files: D, settings: O, total: I, init: function() {
+              var e4, t2, i2 = this;
+              return e4 = i2.getOption("preinit"), "function" == typeof e4 ? e4(i2) : l.each(e4, function(e5, t3) {
+                i2.bind(t3, e5);
+              }), f.call(i2), l.each(["container", "browse_button", "drop_element"], function(e5) {
+                return null === i2.getOption(e5) ? (t2 = { code: l.INIT_ERROR, message: l.sprintf(l.translate("%s specified, but cannot be found."), e5) }, false) : void 0;
+              }), t2 ? i2.trigger("Error", t2) : O.browse_button || O.drop_element ? (p.call(i2, O, function(e5) {
+                var t3 = i2.getOption("init");
+                "function" == typeof t3 ? t3(i2) : l.each(t3, function(e6, t4) {
+                  i2.bind(t4, e6);
+                }), e5 ? (i2.runtime = o.getInfo(c()).type, i2.trigger("Init", { runtime: i2.runtime }), i2.trigger("PostInit")) : i2.trigger("Error", { code: l.INIT_ERROR, message: l.translate("Init error.") });
+              }), void 0) : i2.trigger("Error", { code: l.INIT_ERROR, message: l.translate("You must specify either browse_button or drop_element.") });
+            }, setOption: function(e4, t2) {
+              h.call(this, e4, t2, !this.runtime);
+            }, getOption: function(e4) {
+              return e4 ? O[e4] : O;
+            }, refresh: function() {
+              F.length && l.each(F, function(e4) {
+                e4.trigger("Refresh");
+              }), this.trigger("Refresh");
+            }, start: function() {
+              this.state != l.STARTED && (this.state = l.STARTED, this.trigger("StateChanged"), a2.call(this));
+            }, stop: function() {
+              this.state != l.STOPPED && (this.state = l.STOPPED, this.trigger("StateChanged"), this.trigger("CancelUpload"));
+            }, disableBrowse: function() {
+              U = arguments[0] !== i ? arguments[0] : true, F.length && l.each(F, function(e4) {
+                e4.disable(U);
+              }), this.trigger("DisableBrowse", U);
+            }, getFile: function(e4) {
+              var t2;
+              for (t2 = D.length - 1; t2 >= 0; t2--) if (D[t2].id === e4) return D[t2];
+            }, addFile: function(e4, i2) {
+              function n2(e5, t2) {
+                var i3 = [];
+                l.each(u2.settings.filters, function(t3, n3) {
+                  s[n3] && i3.push(function(i4) {
+                    s[n3].call(u2, t3, e5, function(e6) {
+                      i4(!e6);
+                    });
+                  });
+                }), l.inSeries(i3, t2);
+              }
+              function a3(e5) {
+                var s2 = l.typeOf(e5);
+                if (e5 instanceof t.file.File) {
+                  if (!e5.ruid && !e5.isDetached()) {
+                    if (!o2) return false;
+                    e5.ruid = o2, e5.connectRuntime(o2);
+                  }
+                  a3(new l.File(e5));
+                } else e5 instanceof t.file.Blob ? (a3(e5.getSource()), e5.destroy()) : e5 instanceof l.File ? (i2 && (e5.name = i2), d2.push(function(t2) {
+                  n2(e5, function(i3) {
+                    i3 || (D.push(e5), f2.push(e5), u2.trigger("FileFiltered", e5)), r(t2, 1);
+                  });
+                })) : -1 !== l.inArray(s2, ["file", "blob"]) ? a3(new t.file.File(null, e5)) : "node" === s2 && "filelist" === l.typeOf(e5.files) ? l.each(e5.files, a3) : "array" === s2 && (i2 = null, l.each(e5, a3));
+              }
+              var o2, u2 = this, d2 = [], f2 = [];
+              o2 = c(), a3(e4), d2.length && l.inSeries(d2, function() {
+                f2.length && u2.trigger("FilesAdded", f2);
+              });
+            }, removeFile: function(e4) {
+              for (var t2 = "string" == typeof e4 ? e4 : e4.id, i2 = D.length - 1; i2 >= 0; i2--) if (D[i2].id === t2) return this.splice(i2, 1)[0];
+            }, splice: function(e4, t2) {
+              var n2 = D.splice(e4 === i ? 0 : e4, t2 === i ? D.length : t2), r2 = false;
+              return this.state == l.STARTED && (l.each(n2, function(e5) {
+                return e5.status === l.UPLOADING ? (r2 = true, false) : void 0;
+              }), r2 && this.stop()), this.trigger("FilesRemoved", n2), l.each(n2, function(e5) {
+                e5.destroy();
+              }), r2 && this.start(), n2;
+            }, dispatchEvent: function(e4) {
+              var t2, i2;
+              if (e4 = e4.toLowerCase(), t2 = this.hasEventListener(e4)) {
+                t2.sort(function(e5, t3) {
+                  return t3.priority - e5.priority;
+                }), i2 = [].slice.call(arguments), i2.shift(), i2.unshift(this);
+                for (var n2 = 0; n2 < t2.length; n2++) if (t2[n2].fn.apply(t2[n2].scope, i2) === false) return false;
+              }
+              return true;
+            }, bind: function(e4, t2, i2, n2) {
+              l.Uploader.prototype.bind.call(this, e4, t2, n2, i2);
+            }, destroy: function() {
+              this.trigger("Destroy"), O = I = null, this.unbindAll();
+            } });
+          }, l.Uploader.prototype = t.core.EventTarget.instance, l.File = /* @__PURE__ */ function() {
+            function e3(e4) {
+              l.extend(this, { id: l.guid(), name: e4.name || e4.fileName, type: e4.type || "", relativePath: e4.relativePath || "", size: e4.fileSize || e4.size, origSize: e4.fileSize || e4.size, loaded: 0, percent: 0, status: l.QUEUED, lastModifiedDate: e4.lastModifiedDate || (/* @__PURE__ */ new Date()).toLocaleString(), completeTimestamp: 0, getNative: function() {
+                var e5 = this.getSource().getSource();
+                return -1 !== l.inArray(l.typeOf(e5), ["blob", "file"]) ? e5 : null;
+              }, getSource: function() {
+                return t2[this.id] ? t2[this.id] : null;
+              }, destroy: function() {
+                var e5 = this.getSource();
+                e5 && (e5.destroy(), delete t2[this.id]);
+              } }), t2[this.id] = e4;
+            }
+            var t2 = {};
+            return e3;
+          }(), l.QueueProgress = function() {
+            var e3 = this;
+            e3.size = 0, e3.loaded = 0, e3.uploaded = 0, e3.failed = 0, e3.queued = 0, e3.percent = 0, e3.bytesPerSec = 0, e3.reset = function() {
+              e3.size = e3.loaded = e3.uploaded = e3.failed = e3.queued = e3.percent = e3.bytesPerSec = 0;
+            };
+          }, e2.plupload = l;
+        }(this, e);
       });
     }
   });
@@ -11790,7 +22281,7 @@
             this.selection.save();
             this.code.offset = this.caret.getOffset();
             var scroll = $6(window).scrollTop();
-            var width = this.$editor.innerWidth(), height = this.$editor.innerHeight();
+            var width2 = this.$editor.innerWidth(), height2 = this.$editor.innerHeight();
             this.$editor.hide();
             var html = this.$textarea.val();
             this.modified = this.clean.removeSpaces(html);
@@ -11827,7 +22318,7 @@
               this.$textarea.next(".CodeMirror").each(function(i, el) {
                 $6(el).show();
                 el.CodeMirror.setValue(html);
-                el.CodeMirror.setSize("100%", height);
+                el.CodeMirror.setSize("100%", height2);
                 el.CodeMirror.refresh();
                 if (start2 == end) {
                   el.CodeMirror.setCursor(
@@ -11849,7 +22340,7 @@
                 el.CodeMirror.focus();
               });
             } else {
-              this.$textarea.height(height).show().focus();
+              this.$textarea.height(height2).show().focus();
               this.$textarea.on(
                 "keydown.redactor-textarea-indenting",
                 this.code.textareaIndenting
@@ -12470,18 +22961,18 @@
           moveResize: function(e) {
             e.preventDefault();
             e = e.originalEvent || e;
-            var height = this.image.resizeHandle.h;
+            var height2 = this.image.resizeHandle.h;
             if (e.targetTouches)
-              height += e.targetTouches[0].pageY - this.image.resizeHandle.y;
-            else height += e.pageY - this.image.resizeHandle.y;
-            var width = Math.round(height * this.image.resizeHandle.ratio);
-            if (height < 50 || width < 100) return;
-            var height = Math.round(
+              height2 += e.targetTouches[0].pageY - this.image.resizeHandle.y;
+            else height2 += e.pageY - this.image.resizeHandle.y;
+            var width2 = Math.round(height2 * this.image.resizeHandle.ratio);
+            if (height2 < 50 || width2 < 100) return;
+            var height2 = Math.round(
               this.image.resizeHandle.el.width() / this.image.resizeHandle.ratio
             );
-            this.image.resizeHandle.el.attr({ width, height });
-            this.image.resizeHandle.el.width(width);
-            this.image.resizeHandle.el.height(height);
+            this.image.resizeHandle.el.attr({ width: width2, height: height2 });
+            this.image.resizeHandle.el.width(width2);
+            this.image.resizeHandle.el.height(height2);
             this.code.sync();
           },
           stopResize: function() {
@@ -14346,9 +24837,9 @@
           getModal: function() {
             return this.$modalBody.find("section");
           },
-          load: function(templateName, title, width) {
+          load: function(templateName, title, width2) {
             this.modal.templateName = templateName;
-            this.modal.width = width;
+            this.modal.width = width2;
             this.modal.build();
             this.modal.enableEvents();
             this.modal.setTitle(title);
@@ -14390,17 +24881,17 @@
             this.$modal.find("input[type=text],input[type=url],input[type=email]").on("keydown.redactor-modal", $6.proxy(this.modal.setEnter, this));
           },
           showOnDesktop: function() {
-            var height = this.$modal.outerHeight();
+            var height2 = this.$modal.outerHeight();
             var windowHeight = $6(window).height();
             var windowWidth = $6(window).width();
             if (this.modal.width > windowWidth) {
               this.$modal.css({
                 width: "96%",
-                marginTop: windowHeight / 2 - height / 2 + "px"
+                marginTop: windowHeight / 2 - height2 / 2 + "px"
               });
               return;
             }
-            if (height > windowHeight) {
+            if (height2 > windowHeight) {
               this.$modal.css({
                 width: this.modal.width + "px",
                 marginTop: "20px"
@@ -14408,7 +24899,7 @@
             } else {
               this.$modal.css({
                 width: this.modal.width + "px",
-                marginTop: windowHeight / 2 - height / 2 + "px"
+                marginTop: windowHeight / 2 - height2 / 2 + "px"
               });
             }
           },
@@ -16083,11 +26574,11 @@
             var top2 = this.opts.toolbarFixedTopOffset + scrollTop - boxTop;
             var left = 0;
             var end = boxTop + this.$box.height() - 32;
-            var width = this.$box.innerWidth();
+            var width2 = this.$box.innerWidth();
             this.$toolbar.addClass("toolbar-fixed-box");
             this.$toolbar.css({
               position: "absolute",
-              width,
+              width: width2,
               top: top2 + "px",
               left
             });
@@ -17150,6 +27641,7 @@
       CMS2.categories();
       CMS2.files.init();
       CMS2.fileLinks();
+      CMS2.fileUpload.init();
       CMS2.diff();
     };
     CMS2.dispose = () => {
@@ -22269,9 +32761,9 @@
     coordsAt(pos, side) {
       let rect = coordsInChildren(this, pos, side);
       if (!this.children.length && rect && this.parent) {
-        let { heightOracle } = this.parent.view.viewState, height = rect.bottom - rect.top;
-        if (Math.abs(height - heightOracle.lineHeight) < 2 && heightOracle.textHeight < height) {
-          let dist2 = (height - heightOracle.textHeight) / 2;
+        let { heightOracle } = this.parent.view.viewState, height2 = rect.bottom - rect.top;
+        if (Math.abs(height2 - heightOracle.lineHeight) < 2 && heightOracle.textHeight < height2) {
+          let dist2 = (height2 - heightOracle.textHeight) / 2;
           return { top: rect.top + dist2, bottom: rect.bottom - dist2, left: rect.left, right: rect.left };
         }
       }
@@ -22386,9 +32878,9 @@
     }
   };
   var BlockGapWidget = class extends WidgetType {
-    constructor(height) {
+    constructor(height2) {
       super();
-      this.height = height;
+      this.height = height2;
     }
     toDOM() {
       let elt = document.createElement("div");
@@ -23628,9 +34120,9 @@
             let rects = last ? clientRectsFor(last) : [];
             if (rects.length) {
               let rect = rects[rects.length - 1];
-              let width = ltr ? rect.right - childRect.left : childRect.right - rect.left;
-              if (width > widest) {
-                widest = width;
+              let width2 = ltr ? rect.right - childRect.left : childRect.right - rect.left;
+              if (width2 > widest) {
+                widest = width2;
                 this.minWidth = contentWidth;
                 this.minWidthFrom = pos;
                 this.minWidthTo = end;
@@ -23681,9 +34173,9 @@
         let next = i == vs.viewports.length ? null : vs.viewports[i];
         let end = next ? next.from - 1 : this.length;
         if (end > pos) {
-          let height = (vs.lineBlockAt(end).bottom - vs.lineBlockAt(pos).top) / this.view.scaleY;
+          let height2 = (vs.lineBlockAt(end).bottom - vs.lineBlockAt(pos).top) / this.view.scaleY;
           deco.push(Decoration.replace({
-            widget: new BlockGapWidget(height),
+            widget: new BlockGapWidget(height2),
             block: true,
             inclusive: true,
             isBlockGap: true
@@ -25363,11 +35855,11 @@
     /**
     @internal
     */
-    constructor(from, length, top2, height, _content) {
+    constructor(from, length, top2, height2, _content) {
       this.from = from;
       this.length = length;
       this.top = top2;
-      this.height = height;
+      this.height = height2;
       this._content = _content;
     }
     /**
@@ -25419,9 +35911,9 @@
   }(QueryType || (QueryType = {}));
   var Epsilon = 1e-3;
   var HeightMap = class _HeightMap {
-    constructor(length, height, flags = 2) {
+    constructor(length, height2, flags = 2) {
       this.length = length;
-      this.height = height;
+      this.height = height2;
       this.flags = flags;
     }
     get outdated() {
@@ -25430,11 +35922,11 @@
     set outdated(value) {
       this.flags = (value ? 2 : 0) | this.flags & ~2;
     }
-    setHeight(height) {
-      if (this.height != height) {
-        if (Math.abs(this.height - height) > Epsilon)
+    setHeight(height2) {
+      if (this.height != height2) {
+        if (Math.abs(this.height - height2) > Epsilon)
           heightChangeFlag = true;
-        this.height = height;
+        this.height = height2;
       }
     }
     // Base case is to replace a leaf node, which simply builds a tree
@@ -25534,8 +36026,8 @@
   }
   HeightMap.prototype.size = 1;
   var HeightMapBlock = class extends HeightMap {
-    constructor(length, height, deco) {
-      super(length, height);
+    constructor(length, height2, deco) {
+      super(length, height2);
       this.deco = deco;
     }
     blockAt(_height, _oracle, top2, offset2) {
@@ -25559,8 +36051,8 @@
     }
   };
   var HeightMapText = class _HeightMapText extends HeightMapBlock {
-    constructor(length, height) {
-      super(length, height, null);
+    constructor(length, height2) {
+      super(length, height2, null);
       this.collapsed = 0;
       this.widgetHeight = 0;
       this.breaks = 0;
@@ -25612,15 +36104,15 @@
       }
       return { firstLine, lastLine, perLine, perChar };
     }
-    blockAt(height, oracle, top2, offset2) {
+    blockAt(height2, oracle, top2, offset2) {
       let { firstLine, lastLine, perLine, perChar } = this.heightMetrics(oracle, offset2);
       if (oracle.lineWrapping) {
-        let guess = offset2 + (height < oracle.lineHeight ? 0 : Math.round(Math.max(0, Math.min(1, (height - top2) / this.height)) * this.length));
+        let guess = offset2 + (height2 < oracle.lineHeight ? 0 : Math.round(Math.max(0, Math.min(1, (height2 - top2) / this.height)) * this.length));
         let line = oracle.doc.lineAt(guess), lineHeight = perLine + line.length * perChar;
-        let lineTop = Math.max(top2, height - lineHeight / 2);
+        let lineTop = Math.max(top2, height2 - lineHeight / 2);
         return new BlockInfo(line.from, line.length, lineTop, lineHeight, 0);
       } else {
-        let line = Math.max(0, Math.min(lastLine - firstLine, Math.floor((height - top2) / perLine)));
+        let line = Math.max(0, Math.min(lastLine - firstLine, Math.floor((height2 - top2) / perLine)));
         let { from, length } = oracle.doc.line(firstLine + line);
         return new BlockInfo(from, length, top2 + perLine * line, perLine, 0);
       }
@@ -25688,12 +36180,12 @@
           let len = oracle.doc.lineAt(pos).length;
           if (nodes.length)
             nodes.push(null);
-          let height = measured.heights[measured.index++];
+          let height2 = measured.heights[measured.index++];
           if (singleHeight == -1)
-            singleHeight = height;
-          else if (Math.abs(height - singleHeight) >= Epsilon)
+            singleHeight = height2;
+          else if (Math.abs(height2 - singleHeight) >= Epsilon)
             singleHeight = -2;
-          let line = new HeightMapText(len, height);
+          let line = new HeightMapText(len, height2);
           line.outdated = false;
           nodes.push(line);
           pos += len + 1;
@@ -25724,9 +36216,9 @@
     get break() {
       return this.flags & 1;
     }
-    blockAt(height, oracle, top2, offset2) {
+    blockAt(height2, oracle, top2, offset2) {
       let mid = top2 + this.left.height;
-      return height < mid ? this.left.blockAt(height, oracle, top2, offset2) : this.right.blockAt(height, oracle, mid, offset2 + this.left.length + this.break);
+      return height2 < mid ? this.left.blockAt(height2, oracle, top2, offset2) : this.right.blockAt(height2, oracle, mid, offset2 + this.left.length + this.break);
     }
     lineAt(value, type, oracle, top2, offset2) {
       let rightTop = top2 + this.left.height, rightOffset = offset2 + this.left.length + this.break;
@@ -25869,15 +36361,15 @@
     }
     point(from, to, deco) {
       if (from < to || deco.heightRelevant) {
-        let height = deco.widget ? deco.widget.estimatedHeight : 0;
+        let height2 = deco.widget ? deco.widget.estimatedHeight : 0;
         let breaks = deco.widget ? deco.widget.lineBreaks : 0;
-        if (height < 0)
-          height = this.oracle.lineHeight;
+        if (height2 < 0)
+          height2 = this.oracle.lineHeight;
         let len = to - from;
         if (deco.block) {
-          this.addBlock(new HeightMapBlock(len, height, deco));
-        } else if (len || breaks || height >= relevantWidgetHeight) {
-          this.addLineDeco(height, breaks, len);
+          this.addBlock(new HeightMapBlock(len, height2, deco));
+        } else if (len || breaks || height2 >= relevantWidgetHeight) {
+          this.addLineDeco(height2, breaks, len);
         }
       } else if (to > from) {
         this.span(from, to);
@@ -25925,11 +36417,11 @@
       if (deco && deco.endSide > 0)
         this.covering = block;
     }
-    addLineDeco(height, breaks, length) {
+    addLineDeco(height2, breaks, length) {
       let line = this.ensureLine();
       line.length += length;
       line.collapsed += length;
-      line.widgetHeight = Math.max(line.widgetHeight, height);
+      line.widgetHeight = Math.max(line.widgetHeight, height2);
       line.breaks += breaks;
       this.writtenTo = this.pos = this.pos + length;
     }
@@ -26442,15 +36934,15 @@
     lineBlockAt(pos) {
       return pos >= this.viewport.from && pos <= this.viewport.to && this.viewportLines.find((b) => b.from <= pos && b.to >= pos) || scaleBlock(this.heightMap.lineAt(pos, QueryType.ByPos, this.heightOracle, 0, 0), this.scaler);
     }
-    lineBlockAtHeight(height) {
-      return height >= this.viewportLines[0].top && height <= this.viewportLines[this.viewportLines.length - 1].bottom && this.viewportLines.find((l) => l.top <= height && l.bottom >= height) || scaleBlock(this.heightMap.lineAt(this.scaler.fromDOM(height), QueryType.ByHeight, this.heightOracle, 0, 0), this.scaler);
+    lineBlockAtHeight(height2) {
+      return height2 >= this.viewportLines[0].top && height2 <= this.viewportLines[this.viewportLines.length - 1].bottom && this.viewportLines.find((l) => l.top <= height2 && l.bottom >= height2) || scaleBlock(this.heightMap.lineAt(this.scaler.fromDOM(height2), QueryType.ByHeight, this.heightOracle, 0, 0), this.scaler);
     }
     scrollAnchorAt(scrollTop) {
       let block = this.lineBlockAtHeight(scrollTop + 8);
       return block.from >= this.viewport.from || this.viewportLines[0].top - scrollTop > 200 ? block : this.viewportLines[0];
     }
-    elementAtHeight(height) {
-      return scaleBlock(this.heightMap.blockAt(this.scaler.fromDOM(height), this.heightOracle, 0, 0), this.scaler);
+    elementAtHeight(height2) {
+      return scaleBlock(this.heightMap.blockAt(this.scaler.fromDOM(height2), this.heightOracle, 0, 0), this.scaler);
     }
     get docHeight() {
       return this.scaler.toDOM(this.heightMap.height);
@@ -28006,9 +38498,9 @@
     position (which is interpreted as relative to the [top of the
     document](https://codemirror.net/6/docs/ref/#view.EditorView.documentTop)).
     */
-    elementAtHeight(height) {
+    elementAtHeight(height2) {
       this.readMeasured();
-      return this.viewState.elementAtHeight(height);
+      return this.viewState.elementAtHeight(height2);
     }
     /**
     Find the line block (see
@@ -28016,9 +38508,9 @@
     height, again interpreted relative to the [top of the
     document](https://codemirror.net/6/docs/ref/#view.EditorView.documentTop).
     */
-    lineBlockAtHeight(height) {
+    lineBlockAtHeight(height2) {
       this.readMeasured();
-      return this.viewState.lineBlockAtHeight(height);
+      return this.viewState.lineBlockAtHeight(height2);
     }
     /**
     Get the extent and vertical position of all [line
@@ -28956,10 +39448,10 @@
       height: rect.bottom - rect.top
     };
     var sizes = element.nodeName === "HTML" ? getWindowSizes(element.ownerDocument) : {};
-    var width = sizes.width || element.clientWidth || result.width;
-    var height = sizes.height || element.clientHeight || result.height;
-    var horizScrollbar = element.offsetWidth - width;
-    var vertScrollbar = element.offsetHeight - height;
+    var width2 = sizes.width || element.clientWidth || result.width;
+    var height2 = sizes.height || element.clientHeight || result.height;
+    var horizScrollbar = element.offsetWidth - width2;
+    var vertScrollbar = element.offsetHeight - height2;
     if (horizScrollbar || vertScrollbar) {
       var styles = getStyleComputedProperty(element);
       horizScrollbar -= getBordersSize(styles, "x");
@@ -29010,15 +39502,15 @@
     var excludeScroll = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
     var html = element.ownerDocument.documentElement;
     var relativeOffset = getOffsetRectRelativeToArbitraryNode(element, html);
-    var width = Math.max(html.clientWidth, window.innerWidth || 0);
-    var height = Math.max(html.clientHeight, window.innerHeight || 0);
+    var width2 = Math.max(html.clientWidth, window.innerWidth || 0);
+    var height2 = Math.max(html.clientHeight, window.innerHeight || 0);
     var scrollTop = !excludeScroll ? getScroll(html) : 0;
     var scrollLeft = !excludeScroll ? getScroll(html, "left") : 0;
     var offset2 = {
       top: scrollTop - relativeOffset.top + relativeOffset.marginTop,
       left: scrollLeft - relativeOffset.left + relativeOffset.marginLeft,
-      width,
-      height
+      width: width2,
+      height: height2
     };
     return getClientRect(offset2);
   }
@@ -29066,11 +39558,11 @@
       }
       var offsets = getOffsetRectRelativeToArbitraryNode(boundariesNode, offsetParent, fixedPosition);
       if (boundariesNode.nodeName === "HTML" && !isFixed(offsetParent)) {
-        var _getWindowSizes = getWindowSizes(popper.ownerDocument), height = _getWindowSizes.height, width = _getWindowSizes.width;
+        var _getWindowSizes = getWindowSizes(popper.ownerDocument), height2 = _getWindowSizes.height, width2 = _getWindowSizes.width;
         boundaries.top += offsets.top - offsets.marginTop;
-        boundaries.bottom = height + offsets.top;
+        boundaries.bottom = height2 + offsets.top;
         boundaries.left += offsets.left - offsets.marginLeft;
-        boundaries.right = width + offsets.left;
+        boundaries.right = width2 + offsets.left;
       } else {
         boundaries = offsets;
       }
@@ -29084,8 +39576,8 @@
     return boundaries;
   }
   function getArea(_ref) {
-    var width = _ref.width, height = _ref.height;
-    return width * height;
+    var width2 = _ref.width, height2 = _ref.height;
+    return width2 * height2;
   }
   function computeAutoPlacement(placement, refRect, popper, reference, boundariesElement) {
     var padding = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : 0;
@@ -29121,8 +39613,8 @@
       return b.area - a.area;
     });
     var filteredAreas = sortedAreas.filter(function(_ref2) {
-      var width = _ref2.width, height = _ref2.height;
-      return width >= popper.clientWidth && height >= popper.clientHeight;
+      var width2 = _ref2.width, height2 = _ref2.height;
+      return width2 >= popper.clientWidth && height2 >= popper.clientHeight;
     });
     var computedPlacement = filteredAreas.length > 0 ? filteredAreas[0].key : sortedAreas[0].key;
     var variation = placement.split("-")[1];
@@ -30982,6 +41474,198 @@
     };
   })();
 
+  // app/assets/javascripts/comfy/admin/cms/file_upload.js
+  var import_plupload = __toESM(require_plupload_full_min());
+  (() => {
+    const DROP_TARGET_ACTIVE_CLASS = "cms-uploader-drag-drop-target-active";
+    class FileUpload {
+      constructor(container, settings) {
+        console.log("xxxx", container);
+        if (!container.id) container.id = import_plupload.default.guid();
+        settings = Object.assign(
+          FileUpload.defaultUploaderSettings(container.id),
+          settings
+        );
+        this.ui = {
+          container,
+          list: container.querySelector(".cms-uploader-filelist"),
+          dropElement: container.querySelector(`#${settings.drop_element}`)
+        };
+        this.cleanupFns = [];
+        this.uploader = new import_plupload.default.Uploader(settings);
+        this.uploader.bind("PostInit", () => this.onUploaderPostInit());
+        this.uploader.bind(
+          "Error",
+          (_uploader, error) => this.onUploaderError(error)
+        );
+        this.uploader.bind(
+          "FilesAdded",
+          (_uploader, files) => this.onUploaderFilesAdded(files)
+        );
+        this.uploader.bind(
+          "UploadProgress",
+          (_uploader, file) => this.onUploaderUploadProgress(file)
+        );
+        this.uploader.bind(
+          "FileUploaded",
+          (_uploader, file, info) => this.onUploaderFileUploaded(file, info)
+        );
+        this.uploader.bind(
+          "FilesRemoved",
+          (_uploader, files) => this.onUploaderFilesRemoved(files)
+        );
+        this.uploader.init();
+        if (settings.setup) {
+          settings.setup(this.uploader);
+        }
+      }
+      destroy() {
+        this.uploader.destroy();
+        for (const cleanupFn of this.cleanupFns) {
+          cleanupFn();
+        }
+      }
+      addCleanup(cleanupFn) {
+        this.cleanupFns.push(cleanupFn);
+      }
+      onUploaderPostInit() {
+        if (!this.uploader.settings.dragdrop || !this.uploader.features.dragdrop) {
+          this.ui.container.querySelector(
+            ".cms-uploader-drag-drop-info"
+          ).style.display = "none";
+          return;
+        }
+        const onDragEnter = (e) => {
+          if (e.dataTransfer.types.includes("Files")) {
+            this.ui.dropElement.classList.add(DROP_TARGET_ACTIVE_CLASS);
+          }
+        };
+        document.addEventListener("dragenter", onDragEnter);
+        this.addCleanup(() => {
+          document.removeEventListener("dragenter", onDragEnter);
+        });
+        for (const eventName of ["drop", "dragleave"]) {
+          this.ui.dropElement.addEventListener(eventName, () => {
+            this.ui.dropElement.classList.remove(DROP_TARGET_ACTIVE_CLASS);
+          });
+        }
+      }
+      onUploaderError(error) {
+        if (error.code === import_plupload.default.INIT_ERROR) {
+          window.alert("Error: Initialisation error. Reload to try again.");
+          return;
+        }
+        const file = error.file;
+        if (!file) return;
+        let message = error.response;
+        if (!message) {
+          message = error.message;
+          if (error.details) message += ` (${error.details})`;
+        }
+        file.status = import_plupload.default.FAILED;
+        file.error_message = message;
+        this.updateFileStatus(file);
+      }
+      onUploaderFilesAdded(files) {
+        for (const file of files) {
+          this.addFile(file);
+        }
+        this.uploader.start();
+      }
+      onUploaderUploadProgress(file) {
+        this.updateFileStatus(file);
+      }
+      onUploaderFileUploaded(file, info) {
+        const template = document.createElement("template");
+        template.innerHTML = info.response;
+        const newListItem = template.content.firstElementChild;
+        this.ui.list.replaceChild(newListItem, this.fileListItem(file));
+        window.CMS.fileLinks(newListItem);
+      }
+      onUploaderFilesRemoved(files) {
+        for (const file of files) {
+          this.removeFile(file);
+        }
+      }
+      addFile(file) {
+        this.ui.list.insertAdjacentHTML(
+          "afterbegin",
+          FileUpload.buildListItemHTML(file)
+        );
+        this.fileListItem(file).querySelector(".cms-uploader-file-delete").addEventListener("click", (evt) => {
+          evt.preventDefault();
+          this.uploader.removeFile(file);
+        });
+        this.updateFileStatus(file);
+      }
+      removeFile(file) {
+        this.fileListItem(file).remove();
+      }
+      updateFileStatus(file) {
+        const progressBar = this.fileListItem(file).querySelector(".progress-bar");
+        switch (file.status) {
+          case import_plupload.default.UPLOADING:
+            progressBar.style.width = `${file.percent}%`;
+            break;
+          case import_plupload.default.FAILED:
+            progressBar.style.width = "100%";
+            progressBar.classList.add("progress-bar-danger");
+            progressBar.querySelector("span").innerHTML = file.error_message;
+            break;
+        }
+      }
+      fileListItem({ id }) {
+        return this.ui.container.querySelector(`#${id}`);
+      }
+      static buildListItemHTML({ id, name: name2 }) {
+        return `<li id='${id}' class='row temp'>
+        <div class='col-md-9 d-flex align-items-center'>
+          <div class='progress'>
+            <div class='progress-bar progress-bar-striped progress-bar-animated'>
+              <span>${name2}</span>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-3 d-flex align-items-center justify-content-md-end'>
+          <a class='btn btn-sm btn-danger float-right cms-uploader-file-delete' href='#'>Delete</a>
+        </div>
+      </li>`;
+      }
+      static defaultUploaderSettings(id) {
+        return {
+          runtimes: "html5,browserplus,silverlight,flash,gears",
+          dragdrop: true,
+          drop_element: `${id}-drag-drop-target`,
+          browse_button: `${id}-browse`,
+          container: id,
+          file_data_name: "file[file]"
+        };
+      }
+    }
+    const uploaders = [];
+    window.CMS.fileUpload = {
+      init(root = document) {
+        const el = root.querySelector("#cms-uploader");
+        if (el === null) return;
+        uploaders.push(
+          new FileUpload(el, {
+            url: el.dataset.cmsUploaderUrl,
+            multipart_params: {
+              [el.dataset.cmsUploaderTokenName]: el.dataset.cmsUploaderTokenValue,
+              [el.dataset.cmsUploaderSessionName]: el.dataset.cmsUploaderSessionValue
+            }
+          })
+        );
+      },
+      dispose() {
+        for (const uploader of uploader) {
+          uploader.dispose();
+        }
+        uploaders.length = 0;
+      }
+    };
+  })();
+
   // app/assets/javascripts/comfy/admin/cms/files_modal.js
   (() => {
     let modal = null;
@@ -31260,22 +41944,22 @@
   }
   function getRect(el, relativeToContainingBlock, relativeToNonStaticParent, undoScale, container) {
     if (!el.getBoundingClientRect && el !== window) return;
-    var elRect, top2, left, bottom, right, height, width;
+    var elRect, top2, left, bottom, right, height2, width2;
     if (el !== window && el.parentNode && el !== getWindowScrollingElement()) {
       elRect = el.getBoundingClientRect();
       top2 = elRect.top;
       left = elRect.left;
       bottom = elRect.bottom;
       right = elRect.right;
-      height = elRect.height;
-      width = elRect.width;
+      height2 = elRect.height;
+      width2 = elRect.width;
     } else {
       top2 = 0;
       left = 0;
       bottom = window.innerHeight;
       right = window.innerWidth;
-      height = window.innerHeight;
-      width = window.innerWidth;
+      height2 = window.innerHeight;
+      width2 = window.innerWidth;
     }
     if ((relativeToContainingBlock || relativeToNonStaticParent) && el !== window) {
       container = container || el.parentNode;
@@ -31297,10 +41981,10 @@
       if (elMatrix) {
         top2 /= scaleY;
         left /= scaleX;
-        width /= scaleX;
-        height /= scaleY;
-        bottom = top2 + height;
-        right = left + width;
+        width2 /= scaleX;
+        height2 /= scaleY;
+        bottom = top2 + height2;
+        right = left + width2;
       }
     }
     return {
@@ -31308,8 +41992,8 @@
       left,
       bottom,
       right,
-      width,
-      height
+      width: width2,
+      height: height2
     };
   }
   function isScrolledPast(el, elSide, parentSide) {
@@ -33136,16 +43820,16 @@
     var layersOut = 0;
     var currentParent = scrollEl;
     do {
-      var el = currentParent, rect = getRect(el), top2 = rect.top, bottom = rect.bottom, left = rect.left, right = rect.right, width = rect.width, height = rect.height, canScrollX = void 0, canScrollY = void 0, scrollWidth = el.scrollWidth, scrollHeight = el.scrollHeight, elCSS = css(el), scrollPosX = el.scrollLeft, scrollPosY = el.scrollTop;
+      var el = currentParent, rect = getRect(el), top2 = rect.top, bottom = rect.bottom, left = rect.left, right = rect.right, width2 = rect.width, height2 = rect.height, canScrollX = void 0, canScrollY = void 0, scrollWidth = el.scrollWidth, scrollHeight = el.scrollHeight, elCSS = css(el), scrollPosX = el.scrollLeft, scrollPosY = el.scrollTop;
       if (el === winScroller) {
-        canScrollX = width < scrollWidth && (elCSS.overflowX === "auto" || elCSS.overflowX === "scroll" || elCSS.overflowX === "visible");
-        canScrollY = height < scrollHeight && (elCSS.overflowY === "auto" || elCSS.overflowY === "scroll" || elCSS.overflowY === "visible");
+        canScrollX = width2 < scrollWidth && (elCSS.overflowX === "auto" || elCSS.overflowX === "scroll" || elCSS.overflowX === "visible");
+        canScrollY = height2 < scrollHeight && (elCSS.overflowY === "auto" || elCSS.overflowY === "scroll" || elCSS.overflowY === "visible");
       } else {
-        canScrollX = width < scrollWidth && (elCSS.overflowX === "auto" || elCSS.overflowX === "scroll");
-        canScrollY = height < scrollHeight && (elCSS.overflowY === "auto" || elCSS.overflowY === "scroll");
+        canScrollX = width2 < scrollWidth && (elCSS.overflowX === "auto" || elCSS.overflowX === "scroll");
+        canScrollY = height2 < scrollHeight && (elCSS.overflowY === "auto" || elCSS.overflowY === "scroll");
       }
-      var vx = canScrollX && (Math.abs(right - x) <= sens && scrollPosX + width < scrollWidth) - (Math.abs(left - x) <= sens && !!scrollPosX);
-      var vy = canScrollY && (Math.abs(bottom - y) <= sens && scrollPosY + height < scrollHeight) - (Math.abs(top2 - y) <= sens && !!scrollPosY);
+      var vx = canScrollX && (Math.abs(right - x) <= sens && scrollPosX + width2 < scrollWidth) - (Math.abs(left - x) <= sens && !!scrollPosX);
+      var vy = canScrollY && (Math.abs(bottom - y) <= sens && scrollPosY + height2 < scrollHeight) - (Math.abs(top2 - y) <= sens && !!scrollPosY);
       if (!autoScrolls[layersOut]) {
         for (var i = 0; i <= layersOut; i++) {
           if (!autoScrolls[i]) {
