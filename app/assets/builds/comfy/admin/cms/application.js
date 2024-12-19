@@ -625,39 +625,39 @@
               }
             });
             if (support.getById) {
-              Expr.filter.ID = function(id) {
-                var attrId = id.replace(runescape, funescape);
+              Expr.filter.ID = function(id2) {
+                var attrId = id2.replace(runescape, funescape);
                 return function(elem) {
                   return elem.getAttribute("id") === attrId;
                 };
               };
-              Expr.find.ID = function(id, context) {
+              Expr.find.ID = function(id2, context) {
                 if (typeof context.getElementById !== "undefined" && documentIsHTML) {
-                  var elem = context.getElementById(id);
+                  var elem = context.getElementById(id2);
                   return elem ? [elem] : [];
                 }
               };
             } else {
-              Expr.filter.ID = function(id) {
-                var attrId = id.replace(runescape, funescape);
+              Expr.filter.ID = function(id2) {
+                var attrId = id2.replace(runescape, funescape);
                 return function(elem) {
                   var node2 = typeof elem.getAttributeNode !== "undefined" && elem.getAttributeNode("id");
                   return node2 && node2.value === attrId;
                 };
               };
-              Expr.find.ID = function(id, context) {
+              Expr.find.ID = function(id2, context) {
                 if (typeof context.getElementById !== "undefined" && documentIsHTML) {
-                  var node2, i2, elems, elem = context.getElementById(id);
+                  var node2, i2, elems, elem = context.getElementById(id2);
                   if (elem) {
                     node2 = elem.getAttributeNode("id");
-                    if (node2 && node2.value === id) {
+                    if (node2 && node2.value === id2) {
                       return [elem];
                     }
-                    elems = context.getElementsByName(id);
+                    elems = context.getElementsByName(id2);
                     i2 = 0;
                     while (elem = elems[i2++]) {
                       node2 = elem.getAttributeNode("id");
-                      if (node2 && node2.value === id) {
+                      if (node2 && node2.value === id2) {
                         return [elem];
                       }
                     }
@@ -3733,19 +3733,19 @@
             // Only Firefox includes border widths
             // in computed dimensions. (gh-4529)
             reliableTrDimensions: function() {
-              var table, tr, trChild, trStyle;
+              var table, tr2, trChild, trStyle;
               if (reliableTrDimensionsVal == null) {
                 table = document2.createElement("table");
-                tr = document2.createElement("tr");
+                tr2 = document2.createElement("tr");
                 trChild = document2.createElement("div");
                 table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
-                tr.style.cssText = "box-sizing:content-box;border:1px solid";
-                tr.style.height = "1px";
+                tr2.style.cssText = "box-sizing:content-box;border:1px solid";
+                tr2.style.height = "1px";
                 trChild.style.height = "9px";
                 trChild.style.display = "block";
-                documentElement.appendChild(table).appendChild(tr).appendChild(trChild);
-                trStyle = window2.getComputedStyle(tr);
-                reliableTrDimensionsVal = parseInt(trStyle.height, 10) + parseInt(trStyle.borderTopWidth, 10) + parseInt(trStyle.borderBottomWidth, 10) === tr.offsetHeight;
+                documentElement.appendChild(table).appendChild(tr2).appendChild(trChild);
+                trStyle = window2.getComputedStyle(tr2);
+                reliableTrDimensionsVal = parseInt(trStyle.height, 10) + parseInt(trStyle.borderTopWidth, 10) + parseInt(trStyle.borderBottomWidth, 10) === tr2.offsetHeight;
                 documentElement.removeChild(table);
               }
               return reliableTrDimensionsVal;
@@ -6446,777 +6446,6 @@
     }
   });
 
-  // app/assets/javascripts/comfy/vendor/flatpickr.min.js
-  var require_flatpickr_min = __commonJS({
-    "app/assets/javascripts/comfy/vendor/flatpickr.min.js"(exports, module) {
-      !function(e, t) {
-        "object" == typeof exports && "undefined" != typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define(t) : e.flatpickr = t();
-      }(exports, function() {
-        "use strict";
-        function e(e2, t2, n2) {
-          return false !== n2 ? new Date(e2.getTime()).setHours(0, 0, 0, 0) - new Date(t2.getTime()).setHours(0, 0, 0, 0) : e2.getTime() - t2.getTime();
-        }
-        function t(e2, t2, n2) {
-          void 0 === n2 && (n2 = false);
-          var a2;
-          return function() {
-            var i2 = this, o2 = arguments;
-            null !== a2 && clearTimeout(a2), a2 = window.setTimeout(function() {
-              a2 = null, n2 || e2.apply(i2, o2);
-            }, t2), n2 && !a2 && e2.apply(i2, o2);
-          };
-        }
-        function n(e2) {
-          return (e2.wheelDelta || -e2.deltaY) >= 0 ? 1 : -1;
-        }
-        function a(e2, t2, n2) {
-          if (true === n2) return e2.classList.add(t2);
-          e2.classList.remove(t2);
-        }
-        function i(e2, t2, n2) {
-          var a2 = window.document.createElement(e2);
-          return t2 = t2 || "", n2 = n2 || "", a2.className = t2, void 0 !== n2 && (a2.textContent = n2), a2;
-        }
-        function o(e2) {
-          for (; e2.firstChild; ) e2.removeChild(e2.firstChild);
-        }
-        function r(e2, t2) {
-          return t2(e2) ? e2 : e2.parentNode ? r(e2.parentNode, t2) : void 0;
-        }
-        function l(e2) {
-          var t2 = i("div", "numInputWrapper"), n2 = i("input", "numInput " + e2), a2 = i("span", "arrowUp"), o2 = i("span", "arrowDown");
-          return n2.type = "text", n2.pattern = "\\d*", t2.appendChild(n2), t2.appendChild(a2), t2.appendChild(o2), t2;
-        }
-        function c(c2, d2) {
-          function m3() {
-            ye.utils = { getDaysInMonth: function(e2, t2) {
-              return void 0 === e2 && (e2 = ye.currentMonth), void 0 === t2 && (t2 = ye.currentYear), 1 === e2 && (t2 % 4 == 0 && t2 % 100 != 0 || t2 % 400 == 0) ? 29 : ye.l10n.daysInMonth[e2];
-            } };
-          }
-          function g2(e2) {
-            return e2.bind(ye);
-          }
-          function D2(e2) {
-            ye.config.noCalendar && !ye.selectedDates.length && (ye.setDate((/* @__PURE__ */ new Date()).setHours(ye.config.defaultHour, ye.config.defaultMinute, ye.config.defaultSeconds), false), E(), Ce()), be(e2), 0 !== ye.selectedDates.length && (!ye.minDateHasTime || "input" !== e2.type || e2.target.value.length >= 2 ? (E(), Ce()) : setTimeout(function() {
-              E(), Ce();
-            }, 1e3));
-          }
-          function y(e2, t2) {
-            return e2 % 12 + 12 * h("PM" === t2);
-          }
-          function x(e2) {
-            switch (e2 % 24) {
-              case 0:
-              case 12:
-                return 12;
-              default:
-                return e2 % 12;
-            }
-          }
-          function E() {
-            if (void 0 !== ye.hourElement && void 0 !== ye.minuteElement) {
-              var t2 = (parseInt(ye.hourElement.value.slice(-2), 10) || 0) % 24, n2 = (parseInt(ye.minuteElement.value, 10) || 0) % 60, a2 = void 0 !== ye.secondElement ? (parseInt(ye.secondElement.value, 10) || 0) % 60 : 0;
-              void 0 !== ye.amPM && (t2 = y(t2, ye.amPM.textContent)), ye.config.minDate && ye.minDateHasTime && ye.latestSelectedDateObj && 0 === e(ye.latestSelectedDateObj, ye.config.minDate) && (t2 = Math.max(t2, ye.config.minDate.getHours())) === ye.config.minDate.getHours() && (n2 = Math.max(n2, ye.config.minDate.getMinutes())), ye.config.maxDate && ye.maxDateHasTime && ye.latestSelectedDateObj && 0 === e(ye.latestSelectedDateObj, ye.config.maxDate) && (t2 = Math.min(t2, ye.config.maxDate.getHours())) === ye.config.maxDate.getHours() && (n2 = Math.min(n2, ye.config.maxDate.getMinutes())), N(t2, n2, a2);
-            }
-          }
-          function k(e2) {
-            var t2 = e2 || ye.latestSelectedDateObj;
-            t2 && N(t2.getHours(), t2.getMinutes(), t2.getSeconds());
-          }
-          function N(e2, t2, n2) {
-            void 0 !== ye.latestSelectedDateObj && ye.latestSelectedDateObj.setHours(e2 % 24, t2, n2 || 0, 0), ye.hourElement && ye.minuteElement && !ye.isMobile && (ye.hourElement.value = p(ye.config.time_24hr ? e2 : (12 + e2) % 12 + 12 * h(e2 % 12 == 0)), ye.minuteElement.value = p(t2), void 0 !== ye.amPM && (ye.amPM.textContent = e2 >= 12 ? "PM" : "AM"), void 0 !== ye.secondElement && (ye.secondElement.value = p(n2)));
-          }
-          function S(e2) {
-            var t2 = parseInt(e2.target.value) + (e2.delta || 0);
-            4 !== t2.toString().length && "Enter" !== e2.key || (ye.currentYearElement.blur(), /[^\d]/.test(t2.toString()) || Z(t2));
-          }
-          function T(e2, t2, n2) {
-            return t2 instanceof Array ? t2.forEach(function(t3) {
-              return T(e2, t3, n2);
-            }) : e2 instanceof Array ? e2.forEach(function(e3) {
-              return T(e3, t2, n2);
-            }) : (e2.addEventListener(t2, n2), void ye._handlers.push({ element: e2, event: t2, handler: n2 }));
-          }
-          function I(e2) {
-            return function(t2) {
-              return 1 === t2.which && e2(t2);
-            };
-          }
-          function Y() {
-            ge("onChange");
-          }
-          function _() {
-            if (ye.config.wrap && ["open", "close", "toggle", "clear"].forEach(function(e3) {
-              Array.prototype.forEach.call(ye.element.querySelectorAll("[data-" + e3 + "]"), function(t2) {
-                return T(t2, "click", ye[e3]);
-              });
-            }), ye.isMobile) me();
-            else {
-              var e2 = t(te, 50);
-              if (ye._debouncedChange = t(Y, 300), "range" === ye.config.mode && ye.daysContainer && T(ye.daysContainer, "mouseover", function(e3) {
-                return ee(e3.target);
-              }), T(window.document.body, "keydown", X), ye.config.static || T(ye._input, "keydown", X), ye.config.inline || ye.config.static || T(window, "resize", e2), void 0 !== window.ontouchstart && T(window.document.body, "touchstart", V), T(window.document.body, "mousedown", I(V)), T(ye._input, "blur", V), true === ye.config.clickOpens && (T(ye._input, "focus", ye.open), T(ye._input, "mousedown", I(ye.open))), void 0 !== ye.daysContainer && (ye.monthNav.addEventListener("wheel", function(e3) {
-                return e3.preventDefault();
-              }), T(ye.monthNav, "wheel", t(we, 10)), T(ye.monthNav, "mousedown", I(Me)), T(ye.monthNav, ["keyup", "increment"], S), T(ye.daysContainer, "mousedown", I(le)), ye.config.animate && (T(ye.daysContainer, ["webkitAnimationEnd", "animationend"], F), T(ye.monthNav, ["webkitAnimationEnd", "animationend"], A))), void 0 !== ye.timeContainer && void 0 !== ye.minuteElement && void 0 !== ye.hourElement) {
-                T(ye.timeContainer, ["wheel", "input", "increment"], D2), T(ye.timeContainer, "mousedown", I(P)), T(ye.timeContainer, ["wheel", "increment"], ye._debouncedChange), T(ye.timeContainer, "input", Y), T([ye.hourElement, ye.minuteElement], ["focus", "click"], function(e3) {
-                  return e3.target.select();
-                }), void 0 !== ye.secondElement && T(ye.secondElement, "focus", function() {
-                  return ye.secondElement && ye.secondElement.select();
-                }), void 0 !== ye.amPM && T(ye.amPM, "mousedown", I(function(e3) {
-                  D2(e3), Y();
-                }));
-              }
-            }
-          }
-          function O() {
-            ye._animationLoop.forEach(function(e2) {
-              return e2();
-            }), ye._animationLoop = [];
-          }
-          function F(e2) {
-            if (ye.daysContainer && ye.daysContainer.childNodes.length > 1) switch (e2.animationName) {
-              case "fpSlideLeft":
-                ye.daysContainer.lastChild && ye.daysContainer.lastChild.classList.remove("slideLeftNew"), ye.daysContainer.removeChild(ye.daysContainer.firstChild), ye.days = ye.daysContainer.firstChild, O();
-                break;
-              case "fpSlideRight":
-                ye.daysContainer.firstChild && ye.daysContainer.firstChild.classList.remove("slideRightNew"), ye.daysContainer.removeChild(ye.daysContainer.lastChild), ye.days = ye.daysContainer.firstChild, O();
-            }
-          }
-          function A(e2) {
-            switch (e2.animationName) {
-              case "fpSlideLeftNew":
-              case "fpSlideRightNew":
-                ye.navigationCurrentMonth.classList.remove("slideLeftNew"), ye.navigationCurrentMonth.classList.remove("slideRightNew");
-                for (var t2 = ye.navigationCurrentMonth; t2.nextSibling && /curr/.test(t2.nextSibling.className); ) ye.monthNav.removeChild(t2.nextSibling);
-                for (; t2.previousSibling && /curr/.test(t2.previousSibling.className); ) ye.monthNav.removeChild(t2.previousSibling);
-                ye.oldCurMonth = void 0;
-            }
-          }
-          function L(e2) {
-            var t2 = void 0 !== e2 ? ue(e2) : ye.latestSelectedDateObj || (ye.config.minDate && ye.config.minDate > ye.now ? ye.config.minDate : ye.config.maxDate && ye.config.maxDate < ye.now ? ye.config.maxDate : ye.now);
-            try {
-              void 0 !== t2 && (ye.currentYear = t2.getFullYear(), ye.currentMonth = t2.getMonth());
-            } catch (e3) {
-              console.error(e3.stack), console.warn("Invalid date supplied: " + t2);
-            }
-            ye.redraw();
-          }
-          function P(e2) {
-            ~e2.target.className.indexOf("arrow") && j(e2, e2.target.classList.contains("arrowUp") ? 1 : -1);
-          }
-          function j(e2, t2, n2) {
-            var a2 = e2 && e2.target, i2 = n2 || a2 && a2.parentNode && a2.parentNode.firstChild, o2 = pe("increment");
-            o2.delta = t2, i2 && i2.dispatchEvent(o2);
-          }
-          function H() {
-            var e2 = window.document.createDocumentFragment();
-            if (ye.calendarContainer = i("div", "flatpickr-calendar"), ye.calendarContainer.tabIndex = -1, !ye.config.noCalendar) {
-              if (e2.appendChild(K()), ye.innerContainer = i("div", "flatpickr-innerContainer"), ye.config.weekNumbers) {
-                var t2 = q(), n2 = t2.weekWrapper, o2 = t2.weekNumbers;
-                ye.innerContainer.appendChild(n2), ye.weekNumbers = o2, ye.weekWrapper = n2;
-              }
-              ye.rContainer = i("div", "flatpickr-rContainer"), ye.rContainer.appendChild($6()), ye.daysContainer || (ye.daysContainer = i("div", "flatpickr-days"), ye.daysContainer.tabIndex = -1), J(), ye.rContainer.appendChild(ye.daysContainer), ye.innerContainer.appendChild(ye.rContainer), e2.appendChild(ye.innerContainer);
-            }
-            ye.config.enableTime && e2.appendChild(U()), a(ye.calendarContainer, "rangeMode", "range" === ye.config.mode), a(ye.calendarContainer, "animate", ye.config.animate), ye.calendarContainer.appendChild(e2);
-            var r2 = void 0 !== ye.config.appendTo && ye.config.appendTo.nodeType;
-            if ((ye.config.inline || ye.config.static) && (ye.calendarContainer.classList.add(ye.config.inline ? "inline" : "static"), ye.config.inline && (!r2 && ye.element.parentNode ? ye.element.parentNode.insertBefore(ye.calendarContainer, ye._input.nextSibling) : void 0 !== ye.config.appendTo && ye.config.appendTo.appendChild(ye.calendarContainer)), ye.config.static)) {
-              var l2 = i("div", "flatpickr-wrapper");
-              ye.element.parentNode && ye.element.parentNode.insertBefore(l2, ye.element), l2.appendChild(ye.element), ye.altInput && l2.appendChild(ye.altInput), l2.appendChild(ye.calendarContainer);
-            }
-            ye.config.static || ye.config.inline || (void 0 !== ye.config.appendTo ? ye.config.appendTo : window.document.body).appendChild(ye.calendarContainer);
-          }
-          function R(t2, n2, o2, r2) {
-            var l2 = Q(n2, true), c3 = i("span", "flatpickr-day " + t2, n2.getDate().toString());
-            return c3.dateObj = n2, c3.$i = r2, c3.setAttribute("aria-label", ye.formatDate(n2, ye.config.ariaDateFormat)), 0 === e(n2, ye.now) && (ye.todayDateElem = c3, c3.classList.add("today")), l2 ? (c3.tabIndex = -1, he(n2) && (c3.classList.add("selected"), ye.selectedDateElem = c3, "range" === ye.config.mode && (a(c3, "startRange", ye.selectedDates[0] && 0 === e(n2, ye.selectedDates[0])), a(c3, "endRange", ye.selectedDates[1] && 0 === e(n2, ye.selectedDates[1]))))) : (c3.classList.add("disabled"), ye.selectedDates[0] && ye.minRangeDate && n2 > ye.minRangeDate && n2 < ye.selectedDates[0] ? ye.minRangeDate = n2 : ye.selectedDates[0] && ye.maxRangeDate && n2 < ye.maxRangeDate && n2 > ye.selectedDates[0] && (ye.maxRangeDate = n2)), "range" === ye.config.mode && (ve(n2) && !he(n2) && c3.classList.add("inRange"), 1 === ye.selectedDates.length && void 0 !== ye.minRangeDate && void 0 !== ye.maxRangeDate && (n2 < ye.minRangeDate || n2 > ye.maxRangeDate) && c3.classList.add("notAllowed")), ye.weekNumbers && "prevMonthDay" !== t2 && o2 % 7 == 1 && ye.weekNumbers.insertAdjacentHTML("beforeend", "<span class='disabled flatpickr-day'>" + ye.config.getWeek(n2) + "</span>"), ge("onDayCreate", c3), c3;
-          }
-          function W(e2, t2) {
-            var n2 = e2 + t2 || 0, a2 = void 0 !== e2 ? ye.days.childNodes[n2] : ye.selectedDateElem || ye.todayDateElem || ye.days.childNodes[0], i2 = function() {
-              (a2 = a2 || ye.days.childNodes[n2]).focus(), "range" === ye.config.mode && ee(a2);
-            };
-            if (void 0 === a2 && 0 !== t2) return t2 > 0 ? (ye.changeMonth(1, true, void 0, true), n2 %= 42) : t2 < 0 && (ye.changeMonth(-1, true, void 0, true), n2 += 42), B(i2);
-            i2();
-          }
-          function B(e2) {
-            true === ye.config.animate ? ye._animationLoop.push(e2) : e2();
-          }
-          function J(e2) {
-            if (void 0 !== ye.daysContainer) {
-              var t2 = (new Date(ye.currentYear, ye.currentMonth, 1).getDay() - ye.l10n.firstDayOfWeek + 7) % 7, n2 = "range" === ye.config.mode, a2 = ye.utils.getDaysInMonth((ye.currentMonth - 1 + 12) % 12), r2 = ye.utils.getDaysInMonth(), l2 = window.document.createDocumentFragment(), c3 = a2 + 1 - t2, d3 = 0;
-              for (ye.weekNumbers && ye.weekNumbers.firstChild && (ye.weekNumbers.textContent = ""), n2 && (ye.minRangeDate = new Date(ye.currentYear, ye.currentMonth - 1, c3), ye.maxRangeDate = new Date(ye.currentYear, ye.currentMonth + 1, (42 - t2) % r2)); c3 <= a2; c3++, d3++) l2.appendChild(R("prevMonthDay", new Date(ye.currentYear, ye.currentMonth - 1, c3), c3, d3));
-              for (c3 = 1; c3 <= r2; c3++, d3++) l2.appendChild(R("", new Date(ye.currentYear, ye.currentMonth, c3), c3, d3));
-              for (var s2 = r2 + 1; s2 <= 42 - t2; s2++, d3++) l2.appendChild(R("nextMonthDay", new Date(ye.currentYear, ye.currentMonth + 1, s2 % r2), s2, d3));
-              n2 && 1 === ye.selectedDates.length && l2.childNodes[0] ? (ye._hidePrevMonthArrow = ye._hidePrevMonthArrow || !!ye.minRangeDate && ye.minRangeDate > l2.childNodes[0].dateObj, ye._hideNextMonthArrow = ye._hideNextMonthArrow || !!ye.maxRangeDate && ye.maxRangeDate < new Date(ye.currentYear, ye.currentMonth + 1, 1)) : De();
-              var u2 = i("div", "dayContainer");
-              if (u2.appendChild(l2), ye.config.animate && void 0 !== e2) for (; ye.daysContainer.childNodes.length > 1; ) ye.daysContainer.removeChild(ye.daysContainer.firstChild);
-              else o(ye.daysContainer);
-              e2 && e2 >= 0 ? ye.daysContainer.appendChild(u2) : ye.daysContainer.insertBefore(u2, ye.daysContainer.firstChild), ye.days = ye.daysContainer.childNodes[0];
-            }
-          }
-          function K() {
-            var e2 = window.document.createDocumentFragment();
-            ye.monthNav = i("div", "flatpickr-month"), ye.prevMonthNav = i("span", "flatpickr-prev-month"), ye.prevMonthNav.innerHTML = ye.config.prevArrow, ye.currentMonthElement = i("span", "cur-month"), ye.currentMonthElement.title = ye.l10n.scrollTitle;
-            var t2 = l("cur-year");
-            return ye.currentYearElement = t2.childNodes[0], ye.currentYearElement.title = ye.l10n.scrollTitle, ye.config.minDate && (ye.currentYearElement.min = ye.config.minDate.getFullYear().toString()), ye.config.maxDate && (ye.currentYearElement.max = ye.config.maxDate.getFullYear().toString(), ye.currentYearElement.disabled = !!ye.config.minDate && ye.config.minDate.getFullYear() === ye.config.maxDate.getFullYear()), ye.nextMonthNav = i("span", "flatpickr-next-month"), ye.nextMonthNav.innerHTML = ye.config.nextArrow, ye.navigationCurrentMonth = i("span", "flatpickr-current-month"), ye.navigationCurrentMonth.appendChild(ye.currentMonthElement), ye.navigationCurrentMonth.appendChild(t2), e2.appendChild(ye.prevMonthNav), e2.appendChild(ye.navigationCurrentMonth), e2.appendChild(ye.nextMonthNav), ye.monthNav.appendChild(e2), Object.defineProperty(ye, "_hidePrevMonthArrow", { get: function() {
-              return ye.__hidePrevMonthArrow;
-            }, set: function(e3) {
-              ye.__hidePrevMonthArrow !== e3 && (ye.prevMonthNav.style.display = e3 ? "none" : "block"), ye.__hidePrevMonthArrow = e3;
-            } }), Object.defineProperty(ye, "_hideNextMonthArrow", { get: function() {
-              return ye.__hideNextMonthArrow;
-            }, set: function(e3) {
-              ye.__hideNextMonthArrow !== e3 && (ye.nextMonthNav.style.display = e3 ? "none" : "block"), ye.__hideNextMonthArrow = e3;
-            } }), De(), ye.monthNav;
-          }
-          function U() {
-            ye.calendarContainer.classList.add("hasTime"), ye.config.noCalendar && ye.calendarContainer.classList.add("noCalendar"), ye.timeContainer = i("div", "flatpickr-time"), ye.timeContainer.tabIndex = -1;
-            var e2 = i("span", "flatpickr-time-separator", ":"), t2 = l("flatpickr-hour");
-            ye.hourElement = t2.childNodes[0];
-            var n2 = l("flatpickr-minute");
-            if (ye.minuteElement = n2.childNodes[0], ye.hourElement.tabIndex = ye.minuteElement.tabIndex = -1, ye.hourElement.value = p(ye.latestSelectedDateObj ? ye.latestSelectedDateObj.getHours() : ye.config.time_24hr ? ye.config.defaultHour : x(ye.config.defaultHour)), ye.minuteElement.value = p(ye.latestSelectedDateObj ? ye.latestSelectedDateObj.getMinutes() : ye.config.defaultMinute), ye.hourElement.step = ye.config.hourIncrement.toString(), ye.minuteElement.step = ye.config.minuteIncrement.toString(), ye.hourElement.min = ye.config.time_24hr ? "0" : "1", ye.hourElement.max = ye.config.time_24hr ? "23" : "12", ye.minuteElement.min = "0", ye.minuteElement.max = "59", ye.hourElement.title = ye.minuteElement.title = ye.l10n.scrollTitle, ye.timeContainer.appendChild(t2), ye.timeContainer.appendChild(e2), ye.timeContainer.appendChild(n2), ye.config.time_24hr && ye.timeContainer.classList.add("time24hr"), ye.config.enableSeconds) {
-              ye.timeContainer.classList.add("hasSeconds");
-              var a2 = l("flatpickr-second");
-              ye.secondElement = a2.childNodes[0], ye.secondElement.value = p(ye.latestSelectedDateObj ? ye.latestSelectedDateObj.getSeconds() : ye.config.defaultSeconds), ye.secondElement.step = ye.minuteElement.step, ye.secondElement.min = ye.minuteElement.min, ye.secondElement.max = ye.minuteElement.max, ye.timeContainer.appendChild(i("span", "flatpickr-time-separator", ":")), ye.timeContainer.appendChild(a2);
-            }
-            return ye.config.time_24hr || (ye.amPM = i("span", "flatpickr-am-pm", ye.l10n.amPM[h((ye.latestSelectedDateObj ? ye.hourElement.value : ye.config.defaultHour) > 11)]), ye.amPM.title = ye.l10n.toggleTitle, ye.amPM.tabIndex = -1, ye.timeContainer.appendChild(ye.amPM)), ye.timeContainer;
-          }
-          function $6() {
-            ye.weekdayContainer || (ye.weekdayContainer = i("div", "flatpickr-weekdays"));
-            var e2 = ye.l10n.firstDayOfWeek, t2 = ye.l10n.weekdays.shorthand.slice();
-            return e2 > 0 && e2 < t2.length && (t2 = t2.splice(e2, t2.length).concat(t2.splice(0, e2))), ye.weekdayContainer.innerHTML = "\n    <span class=flatpickr-weekday>\n      " + t2.join("</span><span class=flatpickr-weekday>") + "\n    </span>\n    ", ye.weekdayContainer;
-          }
-          function q() {
-            ye.calendarContainer.classList.add("hasWeeks");
-            var e2 = i("div", "flatpickr-weekwrapper");
-            e2.appendChild(i("span", "flatpickr-weekday", ye.l10n.weekAbbreviation));
-            var t2 = i("div", "flatpickr-weeks");
-            return e2.appendChild(t2), { weekWrapper: e2, weekNumbers: t2 };
-          }
-          function z(e2, t2, n2, a2) {
-            void 0 === t2 && (t2 = true), void 0 === n2 && (n2 = ye.config.animate), void 0 === a2 && (a2 = false);
-            var i2 = t2 ? e2 : e2 - ye.currentMonth;
-            if (!(i2 < 0 && ye._hidePrevMonthArrow || i2 > 0 && ye._hideNextMonthArrow)) {
-              if (ye.currentMonth += i2, (ye.currentMonth < 0 || ye.currentMonth > 11) && (ye.currentYear += ye.currentMonth > 11 ? 1 : -1, ye.currentMonth = (ye.currentMonth + 12) % 12, ge("onYearChange")), J(n2 ? i2 : void 0), !n2) return ge("onMonthChange"), De();
-              var o2 = ye.navigationCurrentMonth;
-              if (i2 < 0) for (; o2.nextSibling && /curr/.test(o2.nextSibling.className); ) ye.monthNav.removeChild(o2.nextSibling);
-              else if (i2 > 0) for (; o2.previousSibling && /curr/.test(o2.previousSibling.className); ) ye.monthNav.removeChild(o2.previousSibling);
-              ye.oldCurMonth = ye.navigationCurrentMonth, ye.navigationCurrentMonth = ye.monthNav.insertBefore(ye.oldCurMonth.cloneNode(true), i2 > 0 ? ye.oldCurMonth.nextSibling : ye.oldCurMonth);
-              var r2 = ye.daysContainer;
-              if (r2.firstChild && r2.lastChild && (i2 > 0 ? (r2.firstChild.classList.add("slideLeft"), r2.lastChild.classList.add("slideLeftNew"), ye.oldCurMonth.classList.add("slideLeft"), ye.navigationCurrentMonth.classList.add("slideLeftNew")) : i2 < 0 && (r2.firstChild.classList.add("slideRightNew"), r2.lastChild.classList.add("slideRight"), ye.oldCurMonth.classList.add("slideRight"), ye.navigationCurrentMonth.classList.add("slideRightNew"))), ye.currentMonthElement = ye.navigationCurrentMonth.firstChild, ye.currentYearElement = ye.navigationCurrentMonth.lastChild.childNodes[0], De(), ye.oldCurMonth.firstChild && (ye.oldCurMonth.firstChild.textContent = u(ye.currentMonth - i2, ye.config.shorthandCurrentMonth, ye.l10n)), ge("onMonthChange"), a2 && document.activeElement && document.activeElement.$i) {
-                var l2 = document.activeElement.$i;
-                B(function() {
-                  W(l2, 0);
-                });
-              }
-            }
-          }
-          function G(e2) {
-            return !(!ye.config.appendTo || !ye.config.appendTo.contains(e2)) || ye.calendarContainer.contains(e2);
-          }
-          function V(e2) {
-            if (ye.isOpen && !ye.config.inline) {
-              var t2 = G(e2.target), n2 = e2.target === ye.input || e2.target === ye.altInput || ye.element.contains(e2.target) || e2.path && e2.path.indexOf && (~e2.path.indexOf(ye.input) || ~e2.path.indexOf(ye.altInput));
-              ("blur" === e2.type ? n2 && e2.relatedTarget && !G(e2.relatedTarget) : !n2 && !t2) && -1 === ye.config.ignoredFocusElements.indexOf(e2.target) && (ye.close(), "range" === ye.config.mode && 1 === ye.selectedDates.length && (ye.clear(false), ye.redraw()));
-            }
-          }
-          function Z(e2) {
-            if (!(!e2 || ye.currentYearElement.min && e2 < parseInt(ye.currentYearElement.min) || ye.currentYearElement.max && e2 > parseInt(ye.currentYearElement.max))) {
-              var t2 = e2, n2 = ye.currentYear !== t2;
-              ye.currentYear = t2 || ye.currentYear, ye.config.maxDate && ye.currentYear === ye.config.maxDate.getFullYear() ? ye.currentMonth = Math.min(ye.config.maxDate.getMonth(), ye.currentMonth) : ye.config.minDate && ye.currentYear === ye.config.minDate.getFullYear() && (ye.currentMonth = Math.max(ye.config.minDate.getMonth(), ye.currentMonth)), n2 && (ye.redraw(), ge("onYearChange"));
-            }
-          }
-          function Q(t2, n2) {
-            void 0 === n2 && (n2 = true);
-            var a2 = ye.parseDate(t2, void 0, n2);
-            if (ye.config.minDate && a2 && e(a2, ye.config.minDate, void 0 !== n2 ? n2 : !ye.minDateHasTime) < 0 || ye.config.maxDate && a2 && e(a2, ye.config.maxDate, void 0 !== n2 ? n2 : !ye.maxDateHasTime) > 0) return false;
-            if (!ye.config.enable.length && !ye.config.disable.length) return true;
-            if (void 0 === a2) return false;
-            for (var i2 = ye.config.enable.length > 0, o2 = i2 ? ye.config.enable : ye.config.disable, r2 = 0, l2 = void 0; r2 < o2.length; r2++) {
-              if ("function" == typeof (l2 = o2[r2]) && l2(a2)) return i2;
-              if (l2 instanceof Date && void 0 !== a2 && l2.getTime() === a2.getTime()) return i2;
-              if ("string" == typeof l2 && void 0 !== a2) {
-                var c3 = ye.parseDate(l2, void 0, true);
-                return c3 && c3.getTime() === a2.getTime() ? i2 : !i2;
-              }
-              if ("object" == typeof l2 && void 0 !== a2 && l2.from && l2.to && a2.getTime() >= l2.from.getTime() && a2.getTime() <= l2.to.getTime()) return i2;
-            }
-            return !i2;
-          }
-          function X(e2) {
-            var t2 = e2.target === ye._input, n2 = G(e2.target), a2 = ye.config.allowInput, i2 = ye.isOpen && (!a2 || !t2), o2 = ye.config.inline && t2 && !a2;
-            if ("Enter" === e2.key && t2) {
-              if (a2) return ye.setDate(ye._input.value, true, e2.target === ye.altInput ? ye.config.altFormat : ye.config.dateFormat), e2.target.blur();
-              ye.open();
-            } else if (n2 || i2 || o2) {
-              var r2 = !!ye.timeContainer && ye.timeContainer.contains(e2.target);
-              switch (e2.key) {
-                case "Enter":
-                  r2 ? Ce() : le(e2);
-                  break;
-                case "Escape":
-                  e2.preventDefault(), ye.close();
-                  break;
-                case "Backspace":
-                case "Delete":
-                  t2 && !ye.config.allowInput && ye.clear();
-                  break;
-                case "ArrowLeft":
-                case "ArrowRight":
-                  if (r2) ye.hourElement && ye.hourElement.focus();
-                  else if (e2.preventDefault(), ye.daysContainer) {
-                    var l2 = "ArrowRight" === e2.key ? 1 : -1;
-                    e2.ctrlKey ? z(l2, true, void 0, true) : W(e2.target.$i, l2);
-                  }
-                  break;
-                case "ArrowUp":
-                case "ArrowDown":
-                  e2.preventDefault();
-                  var c3 = "ArrowDown" === e2.key ? 1 : -1;
-                  ye.daysContainer && void 0 !== e2.target.$i ? e2.ctrlKey ? (Z(ye.currentYear - c3), W(e2.target.$i, 0)) : r2 || W(e2.target.$i, 7 * c3) : ye.config.enableTime && (!r2 && ye.hourElement && ye.hourElement.focus(), D2(e2), ye._debouncedChange());
-                  break;
-                case "Tab":
-                  e2.target === ye.hourElement ? (e2.preventDefault(), ye.minuteElement.select()) : e2.target === ye.minuteElement && (ye.secondElement || ye.amPM) ? (e2.preventDefault(), void 0 !== ye.secondElement ? ye.secondElement.focus() : void 0 !== ye.amPM && ye.amPM.focus()) : e2.target === ye.secondElement && ye.amPM && (e2.preventDefault(), ye.amPM.focus());
-                  break;
-                case "a":
-                  void 0 !== ye.amPM && e2.target === ye.amPM && (ye.amPM.textContent = "AM", E(), Ce());
-                  break;
-                case "p":
-                  void 0 !== ye.amPM && e2.target === ye.amPM && (ye.amPM.textContent = "PM", E(), Ce());
-              }
-              ge("onKeyDown", e2);
-            }
-          }
-          function ee(e2) {
-            if (1 === ye.selectedDates.length && e2.classList.contains("flatpickr-day") && void 0 !== ye.minRangeDate && void 0 !== ye.maxRangeDate) {
-              for (var t2 = e2.dateObj, n2 = ye.parseDate(ye.selectedDates[0], void 0, true), a2 = Math.min(t2.getTime(), ye.selectedDates[0].getTime()), i2 = Math.max(t2.getTime(), ye.selectedDates[0].getTime()), o2 = false, r2 = a2; r2 < i2; r2 += f.DAY) if (!Q(new Date(r2))) {
-                o2 = true;
-                break;
-              }
-              for (var l2 = ye.days.childNodes[0].dateObj.getTime(), c3 = 0; c3 < 42; c3++, l2 += f.DAY) !function(r3, l3) {
-                var c4 = r3 < ye.minRangeDate.getTime() || r3 > ye.maxRangeDate.getTime(), d3 = ye.days.childNodes[l3];
-                if (c4) return d3.classList.add("notAllowed"), ["inRange", "startRange", "endRange"].forEach(function(e3) {
-                  d3.classList.remove(e3);
-                }), "continue";
-                if (o2 && !c4) return "continue";
-                ["startRange", "inRange", "endRange", "notAllowed"].forEach(function(e3) {
-                  d3.classList.remove(e3);
-                });
-                var s2 = Math.max(ye.minRangeDate.getTime(), a2), u2 = Math.min(ye.maxRangeDate.getTime(), i2);
-                e2.classList.add(t2 < ye.selectedDates[0] ? "startRange" : "endRange"), n2 < t2 && r3 === n2.getTime() ? d3.classList.add("startRange") : n2 > t2 && r3 === n2.getTime() && d3.classList.add("endRange"), r3 >= s2 && r3 <= u2 && d3.classList.add("inRange");
-              }(l2, c3);
-            }
-          }
-          function te() {
-            !ye.isOpen || ye.config.static || ye.config.inline || oe();
-          }
-          function ne(e2) {
-            return function(t2) {
-              var n2 = ye.config["_" + e2 + "Date"] = ye.parseDate(t2), a2 = ye.config["_" + ("min" === e2 ? "max" : "min") + "Date"];
-              void 0 !== n2 && (ye["min" === e2 ? "minDateHasTime" : "maxDateHasTime"] = n2.getHours() > 0 || n2.getMinutes() > 0 || n2.getSeconds() > 0), ye.selectedDates && (ye.selectedDates = ye.selectedDates.filter(function(e3) {
-                return Q(e3);
-              }), ye.selectedDates.length || "min" !== e2 || k(n2), Ce()), ye.daysContainer && (re(), void 0 !== n2 ? ye.currentYearElement[e2] = n2.getFullYear().toString() : ye.currentYearElement.removeAttribute(e2), ye.currentYearElement.disabled = !!a2 && void 0 !== n2 && a2.getFullYear() === n2.getFullYear());
-            };
-          }
-          function ae() {
-            var e2 = ["wrap", "weekNumbers", "allowInput", "clickOpens", "time_24hr", "enableTime", "noCalendar", "altInput", "shorthandCurrentMonth", "inline", "static", "enableSeconds", "disableMobile"], t2 = ["onChange", "onClose", "onDayCreate", "onDestroy", "onKeyDown", "onMonthChange", "onOpen", "onParseConfig", "onReady", "onValueUpdate", "onYearChange"];
-            ye.config = s({}, b.defaultConfig);
-            var n2 = s({}, d2, JSON.parse(JSON.stringify(c2.dataset || {}))), a2 = {};
-            Object.defineProperty(ye.config, "enable", { get: function() {
-              return ye.config._enable || [];
-            }, set: function(e3) {
-              ye.config._enable = de(e3);
-            } }), Object.defineProperty(ye.config, "disable", { get: function() {
-              return ye.config._disable || [];
-            }, set: function(e3) {
-              ye.config._disable = de(e3);
-            } }), !n2.dateFormat && n2.enableTime && (a2.dateFormat = n2.noCalendar ? "H:i" + (n2.enableSeconds ? ":S" : "") : b.defaultConfig.dateFormat + " H:i" + (n2.enableSeconds ? ":S" : "")), n2.altInput && n2.enableTime && !n2.altFormat && (a2.altFormat = n2.noCalendar ? "h:i" + (n2.enableSeconds ? ":S K" : " K") : b.defaultConfig.altFormat + " h:i" + (n2.enableSeconds ? ":S" : "") + " K"), Object.defineProperty(ye.config, "minDate", { get: function() {
-              return ye.config._minDate;
-            }, set: ne("min") }), Object.defineProperty(ye.config, "maxDate", { get: function() {
-              return ye.config._maxDate;
-            }, set: ne("max") }), Object.assign(ye.config, a2, n2);
-            for (i2 = 0; i2 < e2.length; i2++) ye.config[e2[i2]] = true === ye.config[e2[i2]] || "true" === ye.config[e2[i2]];
-            for (i2 = t2.length; i2--; ) void 0 !== ye.config[t2[i2]] && (ye.config[t2[i2]] = v(ye.config[t2[i2]] || []).map(g2));
-            for (var i2 = 0; i2 < ye.config.plugins.length; i2++) {
-              var o2 = ye.config.plugins[i2](ye) || {};
-              for (var r2 in o2) ~t2.indexOf(r2) ? ye.config[r2] = v(o2[r2]).map(g2).concat(ye.config[r2]) : void 0 === n2[r2] && (ye.config[r2] = o2[r2]);
-            }
-            ye.isMobile = !ye.config.disableMobile && !ye.config.inline && "single" === ye.config.mode && !ye.config.disable.length && !ye.config.enable.length && !ye.config.weekNumbers && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), ge("onParseConfig");
-          }
-          function ie3() {
-            "object" != typeof ye.config.locale && void 0 === b.l10ns[ye.config.locale] && console.warn("flatpickr: invalid locale " + ye.config.locale), ye.l10n = s({}, b.l10ns.default, "object" == typeof ye.config.locale ? ye.config.locale : "default" !== ye.config.locale ? b.l10ns[ye.config.locale] : void 0);
-          }
-          function oe(e2) {
-            if (void 0 === e2 && (e2 = ye._positionElement), void 0 !== ye.calendarContainer) {
-              var t2 = ye.calendarContainer.offsetHeight, n2 = ye.calendarContainer.offsetWidth, i2 = ye.config.position, o2 = e2.getBoundingClientRect(), r2 = window.innerHeight - o2.bottom, l2 = "above" === i2 || "below" !== i2 && r2 < t2 && o2.top > t2, c3 = window.pageYOffset + o2.top + (l2 ? -t2 - 2 : e2.offsetHeight + 2);
-              if (a(ye.calendarContainer, "arrowTop", !l2), a(ye.calendarContainer, "arrowBottom", l2), !ye.config.inline) {
-                var d3 = window.pageXOffset + o2.left, s2 = window.document.body.offsetWidth - o2.right, u2 = d3 + n2 > window.document.body.offsetWidth;
-                a(ye.calendarContainer, "rightMost", u2), ye.config.static || (ye.calendarContainer.style.top = c3 + "px", u2 ? (ye.calendarContainer.style.left = "auto", ye.calendarContainer.style.right = s2 + "px") : (ye.calendarContainer.style.left = d3 + "px", ye.calendarContainer.style.right = "auto"));
-              }
-            }
-          }
-          function re() {
-            ye.config.noCalendar || ye.isMobile || ($6(), De(), J());
-          }
-          function le(t2) {
-            t2.preventDefault(), t2.stopPropagation();
-            var n2 = r(t2.target, function(e2) {
-              return e2.classList && e2.classList.contains("flatpickr-day") && !e2.classList.contains("disabled") && !e2.classList.contains("notAllowed");
-            });
-            if (void 0 !== n2) {
-              var a2 = n2, i2 = ye.latestSelectedDateObj = new Date(a2.dateObj.getTime()), o2 = i2.getMonth() !== ye.currentMonth && "range" !== ye.config.mode;
-              if (ye.selectedDateElem = a2, "single" === ye.config.mode) ye.selectedDates = [i2];
-              else if ("multiple" === ye.config.mode) {
-                var l2 = he(i2);
-                l2 ? ye.selectedDates.splice(parseInt(l2), 1) : ye.selectedDates.push(i2);
-              } else "range" === ye.config.mode && (2 === ye.selectedDates.length && ye.clear(), ye.selectedDates.push(i2), 0 !== e(i2, ye.selectedDates[0], true) && ye.selectedDates.sort(function(e2, t3) {
-                return e2.getTime() - t3.getTime();
-              }));
-              if (E(), o2) {
-                var c3 = ye.currentYear !== i2.getFullYear();
-                ye.currentYear = i2.getFullYear(), ye.currentMonth = i2.getMonth(), c3 && ge("onYearChange"), ge("onMonthChange");
-              }
-              if (J(), ye.config.minDate && ye.minDateHasTime && ye.config.enableTime && 0 === e(i2, ye.config.minDate) && k(ye.config.minDate), Ce(), ye.config.enableTime && setTimeout(function() {
-                return ye.showTimeInput = true;
-              }, 50), "range" === ye.config.mode && (1 === ye.selectedDates.length ? (ee(a2), ye._hidePrevMonthArrow = ye._hidePrevMonthArrow || void 0 !== ye.minRangeDate && ye.minRangeDate > ye.days.childNodes[0].dateObj, ye._hideNextMonthArrow = ye._hideNextMonthArrow || void 0 !== ye.maxRangeDate && ye.maxRangeDate < new Date(ye.currentYear, ye.currentMonth + 1, 1)) : De()), ge("onChange"), o2 ? B(function() {
-                return ye.selectedDateElem && ye.selectedDateElem.focus();
-              }) : W(a2.$i, 0), void 0 !== ye.hourElement && setTimeout(function() {
-                return void 0 !== ye.hourElement && ye.hourElement.select();
-              }, 451), ye.config.closeOnSelect) {
-                var d3 = "single" === ye.config.mode && !ye.config.enableTime, s2 = "range" === ye.config.mode && 2 === ye.selectedDates.length && !ye.config.enableTime;
-                (d3 || s2) && ye.close();
-              }
-            }
-          }
-          function ce(e2, t2) {
-            var n2 = [];
-            if (e2 instanceof Array) n2 = e2.map(function(e3) {
-              return ye.parseDate(e3, t2);
-            });
-            else if (e2 instanceof Date || "number" == typeof e2) n2 = [ye.parseDate(e2, t2)];
-            else if ("string" == typeof e2) switch (ye.config.mode) {
-              case "single":
-                n2 = [ye.parseDate(e2, t2)];
-                break;
-              case "multiple":
-                n2 = e2.split("; ").map(function(e3) {
-                  return ye.parseDate(e3, t2);
-                });
-                break;
-              case "range":
-                n2 = e2.split(ye.l10n.rangeSeparator).map(function(e3) {
-                  return ye.parseDate(e3, t2);
-                });
-            }
-            ye.selectedDates = n2.filter(function(e3) {
-              return e3 instanceof Date && Q(e3, false);
-            }), ye.selectedDates.sort(function(e3, t3) {
-              return e3.getTime() - t3.getTime();
-            });
-          }
-          function de(e2) {
-            return e2.map(function(e3) {
-              return "string" == typeof e3 || "number" == typeof e3 || e3 instanceof Date ? ye.parseDate(e3, void 0, true) : e3 && "object" == typeof e3 && e3.from && e3.to ? { from: ye.parseDate(e3.from, void 0), to: ye.parseDate(e3.to, void 0) } : e3;
-            }).filter(function(e3) {
-              return e3;
-            });
-          }
-          function se() {
-            ye.selectedDates = [], ye.now = /* @__PURE__ */ new Date();
-            var e2 = ye.config.defaultDate || ye.input.value;
-            e2 && ce(e2, ye.config.dateFormat);
-            var t2 = ye.selectedDates.length ? ye.selectedDates[0] : ye.config.minDate && ye.config.minDate.getTime() > ye.now.getTime() ? ye.config.minDate : ye.config.maxDate && ye.config.maxDate.getTime() < ye.now.getTime() ? ye.config.maxDate : ye.now;
-            ye.currentYear = t2.getFullYear(), ye.currentMonth = t2.getMonth(), ye.selectedDates.length && (ye.latestSelectedDateObj = ye.selectedDates[0]), ye.minDateHasTime = !!ye.config.minDate && (ye.config.minDate.getHours() > 0 || ye.config.minDate.getMinutes() > 0 || ye.config.minDate.getSeconds() > 0), ye.maxDateHasTime = !!ye.config.maxDate && (ye.config.maxDate.getHours() > 0 || ye.config.maxDate.getMinutes() > 0 || ye.config.maxDate.getSeconds() > 0), Object.defineProperty(ye, "showTimeInput", { get: function() {
-              return ye._showTimeInput;
-            }, set: function(e3) {
-              ye._showTimeInput = e3, ye.calendarContainer && a(ye.calendarContainer, "showTimeInput", e3), oe();
-            } });
-          }
-          function ue(e2, t2, n2) {
-            if (0 === e2 || e2) {
-              var a2, i2 = e2;
-              if (e2 instanceof Date) a2 = new Date(e2.getTime());
-              else if ("string" != typeof e2 && void 0 !== e2.toFixed) a2 = new Date(e2);
-              else if ("string" == typeof e2) {
-                var o2 = t2 || (ye.config || b.defaultConfig).dateFormat, r2 = String(e2).trim();
-                if ("today" === r2) a2 = /* @__PURE__ */ new Date(), n2 = true;
-                else if (/Z$/.test(r2) || /GMT$/.test(r2)) a2 = new Date(e2);
-                else if (ye.config && ye.config.parseDate) a2 = ye.config.parseDate(e2, o2);
-                else {
-                  a2 = ye.config && ye.config.noCalendar ? new Date((/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0)) : new Date((/* @__PURE__ */ new Date()).getFullYear(), 0, 1, 0, 0, 0, 0);
-                  for (var l2 = void 0, c3 = [], d3 = 0, s2 = 0, u2 = ""; d3 < o2.length; d3++) {
-                    var f2 = o2[d3], m4 = "\\" === f2, g3 = "\\" === o2[d3 - 1] || m4;
-                    if (w[f2] && !g3) {
-                      u2 += w[f2];
-                      var p2 = new RegExp(u2).exec(e2);
-                      p2 && (l2 = true) && c3["Y" !== f2 ? "push" : "unshift"]({ fn: C2[f2], val: p2[++s2] });
-                    } else m4 || (u2 += ".");
-                    c3.forEach(function(e3) {
-                      var t3 = e3.fn, n3 = e3.val;
-                      return a2 = t3(a2, n3, ye.l10n) || a2;
-                    });
-                  }
-                  a2 = l2 ? a2 : void 0;
-                }
-              }
-              return a2 instanceof Date ? (true === n2 && a2.setHours(0, 0, 0, 0), a2) : (console.warn("flatpickr: invalid date " + i2), void console.info(ye.element));
-            }
-          }
-          function fe() {
-            ye.input = ye.config.wrap ? c2.querySelector("[data-input]") : c2, ye.input ? (ye.input._type = ye.input.type, ye.input.type = "text", ye.input.classList.add("flatpickr-input"), ye._input = ye.input, ye.config.altInput && (ye.altInput = i(ye.input.nodeName, ye.input.className + " " + ye.config.altInputClass), ye._input = ye.altInput, ye.altInput.placeholder = ye.input.placeholder, ye.altInput.disabled = ye.input.disabled, ye.altInput.required = ye.input.required, ye.altInput.type = "text", ye.input.type = "hidden", !ye.config.static && ye.input.parentNode && ye.input.parentNode.insertBefore(ye.altInput, ye.input.nextSibling)), ye.config.allowInput || ye._input.setAttribute("readonly", "readonly"), ye._positionElement = ye.config.positionElement || ye._input) : console.warn("Error: invalid input element specified", ye.input);
-          }
-          function me() {
-            var e2 = ye.config.enableTime ? ye.config.noCalendar ? "time" : "datetime-local" : "date";
-            ye.mobileInput = i("input", ye.input.className + " flatpickr-mobile"), ye.mobileInput.step = ye.input.getAttribute("step") || "any", ye.mobileInput.tabIndex = 1, ye.mobileInput.type = e2, ye.mobileInput.disabled = ye.input.disabled, ye.mobileInput.placeholder = ye.input.placeholder, ye.mobileFormatStr = "datetime-local" === e2 ? "Y-m-d\\TH:i:S" : "date" === e2 ? "Y-m-d" : "H:i:S", ye.selectedDates.length && (ye.mobileInput.defaultValue = ye.mobileInput.value = ye.formatDate(ye.selectedDates[0], ye.mobileFormatStr)), ye.config.minDate && (ye.mobileInput.min = ye.formatDate(ye.config.minDate, "Y-m-d")), ye.config.maxDate && (ye.mobileInput.max = ye.formatDate(ye.config.maxDate, "Y-m-d")), ye.input.type = "hidden", void 0 !== ye.altInput && (ye.altInput.type = "hidden");
-            try {
-              ye.input.parentNode && ye.input.parentNode.insertBefore(ye.mobileInput, ye.input.nextSibling);
-            } catch (e3) {
-            }
-            ye.mobileInput.addEventListener("change", function(e3) {
-              ye.setDate(e3.target.value, false, ye.mobileFormatStr), ge("onChange"), ge("onClose");
-            });
-          }
-          function ge(e2, t2) {
-            var n2 = ye.config[e2];
-            if (void 0 !== n2 && n2.length > 0) for (var a2 = 0; n2[a2] && a2 < n2.length; a2++) n2[a2](ye.selectedDates, ye.input.value, ye, t2);
-            "onChange" === e2 && (ye.input.dispatchEvent(pe("change")), ye.input.dispatchEvent(pe("input")));
-          }
-          function pe(e2) {
-            var t2 = document.createEvent("Event");
-            return t2.initEvent(e2, true, true), t2;
-          }
-          function he(t2) {
-            for (var n2 = 0; n2 < ye.selectedDates.length; n2++) if (0 === e(ye.selectedDates[n2], t2)) return "" + n2;
-            return false;
-          }
-          function ve(t2) {
-            return !("range" !== ye.config.mode || ye.selectedDates.length < 2) && (e(t2, ye.selectedDates[0]) >= 0 && e(t2, ye.selectedDates[1]) <= 0);
-          }
-          function De() {
-            ye.config.noCalendar || ye.isMobile || !ye.monthNav || (ye.currentMonthElement.textContent = u(ye.currentMonth, ye.config.shorthandCurrentMonth, ye.l10n) + " ", ye.currentYearElement.value = ye.currentYear.toString(), ye._hidePrevMonthArrow = void 0 !== ye.config.minDate && (ye.currentYear === ye.config.minDate.getFullYear() ? ye.currentMonth <= ye.config.minDate.getMonth() : ye.currentYear < ye.config.minDate.getFullYear()), ye._hideNextMonthArrow = void 0 !== ye.config.maxDate && (ye.currentYear === ye.config.maxDate.getFullYear() ? ye.currentMonth + 1 > ye.config.maxDate.getMonth() : ye.currentYear > ye.config.maxDate.getFullYear()));
-          }
-          function Ce(e2) {
-            if (void 0 === e2 && (e2 = true), !ye.selectedDates.length) return ye.clear(e2);
-            void 0 !== ye.mobileInput && ye.mobileFormatStr && (ye.mobileInput.value = void 0 !== ye.latestSelectedDateObj ? ye.formatDate(ye.latestSelectedDateObj, ye.mobileFormatStr) : "");
-            var t2 = "range" !== ye.config.mode ? ye.config.conjunction : ye.l10n.rangeSeparator;
-            ye.input.value = ye.selectedDates.map(function(e3) {
-              return ye.formatDate(e3, ye.config.dateFormat);
-            }).join(t2), void 0 !== ye.altInput && (ye.altInput.value = ye.selectedDates.map(function(e3) {
-              return ye.formatDate(e3, ye.config.altFormat);
-            }).join(t2)), false !== e2 && ge("onValueUpdate");
-          }
-          function we(e2) {
-            e2.preventDefault();
-            var t2 = ye.currentYearElement.parentNode && ye.currentYearElement.parentNode.contains(e2.target);
-            if (e2.target === ye.currentMonthElement || t2) {
-              var a2 = n(e2);
-              t2 ? (Z(ye.currentYear + a2), e2.target.value = ye.currentYear.toString()) : ye.changeMonth(a2, true, false);
-            }
-          }
-          function Me(e2) {
-            var t2 = ye.prevMonthNav.contains(e2.target), n2 = ye.nextMonthNav.contains(e2.target);
-            t2 || n2 ? z(t2 ? -1 : 1) : e2.target === ye.currentYearElement ? (e2.preventDefault(), ye.currentYearElement.select()) : "arrowUp" === e2.target.className ? ye.changeYear(ye.currentYear + 1) : "arrowDown" === e2.target.className && ye.changeYear(ye.currentYear - 1);
-          }
-          function be(e2) {
-            e2.preventDefault();
-            var t2 = "keydown" === e2.type, n2 = e2.target;
-            void 0 !== ye.amPM && e2.target === ye.amPM && (ye.amPM.textContent = ye.l10n.amPM["AM" === ye.amPM.textContent ? 1 : 0]);
-            var a2 = Number(n2.min), i2 = Number(n2.max), o2 = Number(n2.step), r2 = parseInt(n2.value, 10), l2 = r2 + o2 * (e2.delta || (t2 ? 38 === e2.which ? 1 : -1 : Math.max(-1, Math.min(1, e2.wheelDelta || -e2.deltaY)) || 0));
-            if (void 0 !== n2.value && 2 === n2.value.length) {
-              var c3 = n2 === ye.hourElement, d3 = n2 === ye.minuteElement;
-              l2 < a2 ? (l2 = i2 + l2 + h(!c3) + (h(c3) && h(!ye.amPM)), d3 && j(void 0, -1, ye.hourElement)) : l2 > i2 && (l2 = n2 === ye.hourElement ? l2 - i2 - h(!ye.amPM) : a2, d3 && j(void 0, 1, ye.hourElement)), ye.amPM && c3 && (1 === o2 ? l2 + r2 === 23 : Math.abs(l2 - r2) > o2) && (ye.amPM.textContent = "PM" === ye.amPM.textContent ? "AM" : "PM"), n2.value = p(l2);
-            }
-          }
-          var ye = {};
-          return ye.parseDate = ue, ye.formatDate = function(e2, t2) {
-            return void 0 !== ye.config && void 0 !== ye.config.formatDate ? ye.config.formatDate(e2, t2) : t2.split("").map(function(t3, n2, a2) {
-              return M[t3] && "\\" !== a2[n2 - 1] ? M[t3](e2, ye.l10n, ye.config) : "\\" !== t3 ? t3 : "";
-            }).join("");
-          }, ye._animationLoop = [], ye._handlers = [], ye._bind = T, ye._setHoursFromDate = k, ye.changeMonth = z, ye.changeYear = Z, ye.clear = function(e2) {
-            void 0 === e2 && (e2 = true), ye.input.value = "", ye.altInput && (ye.altInput.value = ""), ye.mobileInput && (ye.mobileInput.value = ""), ye.selectedDates = [], ye.latestSelectedDateObj = void 0, ye.showTimeInput = false, ye.redraw(), e2 && ge("onChange");
-          }, ye.close = function() {
-            ye.isOpen = false, ye.isMobile || (ye.calendarContainer.classList.remove("open"), ye._input.classList.remove("active")), ge("onClose");
-          }, ye._createElement = i, ye.destroy = function() {
-            void 0 !== ye.config && ge("onDestroy");
-            for (var e2 = ye._handlers.length; e2--; ) {
-              var t2 = ye._handlers[e2];
-              t2.element.removeEventListener(t2.event, t2.handler);
-            }
-            ye._handlers = [], ye.mobileInput ? (ye.mobileInput.parentNode && ye.mobileInput.parentNode.removeChild(ye.mobileInput), ye.mobileInput = void 0) : ye.calendarContainer && ye.calendarContainer.parentNode && ye.calendarContainer.parentNode.removeChild(ye.calendarContainer), ye.altInput && (ye.input.type = "text", ye.altInput.parentNode && ye.altInput.parentNode.removeChild(ye.altInput), delete ye.altInput), ye.input && (ye.input.type = ye.input._type, ye.input.classList.remove("flatpickr-input"), ye.input.removeAttribute("readonly"), ye.input.value = ""), ["_showTimeInput", "latestSelectedDateObj", "_hideNextMonthArrow", "_hidePrevMonthArrow", "__hideNextMonthArrow", "__hidePrevMonthArrow", "isMobile", "isOpen", "selectedDateElem", "minDateHasTime", "maxDateHasTime", "days", "daysContainer", "_input", "_positionElement", "innerContainer", "rContainer", "monthNav", "todayDateElem", "calendarContainer", "weekdayContainer", "prevMonthNav", "nextMonthNav", "currentMonthElement", "currentYearElement", "navigationCurrentMonth", "selectedDateElem", "config"].forEach(function(e3) {
-              try {
-                delete ye[e3];
-              } catch (e4) {
-              }
-            });
-          }, ye.isEnabled = Q, ye.jumpToDate = L, ye.open = function(e2, t2) {
-            if (void 0 === t2 && (t2 = ye._input), ye.isMobile) return e2 && (e2.preventDefault(), e2.target && e2.target.blur()), setTimeout(function() {
-              void 0 !== ye.mobileInput && ye.mobileInput.click();
-            }, 0), void ge("onOpen");
-            ye._input.disabled || ye.config.inline || (ye.isOpen = true, ye.calendarContainer.classList.add("open"), oe(t2), ye._input.classList.add("active"), ge("onOpen"));
-          }, ye.redraw = re, ye.set = function(e2, t2) {
-            null !== e2 && "object" == typeof e2 ? Object.assign(ye.config, e2) : ye.config[e2] = t2, ye.redraw(), L();
-          }, ye.setDate = function(e2, t2, n2) {
-            if (void 0 === t2 && (t2 = false), void 0 === n2 && (n2 = void 0), 0 !== e2 && !e2) return ye.clear(t2);
-            ce(e2, n2), ye.showTimeInput = ye.selectedDates.length > 0, ye.latestSelectedDateObj = ye.selectedDates[0], ye.redraw(), L(), k(), Ce(t2), t2 && ge("onChange");
-          }, ye.toggle = function() {
-            if (ye.isOpen) return ye.close();
-            ye.open();
-          }, ye.element = ye.input = c2, ye.isOpen = false, ae(), ie3(), fe(), se(), m3(), ye.isMobile || H(), _(), (ye.selectedDates.length || ye.config.noCalendar) && (ye.config.enableTime && k(ye.config.noCalendar ? ye.latestSelectedDateObj || ye.config.minDate : void 0), Ce(false)), ye.showTimeInput = ye.selectedDates.length > 0 || ye.config.noCalendar, void 0 !== ye.weekWrapper && void 0 !== ye.daysContainer && (ye.calendarContainer.style.width = ye.daysContainer.offsetWidth + ye.weekWrapper.offsetWidth + "px"), ye.isMobile || oe(), ge("onReady"), ye;
-        }
-        function d(e2, t2) {
-          for (var n2 = Array.prototype.slice.call(e2), a2 = [], i2 = 0; i2 < n2.length; i2++) {
-            var o2 = n2[i2];
-            try {
-              if (null !== o2.getAttribute("data-fp-omit")) continue;
-              void 0 !== o2._flatpickr && (o2._flatpickr.destroy(), o2._flatpickr = void 0), o2._flatpickr = c(o2, t2 || {}), a2.push(o2._flatpickr);
-            } catch (e3) {
-              console.warn(e3, e3.stack);
-            }
-          }
-          return 1 === a2.length ? a2[0] : a2;
-        }
-        var s = Object.assign || function(e2) {
-          for (var t2, n2 = 1, a2 = arguments.length; n2 < a2; n2++) {
-            t2 = arguments[n2];
-            for (var i2 in t2) Object.prototype.hasOwnProperty.call(t2, i2) && (e2[i2] = t2[i2]);
-          }
-          return e2;
-        }, u = function(e2, t2, n2) {
-          return n2.months[t2 ? "shorthand" : "longhand"][e2];
-        }, f = { DAY: 864e5 }, m2 = { _disable: [], _enable: [], allowInput: false, altFormat: "F j, Y", altInput: false, altInputClass: "form-control input", animate: "object" == typeof window && -1 === window.navigator.userAgent.indexOf("MSIE"), ariaDateFormat: "F j, Y", clickOpens: true, closeOnSelect: true, conjunction: ", ", dateFormat: "Y-m-d", defaultHour: 12, defaultMinute: 0, defaultSeconds: 0, disable: [], disableMobile: false, enable: [], enableSeconds: false, enableTime: false, getWeek: function(e2) {
-          var t2 = new Date(e2.getFullYear(), 0, 1);
-          return Math.ceil(((e2.getTime() - t2.getTime()) / 864e5 + t2.getDay() + 1) / 7);
-        }, hourIncrement: 1, ignoredFocusElements: [], inline: false, locale: "default", minuteIncrement: 5, mode: "single", nextArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z' /></svg>", noCalendar: false, onChange: [], onClose: [], onDayCreate: [], onDestroy: [], onKeyDown: [], onMonthChange: [], onOpen: [], onParseConfig: [], onReady: [], onValueUpdate: [], onYearChange: [], plugins: [], position: "auto", positionElement: void 0, prevArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z' /></svg>", shorthandCurrentMonth: false, static: false, time_24hr: false, weekNumbers: false, wrap: false }, g = { weekdays: { shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], longhand: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] }, months: { shorthand: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], longhand: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] }, daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], firstDayOfWeek: 0, ordinal: function(e2) {
-          var t2 = e2 % 100;
-          if (t2 > 3 && t2 < 21) return "th";
-          switch (t2 % 10) {
-            case 1:
-              return "st";
-            case 2:
-              return "nd";
-            case 3:
-              return "rd";
-            default:
-              return "th";
-          }
-        }, rangeSeparator: " to ", weekAbbreviation: "Wk", scrollTitle: "Scroll to increment", toggleTitle: "Click to toggle", amPM: ["AM", "PM"] }, p = function(e2) {
-          return ("0" + e2).slice(-2);
-        }, h = function(e2) {
-          return true === e2 ? 1 : 0;
-        }, v = function(e2) {
-          return e2 instanceof Array ? e2 : [e2];
-        }, D = function() {
-        }, C2 = { D, F: function(e2, t2, n2) {
-          e2.setMonth(n2.months.longhand.indexOf(t2));
-        }, G: function(e2, t2) {
-          e2.setHours(parseFloat(t2));
-        }, H: function(e2, t2) {
-          e2.setHours(parseFloat(t2));
-        }, J: function(e2, t2) {
-          e2.setDate(parseFloat(t2));
-        }, K: function(e2, t2) {
-          e2.setHours(e2.getHours() % 12 + 12 * h(/pm/i.test(t2)));
-        }, M: function(e2, t2, n2) {
-          e2.setMonth(n2.months.shorthand.indexOf(t2));
-        }, S: function(e2, t2) {
-          e2.setSeconds(parseFloat(t2));
-        }, U: function(e2, t2) {
-          return new Date(1e3 * parseFloat(t2));
-        }, W: function(e2, t2) {
-          var n2 = parseInt(t2);
-          return new Date(e2.getFullYear(), 0, 2 + 7 * (n2 - 1), 0, 0, 0, 0);
-        }, Y: function(e2, t2) {
-          e2.setFullYear(parseFloat(t2));
-        }, Z: function(e2, t2) {
-          return new Date(t2);
-        }, d: function(e2, t2) {
-          e2.setDate(parseFloat(t2));
-        }, h: function(e2, t2) {
-          e2.setHours(parseFloat(t2));
-        }, i: function(e2, t2) {
-          e2.setMinutes(parseFloat(t2));
-        }, j: function(e2, t2) {
-          e2.setDate(parseFloat(t2));
-        }, l: D, m: function(e2, t2) {
-          e2.setMonth(parseFloat(t2) - 1);
-        }, n: function(e2, t2) {
-          e2.setMonth(parseFloat(t2) - 1);
-        }, s: function(e2, t2) {
-          e2.setSeconds(parseFloat(t2));
-        }, w: D, y: function(e2, t2) {
-          e2.setFullYear(2e3 + parseFloat(t2));
-        } }, w = { D: "(\\w+)", F: "(\\w+)", G: "(\\d\\d|\\d)", H: "(\\d\\d|\\d)", J: "(\\d\\d|\\d)\\w+", K: "(am|AM|Am|aM|pm|PM|Pm|pM)", M: "(\\w+)", S: "(\\d\\d|\\d)", U: "(.+)", W: "(\\d\\d|\\d)", Y: "(\\d{4})", Z: "(.+)", d: "(\\d\\d|\\d)", h: "(\\d\\d|\\d)", i: "(\\d\\d|\\d)", j: "(\\d\\d|\\d)", l: "(\\w+)", m: "(\\d\\d|\\d)", n: "(\\d\\d|\\d)", s: "(\\d\\d|\\d)", w: "(\\d\\d|\\d)", y: "(\\d{2})" }, M = { Z: function(e2) {
-          return e2.toISOString();
-        }, D: function(e2, t2, n2) {
-          return t2.weekdays.shorthand[M.w(e2, t2, n2)];
-        }, F: function(e2, t2, n2) {
-          return u(M.n(e2, t2, n2) - 1, false, t2);
-        }, G: function(e2, t2, n2) {
-          return p(M.h(e2, t2, n2));
-        }, H: function(e2) {
-          return p(e2.getHours());
-        }, J: function(e2, t2) {
-          return void 0 !== t2.ordinal ? e2.getDate() + t2.ordinal(e2.getDate()) : e2.getDate();
-        }, K: function(e2) {
-          return e2.getHours() > 11 ? "PM" : "AM";
-        }, M: function(e2, t2) {
-          return u(e2.getMonth(), true, t2);
-        }, S: function(e2) {
-          return p(e2.getSeconds());
-        }, U: function(e2) {
-          return e2.getTime() / 1e3;
-        }, W: function(e2, t2, n2) {
-          return n2.getWeek(e2);
-        }, Y: function(e2) {
-          return e2.getFullYear();
-        }, d: function(e2) {
-          return p(e2.getDate());
-        }, h: function(e2) {
-          return e2.getHours() % 12 ? e2.getHours() % 12 : 12;
-        }, i: function(e2) {
-          return p(e2.getMinutes());
-        }, j: function(e2) {
-          return e2.getDate();
-        }, l: function(e2, t2) {
-          return t2.weekdays.longhand[e2.getDay()];
-        }, m: function(e2) {
-          return p(e2.getMonth() + 1);
-        }, n: function(e2) {
-          return e2.getMonth() + 1;
-        }, s: function(e2) {
-          return e2.getSeconds();
-        }, w: function(e2) {
-          return e2.getDay();
-        }, y: function(e2) {
-          return String(e2.getFullYear()).substring(2);
-        } };
-        "function" != typeof Object.assign && (Object.assign = function(e2) {
-          for (var t2 = [], n2 = 1; n2 < arguments.length; n2++) t2[n2 - 1] = arguments[n2];
-          if (!e2) throw TypeError("Cannot convert undefined or null to object");
-          for (var a2 = 0, i2 = t2; a2 < i2.length; a2++) !function(t3) {
-            t3 && Object.keys(t3).forEach(function(n3) {
-              return e2[n3] = t3[n3];
-            });
-          }(i2[a2]);
-          return e2;
-        }), "undefined" != typeof HTMLElement && (HTMLCollection.prototype.flatpickr = NodeList.prototype.flatpickr = function(e2) {
-          return d(this, e2);
-        }, HTMLElement.prototype.flatpickr = function(e2) {
-          return d([this], e2);
-        });
-        var b;
-        return b = function(e2, t2) {
-          return e2 instanceof NodeList ? d(e2, t2) : "string" == typeof e2 ? d(window.document.querySelectorAll(e2), t2) : d([e2], t2);
-        }, "object" == typeof window && (window.flatpickr = b), b.defaultConfig = m2, b.l10ns = { en: s({}, g), default: s({}, g) }, b.localize = function(e2) {
-          b.l10ns.default = s({}, b.l10ns.default, e2);
-        }, b.setDefaults = function(e2) {
-          b.defaultConfig = s({}, b.defaultConfig, e2);
-        }, "undefined" != typeof jQuery && (jQuery.fn.flatpickr = function(e2) {
-          return d(this, e2);
-        }), Date.prototype.fp_incr = function(e2) {
-          return new Date(this.getFullYear(), this.getMonth(), this.getDate() + ("string" == typeof e2 ? parseInt(e2, 10) : e2));
-        }, b;
-      });
-    }
-  });
-
   // node_modules/plupload/js/moxie.js
   var require_moxie = __commonJS({
     "node_modules/plupload/js/moxie.js"(exports, module) {
@@ -7249,8 +6478,8 @@
             }
             callback.apply(null, defs);
           }
-          function define2(id, dependencies, definition) {
-            if (typeof id !== "string") {
+          function define2(id2, dependencies, definition) {
+            if (typeof id2 !== "string") {
               throw "invalid module definition, module id must be defined and be a string";
             }
             if (dependencies === undefined2) {
@@ -7260,35 +6489,35 @@
               throw "invalid module definition, definition function must be specified";
             }
             require2(dependencies, function() {
-              modules[id] = definition.apply(null, arguments);
+              modules[id2] = definition.apply(null, arguments);
             });
           }
-          function defined(id) {
-            return !!modules[id];
+          function defined(id2) {
+            return !!modules[id2];
           }
-          function resolve(id) {
+          function resolve(id2) {
             var target = exports2;
-            var fragments = id.split(/[.\/]/);
-            for (var fi = 0; fi < fragments.length; ++fi) {
-              if (!target[fragments[fi]]) {
+            var fragments = id2.split(/[.\/]/);
+            for (var fi2 = 0; fi2 < fragments.length; ++fi2) {
+              if (!target[fragments[fi2]]) {
                 return;
               }
-              target = target[fragments[fi]];
+              target = target[fragments[fi2]];
             }
             return target;
           }
           function expose(ids) {
             for (var i = 0; i < ids.length; i++) {
               var target = exports2;
-              var id = ids[i];
-              var fragments = id.split(/[.\/]/);
-              for (var fi = 0; fi < fragments.length - 1; ++fi) {
-                if (target[fragments[fi]] === undefined2) {
-                  target[fragments[fi]] = {};
+              var id2 = ids[i];
+              var fragments = id2.split(/[.\/]/);
+              for (var fi2 = 0; fi2 < fragments.length - 1; ++fi2) {
+                if (target[fragments[fi2]] === undefined2) {
+                  target[fragments[fi2]] = {};
                 }
-                target = target[fragments[fi]];
+                target = target[fragments[fi2]];
               }
-              target[fragments[fragments.length - 1]] = modules[id];
+              target[fragments[fragments.length - 1]] = modules[id2];
             }
           }
           define2("moxie/core/utils/Basic", [], function() {
@@ -8394,11 +7623,11 @@
             };
           });
           define2("moxie/core/utils/Dom", ["moxie/core/utils/Env"], function(Env) {
-            var get = function(id) {
-              if (typeof id !== "string") {
-                return id;
+            var get = function(id2) {
+              if (typeof id2 !== "string") {
+                return id2;
               }
-              return document.getElementById(id);
+              return document.getElementById(id2);
             };
             var hasClass = function(obj, name2) {
               if (!obj.className) {
@@ -9605,7 +8834,7 @@
               if (MXI_DEBUG) {
                 Env.log("Instantiating FileInput...");
               }
-              var container, browseButton, defaults2;
+              var container, browseButton, defaults3;
               if (Basic.inArray(Basic.typeOf(options), ["string", "node"]) !== -1) {
                 options = { browse_button: options };
               }
@@ -9613,7 +8842,7 @@
               if (!browseButton) {
                 throw new x.DOMException(x.DOMException.NOT_FOUND_ERR);
               }
-              defaults2 = {
+              defaults3 = {
                 accept: [{
                   title: I18n.translate("All Files"),
                   extensions: "*"
@@ -9622,7 +8851,7 @@
                 required_caps: false,
                 container: browseButton.parentNode || document.body
               };
-              options = Basic.extend({}, defaults2, options);
+              options = Basic.extend({}, defaults3, options);
               if (typeof options.required_caps === "string") {
                 options.required_caps = Runtime.parseCaps(options.required_caps);
               }
@@ -9902,11 +9131,11 @@
               if (MXI_DEBUG) {
                 Env.log("Instantiating FileDrop...");
               }
-              var self2 = this, defaults2;
+              var self2 = this, defaults3;
               if (typeof options === "string") {
                 options = { drop_zone: options };
               }
-              defaults2 = {
+              defaults3 = {
                 accept: [{
                   title: I18n.translate("All Files"),
                   extensions: "*"
@@ -9915,7 +9144,7 @@
                   drag_and_drop: true
                 }
               };
-              options = typeof options === "object" ? Basic.extend({}, defaults2, options) : defaults2;
+              options = typeof options === "object" ? Basic.extend({}, defaults3, options) : defaults3;
               options.container = Dom.get(options.drop_zone) || document.body;
               if (Dom.getStyle(options.container, "position") === "static") {
                 options.container.style.position = "relative";
@@ -11343,7 +10572,7 @@
                 			@deprecated use resize()
                 			*/
                 downsize: function(options) {
-                  var defaults2 = {
+                  var defaults3 = {
                     width: this.width,
                     height: this.height,
                     type: this.type || "image/jpeg",
@@ -11354,9 +10583,9 @@
                     resample: "default"
                   }, opts;
                   if (typeof options === "object") {
-                    opts = Basic.extend(defaults2, options);
+                    opts = Basic.extend(defaults3, options);
                   } else {
-                    opts = Basic.extend(defaults2, {
+                    opts = Basic.extend(defaults3, {
                       width: arguments[0],
                       height: arguments[1],
                       crop: arguments[2],
@@ -11471,8 +10700,8 @@
                       img.destroy();
                       self2.trigger("embedded");
                     } else {
-                      var tr = new Transporter();
-                      tr.bind("TransportingComplete", function() {
+                      var tr2 = new Transporter();
+                      tr2.bind("TransportingComplete", function() {
                         runtime = self2.connectRuntime(this.result.ruid);
                         self2.bind("Embedded", function() {
                           Basic.extend(runtime.getShimContainer().style, {
@@ -11487,7 +10716,7 @@
                         runtime.exec.call(self2, "ImageView", "display", this.result.uid, width, height);
                         img.destroy();
                       });
-                      tr.transport(Encode.atob(dataUrl.substring(dataUrl.indexOf("base64,") + 7)), type, {
+                      tr2.transport(Encode.atob(dataUrl.substring(dataUrl.indexOf("base64,") + 7)), type, {
                         required_caps: {
                           display_media: true
                         },
@@ -12394,17 +11623,17 @@
                 }
               });
               function _preloadAndSend(meta, data) {
-                var target = this, blob, fr;
+                var target = this, blob, fr2;
                 blob = data.getBlob().getSource();
-                fr = new window.FileReader();
-                fr.onload = function() {
+                fr2 = new window.FileReader();
+                fr2.onload = function() {
                   data.append(data.getBlobName(), new Blob(null, {
                     type: blob.type,
-                    data: fr.result
+                    data: fr2.result
                   }));
                   self2.send.call(target, meta, data);
                 };
-                fr.readAsBinaryString(blob);
+                fr2.readAsBinaryString(blob);
               }
               function _getNativeXHR() {
                 if (window.XMLHttpRequest && !(Env.browser === "IE" && Env.verComp(Env.version, 8, "<"))) {
@@ -13556,16 +12785,16 @@
                 _img.src = str.substr(0, 5) == "data:" ? str : _toDataUrl(str, _blob.type);
               }
               function _readAsDataUrl(file, callback) {
-                var comp = this, fr;
+                var comp = this, fr2;
                 if (window.FileReader) {
-                  fr = new FileReader();
-                  fr.onload = function() {
+                  fr2 = new FileReader();
+                  fr2.onload = function() {
                     callback.call(comp, this.result);
                   };
-                  fr.onerror = function() {
+                  fr2.onerror = function() {
                     comp.trigger("error", x.ImageError.WRONG_FORMAT);
                   };
-                  fr.readAsDataURL(file);
+                  fr2.readAsDataURL(file);
                 } else {
                   return callback.call(this, file.getAsDataURL());
                 }
@@ -13651,14 +12880,14 @@
               version2 = version2.match(/\d+/g);
               return parseFloat(version2[0] + "." + version2[1]);
             }
-            function removeSWF(id) {
-              var obj = Dom.get(id);
+            function removeSWF(id2) {
+              var obj = Dom.get(id2);
               if (obj && obj.nodeName == "OBJECT") {
                 if (Env.browser === "IE") {
                   obj.style.display = "none";
                   (function onInit() {
                     if (obj.readyState == 4) {
-                      removeObjectInIE(id);
+                      removeObjectInIE(id2);
                     } else {
                       setTimeout(onInit, 10);
                     }
@@ -13668,8 +12897,8 @@
                 }
               }
             }
-            function removeObjectInIE(id) {
-              var obj = Dom.get(id);
+            function removeObjectInIE(id2) {
+              var obj = Dom.get(id2);
               if (obj) {
                 for (var i in obj) {
                   if (typeof obj[i] == "function") {
@@ -13984,11 +13213,11 @@
                   send();
                 }
                 function attachBlob(blob2, cb) {
-                  var tr = new Transporter();
-                  tr.bind("TransportingComplete", function() {
+                  var tr2 = new Transporter();
+                  tr2.bind("TransportingComplete", function() {
                     cb(this.result);
                   });
-                  tr.transport(blob2.getSource(), blob2.type, {
+                  tr2.transport(blob2.getSource(), blob2.type, {
                     ruid: self2.uid
                   });
                 }
@@ -14080,11 +13309,11 @@
                   comp = self2 = null;
                 }
                 if (blob.isDetached()) {
-                  var tr = new Transporter();
-                  tr.bind("TransportingComplete", function() {
-                    exec(tr.result.getSource());
+                  var tr2 = new Transporter();
+                  tr2.bind("TransportingComplete", function() {
+                    exec(tr2.result.getSource());
                   });
-                  tr.transport(blob.getSource(), blob.type, { ruid: self2.uid });
+                  tr2.transport(blob.getSource(), blob.type, { ruid: self2.uid });
                 } else {
                   exec(blob.getSource());
                 }
@@ -17708,6 +16937,4503 @@
     }
   });
 
+  // node_modules/flatpickr/dist/l10n/cy.js
+  var require_cy = __commonJS({
+    "node_modules/flatpickr/dist/l10n/cy.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.cy = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Welsh = {
+          weekdays: {
+            shorthand: ["Sul", "Llun", "Maw", "Mer", "Iau", "Gwe", "Sad"],
+            longhand: [
+              "Dydd Sul",
+              "Dydd Llun",
+              "Dydd Mawrth",
+              "Dydd Mercher",
+              "Dydd Iau",
+              "Dydd Gwener",
+              "Dydd Sadwrn"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Ion",
+              "Chwef",
+              "Maw",
+              "Ebr",
+              "Mai",
+              "Meh",
+              "Gorff",
+              "Awst",
+              "Medi",
+              "Hyd",
+              "Tach",
+              "Rhag"
+            ],
+            longhand: [
+              "Ionawr",
+              "Chwefror",
+              "Mawrth",
+              "Ebrill",
+              "Mai",
+              "Mehefin",
+              "Gorffennaf",
+              "Awst",
+              "Medi",
+              "Hydref",
+              "Tachwedd",
+              "Rhagfyr"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function(nth) {
+            if (nth === 1)
+              return "af";
+            if (nth === 2)
+              return "ail";
+            if (nth === 3 || nth === 4)
+              return "ydd";
+            if (nth === 5 || nth === 6)
+              return "ed";
+            if (nth >= 7 && nth <= 10 || nth == 12 || nth == 15 || nth == 18 || nth == 20)
+              return "fed";
+            if (nth == 11 || nth == 13 || nth == 14 || nth == 16 || nth == 17 || nth == 19)
+              return "eg";
+            if (nth >= 21 && nth <= 39)
+              return "ain";
+            return "";
+          },
+          time_24hr: true
+        };
+        fp.l10ns.cy = Welsh;
+        var cy2 = fp.l10ns;
+        exports2.Welsh = Welsh;
+        exports2.default = cy2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ka.js
+  var require_ka = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ka.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ka = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Georgian = {
+          weekdays: {
+            shorthand: ["\u10D9\u10D5", "\u10DD\u10E0", "\u10E1\u10D0", "\u10DD\u10D7", "\u10EE\u10E3", "\u10DE\u10D0", "\u10E8\u10D0"],
+            longhand: [
+              "\u10D9\u10D5\u10D8\u10E0\u10D0",
+              "\u10DD\u10E0\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
+              "\u10E1\u10D0\u10DB\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
+              "\u10DD\u10D7\u10EE\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
+              "\u10EE\u10E3\u10D7\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
+              "\u10DE\u10D0\u10E0\u10D0\u10E1\u10D9\u10D4\u10D5\u10D8",
+              "\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u10D8\u10D0\u10DC",
+              "\u10D7\u10D4\u10D1",
+              "\u10DB\u10D0\u10E0",
+              "\u10D0\u10DE\u10E0",
+              "\u10DB\u10D0\u10D8",
+              "\u10D8\u10D5\u10DC",
+              "\u10D8\u10D5\u10DA",
+              "\u10D0\u10D2\u10D5",
+              "\u10E1\u10D4\u10E5",
+              "\u10DD\u10E5\u10E2",
+              "\u10DC\u10DD\u10D4",
+              "\u10D3\u10D4\u10D9"
+            ],
+            longhand: [
+              "\u10D8\u10D0\u10DC\u10D5\u10D0\u10E0\u10D8",
+              "\u10D7\u10D4\u10D1\u10D4\u10E0\u10D5\u10D0\u10DA\u10D8",
+              "\u10DB\u10D0\u10E0\u10E2\u10D8",
+              "\u10D0\u10DE\u10E0\u10D8\u10DA\u10D8",
+              "\u10DB\u10D0\u10D8\u10E1\u10D8",
+              "\u10D8\u10D5\u10DC\u10D8\u10E1\u10D8",
+              "\u10D8\u10D5\u10DA\u10D8\u10E1\u10D8",
+              "\u10D0\u10D2\u10D5\u10D8\u10E1\u10E2\u10DD",
+              "\u10E1\u10D4\u10E5\u10E2\u10D4\u10DB\u10D1\u10D4\u10E0\u10D8",
+              "\u10DD\u10E5\u10E2\u10DD\u10DB\u10D1\u10D4\u10E0\u10D8",
+              "\u10DC\u10DD\u10D4\u10DB\u10D1\u10D4\u10E0\u10D8",
+              "\u10D3\u10D4\u10D9\u10D4\u10DB\u10D1\u10D4\u10E0\u10D8"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          rangeSeparator: " \u2014 ",
+          weekAbbreviation: "\u10D9\u10D5.",
+          scrollTitle: "\u10D3\u10D0\u10E1\u10E5\u10E0\u10DD\u10DA\u10D4\u10D7 \u10D2\u10D0\u10E1\u10D0\u10D3\u10D8\u10D3\u10D4\u10D1\u10DA\u10D0\u10D3",
+          toggleTitle: "\u10D3\u10D0\u10D0\u10D9\u10DA\u10D8\u10D9\u10D4\u10D7 \u10D2\u10D0\u10D3\u10D0\u10E0\u10D7\u10D5\u10D8\u10E1\u10D7\u10D5\u10D8\u10E1",
+          amPM: ["AM", "PM"],
+          yearAriaLabel: "\u10EC\u10D4\u10DA\u10D8",
+          time_24hr: true
+        };
+        fp.l10ns.ka = Georgian;
+        var ka2 = fp.l10ns;
+        exports2.Georgian = Georgian;
+        exports2.default = ka2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/sr.js
+  var require_sr = __commonJS({
+    "node_modules/flatpickr/dist/l10n/sr.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sr = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Serbian = {
+          weekdays: {
+            shorthand: ["Ned", "Pon", "Uto", "Sre", "\u010Cet", "Pet", "Sub"],
+            longhand: [
+              "Nedelja",
+              "Ponedeljak",
+              "Utorak",
+              "Sreda",
+              "\u010Cetvrtak",
+              "Petak",
+              "Subota"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Maj",
+              "Jun",
+              "Jul",
+              "Avg",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dec"
+            ],
+            longhand: [
+              "Januar",
+              "Februar",
+              "Mart",
+              "April",
+              "Maj",
+              "Jun",
+              "Jul",
+              "Avgust",
+              "Septembar",
+              "Oktobar",
+              "Novembar",
+              "Decembar"
+            ]
+          },
+          firstDayOfWeek: 1,
+          weekAbbreviation: "Ned.",
+          rangeSeparator: " do ",
+          time_24hr: true
+        };
+        fp.l10ns.sr = Serbian;
+        var sr2 = fp.l10ns;
+        exports2.Serbian = Serbian;
+        exports2.default = sr2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ar-dz.js
+  var require_ar_dz = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ar-dz.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2["ar-dz"] = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var AlgerianArabic = {
+          weekdays: {
+            shorthand: ["\u0623\u062D\u062F", "\u0627\u062B\u0646\u064A\u0646", "\u062B\u0644\u0627\u062B\u0627\u0621", "\u0623\u0631\u0628\u0639\u0627\u0621", "\u062E\u0645\u064A\u0633", "\u062C\u0645\u0639\u0629", "\u0633\u0628\u062A"],
+            longhand: [
+              "\u0627\u0644\u0623\u062D\u062F",
+              "\u0627\u0644\u0627\u062B\u0646\u064A\u0646",
+              "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621",
+              "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621",
+              "\u0627\u0644\u062E\u0645\u064A\u0633",
+              "\u0627\u0644\u062C\u0645\u0639\u0629",
+              "\u0627\u0644\u0633\u0628\u062A"
+            ]
+          },
+          months: {
+            shorthand: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+            longhand: [
+              "\u062C\u0627\u0646\u0641\u064A",
+              "\u0641\u064A\u0641\u0631\u064A",
+              "\u0645\u0627\u0631\u0633",
+              "\u0623\u0641\u0631\u064A\u0644",
+              "\u0645\u0627\u064A",
+              "\u062C\u0648\u0627\u0646",
+              "\u062C\u0648\u064A\u0644\u064A\u0647",
+              "\u0623\u0648\u062A",
+              "\u0633\u0628\u062A\u0645\u0628\u0631",
+              "\u0623\u0643\u062A\u0648\u0628\u0631",
+              "\u0646\u0648\u0641\u0645\u0628\u0631",
+              "\u062F\u064A\u0633\u0645\u0628\u0631"
+            ]
+          },
+          firstDayOfWeek: 0,
+          rangeSeparator: " \u0625\u0644\u0649 ",
+          weekAbbreviation: "Wk",
+          scrollTitle: "\u0642\u0645 \u0628\u0627\u0644\u062A\u0645\u0631\u064A\u0631 \u0644\u0644\u0632\u064A\u0627\u062F\u0629",
+          toggleTitle: "\u0627\u0636\u063A\u0637 \u0644\u0644\u062A\u0628\u062F\u064A\u0644",
+          yearAriaLabel: "\u0633\u0646\u0629",
+          monthAriaLabel: "\u0634\u0647\u0631",
+          hourAriaLabel: "\u0633\u0627\u0639\u0629",
+          minuteAriaLabel: "\u062F\u0642\u064A\u0642\u0629",
+          time_24hr: true
+        };
+        fp.l10ns.ar = AlgerianArabic;
+        var arDz = fp.l10ns;
+        exports2.AlgerianArabic = AlgerianArabic;
+        exports2.default = arDz;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/gr.js
+  var require_gr = __commonJS({
+    "node_modules/flatpickr/dist/l10n/gr.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.gr = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Greek = {
+          weekdays: {
+            shorthand: ["\u039A\u03C5", "\u0394\u03B5", "\u03A4\u03C1", "\u03A4\u03B5", "\u03A0\u03AD", "\u03A0\u03B1", "\u03A3\u03AC"],
+            longhand: [
+              "\u039A\u03C5\u03C1\u03B9\u03B1\u03BA\u03AE",
+              "\u0394\u03B5\u03C5\u03C4\u03AD\u03C1\u03B1",
+              "\u03A4\u03C1\u03AF\u03C4\u03B7",
+              "\u03A4\u03B5\u03C4\u03AC\u03C1\u03C4\u03B7",
+              "\u03A0\u03AD\u03BC\u03C0\u03C4\u03B7",
+              "\u03A0\u03B1\u03C1\u03B1\u03C3\u03BA\u03B5\u03C5\u03AE",
+              "\u03A3\u03AC\u03B2\u03B2\u03B1\u03C4\u03BF"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0399\u03B1\u03BD",
+              "\u03A6\u03B5\u03B2",
+              "\u039C\u03AC\u03C1",
+              "\u0391\u03C0\u03C1",
+              "\u039C\u03AC\u03B9",
+              "\u0399\u03BF\u03CD\u03BD",
+              "\u0399\u03BF\u03CD\u03BB",
+              "\u0391\u03CD\u03B3",
+              "\u03A3\u03B5\u03C0",
+              "\u039F\u03BA\u03C4",
+              "\u039D\u03BF\u03AD",
+              "\u0394\u03B5\u03BA"
+            ],
+            longhand: [
+              "\u0399\u03B1\u03BD\u03BF\u03C5\u03AC\u03C1\u03B9\u03BF\u03C2",
+              "\u03A6\u03B5\u03B2\u03C1\u03BF\u03C5\u03AC\u03C1\u03B9\u03BF\u03C2",
+              "\u039C\u03AC\u03C1\u03C4\u03B9\u03BF\u03C2",
+              "\u0391\u03C0\u03C1\u03AF\u03BB\u03B9\u03BF\u03C2",
+              "\u039C\u03AC\u03B9\u03BF\u03C2",
+              "\u0399\u03BF\u03CD\u03BD\u03B9\u03BF\u03C2",
+              "\u0399\u03BF\u03CD\u03BB\u03B9\u03BF\u03C2",
+              "\u0391\u03CD\u03B3\u03BF\u03C5\u03C3\u03C4\u03BF\u03C2",
+              "\u03A3\u03B5\u03C0\u03C4\u03AD\u03BC\u03B2\u03C1\u03B9\u03BF\u03C2",
+              "\u039F\u03BA\u03C4\u03CE\u03B2\u03C1\u03B9\u03BF\u03C2",
+              "\u039D\u03BF\u03AD\u03BC\u03B2\u03C1\u03B9\u03BF\u03C2",
+              "\u0394\u03B5\u03BA\u03AD\u03BC\u03B2\u03C1\u03B9\u03BF\u03C2"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          weekAbbreviation: "\u0395\u03B2\u03B4",
+          rangeSeparator: " \u03AD\u03C9\u03C2 ",
+          scrollTitle: "\u039C\u03B5\u03C4\u03B1\u03BA\u03C5\u03BB\u03AE\u03C3\u03C4\u03B5 \u03B3\u03B9\u03B1 \u03C0\u03C1\u03BF\u03C3\u03B1\u03CD\u03BE\u03B7\u03C3\u03B7",
+          toggleTitle: "\u039A\u03AC\u03BD\u03C4\u03B5 \u03BA\u03BB\u03B9\u03BA \u03B3\u03B9\u03B1 \u03B1\u03BB\u03BB\u03B1\u03B3\u03AE",
+          amPM: ["\u03A0\u039C", "\u039C\u039C"],
+          yearAriaLabel: "\u03C7\u03C1\u03CC\u03BD\u03BF\u03C2",
+          monthAriaLabel: "\u03BC\u03AE\u03BD\u03B1\u03C2",
+          hourAriaLabel: "\u03CE\u03C1\u03B1",
+          minuteAriaLabel: "\u03BB\u03B5\u03C0\u03C4\u03CC"
+        };
+        fp.l10ns.gr = Greek;
+        var gr2 = fp.l10ns;
+        exports2.Greek = Greek;
+        exports2.default = gr2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/no.js
+  var require_no = __commonJS({
+    "node_modules/flatpickr/dist/l10n/no.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.no = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Norwegian = {
+          weekdays: {
+            shorthand: ["S\xF8n", "Man", "Tir", "Ons", "Tor", "Fre", "L\xF8r"],
+            longhand: [
+              "S\xF8ndag",
+              "Mandag",
+              "Tirsdag",
+              "Onsdag",
+              "Torsdag",
+              "Fredag",
+              "L\xF8rdag"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mai",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des"
+            ],
+            longhand: [
+              "Januar",
+              "Februar",
+              "Mars",
+              "April",
+              "Mai",
+              "Juni",
+              "Juli",
+              "August",
+              "September",
+              "Oktober",
+              "November",
+              "Desember"
+            ]
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " til ",
+          weekAbbreviation: "Uke",
+          scrollTitle: "Scroll for \xE5 endre",
+          toggleTitle: "Klikk for \xE5 veksle",
+          time_24hr: true,
+          ordinal: function() {
+            return ".";
+          }
+        };
+        fp.l10ns.no = Norwegian;
+        var no2 = fp.l10ns;
+        exports2.Norwegian = Norwegian;
+        exports2.default = no2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/da.js
+  var require_da = __commonJS({
+    "node_modules/flatpickr/dist/l10n/da.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.da = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Danish = {
+          weekdays: {
+            shorthand: ["s\xF8n", "man", "tir", "ons", "tors", "fre", "l\xF8r"],
+            longhand: [
+              "s\xF8ndag",
+              "mandag",
+              "tirsdag",
+              "onsdag",
+              "torsdag",
+              "fredag",
+              "l\xF8rdag"
+            ]
+          },
+          months: {
+            shorthand: [
+              "jan",
+              "feb",
+              "mar",
+              "apr",
+              "maj",
+              "jun",
+              "jul",
+              "aug",
+              "sep",
+              "okt",
+              "nov",
+              "dec"
+            ],
+            longhand: [
+              "januar",
+              "februar",
+              "marts",
+              "april",
+              "maj",
+              "juni",
+              "juli",
+              "august",
+              "september",
+              "oktober",
+              "november",
+              "december"
+            ]
+          },
+          ordinal: function() {
+            return ".";
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " til ",
+          weekAbbreviation: "uge",
+          time_24hr: true
+        };
+        fp.l10ns.da = Danish;
+        var da2 = fp.l10ns;
+        exports2.Danish = Danish;
+        exports2.default = da2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/km.js
+  var require_km = __commonJS({
+    "node_modules/flatpickr/dist/l10n/km.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.km = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Khmer = {
+          weekdays: {
+            shorthand: ["\u17A2\u17B6\u1791\u17B7\u178F\u17D2\u1799", "\u1785\u1793\u17D2\u1791", "\u17A2\u1784\u17D2\u1782\u17B6\u179A", "\u1796\u17BB\u1792", "\u1796\u17D2\u179A\u17A0\u179F.", "\u179F\u17BB\u1780\u17D2\u179A", "\u179F\u17C5\u179A\u17CD"],
+            longhand: [
+              "\u17A2\u17B6\u1791\u17B7\u178F\u17D2\u1799",
+              "\u1785\u1793\u17D2\u1791",
+              "\u17A2\u1784\u17D2\u1782\u17B6\u179A",
+              "\u1796\u17BB\u1792",
+              "\u1796\u17D2\u179A\u17A0\u179F\u17D2\u1794\u178F\u17B7\u17CD",
+              "\u179F\u17BB\u1780\u17D2\u179A",
+              "\u179F\u17C5\u179A\u17CD"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u1798\u1780\u179A\u17B6",
+              "\u1780\u17BB\u1798\u17D2\u1797\u17C7",
+              "\u1798\u17B8\u1793\u17B6",
+              "\u1798\u17C1\u179F\u17B6",
+              "\u17A7\u179F\u1797\u17B6",
+              "\u1798\u17B7\u1790\u17BB\u1793\u17B6",
+              "\u1780\u1780\u17D2\u1780\u178A\u17B6",
+              "\u179F\u17B8\u17A0\u17B6",
+              "\u1780\u1789\u17D2\u1789\u17B6",
+              "\u178F\u17BB\u179B\u17B6",
+              "\u179C\u17B7\u1785\u17D2\u1786\u17B7\u1780\u17B6",
+              "\u1792\u17D2\u1793\u17BC"
+            ],
+            longhand: [
+              "\u1798\u1780\u179A\u17B6",
+              "\u1780\u17BB\u1798\u17D2\u1797\u17C7",
+              "\u1798\u17B8\u1793\u17B6",
+              "\u1798\u17C1\u179F\u17B6",
+              "\u17A7\u179F\u1797\u17B6",
+              "\u1798\u17B7\u1790\u17BB\u1793\u17B6",
+              "\u1780\u1780\u17D2\u1780\u178A\u17B6",
+              "\u179F\u17B8\u17A0\u17B6",
+              "\u1780\u1789\u17D2\u1789\u17B6",
+              "\u178F\u17BB\u179B\u17B6",
+              "\u179C\u17B7\u1785\u17D2\u1786\u17B7\u1780\u17B6",
+              "\u1792\u17D2\u1793\u17BC"
+            ]
+          },
+          ordinal: function() {
+            return "";
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " \u178A\u179B\u17CB ",
+          weekAbbreviation: "\u179F\u1794\u17D2\u178F\u17B6\u17A0\u17CD",
+          scrollTitle: "\u179A\u17C6\u1780\u17B7\u179B\u178A\u17BE\u1798\u17D2\u1794\u17B8\u1794\u1784\u17D2\u1780\u17BE\u1793",
+          toggleTitle: "\u1785\u17BB\u1785\u178A\u17BE\u1798\u17D2\u1794\u17B8\u1795\u17D2\u179B\u17B6\u179F\u17CB\u1794\u17D2\u178A\u17BC\u179A",
+          yearAriaLabel: "\u1786\u17D2\u1793\u17B6\u17C6",
+          time_24hr: true
+        };
+        fp.l10ns.km = Khmer;
+        var km2 = fp.l10ns;
+        exports2.Khmer = Khmer;
+        exports2.default = km2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/sv.js
+  var require_sv = __commonJS({
+    "node_modules/flatpickr/dist/l10n/sv.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sv = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Swedish = {
+          firstDayOfWeek: 1,
+          weekAbbreviation: "v",
+          weekdays: {
+            shorthand: ["s\xF6n", "m\xE5n", "tis", "ons", "tor", "fre", "l\xF6r"],
+            longhand: [
+              "s\xF6ndag",
+              "m\xE5ndag",
+              "tisdag",
+              "onsdag",
+              "torsdag",
+              "fredag",
+              "l\xF6rdag"
+            ]
+          },
+          months: {
+            shorthand: [
+              "jan",
+              "feb",
+              "mar",
+              "apr",
+              "maj",
+              "jun",
+              "jul",
+              "aug",
+              "sep",
+              "okt",
+              "nov",
+              "dec"
+            ],
+            longhand: [
+              "januari",
+              "februari",
+              "mars",
+              "april",
+              "maj",
+              "juni",
+              "juli",
+              "augusti",
+              "september",
+              "oktober",
+              "november",
+              "december"
+            ]
+          },
+          rangeSeparator: " till ",
+          time_24hr: true,
+          ordinal: function() {
+            return ".";
+          }
+        };
+        fp.l10ns.sv = Swedish;
+        var sv2 = fp.l10ns;
+        exports2.Swedish = Swedish;
+        exports2.default = sv2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ar.js
+  var require_ar = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ar.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ar = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Arabic = {
+          weekdays: {
+            shorthand: ["\u0623\u062D\u062F", "\u0627\u062B\u0646\u064A\u0646", "\u062B\u0644\u0627\u062B\u0627\u0621", "\u0623\u0631\u0628\u0639\u0627\u0621", "\u062E\u0645\u064A\u0633", "\u062C\u0645\u0639\u0629", "\u0633\u0628\u062A"],
+            longhand: [
+              "\u0627\u0644\u0623\u062D\u062F",
+              "\u0627\u0644\u0627\u062B\u0646\u064A\u0646",
+              "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621",
+              "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621",
+              "\u0627\u0644\u062E\u0645\u064A\u0633",
+              "\u0627\u0644\u062C\u0645\u0639\u0629",
+              "\u0627\u0644\u0633\u0628\u062A"
+            ]
+          },
+          months: {
+            shorthand: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+            longhand: [
+              "\u064A\u0646\u0627\u064A\u0631",
+              "\u0641\u0628\u0631\u0627\u064A\u0631",
+              "\u0645\u0627\u0631\u0633",
+              "\u0623\u0628\u0631\u064A\u0644",
+              "\u0645\u0627\u064A\u0648",
+              "\u064A\u0648\u0646\u064A\u0648",
+              "\u064A\u0648\u0644\u064A\u0648",
+              "\u0623\u063A\u0633\u0637\u0633",
+              "\u0633\u0628\u062A\u0645\u0628\u0631",
+              "\u0623\u0643\u062A\u0648\u0628\u0631",
+              "\u0646\u0648\u0641\u0645\u0628\u0631",
+              "\u062F\u064A\u0633\u0645\u0628\u0631"
+            ]
+          },
+          firstDayOfWeek: 6,
+          rangeSeparator: " \u0625\u0644\u0649 ",
+          weekAbbreviation: "Wk",
+          scrollTitle: "\u0642\u0645 \u0628\u0627\u0644\u062A\u0645\u0631\u064A\u0631 \u0644\u0644\u0632\u064A\u0627\u062F\u0629",
+          toggleTitle: "\u0627\u0636\u063A\u0637 \u0644\u0644\u062A\u0628\u062F\u064A\u0644",
+          amPM: ["\u0635", "\u0645"],
+          yearAriaLabel: "\u0633\u0646\u0629",
+          monthAriaLabel: "\u0634\u0647\u0631",
+          hourAriaLabel: "\u0633\u0627\u0639\u0629",
+          minuteAriaLabel: "\u062F\u0642\u064A\u0642\u0629",
+          time_24hr: false
+        };
+        fp.l10ns.ar = Arabic;
+        var ar2 = fp.l10ns;
+        exports2.Arabic = Arabic;
+        exports2.default = ar2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/he.js
+  var require_he = __commonJS({
+    "node_modules/flatpickr/dist/l10n/he.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.he = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Hebrew = {
+          weekdays: {
+            shorthand: ["\u05D0", "\u05D1", "\u05D2", "\u05D3", "\u05D4", "\u05D5", "\u05E9"],
+            longhand: ["\u05E8\u05D0\u05E9\u05D5\u05DF", "\u05E9\u05E0\u05D9", "\u05E9\u05DC\u05D9\u05E9\u05D9", "\u05E8\u05D1\u05D9\u05E2\u05D9", "\u05D7\u05DE\u05D9\u05E9\u05D9", "\u05E9\u05D9\u05E9\u05D9", "\u05E9\u05D1\u05EA"]
+          },
+          months: {
+            shorthand: [
+              "\u05D9\u05E0\u05D5\u05F3",
+              "\u05E4\u05D1\u05E8\u05F3",
+              "\u05DE\u05E8\u05E5",
+              "\u05D0\u05E4\u05E8\u05F3",
+              "\u05DE\u05D0\u05D9",
+              "\u05D9\u05D5\u05E0\u05D9",
+              "\u05D9\u05D5\u05DC\u05D9",
+              "\u05D0\u05D5\u05D2\u05F3",
+              "\u05E1\u05E4\u05D8\u05F3",
+              "\u05D0\u05D5\u05E7\u05F3",
+              "\u05E0\u05D5\u05D1\u05F3",
+              "\u05D3\u05E6\u05DE\u05F3"
+            ],
+            longhand: [
+              "\u05D9\u05E0\u05D5\u05D0\u05E8",
+              "\u05E4\u05D1\u05E8\u05D5\u05D0\u05E8",
+              "\u05DE\u05E8\u05E5",
+              "\u05D0\u05E4\u05E8\u05D9\u05DC",
+              "\u05DE\u05D0\u05D9",
+              "\u05D9\u05D5\u05E0\u05D9",
+              "\u05D9\u05D5\u05DC\u05D9",
+              "\u05D0\u05D5\u05D2\u05D5\u05E1\u05D8",
+              "\u05E1\u05E4\u05D8\u05DE\u05D1\u05E8",
+              "\u05D0\u05D5\u05E7\u05D8\u05D5\u05D1\u05E8",
+              "\u05E0\u05D5\u05D1\u05DE\u05D1\u05E8",
+              "\u05D3\u05E6\u05DE\u05D1\u05E8"
+            ]
+          },
+          rangeSeparator: " \u05D0\u05DC ",
+          time_24hr: true
+        };
+        fp.l10ns.he = Hebrew;
+        var he2 = fp.l10ns;
+        exports2.Hebrew = Hebrew;
+        exports2.default = he2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/pa.js
+  var require_pa = __commonJS({
+    "node_modules/flatpickr/dist/l10n/pa.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.pa = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Punjabi = {
+          weekdays: {
+            shorthand: ["\u0A10\u0A24", "\u0A38\u0A4B\u0A2E", "\u0A2E\u0A70\u0A17\u0A32", "\u0A2C\u0A41\u0A71\u0A27", "\u0A35\u0A40\u0A30", "\u0A38\u0A3C\u0A41\u0A71\u0A15\u0A30", "\u0A38\u0A3C\u0A28\u0A3F\u0A71\u0A1A\u0A30"],
+            longhand: [
+              "\u0A10\u0A24\u0A35\u0A3E\u0A30",
+              "\u0A38\u0A4B\u0A2E\u0A35\u0A3E\u0A30",
+              "\u0A2E\u0A70\u0A17\u0A32\u0A35\u0A3E\u0A30",
+              "\u0A2C\u0A41\u0A71\u0A27\u0A35\u0A3E\u0A30",
+              "\u0A35\u0A40\u0A30\u0A35\u0A3E\u0A30",
+              "\u0A38\u0A3C\u0A41\u0A71\u0A15\u0A30\u0A35\u0A3E\u0A30",
+              "\u0A38\u0A3C\u0A28\u0A3F\u0A71\u0A1A\u0A30\u0A35\u0A3E\u0A30"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0A1C\u0A28",
+              "\u0A2B\u0A3C\u0A30",
+              "\u0A2E\u0A3E\u0A30",
+              "\u0A05\u0A2A\u0A4D\u0A30\u0A48",
+              "\u0A2E\u0A08",
+              "\u0A1C\u0A42\u0A28",
+              "\u0A1C\u0A41\u0A32\u0A3E",
+              "\u0A05\u0A17",
+              "\u0A38\u0A24\u0A70",
+              "\u0A05\u0A15",
+              "\u0A28\u0A35\u0A70",
+              "\u0A26\u0A38\u0A70"
+            ],
+            longhand: [
+              "\u0A1C\u0A28\u0A35\u0A30\u0A40",
+              "\u0A2B\u0A3C\u0A30\u0A35\u0A30\u0A40",
+              "\u0A2E\u0A3E\u0A30\u0A1A",
+              "\u0A05\u0A2A\u0A4D\u0A30\u0A48\u0A32",
+              "\u0A2E\u0A08",
+              "\u0A1C\u0A42\u0A28",
+              "\u0A1C\u0A41\u0A32\u0A3E\u0A08",
+              "\u0A05\u0A17\u0A38\u0A24",
+              "\u0A38\u0A24\u0A70\u0A2C\u0A30",
+              "\u0A05\u0A15\u0A24\u0A42\u0A2C\u0A30",
+              "\u0A28\u0A35\u0A70\u0A2C\u0A30",
+              "\u0A26\u0A38\u0A70\u0A2C\u0A30"
+            ]
+          },
+          time_24hr: true
+        };
+        fp.l10ns.pa = Punjabi;
+        var pa2 = fp.l10ns;
+        exports2.Punjabi = Punjabi;
+        exports2.default = pa2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/de.js
+  var require_de = __commonJS({
+    "node_modules/flatpickr/dist/l10n/de.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.de = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var German = {
+          weekdays: {
+            shorthand: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+            longhand: [
+              "Sonntag",
+              "Montag",
+              "Dienstag",
+              "Mittwoch",
+              "Donnerstag",
+              "Freitag",
+              "Samstag"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "M\xE4r",
+              "Apr",
+              "Mai",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dez"
+            ],
+            longhand: [
+              "Januar",
+              "Februar",
+              "M\xE4rz",
+              "April",
+              "Mai",
+              "Juni",
+              "Juli",
+              "August",
+              "September",
+              "Oktober",
+              "November",
+              "Dezember"
+            ]
+          },
+          firstDayOfWeek: 1,
+          weekAbbreviation: "KW",
+          rangeSeparator: " bis ",
+          scrollTitle: "Zum \xC4ndern scrollen",
+          toggleTitle: "Zum Umschalten klicken",
+          time_24hr: true
+        };
+        fp.l10ns.de = German;
+        var de2 = fp.l10ns;
+        exports2.German = German;
+        exports2.default = de2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ko.js
+  var require_ko = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ko.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ko = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Korean = {
+          weekdays: {
+            shorthand: ["\uC77C", "\uC6D4", "\uD654", "\uC218", "\uBAA9", "\uAE08", "\uD1A0"],
+            longhand: [
+              "\uC77C\uC694\uC77C",
+              "\uC6D4\uC694\uC77C",
+              "\uD654\uC694\uC77C",
+              "\uC218\uC694\uC77C",
+              "\uBAA9\uC694\uC77C",
+              "\uAE08\uC694\uC77C",
+              "\uD1A0\uC694\uC77C"
+            ]
+          },
+          months: {
+            shorthand: [
+              "1\uC6D4",
+              "2\uC6D4",
+              "3\uC6D4",
+              "4\uC6D4",
+              "5\uC6D4",
+              "6\uC6D4",
+              "7\uC6D4",
+              "8\uC6D4",
+              "9\uC6D4",
+              "10\uC6D4",
+              "11\uC6D4",
+              "12\uC6D4"
+            ],
+            longhand: [
+              "1\uC6D4",
+              "2\uC6D4",
+              "3\uC6D4",
+              "4\uC6D4",
+              "5\uC6D4",
+              "6\uC6D4",
+              "7\uC6D4",
+              "8\uC6D4",
+              "9\uC6D4",
+              "10\uC6D4",
+              "11\uC6D4",
+              "12\uC6D4"
+            ]
+          },
+          ordinal: function() {
+            return "\uC77C";
+          },
+          rangeSeparator: " ~ ",
+          amPM: ["\uC624\uC804", "\uC624\uD6C4"]
+        };
+        fp.l10ns.ko = Korean;
+        var ko2 = fp.l10ns;
+        exports2.Korean = Korean;
+        exports2.default = ko2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/th.js
+  var require_th = __commonJS({
+    "node_modules/flatpickr/dist/l10n/th.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.th = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Thai = {
+          weekdays: {
+            shorthand: ["\u0E2D\u0E32", "\u0E08", "\u0E2D", "\u0E1E", "\u0E1E\u0E24", "\u0E28", "\u0E2A"],
+            longhand: [
+              "\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C",
+              "\u0E08\u0E31\u0E19\u0E17\u0E23\u0E4C",
+              "\u0E2D\u0E31\u0E07\u0E04\u0E32\u0E23",
+              "\u0E1E\u0E38\u0E18",
+              "\u0E1E\u0E24\u0E2B\u0E31\u0E2A\u0E1A\u0E14\u0E35",
+              "\u0E28\u0E38\u0E01\u0E23\u0E4C",
+              "\u0E40\u0E2A\u0E32\u0E23\u0E4C"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0E21.\u0E04.",
+              "\u0E01.\u0E1E.",
+              "\u0E21\u0E35.\u0E04.",
+              "\u0E40\u0E21.\u0E22.",
+              "\u0E1E.\u0E04.",
+              "\u0E21\u0E34.\u0E22.",
+              "\u0E01.\u0E04.",
+              "\u0E2A.\u0E04.",
+              "\u0E01.\u0E22.",
+              "\u0E15.\u0E04.",
+              "\u0E1E.\u0E22.",
+              "\u0E18.\u0E04."
+            ],
+            longhand: [
+              "\u0E21\u0E01\u0E23\u0E32\u0E04\u0E21",
+              "\u0E01\u0E38\u0E21\u0E20\u0E32\u0E1E\u0E31\u0E19\u0E18\u0E4C",
+              "\u0E21\u0E35\u0E19\u0E32\u0E04\u0E21",
+              "\u0E40\u0E21\u0E29\u0E32\u0E22\u0E19",
+              "\u0E1E\u0E24\u0E29\u0E20\u0E32\u0E04\u0E21",
+              "\u0E21\u0E34\u0E16\u0E38\u0E19\u0E32\u0E22\u0E19",
+              "\u0E01\u0E23\u0E01\u0E0E\u0E32\u0E04\u0E21",
+              "\u0E2A\u0E34\u0E07\u0E2B\u0E32\u0E04\u0E21",
+              "\u0E01\u0E31\u0E19\u0E22\u0E32\u0E22\u0E19",
+              "\u0E15\u0E38\u0E25\u0E32\u0E04\u0E21",
+              "\u0E1E\u0E24\u0E28\u0E08\u0E34\u0E01\u0E32\u0E22\u0E19",
+              "\u0E18\u0E31\u0E19\u0E27\u0E32\u0E04\u0E21"
+            ]
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " \u0E16\u0E36\u0E07 ",
+          scrollTitle: "\u0E40\u0E25\u0E37\u0E48\u0E2D\u0E19\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E2B\u0E23\u0E37\u0E2D\u0E25\u0E14",
+          toggleTitle: "\u0E04\u0E25\u0E34\u0E01\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E25\u0E35\u0E48\u0E22\u0E19",
+          time_24hr: true,
+          ordinal: function() {
+            return "";
+          }
+        };
+        fp.l10ns.th = Thai;
+        var th2 = fp.l10ns;
+        exports2.Thai = Thai;
+        exports2.default = th2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/at.js
+  var require_at = __commonJS({
+    "node_modules/flatpickr/dist/l10n/at.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.at = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Austria = {
+          weekdays: {
+            shorthand: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+            longhand: [
+              "Sonntag",
+              "Montag",
+              "Dienstag",
+              "Mittwoch",
+              "Donnerstag",
+              "Freitag",
+              "Samstag"
+            ]
+          },
+          months: {
+            shorthand: [
+              "J\xE4n",
+              "Feb",
+              "M\xE4r",
+              "Apr",
+              "Mai",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dez"
+            ],
+            longhand: [
+              "J\xE4nner",
+              "Februar",
+              "M\xE4rz",
+              "April",
+              "Mai",
+              "Juni",
+              "Juli",
+              "August",
+              "September",
+              "Oktober",
+              "November",
+              "Dezember"
+            ]
+          },
+          firstDayOfWeek: 1,
+          weekAbbreviation: "KW",
+          rangeSeparator: " bis ",
+          scrollTitle: "Zum \xC4ndern scrollen",
+          toggleTitle: "Zum Umschalten klicken",
+          time_24hr: true
+        };
+        fp.l10ns.at = Austria;
+        var at2 = fp.l10ns;
+        exports2.Austria = Austria;
+        exports2.default = at2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/hi.js
+  var require_hi = __commonJS({
+    "node_modules/flatpickr/dist/l10n/hi.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hi = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Hindi = {
+          weekdays: {
+            shorthand: ["\u0930\u0935\u093F", "\u0938\u094B\u092E", "\u092E\u0902\u0917\u0932", "\u092C\u0941\u0927", "\u0917\u0941\u0930\u0941", "\u0936\u0941\u0915\u094D\u0930", "\u0936\u0928\u093F"],
+            longhand: [
+              "\u0930\u0935\u093F\u0935\u093E\u0930",
+              "\u0938\u094B\u092E\u0935\u093E\u0930",
+              "\u092E\u0902\u0917\u0932\u0935\u093E\u0930",
+              "\u092C\u0941\u0927\u0935\u093E\u0930",
+              "\u0917\u0941\u0930\u0941\u0935\u093E\u0930",
+              "\u0936\u0941\u0915\u094D\u0930\u0935\u093E\u0930",
+              "\u0936\u0928\u093F\u0935\u093E\u0930"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u091C\u0928",
+              "\u092B\u0930",
+              "\u092E\u093E\u0930\u094D\u091A",
+              "\u0905\u092A\u094D\u0930\u0947\u0932",
+              "\u092E\u0908",
+              "\u091C\u0942\u0928",
+              "\u091C\u0942\u0932\u093E\u0908",
+              "\u0905\u0917",
+              "\u0938\u093F\u0924",
+              "\u0905\u0915\u094D\u091F",
+              "\u0928\u0935",
+              "\u0926\u093F"
+            ],
+            longhand: [
+              "\u091C\u0928\u0935\u0930\u0940 ",
+              "\u092B\u0930\u0935\u0930\u0940",
+              "\u092E\u093E\u0930\u094D\u091A",
+              "\u0905\u092A\u094D\u0930\u0947\u0932",
+              "\u092E\u0908",
+              "\u091C\u0942\u0928",
+              "\u091C\u0942\u0932\u093E\u0908",
+              "\u0905\u0917\u0938\u094D\u0924 ",
+              "\u0938\u093F\u0924\u092E\u094D\u092C\u0930",
+              "\u0905\u0915\u094D\u091F\u0942\u092C\u0930",
+              "\u0928\u0935\u092E\u094D\u092C\u0930",
+              "\u0926\u093F\u0938\u092E\u094D\u092C\u0930"
+            ]
+          }
+        };
+        fp.l10ns.hi = Hindi;
+        var hi2 = fp.l10ns;
+        exports2.Hindi = Hindi;
+        exports2.default = hi2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/pl.js
+  var require_pl = __commonJS({
+    "node_modules/flatpickr/dist/l10n/pl.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.pl = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Polish = {
+          weekdays: {
+            shorthand: ["Nd", "Pn", "Wt", "\u015Ar", "Cz", "Pt", "So"],
+            longhand: [
+              "Niedziela",
+              "Poniedzia\u0142ek",
+              "Wtorek",
+              "\u015Aroda",
+              "Czwartek",
+              "Pi\u0105tek",
+              "Sobota"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Sty",
+              "Lut",
+              "Mar",
+              "Kwi",
+              "Maj",
+              "Cze",
+              "Lip",
+              "Sie",
+              "Wrz",
+              "Pa\u017A",
+              "Lis",
+              "Gru"
+            ],
+            longhand: [
+              "Stycze\u0144",
+              "Luty",
+              "Marzec",
+              "Kwiecie\u0144",
+              "Maj",
+              "Czerwiec",
+              "Lipiec",
+              "Sierpie\u0144",
+              "Wrzesie\u0144",
+              "Pa\u017Adziernik",
+              "Listopad",
+              "Grudzie\u0144"
+            ]
+          },
+          rangeSeparator: " do ",
+          weekAbbreviation: "tydz.",
+          scrollTitle: "Przewi\u0144, aby zwi\u0119kszy\u0107",
+          toggleTitle: "Kliknij, aby prze\u0142\u0105czy\u0107",
+          firstDayOfWeek: 1,
+          time_24hr: true,
+          ordinal: function() {
+            return ".";
+          }
+        };
+        fp.l10ns.pl = Polish;
+        var pl2 = fp.l10ns;
+        exports2.Polish = Polish;
+        exports2.default = pl2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/kz.js
+  var require_kz = __commonJS({
+    "node_modules/flatpickr/dist/l10n/kz.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.kz = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Kazakh = {
+          weekdays: {
+            shorthand: ["\u0416\u0441", "\u0414\u0441", "\u0421c", "\u0421\u0440", "\u0411\u0441", "\u0416\u043C", "\u0421\u0431"],
+            longhand: [
+              "\u0416\u0435\u043A\u0441\u0435\u043D\u0431i",
+              "\u0414\u04AF\u0439\u0441\u0435\u043D\u0431i",
+              "\u0421\u0435\u0439\u0441\u0435\u043D\u0431i",
+              "\u0421\u04D9\u0440\u0441\u0435\u043D\u0431i",
+              "\u0411\u0435\u0439\u0441\u0435\u043D\u0431i",
+              "\u0416\u04B1\u043C\u0430",
+              "\u0421\u0435\u043D\u0431i"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u049A\u0430\u04A3",
+              "\u0410\u049B\u043F",
+              "\u041D\u0430\u0443",
+              "\u0421\u04D9\u0443",
+              "\u041C\u0430\u043C",
+              "\u041C\u0430\u0443",
+              "\u0428i\u043B",
+              "\u0422\u0430\u043C",
+              "\u049A\u044B\u0440",
+              "\u049A\u0430\u0437",
+              "\u049A\u0430\u0440",
+              "\u0416\u0435\u043B"
+            ],
+            longhand: [
+              "\u049A\u0430\u04A3\u0442\u0430\u0440",
+              "\u0410\u049B\u043F\u0430\u043D",
+              "\u041D\u0430\u0443\u0440\u044B\u0437",
+              "\u0421\u04D9\u0443i\u0440",
+              "\u041C\u0430\u043C\u044B\u0440",
+              "\u041C\u0430\u0443\u0441\u044B\u043C",
+              "\u0428i\u043B\u0434\u0435",
+              "\u0422\u0430\u043C\u044B\u0437",
+              "\u049A\u044B\u0440\u043A\u04AF\u0439\u0435\u043A",
+              "\u049A\u0430\u0437\u0430\u043D",
+              "\u049A\u0430\u0440\u0430\u0448\u0430",
+              "\u0416\u0435\u043B\u0442\u043E\u049B\u0441\u0430\u043D"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          rangeSeparator: " \u2014 ",
+          weekAbbreviation: "\u0410\u043F\u0442\u0430",
+          scrollTitle: "\u04AE\u043B\u043A\u0435\u0439\u0442\u0443 \u04AF\u0448\u0456\u043D \u0430\u0439\u043D\u0430\u043B\u0434\u044B\u0440\u044B\u04A3\u044B\u0437",
+          toggleTitle: "\u0410\u0443\u044B\u0441\u0442\u044B\u0440\u0443 \u04AF\u0448\u0456\u043D \u0431\u0430\u0441\u044B\u04A3\u044B\u0437",
+          amPM: ["\u0422\u0414", "\u0422\u041A"],
+          yearAriaLabel: "\u0416\u044B\u043B"
+        };
+        fp.l10ns.kz = Kazakh;
+        var kz2 = fp.l10ns;
+        exports2.Kazakh = Kazakh;
+        exports2.default = kz2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/tr.js
+  var require_tr = __commonJS({
+    "node_modules/flatpickr/dist/l10n/tr.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.tr = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Turkish = {
+          weekdays: {
+            shorthand: ["Paz", "Pzt", "Sal", "\xC7ar", "Per", "Cum", "Cmt"],
+            longhand: [
+              "Pazar",
+              "Pazartesi",
+              "Sal\u0131",
+              "\xC7ar\u015Famba",
+              "Per\u015Fembe",
+              "Cuma",
+              "Cumartesi"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Oca",
+              "\u015Eub",
+              "Mar",
+              "Nis",
+              "May",
+              "Haz",
+              "Tem",
+              "A\u011Fu",
+              "Eyl",
+              "Eki",
+              "Kas",
+              "Ara"
+            ],
+            longhand: [
+              "Ocak",
+              "\u015Eubat",
+              "Mart",
+              "Nisan",
+              "May\u0131s",
+              "Haziran",
+              "Temmuz",
+              "A\u011Fustos",
+              "Eyl\xFCl",
+              "Ekim",
+              "Kas\u0131m",
+              "Aral\u0131k"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return ".";
+          },
+          rangeSeparator: " - ",
+          weekAbbreviation: "Hf",
+          scrollTitle: "Art\u0131rmak i\xE7in kayd\u0131r\u0131n",
+          toggleTitle: "A\xE7/Kapa",
+          amPM: ["\xD6\xD6", "\xD6S"],
+          time_24hr: true
+        };
+        fp.l10ns.tr = Turkish;
+        var tr2 = fp.l10ns;
+        exports2.Turkish = Turkish;
+        exports2.default = tr2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/az.js
+  var require_az = __commonJS({
+    "node_modules/flatpickr/dist/l10n/az.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.az = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Azerbaijan = {
+          weekdays: {
+            shorthand: ["B.", "B.e.", "\xC7.a.", "\xC7.", "C.a.", "C.", "\u015E."],
+            longhand: [
+              "Bazar",
+              "Bazar ert\u0259si",
+              "\xC7\u0259r\u015F\u0259nb\u0259 ax\u015Fam\u0131",
+              "\xC7\u0259r\u015F\u0259nb\u0259",
+              "C\xFCm\u0259 ax\u015Fam\u0131",
+              "C\xFCm\u0259",
+              "\u015E\u0259nb\u0259"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Yan",
+              "Fev",
+              "Mar",
+              "Apr",
+              "May",
+              "\u0130yn",
+              "\u0130yl",
+              "Avq",
+              "Sen",
+              "Okt",
+              "Noy",
+              "Dek"
+            ],
+            longhand: [
+              "Yanvar",
+              "Fevral",
+              "Mart",
+              "Aprel",
+              "May",
+              "\u0130yun",
+              "\u0130yul",
+              "Avqust",
+              "Sentyabr",
+              "Oktyabr",
+              "Noyabr",
+              "Dekabr"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return ".";
+          },
+          rangeSeparator: " - ",
+          weekAbbreviation: "Hf",
+          scrollTitle: "Art\u0131rmaq \xFC\xE7\xFCn s\xFCr\xFC\u015Fd\xFCr\xFCn",
+          toggleTitle: "A\xE7 / Ba\u011Fla",
+          amPM: ["G\u018F", "GS"],
+          time_24hr: true
+        };
+        fp.l10ns.az = Azerbaijan;
+        var az2 = fp.l10ns;
+        exports2.Azerbaijan = Azerbaijan;
+        exports2.default = az2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/hr.js
+  var require_hr = __commonJS({
+    "node_modules/flatpickr/dist/l10n/hr.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hr = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Croatian = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["Ned", "Pon", "Uto", "Sri", "\u010Cet", "Pet", "Sub"],
+            longhand: [
+              "Nedjelja",
+              "Ponedjeljak",
+              "Utorak",
+              "Srijeda",
+              "\u010Cetvrtak",
+              "Petak",
+              "Subota"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Sij",
+              "Velj",
+              "O\u017Eu",
+              "Tra",
+              "Svi",
+              "Lip",
+              "Srp",
+              "Kol",
+              "Ruj",
+              "Lis",
+              "Stu",
+              "Pro"
+            ],
+            longhand: [
+              "Sije\u010Danj",
+              "Velja\u010Da",
+              "O\u017Eujak",
+              "Travanj",
+              "Svibanj",
+              "Lipanj",
+              "Srpanj",
+              "Kolovoz",
+              "Rujan",
+              "Listopad",
+              "Studeni",
+              "Prosinac"
+            ]
+          },
+          time_24hr: true
+        };
+        fp.l10ns.hr = Croatian;
+        var hr2 = fp.l10ns;
+        exports2.Croatian = Croatian;
+        exports2.default = hr2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/pt.js
+  var require_pt = __commonJS({
+    "node_modules/flatpickr/dist/l10n/pt.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.pt = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Portuguese = {
+          weekdays: {
+            shorthand: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "S\xE1b"],
+            longhand: [
+              "Domingo",
+              "Segunda-feira",
+              "Ter\xE7a-feira",
+              "Quarta-feira",
+              "Quinta-feira",
+              "Sexta-feira",
+              "S\xE1bado"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Fev",
+              "Mar",
+              "Abr",
+              "Mai",
+              "Jun",
+              "Jul",
+              "Ago",
+              "Set",
+              "Out",
+              "Nov",
+              "Dez"
+            ],
+            longhand: [
+              "Janeiro",
+              "Fevereiro",
+              "Mar\xE7o",
+              "Abril",
+              "Maio",
+              "Junho",
+              "Julho",
+              "Agosto",
+              "Setembro",
+              "Outubro",
+              "Novembro",
+              "Dezembro"
+            ]
+          },
+          rangeSeparator: " at\xE9 ",
+          time_24hr: true
+        };
+        fp.l10ns.pt = Portuguese;
+        var pt2 = fp.l10ns;
+        exports2.Portuguese = Portuguese;
+        exports2.default = pt2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/eo.js
+  var require_eo = __commonJS({
+    "node_modules/flatpickr/dist/l10n/eo.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.eo = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Esperanto = {
+          firstDayOfWeek: 1,
+          rangeSeparator: " \u011Dis ",
+          weekAbbreviation: "Sem",
+          scrollTitle: "Rulumu por pligrandigi la valoron",
+          toggleTitle: "Klaku por \u015Dalti",
+          weekdays: {
+            shorthand: ["Dim", "Lun", "Mar", "Mer", "\u0134a\u016D", "Ven", "Sab"],
+            longhand: [
+              "diman\u0109o",
+              "lundo",
+              "mardo",
+              "merkredo",
+              "\u0135a\u016Ddo",
+              "vendredo",
+              "sabato"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Maj",
+              "Jun",
+              "Jul",
+              "A\u016Dg",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dec"
+            ],
+            longhand: [
+              "januaro",
+              "februaro",
+              "marto",
+              "aprilo",
+              "majo",
+              "junio",
+              "julio",
+              "a\u016Dgusto",
+              "septembro",
+              "oktobro",
+              "novembro",
+              "decembro"
+            ]
+          },
+          ordinal: function() {
+            return "-a";
+          },
+          time_24hr: true
+        };
+        fp.l10ns.eo = Esperanto;
+        var eo2 = fp.l10ns;
+        exports2.Esperanto = Esperanto;
+        exports2.default = eo2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/lt.js
+  var require_lt = __commonJS({
+    "node_modules/flatpickr/dist/l10n/lt.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.lt = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Lithuanian = {
+          weekdays: {
+            shorthand: ["S", "Pr", "A", "T", "K", "Pn", "\u0160"],
+            longhand: [
+              "Sekmadienis",
+              "Pirmadienis",
+              "Antradienis",
+              "Tre\u010Diadienis",
+              "Ketvirtadienis",
+              "Penktadienis",
+              "\u0160e\u0161tadienis"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Sau",
+              "Vas",
+              "Kov",
+              "Bal",
+              "Geg",
+              "Bir",
+              "Lie",
+              "Rgp",
+              "Rgs",
+              "Spl",
+              "Lap",
+              "Grd"
+            ],
+            longhand: [
+              "Sausis",
+              "Vasaris",
+              "Kovas",
+              "Balandis",
+              "Gegu\u017E\u0117",
+              "Bir\u017Eelis",
+              "Liepa",
+              "Rugpju\u0304tis",
+              "Rugse\u0307jis",
+              "Spalis",
+              "Lapkritis",
+              "Gruodis"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "-a";
+          },
+          rangeSeparator: " iki ",
+          weekAbbreviation: "Sav",
+          scrollTitle: "Keisti laik\u0105 pel\u0117s rateliu",
+          toggleTitle: "Perjungti laiko format\u0105",
+          time_24hr: true
+        };
+        fp.l10ns.lt = Lithuanian;
+        var lt2 = fp.l10ns;
+        exports2.Lithuanian = Lithuanian;
+        exports2.default = lt2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/uk.js
+  var require_uk = __commonJS({
+    "node_modules/flatpickr/dist/l10n/uk.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.uk = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Ukrainian = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["\u041D\u0434", "\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431"],
+            longhand: [
+              "\u041D\u0435\u0434\u0456\u043B\u044F",
+              "\u041F\u043E\u043D\u0435\u0434\u0456\u043B\u043E\u043A",
+              "\u0412\u0456\u0432\u0442\u043E\u0440\u043E\u043A",
+              "\u0421\u0435\u0440\u0435\u0434\u0430",
+              "\u0427\u0435\u0442\u0432\u0435\u0440",
+              "\u041F'\u044F\u0442\u043D\u0438\u0446\u044F",
+              "\u0421\u0443\u0431\u043E\u0442\u0430"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0421\u0456\u0447",
+              "\u041B\u044E\u0442",
+              "\u0411\u0435\u0440",
+              "\u041A\u0432\u0456",
+              "\u0422\u0440\u0430",
+              "\u0427\u0435\u0440",
+              "\u041B\u0438\u043F",
+              "\u0421\u0435\u0440",
+              "\u0412\u0435\u0440",
+              "\u0416\u043E\u0432",
+              "\u041B\u0438\u0441",
+              "\u0413\u0440\u0443"
+            ],
+            longhand: [
+              "\u0421\u0456\u0447\u0435\u043D\u044C",
+              "\u041B\u044E\u0442\u0438\u0439",
+              "\u0411\u0435\u0440\u0435\u0437\u0435\u043D\u044C",
+              "\u041A\u0432\u0456\u0442\u0435\u043D\u044C",
+              "\u0422\u0440\u0430\u0432\u0435\u043D\u044C",
+              "\u0427\u0435\u0440\u0432\u0435\u043D\u044C",
+              "\u041B\u0438\u043F\u0435\u043D\u044C",
+              "\u0421\u0435\u0440\u043F\u0435\u043D\u044C",
+              "\u0412\u0435\u0440\u0435\u0441\u0435\u043D\u044C",
+              "\u0416\u043E\u0432\u0442\u0435\u043D\u044C",
+              "\u041B\u0438\u0441\u0442\u043E\u043F\u0430\u0434",
+              "\u0413\u0440\u0443\u0434\u0435\u043D\u044C"
+            ]
+          },
+          time_24hr: true
+        };
+        fp.l10ns.uk = Ukrainian;
+        var uk2 = fp.l10ns;
+        exports2.Ukrainian = Ukrainian;
+        exports2.default = uk2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/be.js
+  var require_be = __commonJS({
+    "node_modules/flatpickr/dist/l10n/be.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.be = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Belarusian = {
+          weekdays: {
+            shorthand: ["\u041D\u0434", "\u041F\u043D", "\u0410\u045E", "\u0421\u0440", "\u0427\u0446", "\u041F\u0442", "\u0421\u0431"],
+            longhand: [
+              "\u041D\u044F\u0434\u0437\u0435\u043B\u044F",
+              "\u041F\u0430\u043D\u044F\u0434\u0437\u0435\u043B\u0430\u043A",
+              "\u0410\u045E\u0442\u043E\u0440\u0430\u043A",
+              "\u0421\u0435\u0440\u0430\u0434\u0430",
+              "\u0427\u0430\u0446\u0432\u0435\u0440",
+              "\u041F\u044F\u0442\u043D\u0456\u0446\u0430",
+              "\u0421\u0443\u0431\u043E\u0442\u0430"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0421\u0442\u0443",
+              "\u041B\u044E\u0442",
+              "\u0421\u0430\u043A",
+              "\u041A\u0440\u0430",
+              "\u0422\u0440\u0430",
+              "\u0427\u044D\u0440",
+              "\u041B\u0456\u043F",
+              "\u0416\u043D\u0456",
+              "\u0412\u0435\u0440",
+              "\u041A\u0430\u0441",
+              "\u041B\u0456\u0441",
+              "\u0421\u043D\u0435"
+            ],
+            longhand: [
+              "\u0421\u0442\u0443\u0434\u0437\u0435\u043D\u044C",
+              "\u041B\u044E\u0442\u044B",
+              "\u0421\u0430\u043A\u0430\u0432\u0456\u043A",
+              "\u041A\u0440\u0430\u0441\u0430\u0432\u0456\u043A",
+              "\u0422\u0440\u0430\u0432\u0435\u043D\u044C",
+              "\u0427\u044D\u0440\u0432\u0435\u043D\u044C",
+              "\u041B\u0456\u043F\u0435\u043D\u044C",
+              "\u0416\u043D\u0456\u0432\u0435\u043D\u044C",
+              "\u0412\u0435\u0440\u0430\u0441\u0435\u043D\u044C",
+              "\u041A\u0430\u0441\u0442\u0440\u044B\u0447\u043D\u0456\u043A",
+              "\u041B\u0456\u0441\u0442\u0430\u043F\u0430\u0434",
+              "\u0421\u043D\u0435\u0436\u0430\u043D\u044C"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          rangeSeparator: " \u2014 ",
+          weekAbbreviation: "\u0422\u044B\u0434.",
+          scrollTitle: "\u041F\u0440\u0430\u043A\u0440\u0443\u0446\u0456\u0446\u0435 \u0434\u043B\u044F \u043F\u0430\u0432\u0435\u043B\u0456\u0447\u044D\u043D\u043D\u044F",
+          toggleTitle: "\u041D\u0430\u0446\u0456\u0441\u043D\u0456\u0446\u0435 \u0434\u043B\u044F \u043F\u0435\u0440\u0430\u043A\u043B\u044E\u0447\u044D\u043D\u043D\u044F",
+          amPM: ["\u0414\u041F", "\u041F\u041F"],
+          yearAriaLabel: "\u0413\u043E\u0434",
+          time_24hr: true
+        };
+        fp.l10ns.be = Belarusian;
+        var be2 = fp.l10ns;
+        exports2.Belarusian = Belarusian;
+        exports2.default = be2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/hu.js
+  var require_hu = __commonJS({
+    "node_modules/flatpickr/dist/l10n/hu.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hu = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Hungarian = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["V", "H", "K", "Sz", "Cs", "P", "Szo"],
+            longhand: [
+              "Vas\xE1rnap",
+              "H\xE9tf\u0151",
+              "Kedd",
+              "Szerda",
+              "Cs\xFCt\xF6rt\xF6k",
+              "P\xE9ntek",
+              "Szombat"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "M\xE1r",
+              "\xC1pr",
+              "M\xE1j",
+              "J\xFAn",
+              "J\xFAl",
+              "Aug",
+              "Szep",
+              "Okt",
+              "Nov",
+              "Dec"
+            ],
+            longhand: [
+              "Janu\xE1r",
+              "Febru\xE1r",
+              "M\xE1rcius",
+              "\xC1prilis",
+              "M\xE1jus",
+              "J\xFAnius",
+              "J\xFAlius",
+              "Augusztus",
+              "Szeptember",
+              "Okt\xF3ber",
+              "November",
+              "December"
+            ]
+          },
+          ordinal: function() {
+            return ".";
+          },
+          weekAbbreviation: "H\xE9t",
+          scrollTitle: "G\xF6rgessen",
+          toggleTitle: "Kattintson a v\xE1lt\xE1shoz",
+          rangeSeparator: " - ",
+          time_24hr: true
+        };
+        fp.l10ns.hu = Hungarian;
+        var hu2 = fp.l10ns;
+        exports2.Hungarian = Hungarian;
+        exports2.default = hu2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ro.js
+  var require_ro = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ro.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ro = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Romanian = {
+          weekdays: {
+            shorthand: ["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "S\xE2m"],
+            longhand: [
+              "Duminic\u0103",
+              "Luni",
+              "Mar\u021Bi",
+              "Miercuri",
+              "Joi",
+              "Vineri",
+              "S\xE2mb\u0103t\u0103"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Ian",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mai",
+              "Iun",
+              "Iul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Noi",
+              "Dec"
+            ],
+            longhand: [
+              "Ianuarie",
+              "Februarie",
+              "Martie",
+              "Aprilie",
+              "Mai",
+              "Iunie",
+              "Iulie",
+              "August",
+              "Septembrie",
+              "Octombrie",
+              "Noiembrie",
+              "Decembrie"
+            ]
+          },
+          firstDayOfWeek: 1,
+          time_24hr: true,
+          ordinal: function() {
+            return "";
+          }
+        };
+        fp.l10ns.ro = Romanian;
+        var ro2 = fp.l10ns;
+        exports2.Romanian = Romanian;
+        exports2.default = ro2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/es.js
+  var require_es = __commonJS({
+    "node_modules/flatpickr/dist/l10n/es.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.es = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Spanish = {
+          weekdays: {
+            shorthand: ["Dom", "Lun", "Mar", "Mi\xE9", "Jue", "Vie", "S\xE1b"],
+            longhand: [
+              "Domingo",
+              "Lunes",
+              "Martes",
+              "Mi\xE9rcoles",
+              "Jueves",
+              "Viernes",
+              "S\xE1bado"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Ene",
+              "Feb",
+              "Mar",
+              "Abr",
+              "May",
+              "Jun",
+              "Jul",
+              "Ago",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dic"
+            ],
+            longhand: [
+              "Enero",
+              "Febrero",
+              "Marzo",
+              "Abril",
+              "Mayo",
+              "Junio",
+              "Julio",
+              "Agosto",
+              "Septiembre",
+              "Octubre",
+              "Noviembre",
+              "Diciembre"
+            ]
+          },
+          ordinal: function() {
+            return "\xBA";
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " a ",
+          time_24hr: true
+        };
+        fp.l10ns.es = Spanish;
+        var es2 = fp.l10ns;
+        exports2.Spanish = Spanish;
+        exports2.default = es2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/lv.js
+  var require_lv = __commonJS({
+    "node_modules/flatpickr/dist/l10n/lv.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.lv = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Latvian = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["Sv", "Pr", "Ot", "Tr", "Ce", "Pk", "Se"],
+            longhand: [
+              "Sv\u0113tdiena",
+              "Pirmdiena",
+              "Otrdiena",
+              "Tre\u0161diena",
+              "Ceturtdiena",
+              "Piektdiena",
+              "Sestdiena"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mai",
+              "J\u016Bn",
+              "J\u016Bl",
+              "Aug",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dec"
+            ],
+            longhand: [
+              "Janv\u0101ris",
+              "Febru\u0101ris",
+              "Marts",
+              "Apr\u012Blis",
+              "Maijs",
+              "J\u016Bnijs",
+              "J\u016Blijs",
+              "Augusts",
+              "Septembris",
+              "Oktobris",
+              "Novembris",
+              "Decembris"
+            ]
+          },
+          rangeSeparator: " l\u012Bdz ",
+          time_24hr: true
+        };
+        fp.l10ns.lv = Latvian;
+        var lv2 = fp.l10ns;
+        exports2.Latvian = Latvian;
+        exports2.default = lv2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/uz.js
+  var require_uz = __commonJS({
+    "node_modules/flatpickr/dist/l10n/uz.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.uz = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Uzbek = {
+          weekdays: {
+            shorthand: ["\u042F\u043A\u0448", "\u0414\u0443\u0448", "\u0421\u0435\u0448", "\u0427\u043E\u0440", "\u041F\u0430\u0439", "\u0416\u0443\u043C", "\u0428\u0430\u043D"],
+            longhand: [
+              "\u042F\u043A\u0448\u0430\u043D\u0431\u0430",
+              "\u0414\u0443\u0448\u0430\u043D\u0431\u0430",
+              "\u0421\u0435\u0448\u0430\u043D\u0431\u0430",
+              "\u0427\u043E\u0440\u0448\u0430\u043D\u0431\u0430",
+              "\u041F\u0430\u0439\u0448\u0430\u043D\u0431\u0430",
+              "\u0416\u0443\u043C\u0430",
+              "\u0428\u0430\u043D\u0431\u0430"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u042F\u043D\u0432",
+              "\u0424\u0435\u0432",
+              "\u041C\u0430\u0440",
+              "\u0410\u043F\u0440",
+              "\u041C\u0430\u0439",
+              "\u0418\u044E\u043D",
+              "\u0418\u044E\u043B",
+              "\u0410\u0432\u0433",
+              "\u0421\u0435\u043D",
+              "\u041E\u043A\u0442",
+              "\u041D\u043E\u044F",
+              "\u0414\u0435\u043A"
+            ],
+            longhand: [
+              "\u042F\u043D\u0432\u0430\u0440",
+              "\u0424\u0435\u0432\u0440\u0430\u043B",
+              "\u041C\u0430\u0440\u0442",
+              "\u0410\u043F\u0440\u0435\u043B",
+              "\u041C\u0430\u0439",
+              "\u0418\u044E\u043D",
+              "\u0418\u044E\u043B",
+              "\u0410\u0432\u0433\u0443\u0441\u0442",
+              "\u0421\u0435\u043D\u0442\u044F\u0431\u0440",
+              "\u041E\u043A\u0442\u044F\u0431\u0440",
+              "\u041D\u043E\u044F\u0431\u0440",
+              "\u0414\u0435\u043A\u0430\u0431\u0440"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          rangeSeparator: " \u2014 ",
+          weekAbbreviation: "\u04B2\u0430\u0444\u0442\u0430",
+          scrollTitle: "\u041A\u0430\u0442\u0442\u0430\u043B\u0430\u0448\u0442\u0438\u0440\u0438\u0448 \u0443\u0447\u0443\u043D \u0430\u0439\u043B\u0430\u043D\u0442\u0438\u0440\u0438\u043D\u0433",
+          toggleTitle: "\u040E\u0442\u0438\u0448 \u0443\u0447\u0443\u043D \u0431\u043E\u0441\u0438\u043D\u0433",
+          amPM: ["AM", "PM"],
+          yearAriaLabel: "\u0419\u0438\u043B",
+          time_24hr: true
+        };
+        fp.l10ns.uz = Uzbek;
+        var uz2 = fp.l10ns;
+        exports2.Uzbek = Uzbek;
+        exports2.default = uz2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/bg.js
+  var require_bg = __commonJS({
+    "node_modules/flatpickr/dist/l10n/bg.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.bg = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Bulgarian = {
+          weekdays: {
+            shorthand: ["\u041D\u0434", "\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431"],
+            longhand: [
+              "\u041D\u0435\u0434\u0435\u043B\u044F",
+              "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u043D\u0438\u043A",
+              "\u0412\u0442\u043E\u0440\u043D\u0438\u043A",
+              "\u0421\u0440\u044F\u0434\u0430",
+              "\u0427\u0435\u0442\u0432\u044A\u0440\u0442\u044A\u043A",
+              "\u041F\u0435\u0442\u044A\u043A",
+              "\u0421\u044A\u0431\u043E\u0442\u0430"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u042F\u043D\u0443",
+              "\u0424\u0435\u0432",
+              "\u041C\u0430\u0440\u0442",
+              "\u0410\u043F\u0440",
+              "\u041C\u0430\u0439",
+              "\u042E\u043D\u0438",
+              "\u042E\u043B\u0438",
+              "\u0410\u0432\u0433",
+              "\u0421\u0435\u043F",
+              "\u041E\u043A\u0442",
+              "\u041D\u043E\u0435",
+              "\u0414\u0435\u043A"
+            ],
+            longhand: [
+              "\u042F\u043D\u0443\u0430\u0440\u0438",
+              "\u0424\u0435\u0432\u0440\u0443\u0430\u0440\u0438",
+              "\u041C\u0430\u0440\u0442",
+              "\u0410\u043F\u0440\u0438\u043B",
+              "\u041C\u0430\u0439",
+              "\u042E\u043D\u0438",
+              "\u042E\u043B\u0438",
+              "\u0410\u0432\u0433\u0443\u0441\u0442",
+              "\u0421\u0435\u043F\u0442\u0435\u043C\u0432\u0440\u0438",
+              "\u041E\u043A\u0442\u043E\u043C\u0432\u0440\u0438",
+              "\u041D\u043E\u0435\u043C\u0432\u0440\u0438",
+              "\u0414\u0435\u043A\u0435\u043C\u0432\u0440\u0438"
+            ]
+          },
+          time_24hr: true,
+          firstDayOfWeek: 1
+        };
+        fp.l10ns.bg = Bulgarian;
+        var bg2 = fp.l10ns;
+        exports2.Bulgarian = Bulgarian;
+        exports2.default = bg2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/hy.js
+  var require_hy = __commonJS({
+    "node_modules/flatpickr/dist/l10n/hy.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hy = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Armenian = {
+          weekdays: {
+            shorthand: ["\u053F\u056B\u0580", "\u0535\u0580\u056F", "\u0535\u0580\u0584", "\u0549\u0580\u0584", "\u0540\u0576\u0563", "\u0548\u0582\u0580\u0562", "\u0547\u0562\u0569"],
+            longhand: [
+              "\u053F\u056B\u0580\u0561\u056F\u056B",
+              "\u0535\u056F\u0578\u0582\u0577\u0561\u0562\u0569\u056B",
+              "\u0535\u0580\u0565\u0584\u0577\u0561\u0562\u0569\u056B",
+              "\u0549\u0578\u0580\u0565\u0584\u0577\u0561\u0562\u0569\u056B",
+              "\u0540\u056B\u0576\u0563\u0577\u0561\u0562\u0569\u056B",
+              "\u0548\u0582\u0580\u0562\u0561\u0569",
+              "\u0547\u0561\u0562\u0561\u0569"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0540\u0576\u057E",
+              "\u0553\u057F\u0580",
+              "\u0544\u0561\u0580",
+              "\u0531\u057A\u0580",
+              "\u0544\u0561\u0575",
+              "\u0540\u0576\u057D",
+              "\u0540\u056C\u057D",
+              "\u0555\u0563\u057D",
+              "\u054D\u0565\u057A",
+              "\u0540\u0578\u056F",
+              "\u0546\u0574\u0562",
+              "\u0534\u0565\u056F"
+            ],
+            longhand: [
+              "\u0540\u0578\u0582\u0576\u057E\u0561\u0580",
+              "\u0553\u0565\u057F\u0580\u057E\u0561\u0580",
+              "\u0544\u0561\u0580\u057F",
+              "\u0531\u057A\u0580\u056B\u056C",
+              "\u0544\u0561\u0575\u056B\u057D",
+              "\u0540\u0578\u0582\u0576\u056B\u057D",
+              "\u0540\u0578\u0582\u056C\u056B\u057D",
+              "\u0555\u0563\u0578\u057D\u057F\u0578\u057D",
+              "\u054D\u0565\u057A\u057F\u0565\u0574\u0562\u0565\u0580",
+              "\u0540\u0578\u056F\u057F\u0565\u0574\u0562\u0565\u0580",
+              "\u0546\u0578\u0575\u0565\u0574\u0562\u0565\u0580",
+              "\u0534\u0565\u056F\u057F\u0565\u0574\u0562\u0565\u0580"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          rangeSeparator: " \u2014 ",
+          weekAbbreviation: "\u0547\u0532\u054F",
+          scrollTitle: "\u0548\u056C\u0578\u0580\u0565\u0584\u055D \u0574\u0565\u056E\u0561\u0581\u0576\u0565\u056C\u0578\u0582 \u0570\u0561\u0574\u0561\u0580",
+          toggleTitle: "\u054D\u0565\u0572\u0574\u0565\u0584\u055D \u0583\u0578\u056D\u0565\u056C\u0578\u0582 \u0570\u0561\u0574\u0561\u0580",
+          amPM: ["\u0544\u053F", "\u053F\u0540"],
+          yearAriaLabel: "\u054F\u0561\u0580\u056B",
+          monthAriaLabel: "\u0531\u0574\u056B\u057D",
+          hourAriaLabel: "\u053A\u0561\u0574",
+          minuteAriaLabel: "\u0550\u0578\u057A\u0565",
+          time_24hr: true
+        };
+        fp.l10ns.hy = Armenian;
+        var hy2 = fp.l10ns;
+        exports2.Armenian = Armenian;
+        exports2.default = hy2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ru.js
+  var require_ru = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ru.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ru = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Russian = {
+          weekdays: {
+            shorthand: ["\u0412\u0441", "\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431"],
+            longhand: [
+              "\u0412\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435",
+              "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A",
+              "\u0412\u0442\u043E\u0440\u043D\u0438\u043A",
+              "\u0421\u0440\u0435\u0434\u0430",
+              "\u0427\u0435\u0442\u0432\u0435\u0440\u0433",
+              "\u041F\u044F\u0442\u043D\u0438\u0446\u0430",
+              "\u0421\u0443\u0431\u0431\u043E\u0442\u0430"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u042F\u043D\u0432",
+              "\u0424\u0435\u0432",
+              "\u041C\u0430\u0440\u0442",
+              "\u0410\u043F\u0440",
+              "\u041C\u0430\u0439",
+              "\u0418\u044E\u043D\u044C",
+              "\u0418\u044E\u043B\u044C",
+              "\u0410\u0432\u0433",
+              "\u0421\u0435\u043D",
+              "\u041E\u043A\u0442",
+              "\u041D\u043E\u044F",
+              "\u0414\u0435\u043A"
+            ],
+            longhand: [
+              "\u042F\u043D\u0432\u0430\u0440\u044C",
+              "\u0424\u0435\u0432\u0440\u0430\u043B\u044C",
+              "\u041C\u0430\u0440\u0442",
+              "\u0410\u043F\u0440\u0435\u043B\u044C",
+              "\u041C\u0430\u0439",
+              "\u0418\u044E\u043D\u044C",
+              "\u0418\u044E\u043B\u044C",
+              "\u0410\u0432\u0433\u0443\u0441\u0442",
+              "\u0421\u0435\u043D\u0442\u044F\u0431\u0440\u044C",
+              "\u041E\u043A\u0442\u044F\u0431\u0440\u044C",
+              "\u041D\u043E\u044F\u0431\u0440\u044C",
+              "\u0414\u0435\u043A\u0430\u0431\u0440\u044C"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          rangeSeparator: " \u2014 ",
+          weekAbbreviation: "\u041D\u0435\u0434.",
+          scrollTitle: "\u041F\u0440\u043E\u043A\u0440\u0443\u0442\u0438\u0442\u0435 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F",
+          toggleTitle: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F",
+          amPM: ["\u0414\u041F", "\u041F\u041F"],
+          yearAriaLabel: "\u0413\u043E\u0434",
+          time_24hr: true
+        };
+        fp.l10ns.ru = Russian;
+        var ru2 = fp.l10ns;
+        exports2.Russian = Russian;
+        exports2.default = ru2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/et.js
+  var require_et = __commonJS({
+    "node_modules/flatpickr/dist/l10n/et.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.et = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Estonian = {
+          weekdays: {
+            shorthand: ["P", "E", "T", "K", "N", "R", "L"],
+            longhand: [
+              "P\xFChap\xE4ev",
+              "Esmasp\xE4ev",
+              "Teisip\xE4ev",
+              "Kolmap\xE4ev",
+              "Neljap\xE4ev",
+              "Reede",
+              "Laup\xE4ev"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jaan",
+              "Veebr",
+              "M\xE4rts",
+              "Apr",
+              "Mai",
+              "Juuni",
+              "Juuli",
+              "Aug",
+              "Sept",
+              "Okt",
+              "Nov",
+              "Dets"
+            ],
+            longhand: [
+              "Jaanuar",
+              "Veebruar",
+              "M\xE4rts",
+              "Aprill",
+              "Mai",
+              "Juuni",
+              "Juuli",
+              "August",
+              "September",
+              "Oktoober",
+              "November",
+              "Detsember"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return ".";
+          },
+          weekAbbreviation: "N\xE4d",
+          rangeSeparator: " kuni ",
+          scrollTitle: "Keri, et suurendada",
+          toggleTitle: "Kl\xF5psa, et vahetada",
+          time_24hr: true
+        };
+        fp.l10ns.et = Estonian;
+        var et2 = fp.l10ns;
+        exports2.Estonian = Estonian;
+        exports2.default = et2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/mk.js
+  var require_mk = __commonJS({
+    "node_modules/flatpickr/dist/l10n/mk.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.mk = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Macedonian = {
+          weekdays: {
+            shorthand: ["\u041D\u0435", "\u041F\u043E", "\u0412\u0442", "\u0421\u0440", "\u0427\u0435", "\u041F\u0435", "\u0421\u0430"],
+            longhand: [
+              "\u041D\u0435\u0434\u0435\u043B\u0430",
+              "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u043D\u0438\u043A",
+              "\u0412\u0442\u043E\u0440\u043D\u0438\u043A",
+              "\u0421\u0440\u0435\u0434\u0430",
+              "\u0427\u0435\u0442\u0432\u0440\u0442\u043E\u043A",
+              "\u041F\u0435\u0442\u043E\u043A",
+              "\u0421\u0430\u0431\u043E\u0442\u0430"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0408\u0430\u043D",
+              "\u0424\u0435\u0432",
+              "\u041C\u0430\u0440",
+              "\u0410\u043F\u0440",
+              "\u041C\u0430\u0458",
+              "\u0408\u0443\u043D",
+              "\u0408\u0443\u043B",
+              "\u0410\u0432\u0433",
+              "\u0421\u0435\u043F",
+              "\u041E\u043A\u0442",
+              "\u041D\u043E\u0435",
+              "\u0414\u0435\u043A"
+            ],
+            longhand: [
+              "\u0408\u0430\u043D\u0443\u0430\u0440\u0438",
+              "\u0424\u0435\u0432\u0440\u0443\u0430\u0440\u0438",
+              "\u041C\u0430\u0440\u0442",
+              "\u0410\u043F\u0440\u0438\u043B",
+              "\u041C\u0430\u0458",
+              "\u0408\u0443\u043D\u0438",
+              "\u0408\u0443\u043B\u0438",
+              "\u0410\u0432\u0433\u0443\u0441\u0442",
+              "\u0421\u0435\u043F\u0442\u0435\u043C\u0432\u0440\u0438",
+              "\u041E\u043A\u0442\u043E\u043C\u0432\u0440\u0438",
+              "\u041D\u043E\u0435\u043C\u0432\u0440\u0438",
+              "\u0414\u0435\u043A\u0435\u043C\u0432\u0440\u0438"
+            ]
+          },
+          firstDayOfWeek: 1,
+          weekAbbreviation: "\u041D\u0435\u0434.",
+          rangeSeparator: " \u0434\u043E ",
+          time_24hr: true
+        };
+        fp.l10ns.mk = Macedonian;
+        var mk2 = fp.l10ns;
+        exports2.Macedonian = Macedonian;
+        exports2.default = mk2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/uz_latn.js
+  var require_uz_latn = __commonJS({
+    "node_modules/flatpickr/dist/l10n/uz_latn.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.uz_latn = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var UzbekLatin = {
+          weekdays: {
+            shorthand: ["Ya", "Du", "Se", "Cho", "Pa", "Ju", "Sha"],
+            longhand: [
+              "Yakshanba",
+              "Dushanba",
+              "Seshanba",
+              "Chorshanba",
+              "Payshanba",
+              "Juma",
+              "Shanba"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Yan",
+              "Fev",
+              "Mar",
+              "Apr",
+              "May",
+              "Iyun",
+              "Iyul",
+              "Avg",
+              "Sen",
+              "Okt",
+              "Noy",
+              "Dek"
+            ],
+            longhand: [
+              "Yanvar",
+              "Fevral",
+              "Mart",
+              "Aprel",
+              "May",
+              "Iyun",
+              "Iyul",
+              "Avgust",
+              "Sentabr",
+              "Oktabr",
+              "Noyabr",
+              "Dekabr"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          rangeSeparator: " \u2014 ",
+          weekAbbreviation: "Hafta",
+          scrollTitle: "Kattalashtirish uchun aylantiring",
+          toggleTitle: "O\u2018tish uchun bosing",
+          amPM: ["AM", "PM"],
+          yearAriaLabel: "Yil",
+          time_24hr: true
+        };
+        fp.l10ns["uz_latn"] = UzbekLatin;
+        var uz_latn2 = fp.l10ns;
+        exports2.UzbekLatin = UzbekLatin;
+        exports2.default = uz_latn2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/bn.js
+  var require_bn = __commonJS({
+    "node_modules/flatpickr/dist/l10n/bn.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.bn = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Bangla = {
+          weekdays: {
+            shorthand: ["\u09B0\u09AC\u09BF", "\u09B8\u09CB\u09AE", "\u09AE\u0999\u09CD\u0997\u09B2", "\u09AC\u09C1\u09A7", "\u09AC\u09C3\u09B9\u09B8\u09CD\u09AA\u09A4\u09BF", "\u09B6\u09C1\u0995\u09CD\u09B0", "\u09B6\u09A8\u09BF"],
+            longhand: [
+              "\u09B0\u09AC\u09BF\u09AC\u09BE\u09B0",
+              "\u09B8\u09CB\u09AE\u09AC\u09BE\u09B0",
+              "\u09AE\u0999\u09CD\u0997\u09B2\u09AC\u09BE\u09B0",
+              "\u09AC\u09C1\u09A7\u09AC\u09BE\u09B0",
+              "\u09AC\u09C3\u09B9\u09B8\u09CD\u09AA\u09A4\u09BF\u09AC\u09BE\u09B0",
+              "\u09B6\u09C1\u0995\u09CD\u09B0\u09AC\u09BE\u09B0",
+              "\u09B6\u09A8\u09BF\u09AC\u09BE\u09B0"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u099C\u09BE\u09A8\u09C1",
+              "\u09AB\u09C7\u09AC\u09CD\u09B0\u09C1",
+              "\u09AE\u09BE\u09B0\u09CD\u099A",
+              "\u098F\u09AA\u09CD\u09B0\u09BF\u09B2",
+              "\u09AE\u09C7",
+              "\u099C\u09C1\u09A8",
+              "\u099C\u09C1\u09B2\u09BE\u0987",
+              "\u0986\u0997",
+              "\u09B8\u09C7\u09AA\u09CD\u099F\u09C7",
+              "\u0985\u0995\u09CD\u099F\u09CB",
+              "\u09A8\u09AD\u09C7",
+              "\u09A1\u09BF\u09B8\u09C7"
+            ],
+            longhand: [
+              "\u099C\u09BE\u09A8\u09C1\u09AF\u09BC\u09BE\u09B0\u09C0",
+              "\u09AB\u09C7\u09AC\u09CD\u09B0\u09C1\u09AF\u09BC\u09BE\u09B0\u09C0",
+              "\u09AE\u09BE\u09B0\u09CD\u099A",
+              "\u098F\u09AA\u09CD\u09B0\u09BF\u09B2",
+              "\u09AE\u09C7",
+              "\u099C\u09C1\u09A8",
+              "\u099C\u09C1\u09B2\u09BE\u0987",
+              "\u0986\u0997\u09B8\u09CD\u099F",
+              "\u09B8\u09C7\u09AA\u09CD\u099F\u09C7\u09AE\u09CD\u09AC\u09B0",
+              "\u0985\u0995\u09CD\u099F\u09CB\u09AC\u09B0",
+              "\u09A8\u09AD\u09C7\u09AE\u09CD\u09AC\u09B0",
+              "\u09A1\u09BF\u09B8\u09C7\u09AE\u09CD\u09AC\u09B0"
+            ]
+          }
+        };
+        fp.l10ns.bn = Bangla;
+        var bn2 = fp.l10ns;
+        exports2.Bangla = Bangla;
+        exports2.default = bn2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/id.js
+  var require_id = __commonJS({
+    "node_modules/flatpickr/dist/l10n/id.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.id = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Indonesian = {
+          weekdays: {
+            shorthand: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+            longhand: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mei",
+              "Jun",
+              "Jul",
+              "Agu",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des"
+            ],
+            longhand: [
+              "Januari",
+              "Februari",
+              "Maret",
+              "April",
+              "Mei",
+              "Juni",
+              "Juli",
+              "Agustus",
+              "September",
+              "Oktober",
+              "November",
+              "Desember"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          time_24hr: true,
+          rangeSeparator: " - "
+        };
+        fp.l10ns.id = Indonesian;
+        var id2 = fp.l10ns;
+        exports2.Indonesian = Indonesian;
+        exports2.default = id2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/si.js
+  var require_si = __commonJS({
+    "node_modules/flatpickr/dist/l10n/si.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.si = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Sinhala = {
+          weekdays: {
+            shorthand: ["\u0D89", "\u0DC3", "\u0D85", "\u0DB6", "\u0DB6\u0DCA\u200D\u0DBB", "\u0DC3\u0DD2", "\u0DC3\u0DD9"],
+            longhand: [
+              "\u0D89\u0DBB\u0DD2\u0DAF\u0DCF",
+              "\u0DC3\u0DB3\u0DD4\u0DAF\u0DCF",
+              "\u0D85\u0D9F\u0DC4\u0DBB\u0DD4\u0DC0\u0DCF\u0DAF\u0DCF",
+              "\u0DB6\u0DAF\u0DCF\u0DAF\u0DCF",
+              "\u0DB6\u0DCA\u200D\u0DBB\u0DC4\u0DC3\u0DCA\u0DB4\u0DAD\u0DD2\u0DB1\u0DCA\u0DAF\u0DCF",
+              "\u0DC3\u0DD2\u0D9A\u0DD4\u0DBB\u0DCF\u0DAF\u0DCF",
+              "\u0DC3\u0DD9\u0DB1\u0DC3\u0DD4\u0DBB\u0DCF\u0DAF\u0DCF"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0DA2\u0DB1",
+              "\u0DB4\u0DD9\u0DB6",
+              "\u0DB8\u0DCF\u0DBB\u0DCA",
+              "\u0D85\u0DB4\u0DCA\u200D\u0DBB\u0DDA",
+              "\u0DB8\u0DD0\u0DBA\u0DD2",
+              "\u0DA2\u0DD4\u0DB1\u0DD2",
+              "\u0DA2\u0DD6\u0DBD\u0DD2",
+              "\u0D85\u0D9C\u0DDD",
+              "\u0DC3\u0DD0\u0DB4\u0DCA",
+              "\u0D94\u0D9A\u0DCA",
+              "\u0DB1\u0DDC\u0DC0\u0DD0",
+              "\u0DAF\u0DD9\u0DC3\u0DD0"
+            ],
+            longhand: [
+              "\u0DA2\u0DB1\u0DC0\u0DCF\u0DBB\u0DD2",
+              "\u0DB4\u0DD9\u0DB6\u0DBB\u0DC0\u0DCF\u0DBB\u0DD2",
+              "\u0DB8\u0DCF\u0DBB\u0DCA\u0DAD\u0DD4",
+              "\u0D85\u0DB4\u0DCA\u200D\u0DBB\u0DDA\u0DBD\u0DCA",
+              "\u0DB8\u0DD0\u0DBA\u0DD2",
+              "\u0DA2\u0DD4\u0DB1\u0DD2",
+              "\u0DA2\u0DD6\u0DBD\u0DD2",
+              "\u0D85\u0D9C\u0DDD\u0DC3\u0DCA\u0DAD\u0DD4",
+              "\u0DC3\u0DD0\u0DB4\u0DCA\u0DAD\u0DD0\u0DB8\u0DCA\u0DB6\u0DBB\u0DCA",
+              "\u0D94\u0D9A\u0DCA\u0DAD\u0DDD\u0DB6\u0DBB\u0DCA",
+              "\u0DB1\u0DDC\u0DC0\u0DD0\u0DB8\u0DCA\u0DB6\u0DBB\u0DCA",
+              "\u0DAF\u0DD9\u0DC3\u0DD0\u0DB8\u0DCA\u0DB6\u0DBB\u0DCA"
+            ]
+          },
+          time_24hr: true
+        };
+        fp.l10ns.si = Sinhala;
+        var si2 = fp.l10ns;
+        exports2.Sinhala = Sinhala;
+        exports2.default = si2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/fa.js
+  var require_fa = __commonJS({
+    "node_modules/flatpickr/dist/l10n/fa.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fa = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Persian = {
+          weekdays: {
+            shorthand: ["\u06CC\u06A9", "\u062F\u0648", "\u0633\u0647", "\u0686\u0647\u0627\u0631", "\u067E\u0646\u062C", "\u062C\u0645\u0639\u0647", "\u0634\u0646\u0628\u0647"],
+            longhand: [
+              "\u06CC\u06A9\u200C\u0634\u0646\u0628\u0647",
+              "\u062F\u0648\u0634\u0646\u0628\u0647",
+              "\u0633\u0647\u200C\u0634\u0646\u0628\u0647",
+              "\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647",
+              "\u067E\u0646\u0686\u200C\u0634\u0646\u0628\u0647",
+              "\u062C\u0645\u0639\u0647",
+              "\u0634\u0646\u0628\u0647"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0698\u0627\u0646\u0648\u06CC\u0647",
+              "\u0641\u0648\u0631\u06CC\u0647",
+              "\u0645\u0627\u0631\u0633",
+              "\u0622\u0648\u0631\u06CC\u0644",
+              "\u0645\u0647",
+              "\u0698\u0648\u0626\u0646",
+              "\u0698\u0648\u0626\u06CC\u0647",
+              "\u0627\u0648\u062A",
+              "\u0633\u067E\u062A\u0627\u0645\u0628\u0631",
+              "\u0627\u06A9\u062A\u0628\u0631",
+              "\u0646\u0648\u0627\u0645\u0628\u0631",
+              "\u062F\u0633\u0627\u0645\u0628\u0631"
+            ],
+            longhand: [
+              "\u0698\u0627\u0646\u0648\u06CC\u0647",
+              "\u0641\u0648\u0631\u06CC\u0647",
+              "\u0645\u0627\u0631\u0633",
+              "\u0622\u0648\u0631\u06CC\u0644",
+              "\u0645\u0647",
+              "\u0698\u0648\u0626\u0646",
+              "\u0698\u0648\u0626\u06CC\u0647",
+              "\u0627\u0648\u062A",
+              "\u0633\u067E\u062A\u0627\u0645\u0628\u0631",
+              "\u0627\u06A9\u062A\u0628\u0631",
+              "\u0646\u0648\u0627\u0645\u0628\u0631",
+              "\u062F\u0633\u0627\u0645\u0628\u0631"
+            ]
+          },
+          firstDayOfWeek: 6,
+          ordinal: function() {
+            return "";
+          }
+        };
+        fp.l10ns.fa = Persian;
+        var fa2 = fp.l10ns;
+        exports2.Persian = Persian;
+        exports2.default = fa2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/mn.js
+  var require_mn = __commonJS({
+    "node_modules/flatpickr/dist/l10n/mn.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.mn = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Mongolian = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["\u0414\u0430", "\u041C\u044F", "\u041B\u0445", "\u041F\u04AF", "\u0411\u0430", "\u0411\u044F", "\u041D\u044F"],
+            longhand: ["\u0414\u0430\u0432\u0430\u0430", "\u041C\u044F\u0433\u043C\u0430\u0440", "\u041B\u0445\u0430\u0433\u0432\u0430", "\u041F\u04AF\u0440\u044D\u0432", "\u0411\u0430\u0430\u0441\u0430\u043D", "\u0411\u044F\u043C\u0431\u0430", "\u041D\u044F\u043C"]
+          },
+          months: {
+            shorthand: [
+              "1-\u0440 \u0441\u0430\u0440",
+              "2-\u0440 \u0441\u0430\u0440",
+              "3-\u0440 \u0441\u0430\u0440",
+              "4-\u0440 \u0441\u0430\u0440",
+              "5-\u0440 \u0441\u0430\u0440",
+              "6-\u0440 \u0441\u0430\u0440",
+              "7-\u0440 \u0441\u0430\u0440",
+              "8-\u0440 \u0441\u0430\u0440",
+              "9-\u0440 \u0441\u0430\u0440",
+              "10-\u0440 \u0441\u0430\u0440",
+              "11-\u0440 \u0441\u0430\u0440",
+              "12-\u0440 \u0441\u0430\u0440"
+            ],
+            longhand: [
+              "\u041D\u044D\u0433\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
+              "\u0425\u043E\u0451\u0440\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
+              "\u0413\u0443\u0440\u0430\u0432\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
+              "\u0414\u04E9\u0440\u04E9\u0432\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
+              "\u0422\u0430\u0432\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
+              "\u0417\u0443\u0440\u0433\u0430\u0430\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
+              "\u0414\u043E\u043B\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
+              "\u041D\u0430\u0439\u043C\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
+              "\u0415\u0441\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
+              "\u0410\u0440\u0430\u0432\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
+              "\u0410\u0440\u0432\u0430\u043D\u043D\u044D\u0433\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
+              "\u0410\u0440\u0432\u0430\u043D\u0445\u043E\u0451\u0440\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440"
+            ]
+          },
+          rangeSeparator: "-\u0441 ",
+          time_24hr: true
+        };
+        fp.l10ns.mn = Mongolian;
+        var mn2 = fp.l10ns;
+        exports2.Mongolian = Mongolian;
+        exports2.default = mn2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/vn.js
+  var require_vn = __commonJS({
+    "node_modules/flatpickr/dist/l10n/vn.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.vn = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Vietnamese = {
+          weekdays: {
+            shorthand: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+            longhand: [
+              "Ch\u1EE7 nh\u1EADt",
+              "Th\u1EE9 hai",
+              "Th\u1EE9 ba",
+              "Th\u1EE9 t\u01B0",
+              "Th\u1EE9 n\u0103m",
+              "Th\u1EE9 s\xE1u",
+              "Th\u1EE9 b\u1EA3y"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Th1",
+              "Th2",
+              "Th3",
+              "Th4",
+              "Th5",
+              "Th6",
+              "Th7",
+              "Th8",
+              "Th9",
+              "Th10",
+              "Th11",
+              "Th12"
+            ],
+            longhand: [
+              "Th\xE1ng m\u1ED9t",
+              "Th\xE1ng hai",
+              "Th\xE1ng ba",
+              "Th\xE1ng t\u01B0",
+              "Th\xE1ng n\u0103m",
+              "Th\xE1ng s\xE1u",
+              "Th\xE1ng b\u1EA3y",
+              "Th\xE1ng t\xE1m",
+              "Th\xE1ng ch\xEDn",
+              "Th\xE1ng m\u01B0\u1EDDi",
+              "Th\xE1ng m\u01B0\u1EDDi m\u1ED9t",
+              "Th\xE1ng m\u01B0\u1EDDi hai"
+            ]
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " \u0111\u1EBFn "
+        };
+        fp.l10ns.vn = Vietnamese;
+        var vn2 = fp.l10ns;
+        exports2.Vietnamese = Vietnamese;
+        exports2.default = vn2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/bs.js
+  var require_bs = __commonJS({
+    "node_modules/flatpickr/dist/l10n/bs.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.bs = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Bosnian = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["Ned", "Pon", "Uto", "Sri", "\u010Cet", "Pet", "Sub"],
+            longhand: [
+              "Nedjelja",
+              "Ponedjeljak",
+              "Utorak",
+              "Srijeda",
+              "\u010Cetvrtak",
+              "Petak",
+              "Subota"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Maj",
+              "Jun",
+              "Jul",
+              "Avg",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dec"
+            ],
+            longhand: [
+              "Januar",
+              "Februar",
+              "Mart",
+              "April",
+              "Maj",
+              "Juni",
+              "Juli",
+              "Avgust",
+              "Septembar",
+              "Oktobar",
+              "Novembar",
+              "Decembar"
+            ]
+          },
+          time_24hr: true
+        };
+        fp.l10ns.bs = Bosnian;
+        var bs2 = fp.l10ns;
+        exports2.Bosnian = Bosnian;
+        exports2.default = bs2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/sk.js
+  var require_sk = __commonJS({
+    "node_modules/flatpickr/dist/l10n/sk.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sk = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Slovak = {
+          weekdays: {
+            shorthand: ["Ned", "Pon", "Ut", "Str", "\u0160tv", "Pia", "Sob"],
+            longhand: [
+              "Nede\u013Ea",
+              "Pondelok",
+              "Utorok",
+              "Streda",
+              "\u0160tvrtok",
+              "Piatok",
+              "Sobota"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "M\xE1j",
+              "J\xFAn",
+              "J\xFAl",
+              "Aug",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dec"
+            ],
+            longhand: [
+              "Janu\xE1r",
+              "Febru\xE1r",
+              "Marec",
+              "Apr\xEDl",
+              "M\xE1j",
+              "J\xFAn",
+              "J\xFAl",
+              "August",
+              "September",
+              "Okt\xF3ber",
+              "November",
+              "December"
+            ]
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " do ",
+          time_24hr: true,
+          ordinal: function() {
+            return ".";
+          }
+        };
+        fp.l10ns.sk = Slovak;
+        var sk2 = fp.l10ns;
+        exports2.Slovak = Slovak;
+        exports2.default = sk2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/fi.js
+  var require_fi = __commonJS({
+    "node_modules/flatpickr/dist/l10n/fi.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fi = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Finnish = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["su", "ma", "ti", "ke", "to", "pe", "la"],
+            longhand: [
+              "sunnuntai",
+              "maanantai",
+              "tiistai",
+              "keskiviikko",
+              "torstai",
+              "perjantai",
+              "lauantai"
+            ]
+          },
+          months: {
+            shorthand: [
+              "tammi",
+              "helmi",
+              "maalis",
+              "huhti",
+              "touko",
+              "kes\xE4",
+              "hein\xE4",
+              "elo",
+              "syys",
+              "loka",
+              "marras",
+              "joulu"
+            ],
+            longhand: [
+              "tammikuu",
+              "helmikuu",
+              "maaliskuu",
+              "huhtikuu",
+              "toukokuu",
+              "kes\xE4kuu",
+              "hein\xE4kuu",
+              "elokuu",
+              "syyskuu",
+              "lokakuu",
+              "marraskuu",
+              "joulukuu"
+            ]
+          },
+          ordinal: function() {
+            return ".";
+          },
+          time_24hr: true
+        };
+        fp.l10ns.fi = Finnish;
+        var fi2 = fp.l10ns;
+        exports2.Finnish = Finnish;
+        exports2.default = fi2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ms.js
+  var require_ms = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ms.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ms = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Malaysian = {
+          weekdays: {
+            shorthand: ["Aha", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"],
+            longhand: ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mac",
+              "Apr",
+              "Mei",
+              "Jun",
+              "Jul",
+              "Ogo",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dis"
+            ],
+            longhand: [
+              "Januari",
+              "Februari",
+              "Mac",
+              "April",
+              "Mei",
+              "Jun",
+              "Julai",
+              "Ogos",
+              "September",
+              "Oktober",
+              "November",
+              "Disember"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          }
+        };
+        var ms2 = fp.l10ns;
+        exports2.Malaysian = Malaysian;
+        exports2.default = ms2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/zh-tw.js
+  var require_zh_tw = __commonJS({
+    "node_modules/flatpickr/dist/l10n/zh-tw.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2["zh-tw"] = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var MandarinTraditional = {
+          weekdays: {
+            shorthand: ["\u9031\u65E5", "\u9031\u4E00", "\u9031\u4E8C", "\u9031\u4E09", "\u9031\u56DB", "\u9031\u4E94", "\u9031\u516D"],
+            longhand: [
+              "\u661F\u671F\u65E5",
+              "\u661F\u671F\u4E00",
+              "\u661F\u671F\u4E8C",
+              "\u661F\u671F\u4E09",
+              "\u661F\u671F\u56DB",
+              "\u661F\u671F\u4E94",
+              "\u661F\u671F\u516D"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u4E00\u6708",
+              "\u4E8C\u6708",
+              "\u4E09\u6708",
+              "\u56DB\u6708",
+              "\u4E94\u6708",
+              "\u516D\u6708",
+              "\u4E03\u6708",
+              "\u516B\u6708",
+              "\u4E5D\u6708",
+              "\u5341\u6708",
+              "\u5341\u4E00\u6708",
+              "\u5341\u4E8C\u6708"
+            ],
+            longhand: [
+              "\u4E00\u6708",
+              "\u4E8C\u6708",
+              "\u4E09\u6708",
+              "\u56DB\u6708",
+              "\u4E94\u6708",
+              "\u516D\u6708",
+              "\u4E03\u6708",
+              "\u516B\u6708",
+              "\u4E5D\u6708",
+              "\u5341\u6708",
+              "\u5341\u4E00\u6708",
+              "\u5341\u4E8C\u6708"
+            ]
+          },
+          rangeSeparator: " \u81F3 ",
+          weekAbbreviation: "\u9031",
+          scrollTitle: "\u6EFE\u52D5\u5207\u63DB",
+          toggleTitle: "\u9EDE\u64CA\u5207\u63DB 12/24 \u5C0F\u6642\u6642\u5236"
+        };
+        fp.l10ns.zh_tw = MandarinTraditional;
+        var zhTw = fp.l10ns;
+        exports2.MandarinTraditional = MandarinTraditional;
+        exports2.default = zhTw;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/cat.js
+  var require_cat = __commonJS({
+    "node_modules/flatpickr/dist/l10n/cat.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.cat = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Catalan = {
+          weekdays: {
+            shorthand: ["Dg", "Dl", "Dt", "Dc", "Dj", "Dv", "Ds"],
+            longhand: [
+              "Diumenge",
+              "Dilluns",
+              "Dimarts",
+              "Dimecres",
+              "Dijous",
+              "Divendres",
+              "Dissabte"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Gen",
+              "Febr",
+              "Mar\xE7",
+              "Abr",
+              "Maig",
+              "Juny",
+              "Jul",
+              "Ag",
+              "Set",
+              "Oct",
+              "Nov",
+              "Des"
+            ],
+            longhand: [
+              "Gener",
+              "Febrer",
+              "Mar\xE7",
+              "Abril",
+              "Maig",
+              "Juny",
+              "Juliol",
+              "Agost",
+              "Setembre",
+              "Octubre",
+              "Novembre",
+              "Desembre"
+            ]
+          },
+          ordinal: function(nth) {
+            var s = nth % 100;
+            if (s > 3 && s < 21)
+              return "\xE8";
+            switch (s % 10) {
+              case 1:
+                return "r";
+              case 2:
+                return "n";
+              case 3:
+                return "r";
+              case 4:
+                return "t";
+              default:
+                return "\xE8";
+            }
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " a ",
+          time_24hr: true
+        };
+        fp.l10ns.cat = fp.l10ns.ca = Catalan;
+        var cat2 = fp.l10ns;
+        exports2.Catalan = Catalan;
+        exports2.default = cat2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/is.js
+  var require_is = __commonJS({
+    "node_modules/flatpickr/dist/l10n/is.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.is = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Icelandic = {
+          weekdays: {
+            shorthand: ["Sun", "M\xE1n", "\xDEri", "Mi\xF0", "Fim", "F\xF6s", "Lau"],
+            longhand: [
+              "Sunnudagur",
+              "M\xE1nudagur",
+              "\xDEri\xF0judagur",
+              "Mi\xF0vikudagur",
+              "Fimmtudagur",
+              "F\xF6studagur",
+              "Laugardagur"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Ma\xED",
+              "J\xFAn",
+              "J\xFAl",
+              "\xC1g\xFA",
+              "Sep",
+              "Okt",
+              "N\xF3v",
+              "Des"
+            ],
+            longhand: [
+              "Jan\xFAar",
+              "Febr\xFAar",
+              "Mars",
+              "Apr\xEDl",
+              "Ma\xED",
+              "J\xFAn\xED",
+              "J\xFAl\xED",
+              "\xC1g\xFAst",
+              "September",
+              "Okt\xF3ber",
+              "N\xF3vember",
+              "Desember"
+            ]
+          },
+          ordinal: function() {
+            return ".";
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " til ",
+          weekAbbreviation: "vika",
+          yearAriaLabel: "\xC1r",
+          time_24hr: true
+        };
+        fp.l10ns.is = Icelandic;
+        var is3 = fp.l10ns;
+        exports2.Icelandic = Icelandic;
+        exports2.default = is3;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/sl.js
+  var require_sl = __commonJS({
+    "node_modules/flatpickr/dist/l10n/sl.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sl = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Slovenian = {
+          weekdays: {
+            shorthand: ["Ned", "Pon", "Tor", "Sre", "\u010Cet", "Pet", "Sob"],
+            longhand: [
+              "Nedelja",
+              "Ponedeljek",
+              "Torek",
+              "Sreda",
+              "\u010Cetrtek",
+              "Petek",
+              "Sobota"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Maj",
+              "Jun",
+              "Jul",
+              "Avg",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Dec"
+            ],
+            longhand: [
+              "Januar",
+              "Februar",
+              "Marec",
+              "April",
+              "Maj",
+              "Junij",
+              "Julij",
+              "Avgust",
+              "September",
+              "Oktober",
+              "November",
+              "December"
+            ]
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " do ",
+          time_24hr: true,
+          ordinal: function() {
+            return ".";
+          }
+        };
+        fp.l10ns.sl = Slovenian;
+        var sl2 = fp.l10ns;
+        exports2.Slovenian = Slovenian;
+        exports2.default = sl2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/fo.js
+  var require_fo = __commonJS({
+    "node_modules/flatpickr/dist/l10n/fo.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fo = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Faroese = {
+          weekdays: {
+            shorthand: ["Sun", "M\xE1n", "T\xFDs", "Mik", "H\xF3s", "Fr\xED", "Ley"],
+            longhand: [
+              "Sunnudagur",
+              "M\xE1nadagur",
+              "T\xFDsdagur",
+              "Mikudagur",
+              "H\xF3sdagur",
+              "Fr\xEDggjadagur",
+              "Leygardagur"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mai",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des"
+            ],
+            longhand: [
+              "Januar",
+              "Februar",
+              "Mars",
+              "Apr\xEDl",
+              "Mai",
+              "Juni",
+              "Juli",
+              "August",
+              "Septembur",
+              "Oktobur",
+              "Novembur",
+              "Desembur"
+            ]
+          },
+          ordinal: function() {
+            return ".";
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " til ",
+          weekAbbreviation: "vika",
+          scrollTitle: "Rulla fyri at broyta",
+          toggleTitle: "Tr\xFDst fyri at skifta",
+          yearAriaLabel: "\xC1r",
+          time_24hr: true
+        };
+        fp.l10ns.fo = Faroese;
+        var fo2 = fp.l10ns;
+        exports2.Faroese = Faroese;
+        exports2.default = fo2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/my.js
+  var require_my = __commonJS({
+    "node_modules/flatpickr/dist/l10n/my.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.my = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Burmese = {
+          weekdays: {
+            shorthand: ["\u1014\u103D\u1031", "\u101C\u102C", "\u1002\u102B", "\u101F\u1030\u1038", "\u1000\u103C\u102C", "\u101E\u1031\u102C", "\u1014\u1031"],
+            longhand: [
+              "\u1010\u1014\u1004\u103A\u1039\u1002\u1014\u103D\u1031",
+              "\u1010\u1014\u1004\u103A\u1039\u101C\u102C",
+              "\u1021\u1004\u103A\u1039\u1002\u102B",
+              "\u1017\u102F\u1012\u1039\u1013\u101F\u1030\u1038",
+              "\u1000\u103C\u102C\u101E\u1015\u1010\u1031\u1038",
+              "\u101E\u1031\u102C\u1000\u103C\u102C",
+              "\u1005\u1014\u1031"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u1007\u1014\u103A",
+              "\u1016\u1031",
+              "\u1019\u1010\u103A",
+              "\u1015\u103C\u102E",
+              "\u1019\u1031",
+              "\u1007\u103D\u1014\u103A",
+              "\u101C\u102D\u102F\u1004\u103A",
+              "\u101E\u103C",
+              "\u1005\u1000\u103A",
+              "\u1021\u1031\u102C\u1000\u103A",
+              "\u1014\u102D\u102F",
+              "\u1012\u102E"
+            ],
+            longhand: [
+              "\u1007\u1014\u103A\u1014\u101D\u102B\u101B\u102E",
+              "\u1016\u1031\u1016\u1031\u102C\u103A\u101D\u102B\u101B\u102E",
+              "\u1019\u1010\u103A",
+              "\u1027\u1015\u103C\u102E",
+              "\u1019\u1031",
+              "\u1007\u103D\u1014\u103A",
+              "\u1007\u1030\u101C\u102D\u102F\u1004\u103A",
+              "\u101E\u103C\u1002\u102F\u1010\u103A",
+              "\u1005\u1000\u103A\u1010\u1004\u103A\u1018\u102C",
+              "\u1021\u1031\u102C\u1000\u103A\u1010\u102D\u102F\u1018\u102C",
+              "\u1014\u102D\u102F\u101D\u1004\u103A\u1018\u102C",
+              "\u1012\u102E\u1007\u1004\u103A\u1018\u102C"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "";
+          },
+          time_24hr: true
+        };
+        fp.l10ns.my = Burmese;
+        var my2 = fp.l10ns;
+        exports2.Burmese = Burmese;
+        exports2.default = my2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/zh.js
+  var require_zh = __commonJS({
+    "node_modules/flatpickr/dist/l10n/zh.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.zh = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Mandarin = {
+          weekdays: {
+            shorthand: ["\u5468\u65E5", "\u5468\u4E00", "\u5468\u4E8C", "\u5468\u4E09", "\u5468\u56DB", "\u5468\u4E94", "\u5468\u516D"],
+            longhand: [
+              "\u661F\u671F\u65E5",
+              "\u661F\u671F\u4E00",
+              "\u661F\u671F\u4E8C",
+              "\u661F\u671F\u4E09",
+              "\u661F\u671F\u56DB",
+              "\u661F\u671F\u4E94",
+              "\u661F\u671F\u516D"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u4E00\u6708",
+              "\u4E8C\u6708",
+              "\u4E09\u6708",
+              "\u56DB\u6708",
+              "\u4E94\u6708",
+              "\u516D\u6708",
+              "\u4E03\u6708",
+              "\u516B\u6708",
+              "\u4E5D\u6708",
+              "\u5341\u6708",
+              "\u5341\u4E00\u6708",
+              "\u5341\u4E8C\u6708"
+            ],
+            longhand: [
+              "\u4E00\u6708",
+              "\u4E8C\u6708",
+              "\u4E09\u6708",
+              "\u56DB\u6708",
+              "\u4E94\u6708",
+              "\u516D\u6708",
+              "\u4E03\u6708",
+              "\u516B\u6708",
+              "\u4E5D\u6708",
+              "\u5341\u6708",
+              "\u5341\u4E00\u6708",
+              "\u5341\u4E8C\u6708"
+            ]
+          },
+          rangeSeparator: " \u81F3 ",
+          weekAbbreviation: "\u5468",
+          scrollTitle: "\u6EDA\u52A8\u5207\u6362",
+          toggleTitle: "\u70B9\u51FB\u5207\u6362 12/24 \u5C0F\u65F6\u65F6\u5236"
+        };
+        fp.l10ns.zh = Mandarin;
+        var zh2 = fp.l10ns;
+        exports2.Mandarin = Mandarin;
+        exports2.default = zh2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ckb.js
+  var require_ckb = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ckb.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ckb = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Kurdish = {
+          weekdays: {
+            shorthand: [
+              "\u06CC\u06D5\u06A9\u0634\u06D5\u0645\u0645\u06D5",
+              "\u062F\u0648\u0648\u0634\u06D5\u0645\u0645\u06D5",
+              "\u0633\u06CE\u0634\u06D5\u0645\u0645\u06D5",
+              "\u0686\u0648\u0627\u0631\u0634\u06D5\u0645\u0645\u06D5",
+              "\u067E\u06CE\u0646\u062C\u0634\u06D5\u0645\u0645\u06D5",
+              "\u0647\u06D5\u06CC\u0646\u06CC",
+              "\u0634\u06D5\u0645\u0645\u06D5"
+            ],
+            longhand: [
+              "\u06CC\u06D5\u06A9\u0634\u06D5\u0645\u0645\u06D5",
+              "\u062F\u0648\u0648\u0634\u06D5\u0645\u0645\u06D5",
+              "\u0633\u06CE\u0634\u06D5\u0645\u0645\u06D5",
+              "\u0686\u0648\u0627\u0631\u0634\u06D5\u0645\u0645\u06D5",
+              "\u067E\u06CE\u0646\u062C\u0634\u06D5\u0645\u0645\u06D5",
+              "\u0647\u06D5\u06CC\u0646\u06CC",
+              "\u0634\u06D5\u0645\u0645\u06D5"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0695\u06CE\u0628\u06D5\u0646\u062F\u0627\u0646",
+              "\u0695\u06D5\u0634\u06D5\u0645\u06D5",
+              "\u0646\u06D5\u0648\u0631\u06C6\u0632",
+              "\u06AF\u0648\u06B5\u0627\u0646",
+              "\u062C\u06C6\u0632\u06D5\u0631\u062F\u0627\u0646",
+              "\u067E\u0648\u0648\u0634\u067E\u06D5\u0695",
+              "\u06AF\u06D5\u0644\u0627\u0648\u06CE\u0698",
+              "\u062E\u06D5\u0631\u0645\u0627\u0646\u0627\u0646",
+              "\u0695\u06D5\u0632\u0628\u06D5\u0631",
+              "\u06AF\u06D5\u06B5\u0627\u0695\u06CE\u0632\u0627\u0646",
+              "\u0633\u06D5\u0631\u0645\u0627\u0648\u06D5\u0632",
+              "\u0628\u06D5\u0641\u0631\u0627\u0646\u0628\u0627\u0631"
+            ],
+            longhand: [
+              "\u0695\u06CE\u0628\u06D5\u0646\u062F\u0627\u0646",
+              "\u0695\u06D5\u0634\u06D5\u0645\u06D5",
+              "\u0646\u06D5\u0648\u0631\u06C6\u0632",
+              "\u06AF\u0648\u06B5\u0627\u0646",
+              "\u062C\u06C6\u0632\u06D5\u0631\u062F\u0627\u0646",
+              "\u067E\u0648\u0648\u0634\u067E\u06D5\u0695",
+              "\u06AF\u06D5\u0644\u0627\u0648\u06CE\u0698",
+              "\u062E\u06D5\u0631\u0645\u0627\u0646\u0627\u0646",
+              "\u0695\u06D5\u0632\u0628\u06D5\u0631",
+              "\u06AF\u06D5\u06B5\u0627\u0695\u06CE\u0632\u0627\u0646",
+              "\u0633\u06D5\u0631\u0645\u0627\u0648\u06D5\u0632",
+              "\u0628\u06D5\u0641\u0631\u0627\u0646\u0628\u0627\u0631"
+            ]
+          },
+          firstDayOfWeek: 6,
+          ordinal: function() {
+            return "";
+          }
+        };
+        fp.l10ns.ckb = Kurdish;
+        var ckb2 = fp.l10ns;
+        exports2.Kurdish = Kurdish;
+        exports2.default = ckb2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/it.js
+  var require_it = __commonJS({
+    "node_modules/flatpickr/dist/l10n/it.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.it = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Italian = {
+          weekdays: {
+            shorthand: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
+            longhand: [
+              "Domenica",
+              "Luned\xEC",
+              "Marted\xEC",
+              "Mercoled\xEC",
+              "Gioved\xEC",
+              "Venerd\xEC",
+              "Sabato"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Gen",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mag",
+              "Giu",
+              "Lug",
+              "Ago",
+              "Set",
+              "Ott",
+              "Nov",
+              "Dic"
+            ],
+            longhand: [
+              "Gennaio",
+              "Febbraio",
+              "Marzo",
+              "Aprile",
+              "Maggio",
+              "Giugno",
+              "Luglio",
+              "Agosto",
+              "Settembre",
+              "Ottobre",
+              "Novembre",
+              "Dicembre"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return "\xB0";
+          },
+          rangeSeparator: " al ",
+          weekAbbreviation: "Se",
+          scrollTitle: "Scrolla per aumentare",
+          toggleTitle: "Clicca per cambiare",
+          time_24hr: true
+        };
+        fp.l10ns.it = Italian;
+        var it2 = fp.l10ns;
+        exports2.Italian = Italian;
+        exports2.default = it2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/sq.js
+  var require_sq = __commonJS({
+    "node_modules/flatpickr/dist/l10n/sq.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sq = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Albanian = {
+          weekdays: {
+            shorthand: ["Di", "H\xEB", "Ma", "M\xEB", "En", "Pr", "Sh"],
+            longhand: [
+              "E Diel",
+              "E H\xEBn\xEB",
+              "E Mart\xEB",
+              "E M\xEBrkur\xEB",
+              "E Enjte",
+              "E Premte",
+              "E Shtun\xEB"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Shk",
+              "Mar",
+              "Pri",
+              "Maj",
+              "Qer",
+              "Kor",
+              "Gus",
+              "Sht",
+              "Tet",
+              "N\xEBn",
+              "Dhj"
+            ],
+            longhand: [
+              "Janar",
+              "Shkurt",
+              "Mars",
+              "Prill",
+              "Maj",
+              "Qershor",
+              "Korrik",
+              "Gusht",
+              "Shtator",
+              "Tetor",
+              "N\xEBntor",
+              "Dhjetor"
+            ]
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " deri ",
+          weekAbbreviation: "Java",
+          yearAriaLabel: "Viti",
+          monthAriaLabel: "Muaji",
+          hourAriaLabel: "Ora",
+          minuteAriaLabel: "Minuta",
+          time_24hr: true
+        };
+        fp.l10ns.sq = Albanian;
+        var sq2 = fp.l10ns;
+        exports2.Albanian = Albanian;
+        exports2.default = sq2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/fr.js
+  var require_fr = __commonJS({
+    "node_modules/flatpickr/dist/l10n/fr.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fr = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var French = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"],
+            longhand: [
+              "dimanche",
+              "lundi",
+              "mardi",
+              "mercredi",
+              "jeudi",
+              "vendredi",
+              "samedi"
+            ]
+          },
+          months: {
+            shorthand: [
+              "janv",
+              "f\xE9vr",
+              "mars",
+              "avr",
+              "mai",
+              "juin",
+              "juil",
+              "ao\xFBt",
+              "sept",
+              "oct",
+              "nov",
+              "d\xE9c"
+            ],
+            longhand: [
+              "janvier",
+              "f\xE9vrier",
+              "mars",
+              "avril",
+              "mai",
+              "juin",
+              "juillet",
+              "ao\xFBt",
+              "septembre",
+              "octobre",
+              "novembre",
+              "d\xE9cembre"
+            ]
+          },
+          ordinal: function(nth) {
+            if (nth > 1)
+              return "";
+            return "er";
+          },
+          rangeSeparator: " au ",
+          weekAbbreviation: "Sem",
+          scrollTitle: "D\xE9filer pour augmenter la valeur",
+          toggleTitle: "Cliquer pour basculer",
+          time_24hr: true
+        };
+        fp.l10ns.fr = French;
+        var fr2 = fp.l10ns;
+        exports2.French = French;
+        exports2.default = fr2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/nl.js
+  var require_nl = __commonJS({
+    "node_modules/flatpickr/dist/l10n/nl.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.nl = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Dutch = {
+          weekdays: {
+            shorthand: ["zo", "ma", "di", "wo", "do", "vr", "za"],
+            longhand: [
+              "zondag",
+              "maandag",
+              "dinsdag",
+              "woensdag",
+              "donderdag",
+              "vrijdag",
+              "zaterdag"
+            ]
+          },
+          months: {
+            shorthand: [
+              "jan",
+              "feb",
+              "mrt",
+              "apr",
+              "mei",
+              "jun",
+              "jul",
+              "aug",
+              "sept",
+              "okt",
+              "nov",
+              "dec"
+            ],
+            longhand: [
+              "januari",
+              "februari",
+              "maart",
+              "april",
+              "mei",
+              "juni",
+              "juli",
+              "augustus",
+              "september",
+              "oktober",
+              "november",
+              "december"
+            ]
+          },
+          firstDayOfWeek: 1,
+          weekAbbreviation: "wk",
+          rangeSeparator: " t/m ",
+          scrollTitle: "Scroll voor volgende / vorige",
+          toggleTitle: "Klik om te wisselen",
+          time_24hr: true,
+          ordinal: function(nth) {
+            if (nth === 1 || nth === 8 || nth >= 20)
+              return "ste";
+            return "de";
+          }
+        };
+        fp.l10ns.nl = Dutch;
+        var nl2 = fp.l10ns;
+        exports2.Dutch = Dutch;
+        exports2.default = nl2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/cs.js
+  var require_cs = __commonJS({
+    "node_modules/flatpickr/dist/l10n/cs.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.cs = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Czech = {
+          weekdays: {
+            shorthand: ["Ne", "Po", "\xDAt", "St", "\u010Ct", "P\xE1", "So"],
+            longhand: [
+              "Ned\u011Ble",
+              "Pond\u011Bl\xED",
+              "\xDAter\xFD",
+              "St\u0159eda",
+              "\u010Ctvrtek",
+              "P\xE1tek",
+              "Sobota"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Led",
+              "\xDAn",
+              "B\u0159e",
+              "Dub",
+              "Kv\u011B",
+              "\u010Cer",
+              "\u010Cvc",
+              "Srp",
+              "Z\xE1\u0159",
+              "\u0158\xEDj",
+              "Lis",
+              "Pro"
+            ],
+            longhand: [
+              "Leden",
+              "\xDAnor",
+              "B\u0159ezen",
+              "Duben",
+              "Kv\u011Bten",
+              "\u010Cerven",
+              "\u010Cervenec",
+              "Srpen",
+              "Z\xE1\u0159\xED",
+              "\u0158\xEDjen",
+              "Listopad",
+              "Prosinec"
+            ]
+          },
+          firstDayOfWeek: 1,
+          ordinal: function() {
+            return ".";
+          },
+          rangeSeparator: " do ",
+          weekAbbreviation: "T\xFDd.",
+          scrollTitle: "Rolujte pro zm\u011Bnu",
+          toggleTitle: "P\u0159epnout dopoledne/odpoledne",
+          amPM: ["dop.", "odp."],
+          yearAriaLabel: "Rok",
+          time_24hr: true
+        };
+        fp.l10ns.cs = Czech;
+        var cs2 = fp.l10ns;
+        exports2.Czech = Czech;
+        exports2.default = cs2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ja.js
+  var require_ja = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ja.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ja = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Japanese = {
+          weekdays: {
+            shorthand: ["\u65E5", "\u6708", "\u706B", "\u6C34", "\u6728", "\u91D1", "\u571F"],
+            longhand: [
+              "\u65E5\u66DC\u65E5",
+              "\u6708\u66DC\u65E5",
+              "\u706B\u66DC\u65E5",
+              "\u6C34\u66DC\u65E5",
+              "\u6728\u66DC\u65E5",
+              "\u91D1\u66DC\u65E5",
+              "\u571F\u66DC\u65E5"
+            ]
+          },
+          months: {
+            shorthand: [
+              "1\u6708",
+              "2\u6708",
+              "3\u6708",
+              "4\u6708",
+              "5\u6708",
+              "6\u6708",
+              "7\u6708",
+              "8\u6708",
+              "9\u6708",
+              "10\u6708",
+              "11\u6708",
+              "12\u6708"
+            ],
+            longhand: [
+              "1\u6708",
+              "2\u6708",
+              "3\u6708",
+              "4\u6708",
+              "5\u6708",
+              "6\u6708",
+              "7\u6708",
+              "8\u6708",
+              "9\u6708",
+              "10\u6708",
+              "11\u6708",
+              "12\u6708"
+            ]
+          },
+          time_24hr: true,
+          rangeSeparator: " \u304B\u3089 ",
+          monthAriaLabel: "\u6708",
+          amPM: ["\u5348\u524D", "\u5348\u5F8C"],
+          yearAriaLabel: "\u5E74",
+          hourAriaLabel: "\u6642\u9593",
+          minuteAriaLabel: "\u5206"
+        };
+        fp.l10ns.ja = Japanese;
+        var ja2 = fp.l10ns;
+        exports2.Japanese = Japanese;
+        exports2.default = ja2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/sr-cyr.js
+  var require_sr_cyr = __commonJS({
+    "node_modules/flatpickr/dist/l10n/sr-cyr.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2["sr-cyr"] = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var SerbianCyrillic = {
+          weekdays: {
+            shorthand: ["\u041D\u0435\u0434", "\u041F\u043E\u043D", "\u0423\u0442\u043E", "\u0421\u0440\u0435", "\u0427\u0435\u0442", "\u041F\u0435\u0442", "\u0421\u0443\u0431"],
+            longhand: [
+              "\u041D\u0435\u0434\u0435\u0459\u0430",
+              "\u041F\u043E\u043D\u0435\u0434\u0435\u0459\u0430\u043A",
+              "\u0423\u0442\u043E\u0440\u0430\u043A",
+              "\u0421\u0440\u0435\u0434\u0430",
+              "\u0427\u0435\u0442\u0432\u0440\u0442\u0430\u043A",
+              "\u041F\u0435\u0442\u0430\u043A",
+              "\u0421\u0443\u0431\u043E\u0442\u0430"
+            ]
+          },
+          months: {
+            shorthand: [
+              "\u0408\u0430\u043D",
+              "\u0424\u0435\u0431",
+              "\u041C\u0430\u0440",
+              "\u0410\u043F\u0440",
+              "\u041C\u0430\u0458",
+              "\u0408\u0443\u043D",
+              "\u0408\u0443\u043B",
+              "\u0410\u0432\u0433",
+              "\u0421\u0435\u043F",
+              "\u041E\u043A\u0442",
+              "\u041D\u043E\u0432",
+              "\u0414\u0435\u0446"
+            ],
+            longhand: [
+              "\u0408\u0430\u043D\u0443\u0430\u0440",
+              "\u0424\u0435\u0431\u0440\u0443\u0430\u0440",
+              "\u041C\u0430\u0440\u0442",
+              "\u0410\u043F\u0440\u0438\u043B",
+              "\u041C\u0430\u0458",
+              "\u0408\u0443\u043D",
+              "\u0408\u0443\u043B",
+              "\u0410\u0432\u0433\u0443\u0441\u0442",
+              "\u0421\u0435\u043F\u0442\u0435\u043C\u0431\u0430\u0440",
+              "\u041E\u043A\u0442\u043E\u0431\u0430\u0440",
+              "\u041D\u043E\u0432\u0435\u043C\u0431\u0430\u0440",
+              "\u0414\u0435\u0446\u0435\u043C\u0431\u0430\u0440"
+            ]
+          },
+          firstDayOfWeek: 1,
+          weekAbbreviation: "\u041D\u0435\u0434.",
+          rangeSeparator: " \u0434\u043E "
+        };
+        fp.l10ns.sr = SerbianCyrillic;
+        var srCyr = fp.l10ns;
+        exports2.SerbianCyrillic = SerbianCyrillic;
+        exports2.default = srCyr;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/ga.js
+  var require_ga = __commonJS({
+    "node_modules/flatpickr/dist/l10n/ga.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ga = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var Irish = {
+          firstDayOfWeek: 1,
+          weekdays: {
+            shorthand: ["Dom", "Lua", "M\xE1i", "C\xE9a", "D\xE9a", "Aoi", "Sat"],
+            longhand: [
+              "D\xE9 Domhnaigh",
+              "D\xE9 Luain",
+              "D\xE9 M\xE1irt",
+              "D\xE9 C\xE9adaoin",
+              "D\xE9ardaoin",
+              "D\xE9 hAoine",
+              "D\xE9 Sathairn"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Ean",
+              "Fea",
+              "M\xE1r",
+              "Aib",
+              "Bea",
+              "Mei",
+              "I\xFAi",
+              "L\xFAn",
+              "MFo",
+              "DFo",
+              "Sam",
+              "Nol"
+            ],
+            longhand: [
+              "Ean\xE1ir",
+              "Feabhra",
+              "M\xE1rta",
+              "Aibre\xE1n",
+              "Bealtaine",
+              "Meitheamh",
+              "I\xFAil",
+              "L\xFAnasa",
+              "Me\xE1n F\xF3mhair",
+              "Deireadh F\xF3mhair",
+              "Samhain",
+              "Nollaig"
+            ]
+          },
+          time_24hr: true
+        };
+        fp.l10ns.hr = Irish;
+        var ga2 = fp.l10ns;
+        exports2.Irish = Irish;
+        exports2.default = ga2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
+  // node_modules/flatpickr/dist/l10n/nn.js
+  var require_nn = __commonJS({
+    "node_modules/flatpickr/dist/l10n/nn.js"(exports, module) {
+      (function(global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.nn = {}));
+      })(exports, function(exports2) {
+        "use strict";
+        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
+          l10ns: {}
+        };
+        var NorwegianNynorsk = {
+          weekdays: {
+            shorthand: ["S\xF8.", "M\xE5.", "Ty.", "On.", "To.", "Fr.", "La."],
+            longhand: [
+              "S\xF8ndag",
+              "M\xE5ndag",
+              "Tysdag",
+              "Onsdag",
+              "Torsdag",
+              "Fredag",
+              "Laurdag"
+            ]
+          },
+          months: {
+            shorthand: [
+              "Jan",
+              "Feb",
+              "Mars",
+              "Apr",
+              "Mai",
+              "Juni",
+              "Juli",
+              "Aug",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des"
+            ],
+            longhand: [
+              "Januar",
+              "Februar",
+              "Mars",
+              "April",
+              "Mai",
+              "Juni",
+              "Juli",
+              "August",
+              "September",
+              "Oktober",
+              "November",
+              "Desember"
+            ]
+          },
+          firstDayOfWeek: 1,
+          rangeSeparator: " til ",
+          weekAbbreviation: "Veke",
+          scrollTitle: "Scroll for \xE5 endre",
+          toggleTitle: "Klikk for \xE5 veksle",
+          time_24hr: true,
+          ordinal: function() {
+            return ".";
+          }
+        };
+        fp.l10ns.nn = NorwegianNynorsk;
+        var nn2 = fp.l10ns;
+        exports2.NorwegianNynorsk = NorwegianNynorsk;
+        exports2.default = nn2;
+        Object.defineProperty(exports2, "__esModule", { value: true });
+      });
+    }
+  });
+
   // node_modules/@rails/ujs/app/assets/javascripts/rails-ujs.esm.js
   var linkClickSelector = "a[data-confirm], a[data-method], a[data-remote]:not([disabled]), a[data-disable-with], a[data-disable]";
   var buttonClickSelector = {
@@ -18348,7 +22074,7 @@
       }
     };
   }
-  function transitionEndEmulator(duration) {
+  function transitionEndEmulator(duration2) {
     let called = false;
     (0, import_jquery.default)(this).one(Util.TRANSITION_END, () => {
       called = true;
@@ -18357,7 +22083,7 @@
       if (!called) {
         Util.triggerTransitionEnd(this);
       }
-    }, duration);
+    }, duration2);
     return this;
   }
   function setTransitionEndSupport() {
@@ -19509,7 +23235,7 @@
       return { found: true, width: c2[0], height: c2[1], icon: { tag: "path", attributes: { fill: "currentColor", d: c2.slice(4)[0] } } };
     }
     function j() {
-      Hc.autoAddCss && (sl || h(tl()), sl = true);
+      Hc.autoAddCss && (sl2 || h(tl()), sl2 = true);
     }
     function F(c2, l2) {
       return Object.defineProperty(c2, "abstract", { get: l2 }), Object.defineProperty(c2, "html", { get: function() {
@@ -19732,7 +23458,7 @@
         v2 = v2.replace(z2, "." + l2 + "-").replace(e2, "." + h2);
       }
       return v2;
-    }, sl = false, rl = new (function() {
+    }, sl2 = false, rl = new (function() {
       function c2() {
         tc(this, c2), this.definitions = {};
       }
@@ -24813,8 +28539,8 @@
             this.modal.$tabber = $6("<div>").attr("id", "redactor-modal-tabber");
             $modal.prepend(this.modal.$tabber);
           },
-          addTab: function(id, name2, active) {
-            var $tab = $6('<a href="#" rel="tab' + id + '">').text(name2);
+          addTab: function(id2, name2, active) {
+            var $tab = $6('<a href="#" rel="tab' + id2 + '">').text(name2);
             if (active) {
               $tab.addClass("active");
             }
@@ -26070,15 +29796,15 @@
             return tagout.replace(/\s*$/, "") + suffix + ">";
           },
           placeTag: function(tag, out) {
-            var nl = tag.match(this.tabifier.newLevel);
-            if (tag.match(this.tabifier.lineBefore) || nl) {
+            var nl2 = tag.match(this.tabifier.newLevel);
+            if (tag.match(this.tabifier.lineBefore) || nl2) {
               out = out.replace(/\s*$/, "");
               out += "\n";
             }
-            if (nl && "/" == tag.charAt(1)) this.tabifier.cleanlevel--;
+            if (nl2 && "/" == tag.charAt(1)) this.tabifier.cleanlevel--;
             if ("\n" == out.charAt(out.length - 1))
               out += this.tabifier.getTabs();
-            if (nl && "/" != tag.charAt(1)) this.tabifier.cleanlevel++;
+            if (nl2 && "/" != tag.charAt(1)) this.tabifier.cleanlevel++;
             out += tag;
             if (tag.match(this.tabifier.lineAfter) || tag.match(this.tabifier.newLevel)) {
               out = out.replace(/ *$/, "");
@@ -26622,11 +30348,11 @@
       },
       upload: function() {
         return {
-          init: function(id, url, callback) {
+          init: function(id2, url, callback) {
             this.upload.direct = false;
             this.upload.callback = callback;
             this.upload.url = url;
-            this.upload.$el = $6(id);
+            this.upload.$el = $6(id2);
             this.upload.$droparea = $6('<div id="redactor-droparea" />');
             this.upload.$placeholdler = $6(
               '<div id="redactor-droparea-placeholder" />'
@@ -27470,13 +31196,13 @@
             this.table.deleteHead();
             return;
           }
-          var tr = $table.find("tr").first().clone();
-          tr.find("td").replaceWith(
+          var tr2 = $table.find("tr").first().clone();
+          tr2.find("td").replaceWith(
             $6.proxy(function() {
               return $6("<th>").html(this.opts.invisibleSpace);
             }, this)
           );
-          $thead = $6("<thead></thead>").append(tr);
+          $thead = $6("<thead></thead>").append(tr2);
           $table.prepend($thead);
           this.code.sync();
         },
@@ -27610,9 +31336,6 @@
       };
     };
   })(import_jquery8.default);
-
-  // app/assets/javascripts/comfy/admin/cms/application.js
-  var import_flatpickr = __toESM(require_flatpickr_min());
 
   // app/assets/javascripts/comfy/admin/cms/base.js
   (() => {
@@ -29206,7 +32929,7 @@
       var _a;
       let getter = this.value;
       let compare2 = this.facet.compareInput;
-      let id = this.id, idx = addresses[id] >> 1, multi = this.type == 2;
+      let id2 = this.id, idx = addresses[id2] >> 1, multi = this.type == 2;
       let depDoc = false, depSel = false, depAddrs = [];
       for (let dep of this.dependencies) {
         if (dep == "doc")
@@ -29221,8 +32944,8 @@
           state.values[idx] = getter(state);
           return 1;
         },
-        update(state, tr) {
-          if (depDoc && tr.docChanged || depSel && (tr.docChanged || tr.selection) || ensureAll(state, depAddrs)) {
+        update(state, tr2) {
+          if (depDoc && tr2.docChanged || depSel && (tr2.docChanged || tr2.selection) || ensureAll(state, depAddrs)) {
             let newVal = getter(state);
             if (multi ? !compareArray(newVal, state.values[idx], compare2) : !compare2(newVal, state.values[idx])) {
               state.values[idx] = newVal;
@@ -29232,7 +32955,7 @@
           return 0;
         },
         reconfigure: (state, oldState) => {
-          let newVal, oldAddr = oldState.config.address[id];
+          let newVal, oldAddr = oldState.config.address[id2];
           if (oldAddr != null) {
             let oldVal = getAddr(oldState, oldAddr);
             if (this.dependencies.every((dep) => {
@@ -29289,7 +33012,7 @@
         state.values[idx] = get(state);
         return 1;
       },
-      update(state, tr) {
+      update(state, tr2) {
         if (!ensureAll(state, dynamic))
           return 0;
         let value = get(state);
@@ -29317,8 +33040,8 @@
   }
   var initField = /* @__PURE__ */ Facet.define({ static: true });
   var StateField = class _StateField {
-    constructor(id, createF, updateF, compareF, spec) {
-      this.id = id;
+    constructor(id2, createF, updateF, compareF, spec) {
+      this.id = id2;
       this.createF = createF;
       this.updateF = updateF;
       this.compareF = compareF;
@@ -29348,9 +33071,9 @@
           state.values[idx] = this.create(state);
           return 1;
         },
-        update: (state, tr) => {
+        update: (state, tr2) => {
           let oldVal = state.values[idx];
-          let value = this.updateF(oldVal, tr);
+          let value = this.updateF(oldVal, tr2);
           if (this.compareF(oldVal, value))
             return 0;
           state.values[idx] = value;
@@ -29485,9 +33208,9 @@
         dynamicSlots.push((a) => field.slot(a));
       }
       let oldFacets = oldState === null || oldState === void 0 ? void 0 : oldState.config.facets;
-      for (let id in facets) {
-        let providers = facets[id], facet = providers[0].facet;
-        let oldProviders = oldFacets && oldFacets[id] || [];
+      for (let id2 in facets) {
+        let providers = facets[id2], facet = providers[0].facet;
+        let oldProviders = oldFacets && oldFacets[id2] || [];
         if (providers.every(
           (p) => p.type == 0
           /* Provider.Static */
@@ -29832,14 +33555,14 @@
       let seq = !!specs[i].sequential;
       s = mergeTransaction(s, resolveTransactionInner(state, specs[i], seq ? s.changes.newLength : state.doc.length), seq);
     }
-    let tr = Transaction.create(state, s.changes, s.selection, s.effects, s.annotations, s.scrollIntoView);
-    return extendTransaction(filter ? filterTransaction(tr) : tr);
+    let tr2 = Transaction.create(state, s.changes, s.selection, s.effects, s.annotations, s.scrollIntoView);
+    return extendTransaction(filter ? filterTransaction(tr2) : tr2);
   }
-  function filterTransaction(tr) {
-    let state = tr.startState;
+  function filterTransaction(tr2) {
+    let state = tr2.startState;
     let result = true;
     for (let filter of state.facet(changeFilter)) {
-      let value = filter(tr);
+      let value = filter(tr2);
       if (value === false) {
         result = false;
         break;
@@ -29850,35 +33573,35 @@
     if (result !== true) {
       let changes, back;
       if (result === false) {
-        back = tr.changes.invertedDesc;
+        back = tr2.changes.invertedDesc;
         changes = ChangeSet.empty(state.doc.length);
       } else {
-        let filtered = tr.changes.filter(result);
+        let filtered = tr2.changes.filter(result);
         changes = filtered.changes;
         back = filtered.filtered.mapDesc(filtered.changes).invertedDesc;
       }
-      tr = Transaction.create(state, changes, tr.selection && tr.selection.map(back), StateEffect.mapEffects(tr.effects, back), tr.annotations, tr.scrollIntoView);
+      tr2 = Transaction.create(state, changes, tr2.selection && tr2.selection.map(back), StateEffect.mapEffects(tr2.effects, back), tr2.annotations, tr2.scrollIntoView);
     }
     let filters = state.facet(transactionFilter);
     for (let i = filters.length - 1; i >= 0; i--) {
-      let filtered = filters[i](tr);
+      let filtered = filters[i](tr2);
       if (filtered instanceof Transaction)
-        tr = filtered;
+        tr2 = filtered;
       else if (Array.isArray(filtered) && filtered.length == 1 && filtered[0] instanceof Transaction)
-        tr = filtered[0];
+        tr2 = filtered[0];
       else
-        tr = resolveTransaction(state, asArray(filtered), false);
+        tr2 = resolveTransaction(state, asArray(filtered), false);
     }
-    return tr;
+    return tr2;
   }
-  function extendTransaction(tr) {
-    let state = tr.startState, extenders = state.facet(transactionExtender), spec = tr;
+  function extendTransaction(tr2) {
+    let state = tr2.startState, extenders = state.facet(transactionExtender), spec = tr2;
     for (let i = extenders.length - 1; i >= 0; i--) {
-      let extension = extenders[i](tr);
+      let extension = extenders[i](tr2);
       if (extension && Object.keys(extension).length)
-        spec = mergeTransaction(spec, resolveTransactionInner(state, extension, tr.changes.newLength), true);
+        spec = mergeTransaction(spec, resolveTransactionInner(state, extension, tr2.changes.newLength), true);
     }
-    return spec == tr ? tr : Transaction.create(state, tr.changes, tr.selection, spec.effects, spec.annotations, spec.scrollIntoView);
+    return spec == tr2 ? tr2 : Transaction.create(state, tr2.changes, tr2.selection, spec.effects, spec.annotations, spec.scrollIntoView);
   }
   var none = [];
   function asArray(value) {
@@ -29919,15 +33642,15 @@
     };
   }
   var EditorState = class _EditorState {
-    constructor(config, doc2, selection, values, computeSlot, tr) {
+    constructor(config, doc2, selection, values, computeSlot, tr2) {
       this.config = config;
       this.doc = doc2;
       this.selection = selection;
       this.values = values;
       this.status = config.statusTemplate.slice();
       this.computeSlot = computeSlot;
-      if (tr)
-        tr._state = this;
+      if (tr2)
+        tr2._state = this;
       for (let i = 0; i < this.config.dynamicSlots.length; i++)
         ensureAddr(this, i << 1);
       this.computeSlot = null;
@@ -29963,9 +33686,9 @@
     /**
     @internal
     */
-    applyTransaction(tr) {
+    applyTransaction(tr2) {
       let conf = this.config, { base: base2, compartments } = conf;
-      for (let effect of tr.effects) {
+      for (let effect of tr2.effects) {
         if (effect.is(Compartment.reconfigure)) {
           if (conf) {
             compartments = /* @__PURE__ */ new Map();
@@ -29987,10 +33710,10 @@
         let intermediateState = new _EditorState(conf, this.doc, this.selection, conf.dynamicSlots.map(() => null), (state, slot) => slot.reconfigure(state, this), null);
         startValues = intermediateState.values;
       } else {
-        startValues = tr.startState.values.slice();
+        startValues = tr2.startState.values.slice();
       }
-      let selection = tr.startState.facet(allowMultipleSelections) ? tr.newSelection : tr.newSelection.asSingle();
-      new _EditorState(conf, tr.newDoc, selection, startValues, (state, slot) => slot.update(state, tr), tr);
+      let selection = tr2.startState.facet(allowMultipleSelections) ? tr2.newSelection : tr2.newSelection.asSingle();
+      new _EditorState(conf, tr2.newDoc, selection, startValues, (state, slot) => slot.update(state, tr2), tr2);
     }
     /**
     Create a [transaction spec](https://codemirror.net/6/docs/ref/#state.TransactionSpec) that
@@ -30209,8 +33932,8 @@
      - Space (contains only whitespace)
      - Other (anything else)
     */
-    charCategorizer(at) {
-      return makeCategorizer(this.languageDataAt("wordChars", at).join(""));
+    charCategorizer(at2) {
+      return makeCategorizer(this.languageDataAt("wordChars", at2).join(""));
     }
     /**
     Find the word at the given position, meaning the range
@@ -30220,17 +33943,17 @@
     */
     wordAt(pos) {
       let { text, from, length } = this.doc.lineAt(pos);
-      let cat = this.charCategorizer(pos);
+      let cat2 = this.charCategorizer(pos);
       let start2 = pos - from, end = pos - from;
       while (start2 > 0) {
         let prev = findClusterBreak2(text, start2, false);
-        if (cat(text.slice(prev, start2)) != CharCategory.Word)
+        if (cat2(text.slice(prev, start2)) != CharCategory.Word)
           break;
         start2 = prev;
       }
       while (end < length) {
         let next = findClusterBreak2(text, end);
-        if (cat(text.slice(end, next)) != CharCategory.Word)
+        if (cat2(text.slice(end, next)) != CharCategory.Word)
           break;
         end = next;
       }
@@ -30305,15 +34028,15 @@
     // `from` pos when `end == false`, `to` when `end == true`.
     findIndex(pos, side, end, startAt = 0) {
       let arr = end ? this.to : this.from;
-      for (let lo = startAt, hi = arr.length; ; ) {
-        if (lo == hi)
+      for (let lo = startAt, hi2 = arr.length; ; ) {
+        if (lo == hi2)
           return lo;
-        let mid = lo + hi >> 1;
+        let mid = lo + hi2 >> 1;
         let diff = arr[mid] - pos || (end ? this.value[mid].endSide : this.value[mid].startSide) - side;
         if (mid == lo)
-          return diff >= 0 ? lo : hi;
+          return diff >= 0 ? lo : hi2;
         if (diff >= 0)
-          hi = mid;
+          hi2 = mid;
         else
           lo = mid + 1;
       }
@@ -31081,9 +34804,9 @@
     // :: () → string
     // Generate a new unique CSS class name.
     static newName() {
-      let id = top[COUNT] || 1;
-      top[COUNT] = id + 1;
-      return C + id.toString(36);
+      let id2 = top[COUNT] || 1;
+      top[COUNT] = id2 + 1;
+      return C + id2.toString(36);
     }
     // :: (union<Document, ShadowRoot>, union<[StyleModule], StyleModule>, ?{nonce: ?string})
     //
@@ -32655,12 +36378,12 @@
       mergeChildrenInto(this, from, to, source ? source.children.slice() : [], openStart, openEnd);
       return true;
     }
-    split(at) {
+    split(at2) {
       let end = new _LineView();
       end.breakAfter = this.breakAfter;
       if (this.length == 0)
         return end;
-      let { i, off: off2 } = this.childPos(at);
+      let { i, off: off2 } = this.childPos(at2);
       if (off2) {
         end.append(this.children[i].split(off2), 0);
         this.children[i].merge(off2, this.children[i].length, null, false, 0, 0);
@@ -32672,7 +36395,7 @@
         this.children[--i].destroy();
       this.children.length = i;
       this.markDirty();
-      this.length = at;
+      this.length = at2;
       return end;
     }
     transferDOM(other) {
@@ -32807,9 +36530,9 @@
     domAtPos(pos) {
       return pos == 0 ? DOMPos.before(this.dom) : DOMPos.after(this.dom, pos == this.length);
     }
-    split(at) {
-      let len = this.length - at;
-      this.length = at;
+    split(at2) {
+      let len = this.length - at2;
+      this.length = at2;
       let end = new _BlockWidgetView(this.widget, len, this.deco);
       end.breakAfter = this.breakAfter;
       return end;
@@ -33494,8 +37217,8 @@
   var nextPluginID = 0;
   var viewPlugin = /* @__PURE__ */ Facet.define();
   var ViewPlugin = class _ViewPlugin {
-    constructor(id, create, domEventHandlers, domEventObservers, buildExtensions) {
-      this.id = id;
+    constructor(id2, create, domEventHandlers, domEventObservers, buildExtensions) {
+      this.id = id2;
       this.create = create;
       this.domEventHandlers = domEventHandlers;
       this.domEventObservers = domEventObservers;
@@ -33687,8 +37410,8 @@
       this.flags = 0;
       this.startState = view.state;
       this.changes = ChangeSet.empty(this.startState.doc.length);
-      for (let tr of transactions)
-        this.changes = this.changes.compose(tr.changes);
+      for (let tr2 of transactions)
+        this.changes = this.changes.compose(tr2.changes);
       let changedRanges = [];
       this.changes.iterChangedRanges((fromA, toA, fromB, toB) => changedRanges.push(new ChangedRange(fromA, toA, fromB, toB)));
       this.changedRanges = changedRanges;
@@ -33737,7 +37460,7 @@
     Whether the selection was explicitly set in this update.
     */
     get selectionSet() {
-      return this.transactions.some((tr) => tr.selection);
+      return this.transactions.some((tr2) => tr2.selection);
     }
     /**
     @internal
@@ -33880,8 +37603,8 @@
     }
     updateEditContextFormatting(update2) {
       this.editContextFormatting = this.editContextFormatting.map(update2.changes);
-      for (let tr of update2.transactions)
-        for (let effect of tr.effects)
+      for (let tr2 of update2.transactions)
+        for (let effect of tr2.effects)
           if (effect.is(setEditContextFormatting)) {
             this.editContextFormatting = effect.value;
           }
@@ -34359,16 +38082,16 @@
       from = findClusterBreak2(line.text, linePos, false);
     else
       to = findClusterBreak2(line.text, linePos);
-    let cat = categorize(line.text.slice(from, to));
+    let cat2 = categorize(line.text.slice(from, to));
     while (from > 0) {
       let prev = findClusterBreak2(line.text, from, false);
-      if (categorize(line.text.slice(prev, from)) != cat)
+      if (categorize(line.text.slice(prev, from)) != cat2)
         break;
       from = prev;
     }
     while (to < line.length) {
       let next = findClusterBreak2(line.text, to);
-      if (categorize(line.text.slice(to, next)) != cat)
+      if (categorize(line.text.slice(to, next)) != cat2)
         break;
       to = next;
     }
@@ -34624,12 +38347,12 @@
   }
   function byGroup(view, pos, start2) {
     let categorize = view.state.charCategorizer(pos);
-    let cat = categorize(start2);
+    let cat2 = categorize(start2);
     return (next) => {
       let nextCat = categorize(next);
-      if (cat == CharCategory.Space)
-        cat = nextCat;
-      return cat == nextCat;
+      if (cat2 == CharCategory.Space)
+        cat2 = nextCat;
+      return cat2 == nextCat;
     };
   }
   function moveVertically(view, start2, forward, distance) {
@@ -34897,11 +38620,11 @@
     return true;
   }
   function applyDefaultInsert(view, change, newSel) {
-    let tr, startState = view.state, sel = startState.selection.main;
+    let tr2, startState = view.state, sel = startState.selection.main;
     if (change.from >= sel.from && change.to <= sel.to && change.to - change.from >= (sel.to - sel.from) / 3 && (!newSel || newSel.main.empty && newSel.main.from == change.from + change.insert.length) && view.inputState.composing < 0) {
       let before = sel.from < change.from ? startState.sliceDoc(sel.from, change.from) : "";
       let after = sel.to > change.to ? startState.sliceDoc(change.to, sel.to) : "";
-      tr = startState.replaceSelection(view.state.toText(before + change.insert.sliceString(0, void 0, view.state.lineBreak) + after));
+      tr2 = startState.replaceSelection(view.state.toText(before + change.insert.sliceString(0, void 0, view.state.lineBreak) + after));
     } else {
       let changes = startState.changes(change);
       let mainSel = newSel && newSel.main.to <= changes.newLength ? newSel.main : void 0;
@@ -34915,7 +38638,7 @@
           compositionRange = view.state.doc.lineAt(sel.head);
         }
         let offset2 = sel.to - change.to, size = sel.to - sel.from;
-        tr = startState.changeByRange((range) => {
+        tr2 = startState.changeByRange((range) => {
           if (range.from == sel.from && range.to == sel.to)
             return { changes, range: mainSel || range.map(changes) };
           let to = range.to - offset2, from = to - replaced.length;
@@ -34932,7 +38655,7 @@
           };
         });
       } else {
-        tr = {
+        tr2 = {
           changes,
           selection: mainSel && startState.selection.replaceRange(mainSel)
         };
@@ -34947,7 +38670,7 @@
         view.inputState.compositionFirstChange = false;
       }
     }
-    return startState.update(tr, { userEvent, scrollIntoView: true });
+    return startState.update(tr2, { userEvent, scrollIntoView: true });
   }
   function findDiff(a, b, preferredPos, preferredSide) {
     let minLen = Math.min(a.length, b.length);
@@ -35296,7 +39019,7 @@
       this.mustSelect = false;
     }
     update(update2) {
-      if (update2.transactions.some((tr) => tr.isUserEvent("input.type")))
+      if (update2.transactions.some((tr2) => tr2.isUserEvent("input.type")))
         this.destroy();
       else if (this.style.update(update2))
         setTimeout(() => this.select(this.lastEvent), 20);
@@ -35679,9 +39402,9 @@
     setTimeout(() => {
       let focus = view.hasFocus;
       if (focus != view.inputState.notifiedFocused) {
-        let tr = focusChangeTransaction(view.state, focus);
-        if (tr)
-          view.dispatch(tr);
+        let tr2 = focusChangeTransaction(view.state, focus);
+        if (tr2)
+          view.dispatch(tr2);
         else
           view.update([]);
       }
@@ -37910,7 +41633,7 @@
     }
     update(update2) {
       let reverted = this.pendingContextChange;
-      if (this.composing && (this.composing.drifted || update2.transactions.some((tr) => !tr.isUserEvent("input.type") && tr.changes.touchesRange(this.from, this.to)))) {
+      if (this.composing && (this.composing.drifted || update2.transactions.some((tr2) => !tr2.isUserEvent("input.type") && tr2.changes.touchesRange(this.from, this.to)))) {
         this.composing.drifted = true;
         this.composing.editorBase = update2.changes.mapPos(this.composing.editorBase);
       } else if (!this.applyEdits(update2) || !this.rangeIsValid(update2.state)) {
@@ -38064,7 +41787,7 @@
       if (config.parent)
         config.parent.appendChild(this.dom);
       let { dispatch } = config;
-      this.dispatchTransactions = config.dispatchTransactions || dispatch && ((trs) => trs.forEach((tr) => dispatch(tr, this))) || ((trs) => this.update(trs));
+      this.dispatchTransactions = config.dispatchTransactions || dispatch && ((trs) => trs.forEach((tr2) => dispatch(tr2, this))) || ((trs) => this.update(trs));
       this.dispatch = this.dispatch.bind(this);
       this._root = config.root || getRoot(config.parent) || document;
       this.viewState = new ViewState(config.state || EditorState.create(config));
@@ -38101,17 +41824,17 @@
         throw new Error("Calls to EditorView.update are not allowed while an update is in progress");
       let redrawn = false, attrsChanged = false, update2;
       let state = this.state;
-      for (let tr of transactions) {
-        if (tr.startState != state)
+      for (let tr2 of transactions) {
+        if (tr2.startState != state)
           throw new RangeError("Trying to update state with a transaction that doesn't start from the previous state.");
-        state = tr.state;
+        state = tr2.state;
       }
       if (this.destroyed) {
         this.viewState.state = state;
         return;
       }
       let focus = this.hasFocus, focusFlag = 0, dispatchFocus = null;
-      if (transactions.some((tr) => tr.annotation(isFocusChange))) {
+      if (transactions.some((tr2) => tr2.annotation(isFocusChange))) {
         this.inputState.notifiedFocused = focus;
         focusFlag = 1;
       } else if (focus != this.inputState.notifiedFocused) {
@@ -38136,14 +41859,14 @@
       let scrollTarget = this.viewState.scrollTarget;
       try {
         this.updateState = 2;
-        for (let tr of transactions) {
+        for (let tr2 of transactions) {
           if (scrollTarget)
-            scrollTarget = scrollTarget.map(tr.changes);
-          if (tr.scrollIntoView) {
-            let { main } = tr.state.selection;
+            scrollTarget = scrollTarget.map(tr2.changes);
+          if (tr2.scrollIntoView) {
+            let { main } = tr2.state.selection;
             scrollTarget = new ScrollTarget(main.empty ? main : EditorSelection.cursor(main.head, main.head > main.anchor ? -1 : 1));
           }
-          for (let e of tr.effects)
+          for (let e of tr2.effects)
             if (e.is(scrollIntoView))
               scrollTarget = e.value.clip(this.state);
         }
@@ -38158,7 +41881,7 @@
           this.mountStyles();
         attrsChanged = this.updateAttrs();
         this.showAnnouncements(transactions);
-        this.docView.updateSelection(redrawn, transactions.some((tr) => tr.isUserEvent("select.pointer")));
+        this.docView.updateSelection(redrawn, transactions.some((tr2) => tr2.isUserEvent("select.pointer")));
       } finally {
         this.updateState = 0;
       }
@@ -38408,8 +42131,8 @@
     }
     showAnnouncements(trs) {
       let first = true;
-      for (let tr of trs)
-        for (let effect of tr.effects)
+      for (let tr2 of trs)
+        for (let effect of tr2.effects)
           if (effect.is(_EditorView.announce)) {
             if (first)
               this.announceDOM.textContent = "";
@@ -41480,7 +45203,6 @@
     const DROP_TARGET_ACTIVE_CLASS = "cms-uploader-drag-drop-target-active";
     class FileUpload {
       constructor(container, settings) {
-        console.log("xxxx", container);
         if (!container.id) container.id = import_plupload.default.guid();
         settings = Object.assign(
           FileUpload.defaultUploaderSettings(container.id),
@@ -41614,11 +45336,11 @@
             break;
         }
       }
-      fileListItem({ id }) {
-        return this.ui.container.querySelector(`#${id}`);
+      fileListItem({ id: id2 }) {
+        return this.ui.container.querySelector(`#${id2}`);
       }
-      static buildListItemHTML({ id, name: name2 }) {
-        return `<li id='${id}' class='row temp'>
+      static buildListItemHTML({ id: id2, name: name2 }) {
+        return `<li id='${id2}' class='row temp'>
         <div class='col-md-9 d-flex align-items-center'>
           <div class='progress'>
             <div class='progress-bar progress-bar-striped progress-bar-animated'>
@@ -41631,13 +45353,13 @@
         </div>
       </li>`;
       }
-      static defaultUploaderSettings(id) {
+      static defaultUploaderSettings(id2) {
         return {
           runtimes: "html5,browserplus,silverlight,flash,gears",
           dragdrop: true,
-          drop_element: `${id}-drag-drop-target`,
-          browse_button: `${id}-browse`,
-          container: id,
+          drop_element: `${id2}-drag-drop-target`,
+          browse_button: `${id2}-browse`,
+          container: id2,
           file_data_name: "file[file]"
         };
       }
@@ -42093,7 +45815,7 @@
     return Math.round(rect1.top) === Math.round(rect2.top) && Math.round(rect1.left) === Math.round(rect2.left) && Math.round(rect1.height) === Math.round(rect2.height) && Math.round(rect1.width) === Math.round(rect2.width);
   }
   var _throttleTimeout;
-  function throttle(callback, ms) {
+  function throttle(callback, ms2) {
     return function() {
       if (!_throttleTimeout) {
         var args = arguments, _this = this;
@@ -42104,7 +45826,7 @@
         }
         _throttleTimeout = setTimeout(function() {
           _throttleTimeout = void 0;
-        }, ms);
+        }, ms2);
       }
     };
   }
@@ -42230,8 +45952,8 @@
         }
         animationStates = [];
       },
-      animate: function animate(target, currentRect, toRect, duration) {
-        if (duration) {
+      animate: function animate(target, currentRect, toRect, duration2) {
+        if (duration2) {
           css(target, "transition", "");
           css(target, "transform", "");
           var elMatrix = matrix(this.el), scaleX = elMatrix && elMatrix.a, scaleY = elMatrix && elMatrix.d, translateX = (currentRect.left - toRect.left) / (scaleX || 1), translateY = (currentRect.top - toRect.top) / (scaleY || 1);
@@ -42239,7 +45961,7 @@
           target.animatingY = !!translateY;
           css(target, "transform", "translate3d(" + translateX + "px," + translateY + "px,0)");
           this.forRepaintDummy = repaint(target);
-          css(target, "transition", "transform " + duration + "ms" + (this.options.easing ? " " + this.options.easing : ""));
+          css(target, "transition", "transform " + duration2 + "ms" + (this.options.easing ? " " + this.options.easing : ""));
           css(target, "transform", "translate3d(0,0,0)");
           typeof target.animated === "number" && clearTimeout(target.animated);
           target.animated = setTimeout(function() {
@@ -42248,7 +45970,7 @@
             target.animated = false;
             target.animatingX = false;
             target.animatingY = false;
-          }, duration);
+          }, duration2);
         }
       }
     };
@@ -42298,7 +46020,7 @@
         }
       });
     },
-    initializePlugins: function initializePlugins(sortable, el, defaults2, options) {
+    initializePlugins: function initializePlugins(sortable, el, defaults3, options) {
       plugins.forEach(function(plugin) {
         var pluginName = plugin.pluginName;
         if (!sortable.options[pluginName] && !plugin.initializeByDefault) return;
@@ -42306,7 +46028,7 @@
         initialized.sortable = sortable;
         initialized.options = sortable.options;
         sortable[pluginName] = initialized;
-        _extends2(defaults2, initialized.defaults);
+        _extends2(defaults3, initialized.defaults);
       });
       for (var option2 in sortable.options) {
         if (!sortable.options.hasOwnProperty(option2)) continue;
@@ -42577,7 +46299,7 @@
     this.el = el;
     this.options = options = _extends2({}, options);
     el[expando] = this;
-    var defaults2 = {
+    var defaults3 = {
       group: null,
       sort: true,
       disabled: false,
@@ -42623,9 +46345,9 @@
       supportPointer: Sortable.supportPointer !== false && "PointerEvent" in window && (!Safari || IOS),
       emptyInsertThreshold: 5
     };
-    PluginManager.initializePlugins(this, el, defaults2);
-    for (var name2 in defaults2) {
-      !(name2 in options) && (options[name2] = defaults2[name2]);
+    PluginManager.initializePlugins(this, el, defaults3);
+    for (var name2 in defaults3) {
+      !(name2 in options) && (options[name2] = defaults3[name2]);
     }
     _prepareGroup(options);
     for (var fn in this) {
@@ -43436,17 +47158,17 @@
      */
     sort: function sort(order, useAnimation) {
       var items = {}, rootEl2 = this.el;
-      this.toArray().forEach(function(id, i) {
+      this.toArray().forEach(function(id2, i) {
         var el = rootEl2.children[i];
         if (closest(el, this.options.draggable, rootEl2, false)) {
-          items[id] = el;
+          items[id2] = el;
         }
       }, this);
       useAnimation && this.captureAnimationState();
-      order.forEach(function(id) {
-        if (items[id]) {
-          rootEl2.removeChild(items[id]);
-          rootEl2.appendChild(items[id]);
+      order.forEach(function(id2) {
+        if (items[id2]) {
+          rootEl2.removeChild(items[id2]);
+          rootEl2.appendChild(items[id2]);
         }
       });
       useAnimation && this.animateAll();
@@ -43648,8 +47370,8 @@
   function _nextTick(fn) {
     return setTimeout(fn, 0);
   }
-  function _cancelNextTick(id) {
-    return clearTimeout(id);
+  function _cancelNextTick(id2) {
+    return clearTimeout(id2);
   }
   if (documentExists) {
     on(document, "touchmove", function(evt) {
@@ -44011,27 +47733,2435 @@
     };
   })();
 
+  // node_modules/flatpickr/dist/esm/types/options.js
+  var HOOKS = [
+    "onChange",
+    "onClose",
+    "onDayCreate",
+    "onDestroy",
+    "onKeyDown",
+    "onMonthChange",
+    "onOpen",
+    "onParseConfig",
+    "onReady",
+    "onValueUpdate",
+    "onYearChange",
+    "onPreCalendarPosition"
+  ];
+  var defaults2 = {
+    _disable: [],
+    allowInput: false,
+    allowInvalidPreload: false,
+    altFormat: "F j, Y",
+    altInput: false,
+    altInputClass: "form-control input",
+    animate: typeof window === "object" && window.navigator.userAgent.indexOf("MSIE") === -1,
+    ariaDateFormat: "F j, Y",
+    autoFillDefaultTime: true,
+    clickOpens: true,
+    closeOnSelect: true,
+    conjunction: ", ",
+    dateFormat: "Y-m-d",
+    defaultHour: 12,
+    defaultMinute: 0,
+    defaultSeconds: 0,
+    disable: [],
+    disableMobile: false,
+    enableSeconds: false,
+    enableTime: false,
+    errorHandler: function(err) {
+      return typeof console !== "undefined" && console.warn(err);
+    },
+    getWeek: function(givenDate) {
+      var date = new Date(givenDate.getTime());
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+      var week1 = new Date(date.getFullYear(), 0, 4);
+      return 1 + Math.round(((date.getTime() - week1.getTime()) / 864e5 - 3 + (week1.getDay() + 6) % 7) / 7);
+    },
+    hourIncrement: 1,
+    ignoredFocusElements: [],
+    inline: false,
+    locale: "default",
+    minuteIncrement: 5,
+    mode: "single",
+    monthSelectorType: "dropdown",
+    nextArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z' /></svg>",
+    noCalendar: false,
+    now: /* @__PURE__ */ new Date(),
+    onChange: [],
+    onClose: [],
+    onDayCreate: [],
+    onDestroy: [],
+    onKeyDown: [],
+    onMonthChange: [],
+    onOpen: [],
+    onParseConfig: [],
+    onReady: [],
+    onValueUpdate: [],
+    onYearChange: [],
+    onPreCalendarPosition: [],
+    plugins: [],
+    position: "auto",
+    positionElement: void 0,
+    prevArrow: "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 17 17'><g></g><path d='M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z' /></svg>",
+    shorthandCurrentMonth: false,
+    showMonths: 1,
+    static: false,
+    time_24hr: false,
+    weekNumbers: false,
+    wrap: false
+  };
+
+  // node_modules/flatpickr/dist/esm/l10n/default.js
+  var english = {
+    weekdays: {
+      shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      longhand: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ]
+    },
+    months: {
+      shorthand: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      longhand: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+    firstDayOfWeek: 0,
+    ordinal: function(nth) {
+      var s = nth % 100;
+      if (s > 3 && s < 21)
+        return "th";
+      switch (s % 10) {
+        case 1:
+          return "st";
+        case 2:
+          return "nd";
+        case 3:
+          return "rd";
+        default:
+          return "th";
+      }
+    },
+    rangeSeparator: " to ",
+    weekAbbreviation: "Wk",
+    scrollTitle: "Scroll to increment",
+    toggleTitle: "Click to toggle",
+    amPM: ["AM", "PM"],
+    yearAriaLabel: "Year",
+    monthAriaLabel: "Month",
+    hourAriaLabel: "Hour",
+    minuteAriaLabel: "Minute",
+    time_24hr: false
+  };
+  var default_default = english;
+
+  // node_modules/flatpickr/dist/esm/utils/index.js
+  var pad = function(number, length) {
+    if (length === void 0) {
+      length = 2;
+    }
+    return ("000" + number).slice(length * -1);
+  };
+  var int = function(bool) {
+    return bool === true ? 1 : 0;
+  };
+  function debounce2(fn, wait) {
+    var t;
+    return function() {
+      var _this = this;
+      var args = arguments;
+      clearTimeout(t);
+      t = setTimeout(function() {
+        return fn.apply(_this, args);
+      }, wait);
+    };
+  }
+  var arrayify = function(obj) {
+    return obj instanceof Array ? obj : [obj];
+  };
+
+  // node_modules/flatpickr/dist/esm/utils/dom.js
+  function toggleClass2(elem, className, bool) {
+    if (bool === true)
+      return elem.classList.add(className);
+    elem.classList.remove(className);
+  }
+  function createElement(tag, className, content) {
+    var e = window.document.createElement(tag);
+    className = className || "";
+    content = content || "";
+    e.className = className;
+    if (content !== void 0)
+      e.textContent = content;
+    return e;
+  }
+  function clearNode(node) {
+    while (node.firstChild)
+      node.removeChild(node.firstChild);
+  }
+  function findParent(node, condition) {
+    if (condition(node))
+      return node;
+    else if (node.parentNode)
+      return findParent(node.parentNode, condition);
+    return void 0;
+  }
+  function createNumberInput(inputClassName, opts) {
+    var wrapper = createElement("div", "numInputWrapper"), numInput = createElement("input", "numInput " + inputClassName), arrowUp = createElement("span", "arrowUp"), arrowDown = createElement("span", "arrowDown");
+    if (navigator.userAgent.indexOf("MSIE 9.0") === -1) {
+      numInput.type = "number";
+    } else {
+      numInput.type = "text";
+      numInput.pattern = "\\d*";
+    }
+    if (opts !== void 0)
+      for (var key in opts)
+        numInput.setAttribute(key, opts[key]);
+    wrapper.appendChild(numInput);
+    wrapper.appendChild(arrowUp);
+    wrapper.appendChild(arrowDown);
+    return wrapper;
+  }
+  function getEventTarget(event) {
+    try {
+      if (typeof event.composedPath === "function") {
+        var path = event.composedPath();
+        return path[0];
+      }
+      return event.target;
+    } catch (error) {
+      return event.target;
+    }
+  }
+
+  // node_modules/flatpickr/dist/esm/utils/formatting.js
+  var doNothing = function() {
+    return void 0;
+  };
+  var monthToStr = function(monthNumber, shorthand, locale) {
+    return locale.months[shorthand ? "shorthand" : "longhand"][monthNumber];
+  };
+  var revFormat = {
+    D: doNothing,
+    F: function(dateObj, monthName, locale) {
+      dateObj.setMonth(locale.months.longhand.indexOf(monthName));
+    },
+    G: function(dateObj, hour) {
+      dateObj.setHours((dateObj.getHours() >= 12 ? 12 : 0) + parseFloat(hour));
+    },
+    H: function(dateObj, hour) {
+      dateObj.setHours(parseFloat(hour));
+    },
+    J: function(dateObj, day) {
+      dateObj.setDate(parseFloat(day));
+    },
+    K: function(dateObj, amPM, locale) {
+      dateObj.setHours(dateObj.getHours() % 12 + 12 * int(new RegExp(locale.amPM[1], "i").test(amPM)));
+    },
+    M: function(dateObj, shortMonth, locale) {
+      dateObj.setMonth(locale.months.shorthand.indexOf(shortMonth));
+    },
+    S: function(dateObj, seconds) {
+      dateObj.setSeconds(parseFloat(seconds));
+    },
+    U: function(_, unixSeconds) {
+      return new Date(parseFloat(unixSeconds) * 1e3);
+    },
+    W: function(dateObj, weekNum, locale) {
+      var weekNumber = parseInt(weekNum);
+      var date = new Date(dateObj.getFullYear(), 0, 2 + (weekNumber - 1) * 7, 0, 0, 0, 0);
+      date.setDate(date.getDate() - date.getDay() + locale.firstDayOfWeek);
+      return date;
+    },
+    Y: function(dateObj, year) {
+      dateObj.setFullYear(parseFloat(year));
+    },
+    Z: function(_, ISODate) {
+      return new Date(ISODate);
+    },
+    d: function(dateObj, day) {
+      dateObj.setDate(parseFloat(day));
+    },
+    h: function(dateObj, hour) {
+      dateObj.setHours((dateObj.getHours() >= 12 ? 12 : 0) + parseFloat(hour));
+    },
+    i: function(dateObj, minutes) {
+      dateObj.setMinutes(parseFloat(minutes));
+    },
+    j: function(dateObj, day) {
+      dateObj.setDate(parseFloat(day));
+    },
+    l: doNothing,
+    m: function(dateObj, month) {
+      dateObj.setMonth(parseFloat(month) - 1);
+    },
+    n: function(dateObj, month) {
+      dateObj.setMonth(parseFloat(month) - 1);
+    },
+    s: function(dateObj, seconds) {
+      dateObj.setSeconds(parseFloat(seconds));
+    },
+    u: function(_, unixMillSeconds) {
+      return new Date(parseFloat(unixMillSeconds));
+    },
+    w: doNothing,
+    y: function(dateObj, year) {
+      dateObj.setFullYear(2e3 + parseFloat(year));
+    }
+  };
+  var tokenRegex = {
+    D: "",
+    F: "",
+    G: "(\\d\\d|\\d)",
+    H: "(\\d\\d|\\d)",
+    J: "(\\d\\d|\\d)\\w+",
+    K: "",
+    M: "",
+    S: "(\\d\\d|\\d)",
+    U: "(.+)",
+    W: "(\\d\\d|\\d)",
+    Y: "(\\d{4})",
+    Z: "(.+)",
+    d: "(\\d\\d|\\d)",
+    h: "(\\d\\d|\\d)",
+    i: "(\\d\\d|\\d)",
+    j: "(\\d\\d|\\d)",
+    l: "",
+    m: "(\\d\\d|\\d)",
+    n: "(\\d\\d|\\d)",
+    s: "(\\d\\d|\\d)",
+    u: "(.+)",
+    w: "(\\d\\d|\\d)",
+    y: "(\\d{2})"
+  };
+  var formats = {
+    Z: function(date) {
+      return date.toISOString();
+    },
+    D: function(date, locale, options) {
+      return locale.weekdays.shorthand[formats.w(date, locale, options)];
+    },
+    F: function(date, locale, options) {
+      return monthToStr(formats.n(date, locale, options) - 1, false, locale);
+    },
+    G: function(date, locale, options) {
+      return pad(formats.h(date, locale, options));
+    },
+    H: function(date) {
+      return pad(date.getHours());
+    },
+    J: function(date, locale) {
+      return locale.ordinal !== void 0 ? date.getDate() + locale.ordinal(date.getDate()) : date.getDate();
+    },
+    K: function(date, locale) {
+      return locale.amPM[int(date.getHours() > 11)];
+    },
+    M: function(date, locale) {
+      return monthToStr(date.getMonth(), true, locale);
+    },
+    S: function(date) {
+      return pad(date.getSeconds());
+    },
+    U: function(date) {
+      return date.getTime() / 1e3;
+    },
+    W: function(date, _, options) {
+      return options.getWeek(date);
+    },
+    Y: function(date) {
+      return pad(date.getFullYear(), 4);
+    },
+    d: function(date) {
+      return pad(date.getDate());
+    },
+    h: function(date) {
+      return date.getHours() % 12 ? date.getHours() % 12 : 12;
+    },
+    i: function(date) {
+      return pad(date.getMinutes());
+    },
+    j: function(date) {
+      return date.getDate();
+    },
+    l: function(date, locale) {
+      return locale.weekdays.longhand[date.getDay()];
+    },
+    m: function(date) {
+      return pad(date.getMonth() + 1);
+    },
+    n: function(date) {
+      return date.getMonth() + 1;
+    },
+    s: function(date) {
+      return date.getSeconds();
+    },
+    u: function(date) {
+      return date.getTime();
+    },
+    w: function(date) {
+      return date.getDay();
+    },
+    y: function(date) {
+      return String(date.getFullYear()).substring(2);
+    }
+  };
+
+  // node_modules/flatpickr/dist/esm/utils/dates.js
+  var createDateFormatter = function(_a) {
+    var _b = _a.config, config = _b === void 0 ? defaults2 : _b, _c = _a.l10n, l10n = _c === void 0 ? english : _c, _d = _a.isMobile, isMobile = _d === void 0 ? false : _d;
+    return function(dateObj, frmt, overrideLocale) {
+      var locale = overrideLocale || l10n;
+      if (config.formatDate !== void 0 && !isMobile) {
+        return config.formatDate(dateObj, frmt, locale);
+      }
+      return frmt.split("").map(function(c, i, arr) {
+        return formats[c] && arr[i - 1] !== "\\" ? formats[c](dateObj, locale, config) : c !== "\\" ? c : "";
+      }).join("");
+    };
+  };
+  var createDateParser = function(_a) {
+    var _b = _a.config, config = _b === void 0 ? defaults2 : _b, _c = _a.l10n, l10n = _c === void 0 ? english : _c;
+    return function(date, givenFormat, timeless, customLocale) {
+      if (date !== 0 && !date)
+        return void 0;
+      var locale = customLocale || l10n;
+      var parsedDate;
+      var dateOrig = date;
+      if (date instanceof Date)
+        parsedDate = new Date(date.getTime());
+      else if (typeof date !== "string" && date.toFixed !== void 0)
+        parsedDate = new Date(date);
+      else if (typeof date === "string") {
+        var format = givenFormat || (config || defaults2).dateFormat;
+        var datestr = String(date).trim();
+        if (datestr === "today") {
+          parsedDate = /* @__PURE__ */ new Date();
+          timeless = true;
+        } else if (config && config.parseDate) {
+          parsedDate = config.parseDate(date, format);
+        } else if (/Z$/.test(datestr) || /GMT$/.test(datestr)) {
+          parsedDate = new Date(date);
+        } else {
+          var matched = void 0, ops = [];
+          for (var i = 0, matchIndex = 0, regexStr = ""; i < format.length; i++) {
+            var token = format[i];
+            var isBackSlash = token === "\\";
+            var escaped = format[i - 1] === "\\" || isBackSlash;
+            if (tokenRegex[token] && !escaped) {
+              regexStr += tokenRegex[token];
+              var match = new RegExp(regexStr).exec(date);
+              if (match && (matched = true)) {
+                ops[token !== "Y" ? "push" : "unshift"]({
+                  fn: revFormat[token],
+                  val: match[++matchIndex]
+                });
+              }
+            } else if (!isBackSlash)
+              regexStr += ".";
+          }
+          parsedDate = !config || !config.noCalendar ? new Date((/* @__PURE__ */ new Date()).getFullYear(), 0, 1, 0, 0, 0, 0) : new Date((/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0));
+          ops.forEach(function(_a2) {
+            var fn = _a2.fn, val = _a2.val;
+            return parsedDate = fn(parsedDate, val, locale) || parsedDate;
+          });
+          parsedDate = matched ? parsedDate : void 0;
+        }
+      }
+      if (!(parsedDate instanceof Date && !isNaN(parsedDate.getTime()))) {
+        config.errorHandler(new Error("Invalid date provided: " + dateOrig));
+        return void 0;
+      }
+      if (timeless === true)
+        parsedDate.setHours(0, 0, 0, 0);
+      return parsedDate;
+    };
+  };
+  function compareDates(date1, date2, timeless) {
+    if (timeless === void 0) {
+      timeless = true;
+    }
+    if (timeless !== false) {
+      return new Date(date1.getTime()).setHours(0, 0, 0, 0) - new Date(date2.getTime()).setHours(0, 0, 0, 0);
+    }
+    return date1.getTime() - date2.getTime();
+  }
+  var isBetween = function(ts, ts1, ts2) {
+    return ts > Math.min(ts1, ts2) && ts < Math.max(ts1, ts2);
+  };
+  var calculateSecondsSinceMidnight = function(hours, minutes, seconds) {
+    return hours * 3600 + minutes * 60 + seconds;
+  };
+  var parseSeconds = function(secondsSinceMidnight) {
+    var hours = Math.floor(secondsSinceMidnight / 3600), minutes = (secondsSinceMidnight - hours * 3600) / 60;
+    return [hours, minutes, secondsSinceMidnight - hours * 3600 - minutes * 60];
+  };
+  var duration = {
+    DAY: 864e5
+  };
+  function getDefaultHours(config) {
+    var hours = config.defaultHour;
+    var minutes = config.defaultMinute;
+    var seconds = config.defaultSeconds;
+    if (config.minDate !== void 0) {
+      var minHour = config.minDate.getHours();
+      var minMinutes = config.minDate.getMinutes();
+      var minSeconds = config.minDate.getSeconds();
+      if (hours < minHour) {
+        hours = minHour;
+      }
+      if (hours === minHour && minutes < minMinutes) {
+        minutes = minMinutes;
+      }
+      if (hours === minHour && minutes === minMinutes && seconds < minSeconds)
+        seconds = config.minDate.getSeconds();
+    }
+    if (config.maxDate !== void 0) {
+      var maxHr = config.maxDate.getHours();
+      var maxMinutes = config.maxDate.getMinutes();
+      hours = Math.min(hours, maxHr);
+      if (hours === maxHr)
+        minutes = Math.min(maxMinutes, minutes);
+      if (hours === maxHr && minutes === maxMinutes)
+        seconds = config.maxDate.getSeconds();
+    }
+    return { hours, minutes, seconds };
+  }
+
+  // node_modules/flatpickr/dist/esm/utils/polyfills.js
+  if (typeof Object.assign !== "function") {
+    Object.assign = function(target) {
+      var args = [];
+      for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+      }
+      if (!target) {
+        throw TypeError("Cannot convert undefined or null to object");
+      }
+      var _loop_1 = function(source2) {
+        if (source2) {
+          Object.keys(source2).forEach(function(key) {
+            return target[key] = source2[key];
+          });
+        }
+      };
+      for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {
+        var source = args_1[_a];
+        _loop_1(source);
+      }
+      return target;
+    };
+  }
+
+  // node_modules/flatpickr/dist/esm/index.js
+  var __assign = function() {
+    __assign = Object.assign || function(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+          t[p] = s[p];
+      }
+      return t;
+    };
+    return __assign.apply(this, arguments);
+  };
+  var __spreadArrays = function() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+      for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+        r[k] = a[j];
+    return r;
+  };
+  var DEBOUNCED_CHANGE_MS = 300;
+  function FlatpickrInstance(element, instanceConfig) {
+    var self2 = {
+      config: __assign(__assign({}, defaults2), flatpickr.defaultConfig),
+      l10n: default_default
+    };
+    self2.parseDate = createDateParser({ config: self2.config, l10n: self2.l10n });
+    self2._handlers = [];
+    self2.pluginElements = [];
+    self2.loadedPlugins = [];
+    self2._bind = bind;
+    self2._setHoursFromDate = setHoursFromDate;
+    self2._positionCalendar = positionCalendar;
+    self2.changeMonth = changeMonth;
+    self2.changeYear = changeYear;
+    self2.clear = clear;
+    self2.close = close;
+    self2.onMouseOver = onMouseOver;
+    self2._createElement = createElement;
+    self2.createDay = createDay;
+    self2.destroy = destroy3;
+    self2.isEnabled = isEnabled;
+    self2.jumpToDate = jumpToDate;
+    self2.updateValue = updateValue;
+    self2.open = open;
+    self2.redraw = redraw;
+    self2.set = set;
+    self2.setDate = setDate;
+    self2.toggle = toggle;
+    function setupHelperFunctions() {
+      self2.utils = {
+        getDaysInMonth: function(month, yr) {
+          if (month === void 0) {
+            month = self2.currentMonth;
+          }
+          if (yr === void 0) {
+            yr = self2.currentYear;
+          }
+          if (month === 1 && (yr % 4 === 0 && yr % 100 !== 0 || yr % 400 === 0))
+            return 29;
+          return self2.l10n.daysInMonth[month];
+        }
+      };
+    }
+    function init() {
+      self2.element = self2.input = element;
+      self2.isOpen = false;
+      parseConfig();
+      setupLocale();
+      setupInputs();
+      setupDates();
+      setupHelperFunctions();
+      if (!self2.isMobile)
+        build();
+      bindEvents();
+      if (self2.selectedDates.length || self2.config.noCalendar) {
+        if (self2.config.enableTime) {
+          setHoursFromDate(self2.config.noCalendar ? self2.latestSelectedDateObj : void 0);
+        }
+        updateValue(false);
+      }
+      setCalendarWidth();
+      var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      if (!self2.isMobile && isSafari) {
+        positionCalendar();
+      }
+      triggerEvent("onReady");
+    }
+    function getClosestActiveElement() {
+      var _a;
+      return ((_a = self2.calendarContainer) === null || _a === void 0 ? void 0 : _a.getRootNode()).activeElement || document.activeElement;
+    }
+    function bindToInstance(fn) {
+      return fn.bind(self2);
+    }
+    function setCalendarWidth() {
+      var config = self2.config;
+      if (config.weekNumbers === false && config.showMonths === 1) {
+        return;
+      } else if (config.noCalendar !== true) {
+        window.requestAnimationFrame(function() {
+          if (self2.calendarContainer !== void 0) {
+            self2.calendarContainer.style.visibility = "hidden";
+            self2.calendarContainer.style.display = "block";
+          }
+          if (self2.daysContainer !== void 0) {
+            var daysWidth = (self2.days.offsetWidth + 1) * config.showMonths;
+            self2.daysContainer.style.width = daysWidth + "px";
+            self2.calendarContainer.style.width = daysWidth + (self2.weekWrapper !== void 0 ? self2.weekWrapper.offsetWidth : 0) + "px";
+            self2.calendarContainer.style.removeProperty("visibility");
+            self2.calendarContainer.style.removeProperty("display");
+          }
+        });
+      }
+    }
+    function updateTime(e) {
+      if (self2.selectedDates.length === 0) {
+        var defaultDate = self2.config.minDate === void 0 || compareDates(/* @__PURE__ */ new Date(), self2.config.minDate) >= 0 ? /* @__PURE__ */ new Date() : new Date(self2.config.minDate.getTime());
+        var defaults3 = getDefaultHours(self2.config);
+        defaultDate.setHours(defaults3.hours, defaults3.minutes, defaults3.seconds, defaultDate.getMilliseconds());
+        self2.selectedDates = [defaultDate];
+        self2.latestSelectedDateObj = defaultDate;
+      }
+      if (e !== void 0 && e.type !== "blur") {
+        timeWrapper(e);
+      }
+      var prevValue = self2._input.value;
+      setHoursFromInputs();
+      updateValue();
+      if (self2._input.value !== prevValue) {
+        self2._debouncedChange();
+      }
+    }
+    function ampm2military(hour, amPM) {
+      return hour % 12 + 12 * int(amPM === self2.l10n.amPM[1]);
+    }
+    function military2ampm(hour) {
+      switch (hour % 24) {
+        case 0:
+        case 12:
+          return 12;
+        default:
+          return hour % 12;
+      }
+    }
+    function setHoursFromInputs() {
+      if (self2.hourElement === void 0 || self2.minuteElement === void 0)
+        return;
+      var hours = (parseInt(self2.hourElement.value.slice(-2), 10) || 0) % 24, minutes = (parseInt(self2.minuteElement.value, 10) || 0) % 60, seconds = self2.secondElement !== void 0 ? (parseInt(self2.secondElement.value, 10) || 0) % 60 : 0;
+      if (self2.amPM !== void 0) {
+        hours = ampm2military(hours, self2.amPM.textContent);
+      }
+      var limitMinHours = self2.config.minTime !== void 0 || self2.config.minDate && self2.minDateHasTime && self2.latestSelectedDateObj && compareDates(self2.latestSelectedDateObj, self2.config.minDate, true) === 0;
+      var limitMaxHours = self2.config.maxTime !== void 0 || self2.config.maxDate && self2.maxDateHasTime && self2.latestSelectedDateObj && compareDates(self2.latestSelectedDateObj, self2.config.maxDate, true) === 0;
+      if (self2.config.maxTime !== void 0 && self2.config.minTime !== void 0 && self2.config.minTime > self2.config.maxTime) {
+        var minBound = calculateSecondsSinceMidnight(self2.config.minTime.getHours(), self2.config.minTime.getMinutes(), self2.config.minTime.getSeconds());
+        var maxBound = calculateSecondsSinceMidnight(self2.config.maxTime.getHours(), self2.config.maxTime.getMinutes(), self2.config.maxTime.getSeconds());
+        var currentTime = calculateSecondsSinceMidnight(hours, minutes, seconds);
+        if (currentTime > maxBound && currentTime < minBound) {
+          var result = parseSeconds(minBound);
+          hours = result[0];
+          minutes = result[1];
+          seconds = result[2];
+        }
+      } else {
+        if (limitMaxHours) {
+          var maxTime = self2.config.maxTime !== void 0 ? self2.config.maxTime : self2.config.maxDate;
+          hours = Math.min(hours, maxTime.getHours());
+          if (hours === maxTime.getHours())
+            minutes = Math.min(minutes, maxTime.getMinutes());
+          if (minutes === maxTime.getMinutes())
+            seconds = Math.min(seconds, maxTime.getSeconds());
+        }
+        if (limitMinHours) {
+          var minTime = self2.config.minTime !== void 0 ? self2.config.minTime : self2.config.minDate;
+          hours = Math.max(hours, minTime.getHours());
+          if (hours === minTime.getHours() && minutes < minTime.getMinutes())
+            minutes = minTime.getMinutes();
+          if (minutes === minTime.getMinutes())
+            seconds = Math.max(seconds, minTime.getSeconds());
+        }
+      }
+      setHours(hours, minutes, seconds);
+    }
+    function setHoursFromDate(dateObj) {
+      var date = dateObj || self2.latestSelectedDateObj;
+      if (date && date instanceof Date) {
+        setHours(date.getHours(), date.getMinutes(), date.getSeconds());
+      }
+    }
+    function setHours(hours, minutes, seconds) {
+      if (self2.latestSelectedDateObj !== void 0) {
+        self2.latestSelectedDateObj.setHours(hours % 24, minutes, seconds || 0, 0);
+      }
+      if (!self2.hourElement || !self2.minuteElement || self2.isMobile)
+        return;
+      self2.hourElement.value = pad(!self2.config.time_24hr ? (12 + hours) % 12 + 12 * int(hours % 12 === 0) : hours);
+      self2.minuteElement.value = pad(minutes);
+      if (self2.amPM !== void 0)
+        self2.amPM.textContent = self2.l10n.amPM[int(hours >= 12)];
+      if (self2.secondElement !== void 0)
+        self2.secondElement.value = pad(seconds);
+    }
+    function onYearInput(event) {
+      var eventTarget = getEventTarget(event);
+      var year = parseInt(eventTarget.value) + (event.delta || 0);
+      if (year / 1e3 > 1 || event.key === "Enter" && !/[^\d]/.test(year.toString())) {
+        changeYear(year);
+      }
+    }
+    function bind(element2, event, handler, options) {
+      if (event instanceof Array)
+        return event.forEach(function(ev) {
+          return bind(element2, ev, handler, options);
+        });
+      if (element2 instanceof Array)
+        return element2.forEach(function(el) {
+          return bind(el, event, handler, options);
+        });
+      element2.addEventListener(event, handler, options);
+      self2._handlers.push({
+        remove: function() {
+          return element2.removeEventListener(event, handler, options);
+        }
+      });
+    }
+    function triggerChange() {
+      triggerEvent("onChange");
+    }
+    function bindEvents() {
+      if (self2.config.wrap) {
+        ["open", "close", "toggle", "clear"].forEach(function(evt) {
+          Array.prototype.forEach.call(self2.element.querySelectorAll("[data-" + evt + "]"), function(el) {
+            return bind(el, "click", self2[evt]);
+          });
+        });
+      }
+      if (self2.isMobile) {
+        setupMobile();
+        return;
+      }
+      var debouncedResize = debounce2(onResize, 50);
+      self2._debouncedChange = debounce2(triggerChange, DEBOUNCED_CHANGE_MS);
+      if (self2.daysContainer && !/iPhone|iPad|iPod/i.test(navigator.userAgent))
+        bind(self2.daysContainer, "mouseover", function(e) {
+          if (self2.config.mode === "range")
+            onMouseOver(getEventTarget(e));
+        });
+      bind(self2._input, "keydown", onKeyDown);
+      if (self2.calendarContainer !== void 0) {
+        bind(self2.calendarContainer, "keydown", onKeyDown);
+      }
+      if (!self2.config.inline && !self2.config.static)
+        bind(window, "resize", debouncedResize);
+      if (window.ontouchstart !== void 0)
+        bind(window.document, "touchstart", documentClick);
+      else
+        bind(window.document, "mousedown", documentClick);
+      bind(window.document, "focus", documentClick, { capture: true });
+      if (self2.config.clickOpens === true) {
+        bind(self2._input, "focus", self2.open);
+        bind(self2._input, "click", self2.open);
+      }
+      if (self2.daysContainer !== void 0) {
+        bind(self2.monthNav, "click", onMonthNavClick);
+        bind(self2.monthNav, ["keyup", "increment"], onYearInput);
+        bind(self2.daysContainer, "click", selectDate);
+      }
+      if (self2.timeContainer !== void 0 && self2.minuteElement !== void 0 && self2.hourElement !== void 0) {
+        var selText = function(e) {
+          return getEventTarget(e).select();
+        };
+        bind(self2.timeContainer, ["increment"], updateTime);
+        bind(self2.timeContainer, "blur", updateTime, { capture: true });
+        bind(self2.timeContainer, "click", timeIncrement);
+        bind([self2.hourElement, self2.minuteElement], ["focus", "click"], selText);
+        if (self2.secondElement !== void 0)
+          bind(self2.secondElement, "focus", function() {
+            return self2.secondElement && self2.secondElement.select();
+          });
+        if (self2.amPM !== void 0) {
+          bind(self2.amPM, "click", function(e) {
+            updateTime(e);
+          });
+        }
+      }
+      if (self2.config.allowInput) {
+        bind(self2._input, "blur", onBlur);
+      }
+    }
+    function jumpToDate(jumpDate, triggerChange2) {
+      var jumpTo = jumpDate !== void 0 ? self2.parseDate(jumpDate) : self2.latestSelectedDateObj || (self2.config.minDate && self2.config.minDate > self2.now ? self2.config.minDate : self2.config.maxDate && self2.config.maxDate < self2.now ? self2.config.maxDate : self2.now);
+      var oldYear = self2.currentYear;
+      var oldMonth = self2.currentMonth;
+      try {
+        if (jumpTo !== void 0) {
+          self2.currentYear = jumpTo.getFullYear();
+          self2.currentMonth = jumpTo.getMonth();
+        }
+      } catch (e) {
+        e.message = "Invalid date supplied: " + jumpTo;
+        self2.config.errorHandler(e);
+      }
+      if (triggerChange2 && self2.currentYear !== oldYear) {
+        triggerEvent("onYearChange");
+        buildMonthSwitch();
+      }
+      if (triggerChange2 && (self2.currentYear !== oldYear || self2.currentMonth !== oldMonth)) {
+        triggerEvent("onMonthChange");
+      }
+      self2.redraw();
+    }
+    function timeIncrement(e) {
+      var eventTarget = getEventTarget(e);
+      if (~eventTarget.className.indexOf("arrow"))
+        incrementNumInput(e, eventTarget.classList.contains("arrowUp") ? 1 : -1);
+    }
+    function incrementNumInput(e, delta, inputElem) {
+      var target = e && getEventTarget(e);
+      var input = inputElem || target && target.parentNode && target.parentNode.firstChild;
+      var event = createEvent("increment");
+      event.delta = delta;
+      input && input.dispatchEvent(event);
+    }
+    function build() {
+      var fragment = window.document.createDocumentFragment();
+      self2.calendarContainer = createElement("div", "flatpickr-calendar");
+      self2.calendarContainer.tabIndex = -1;
+      if (!self2.config.noCalendar) {
+        fragment.appendChild(buildMonthNav());
+        self2.innerContainer = createElement("div", "flatpickr-innerContainer");
+        if (self2.config.weekNumbers) {
+          var _a = buildWeeks(), weekWrapper = _a.weekWrapper, weekNumbers = _a.weekNumbers;
+          self2.innerContainer.appendChild(weekWrapper);
+          self2.weekNumbers = weekNumbers;
+          self2.weekWrapper = weekWrapper;
+        }
+        self2.rContainer = createElement("div", "flatpickr-rContainer");
+        self2.rContainer.appendChild(buildWeekdays());
+        if (!self2.daysContainer) {
+          self2.daysContainer = createElement("div", "flatpickr-days");
+          self2.daysContainer.tabIndex = -1;
+        }
+        buildDays();
+        self2.rContainer.appendChild(self2.daysContainer);
+        self2.innerContainer.appendChild(self2.rContainer);
+        fragment.appendChild(self2.innerContainer);
+      }
+      if (self2.config.enableTime) {
+        fragment.appendChild(buildTime());
+      }
+      toggleClass2(self2.calendarContainer, "rangeMode", self2.config.mode === "range");
+      toggleClass2(self2.calendarContainer, "animate", self2.config.animate === true);
+      toggleClass2(self2.calendarContainer, "multiMonth", self2.config.showMonths > 1);
+      self2.calendarContainer.appendChild(fragment);
+      var customAppend = self2.config.appendTo !== void 0 && self2.config.appendTo.nodeType !== void 0;
+      if (self2.config.inline || self2.config.static) {
+        self2.calendarContainer.classList.add(self2.config.inline ? "inline" : "static");
+        if (self2.config.inline) {
+          if (!customAppend && self2.element.parentNode)
+            self2.element.parentNode.insertBefore(self2.calendarContainer, self2._input.nextSibling);
+          else if (self2.config.appendTo !== void 0)
+            self2.config.appendTo.appendChild(self2.calendarContainer);
+        }
+        if (self2.config.static) {
+          var wrapper = createElement("div", "flatpickr-wrapper");
+          if (self2.element.parentNode)
+            self2.element.parentNode.insertBefore(wrapper, self2.element);
+          wrapper.appendChild(self2.element);
+          if (self2.altInput)
+            wrapper.appendChild(self2.altInput);
+          wrapper.appendChild(self2.calendarContainer);
+        }
+      }
+      if (!self2.config.static && !self2.config.inline)
+        (self2.config.appendTo !== void 0 ? self2.config.appendTo : window.document.body).appendChild(self2.calendarContainer);
+    }
+    function createDay(className, date, _dayNumber, i) {
+      var dateIsEnabled = isEnabled(date, true), dayElement = createElement("span", className, date.getDate().toString());
+      dayElement.dateObj = date;
+      dayElement.$i = i;
+      dayElement.setAttribute("aria-label", self2.formatDate(date, self2.config.ariaDateFormat));
+      if (className.indexOf("hidden") === -1 && compareDates(date, self2.now) === 0) {
+        self2.todayDateElem = dayElement;
+        dayElement.classList.add("today");
+        dayElement.setAttribute("aria-current", "date");
+      }
+      if (dateIsEnabled) {
+        dayElement.tabIndex = -1;
+        if (isDateSelected(date)) {
+          dayElement.classList.add("selected");
+          self2.selectedDateElem = dayElement;
+          if (self2.config.mode === "range") {
+            toggleClass2(dayElement, "startRange", self2.selectedDates[0] && compareDates(date, self2.selectedDates[0], true) === 0);
+            toggleClass2(dayElement, "endRange", self2.selectedDates[1] && compareDates(date, self2.selectedDates[1], true) === 0);
+            if (className === "nextMonthDay")
+              dayElement.classList.add("inRange");
+          }
+        }
+      } else {
+        dayElement.classList.add("flatpickr-disabled");
+      }
+      if (self2.config.mode === "range") {
+        if (isDateInRange(date) && !isDateSelected(date))
+          dayElement.classList.add("inRange");
+      }
+      if (self2.weekNumbers && self2.config.showMonths === 1 && className !== "prevMonthDay" && i % 7 === 6) {
+        self2.weekNumbers.insertAdjacentHTML("beforeend", "<span class='flatpickr-day'>" + self2.config.getWeek(date) + "</span>");
+      }
+      triggerEvent("onDayCreate", dayElement);
+      return dayElement;
+    }
+    function focusOnDayElem(targetNode) {
+      targetNode.focus();
+      if (self2.config.mode === "range")
+        onMouseOver(targetNode);
+    }
+    function getFirstAvailableDay(delta) {
+      var startMonth = delta > 0 ? 0 : self2.config.showMonths - 1;
+      var endMonth = delta > 0 ? self2.config.showMonths : -1;
+      for (var m2 = startMonth; m2 != endMonth; m2 += delta) {
+        var month = self2.daysContainer.children[m2];
+        var startIndex = delta > 0 ? 0 : month.children.length - 1;
+        var endIndex = delta > 0 ? month.children.length : -1;
+        for (var i = startIndex; i != endIndex; i += delta) {
+          var c = month.children[i];
+          if (c.className.indexOf("hidden") === -1 && isEnabled(c.dateObj))
+            return c;
+        }
+      }
+      return void 0;
+    }
+    function getNextAvailableDay(current, delta) {
+      var givenMonth = current.className.indexOf("Month") === -1 ? current.dateObj.getMonth() : self2.currentMonth;
+      var endMonth = delta > 0 ? self2.config.showMonths : -1;
+      var loopDelta = delta > 0 ? 1 : -1;
+      for (var m2 = givenMonth - self2.currentMonth; m2 != endMonth; m2 += loopDelta) {
+        var month = self2.daysContainer.children[m2];
+        var startIndex = givenMonth - self2.currentMonth === m2 ? current.$i + delta : delta < 0 ? month.children.length - 1 : 0;
+        var numMonthDays = month.children.length;
+        for (var i = startIndex; i >= 0 && i < numMonthDays && i != (delta > 0 ? numMonthDays : -1); i += loopDelta) {
+          var c = month.children[i];
+          if (c.className.indexOf("hidden") === -1 && isEnabled(c.dateObj) && Math.abs(current.$i - i) >= Math.abs(delta))
+            return focusOnDayElem(c);
+        }
+      }
+      self2.changeMonth(loopDelta);
+      focusOnDay(getFirstAvailableDay(loopDelta), 0);
+      return void 0;
+    }
+    function focusOnDay(current, offset2) {
+      var activeElement = getClosestActiveElement();
+      var dayFocused = isInView(activeElement || document.body);
+      var startElem = current !== void 0 ? current : dayFocused ? activeElement : self2.selectedDateElem !== void 0 && isInView(self2.selectedDateElem) ? self2.selectedDateElem : self2.todayDateElem !== void 0 && isInView(self2.todayDateElem) ? self2.todayDateElem : getFirstAvailableDay(offset2 > 0 ? 1 : -1);
+      if (startElem === void 0) {
+        self2._input.focus();
+      } else if (!dayFocused) {
+        focusOnDayElem(startElem);
+      } else {
+        getNextAvailableDay(startElem, offset2);
+      }
+    }
+    function buildMonthDays(year, month) {
+      var firstOfMonth = (new Date(year, month, 1).getDay() - self2.l10n.firstDayOfWeek + 7) % 7;
+      var prevMonthDays = self2.utils.getDaysInMonth((month - 1 + 12) % 12, year);
+      var daysInMonth = self2.utils.getDaysInMonth(month, year), days = window.document.createDocumentFragment(), isMultiMonth = self2.config.showMonths > 1, prevMonthDayClass = isMultiMonth ? "prevMonthDay hidden" : "prevMonthDay", nextMonthDayClass = isMultiMonth ? "nextMonthDay hidden" : "nextMonthDay";
+      var dayNumber = prevMonthDays + 1 - firstOfMonth, dayIndex = 0;
+      for (; dayNumber <= prevMonthDays; dayNumber++, dayIndex++) {
+        days.appendChild(createDay("flatpickr-day " + prevMonthDayClass, new Date(year, month - 1, dayNumber), dayNumber, dayIndex));
+      }
+      for (dayNumber = 1; dayNumber <= daysInMonth; dayNumber++, dayIndex++) {
+        days.appendChild(createDay("flatpickr-day", new Date(year, month, dayNumber), dayNumber, dayIndex));
+      }
+      for (var dayNum = daysInMonth + 1; dayNum <= 42 - firstOfMonth && (self2.config.showMonths === 1 || dayIndex % 7 !== 0); dayNum++, dayIndex++) {
+        days.appendChild(createDay("flatpickr-day " + nextMonthDayClass, new Date(year, month + 1, dayNum % daysInMonth), dayNum, dayIndex));
+      }
+      var dayContainer = createElement("div", "dayContainer");
+      dayContainer.appendChild(days);
+      return dayContainer;
+    }
+    function buildDays() {
+      if (self2.daysContainer === void 0) {
+        return;
+      }
+      clearNode(self2.daysContainer);
+      if (self2.weekNumbers)
+        clearNode(self2.weekNumbers);
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < self2.config.showMonths; i++) {
+        var d = new Date(self2.currentYear, self2.currentMonth, 1);
+        d.setMonth(self2.currentMonth + i);
+        frag.appendChild(buildMonthDays(d.getFullYear(), d.getMonth()));
+      }
+      self2.daysContainer.appendChild(frag);
+      self2.days = self2.daysContainer.firstChild;
+      if (self2.config.mode === "range" && self2.selectedDates.length === 1) {
+        onMouseOver();
+      }
+    }
+    function buildMonthSwitch() {
+      if (self2.config.showMonths > 1 || self2.config.monthSelectorType !== "dropdown")
+        return;
+      var shouldBuildMonth = function(month2) {
+        if (self2.config.minDate !== void 0 && self2.currentYear === self2.config.minDate.getFullYear() && month2 < self2.config.minDate.getMonth()) {
+          return false;
+        }
+        return !(self2.config.maxDate !== void 0 && self2.currentYear === self2.config.maxDate.getFullYear() && month2 > self2.config.maxDate.getMonth());
+      };
+      self2.monthsDropdownContainer.tabIndex = -1;
+      self2.monthsDropdownContainer.innerHTML = "";
+      for (var i = 0; i < 12; i++) {
+        if (!shouldBuildMonth(i))
+          continue;
+        var month = createElement("option", "flatpickr-monthDropdown-month");
+        month.value = new Date(self2.currentYear, i).getMonth().toString();
+        month.textContent = monthToStr(i, self2.config.shorthandCurrentMonth, self2.l10n);
+        month.tabIndex = -1;
+        if (self2.currentMonth === i) {
+          month.selected = true;
+        }
+        self2.monthsDropdownContainer.appendChild(month);
+      }
+    }
+    function buildMonth() {
+      var container = createElement("div", "flatpickr-month");
+      var monthNavFragment = window.document.createDocumentFragment();
+      var monthElement;
+      if (self2.config.showMonths > 1 || self2.config.monthSelectorType === "static") {
+        monthElement = createElement("span", "cur-month");
+      } else {
+        self2.monthsDropdownContainer = createElement("select", "flatpickr-monthDropdown-months");
+        self2.monthsDropdownContainer.setAttribute("aria-label", self2.l10n.monthAriaLabel);
+        bind(self2.monthsDropdownContainer, "change", function(e) {
+          var target = getEventTarget(e);
+          var selectedMonth = parseInt(target.value, 10);
+          self2.changeMonth(selectedMonth - self2.currentMonth);
+          triggerEvent("onMonthChange");
+        });
+        buildMonthSwitch();
+        monthElement = self2.monthsDropdownContainer;
+      }
+      var yearInput = createNumberInput("cur-year", { tabindex: "-1" });
+      var yearElement = yearInput.getElementsByTagName("input")[0];
+      yearElement.setAttribute("aria-label", self2.l10n.yearAriaLabel);
+      if (self2.config.minDate) {
+        yearElement.setAttribute("min", self2.config.minDate.getFullYear().toString());
+      }
+      if (self2.config.maxDate) {
+        yearElement.setAttribute("max", self2.config.maxDate.getFullYear().toString());
+        yearElement.disabled = !!self2.config.minDate && self2.config.minDate.getFullYear() === self2.config.maxDate.getFullYear();
+      }
+      var currentMonth = createElement("div", "flatpickr-current-month");
+      currentMonth.appendChild(monthElement);
+      currentMonth.appendChild(yearInput);
+      monthNavFragment.appendChild(currentMonth);
+      container.appendChild(monthNavFragment);
+      return {
+        container,
+        yearElement,
+        monthElement
+      };
+    }
+    function buildMonths() {
+      clearNode(self2.monthNav);
+      self2.monthNav.appendChild(self2.prevMonthNav);
+      if (self2.config.showMonths) {
+        self2.yearElements = [];
+        self2.monthElements = [];
+      }
+      for (var m2 = self2.config.showMonths; m2--; ) {
+        var month = buildMonth();
+        self2.yearElements.push(month.yearElement);
+        self2.monthElements.push(month.monthElement);
+        self2.monthNav.appendChild(month.container);
+      }
+      self2.monthNav.appendChild(self2.nextMonthNav);
+    }
+    function buildMonthNav() {
+      self2.monthNav = createElement("div", "flatpickr-months");
+      self2.yearElements = [];
+      self2.monthElements = [];
+      self2.prevMonthNav = createElement("span", "flatpickr-prev-month");
+      self2.prevMonthNav.innerHTML = self2.config.prevArrow;
+      self2.nextMonthNav = createElement("span", "flatpickr-next-month");
+      self2.nextMonthNav.innerHTML = self2.config.nextArrow;
+      buildMonths();
+      Object.defineProperty(self2, "_hidePrevMonthArrow", {
+        get: function() {
+          return self2.__hidePrevMonthArrow;
+        },
+        set: function(bool) {
+          if (self2.__hidePrevMonthArrow !== bool) {
+            toggleClass2(self2.prevMonthNav, "flatpickr-disabled", bool);
+            self2.__hidePrevMonthArrow = bool;
+          }
+        }
+      });
+      Object.defineProperty(self2, "_hideNextMonthArrow", {
+        get: function() {
+          return self2.__hideNextMonthArrow;
+        },
+        set: function(bool) {
+          if (self2.__hideNextMonthArrow !== bool) {
+            toggleClass2(self2.nextMonthNav, "flatpickr-disabled", bool);
+            self2.__hideNextMonthArrow = bool;
+          }
+        }
+      });
+      self2.currentYearElement = self2.yearElements[0];
+      updateNavigationCurrentMonth();
+      return self2.monthNav;
+    }
+    function buildTime() {
+      self2.calendarContainer.classList.add("hasTime");
+      if (self2.config.noCalendar)
+        self2.calendarContainer.classList.add("noCalendar");
+      var defaults3 = getDefaultHours(self2.config);
+      self2.timeContainer = createElement("div", "flatpickr-time");
+      self2.timeContainer.tabIndex = -1;
+      var separator = createElement("span", "flatpickr-time-separator", ":");
+      var hourInput = createNumberInput("flatpickr-hour", {
+        "aria-label": self2.l10n.hourAriaLabel
+      });
+      self2.hourElement = hourInput.getElementsByTagName("input")[0];
+      var minuteInput = createNumberInput("flatpickr-minute", {
+        "aria-label": self2.l10n.minuteAriaLabel
+      });
+      self2.minuteElement = minuteInput.getElementsByTagName("input")[0];
+      self2.hourElement.tabIndex = self2.minuteElement.tabIndex = -1;
+      self2.hourElement.value = pad(self2.latestSelectedDateObj ? self2.latestSelectedDateObj.getHours() : self2.config.time_24hr ? defaults3.hours : military2ampm(defaults3.hours));
+      self2.minuteElement.value = pad(self2.latestSelectedDateObj ? self2.latestSelectedDateObj.getMinutes() : defaults3.minutes);
+      self2.hourElement.setAttribute("step", self2.config.hourIncrement.toString());
+      self2.minuteElement.setAttribute("step", self2.config.minuteIncrement.toString());
+      self2.hourElement.setAttribute("min", self2.config.time_24hr ? "0" : "1");
+      self2.hourElement.setAttribute("max", self2.config.time_24hr ? "23" : "12");
+      self2.hourElement.setAttribute("maxlength", "2");
+      self2.minuteElement.setAttribute("min", "0");
+      self2.minuteElement.setAttribute("max", "59");
+      self2.minuteElement.setAttribute("maxlength", "2");
+      self2.timeContainer.appendChild(hourInput);
+      self2.timeContainer.appendChild(separator);
+      self2.timeContainer.appendChild(minuteInput);
+      if (self2.config.time_24hr)
+        self2.timeContainer.classList.add("time24hr");
+      if (self2.config.enableSeconds) {
+        self2.timeContainer.classList.add("hasSeconds");
+        var secondInput = createNumberInput("flatpickr-second");
+        self2.secondElement = secondInput.getElementsByTagName("input")[0];
+        self2.secondElement.value = pad(self2.latestSelectedDateObj ? self2.latestSelectedDateObj.getSeconds() : defaults3.seconds);
+        self2.secondElement.setAttribute("step", self2.minuteElement.getAttribute("step"));
+        self2.secondElement.setAttribute("min", "0");
+        self2.secondElement.setAttribute("max", "59");
+        self2.secondElement.setAttribute("maxlength", "2");
+        self2.timeContainer.appendChild(createElement("span", "flatpickr-time-separator", ":"));
+        self2.timeContainer.appendChild(secondInput);
+      }
+      if (!self2.config.time_24hr) {
+        self2.amPM = createElement("span", "flatpickr-am-pm", self2.l10n.amPM[int((self2.latestSelectedDateObj ? self2.hourElement.value : self2.config.defaultHour) > 11)]);
+        self2.amPM.title = self2.l10n.toggleTitle;
+        self2.amPM.tabIndex = -1;
+        self2.timeContainer.appendChild(self2.amPM);
+      }
+      return self2.timeContainer;
+    }
+    function buildWeekdays() {
+      if (!self2.weekdayContainer)
+        self2.weekdayContainer = createElement("div", "flatpickr-weekdays");
+      else
+        clearNode(self2.weekdayContainer);
+      for (var i = self2.config.showMonths; i--; ) {
+        var container = createElement("div", "flatpickr-weekdaycontainer");
+        self2.weekdayContainer.appendChild(container);
+      }
+      updateWeekdays();
+      return self2.weekdayContainer;
+    }
+    function updateWeekdays() {
+      if (!self2.weekdayContainer) {
+        return;
+      }
+      var firstDayOfWeek = self2.l10n.firstDayOfWeek;
+      var weekdays = __spreadArrays(self2.l10n.weekdays.shorthand);
+      if (firstDayOfWeek > 0 && firstDayOfWeek < weekdays.length) {
+        weekdays = __spreadArrays(weekdays.splice(firstDayOfWeek, weekdays.length), weekdays.splice(0, firstDayOfWeek));
+      }
+      for (var i = self2.config.showMonths; i--; ) {
+        self2.weekdayContainer.children[i].innerHTML = "\n      <span class='flatpickr-weekday'>\n        " + weekdays.join("</span><span class='flatpickr-weekday'>") + "\n      </span>\n      ";
+      }
+    }
+    function buildWeeks() {
+      self2.calendarContainer.classList.add("hasWeeks");
+      var weekWrapper = createElement("div", "flatpickr-weekwrapper");
+      weekWrapper.appendChild(createElement("span", "flatpickr-weekday", self2.l10n.weekAbbreviation));
+      var weekNumbers = createElement("div", "flatpickr-weeks");
+      weekWrapper.appendChild(weekNumbers);
+      return {
+        weekWrapper,
+        weekNumbers
+      };
+    }
+    function changeMonth(value, isOffset) {
+      if (isOffset === void 0) {
+        isOffset = true;
+      }
+      var delta = isOffset ? value : value - self2.currentMonth;
+      if (delta < 0 && self2._hidePrevMonthArrow === true || delta > 0 && self2._hideNextMonthArrow === true)
+        return;
+      self2.currentMonth += delta;
+      if (self2.currentMonth < 0 || self2.currentMonth > 11) {
+        self2.currentYear += self2.currentMonth > 11 ? 1 : -1;
+        self2.currentMonth = (self2.currentMonth + 12) % 12;
+        triggerEvent("onYearChange");
+        buildMonthSwitch();
+      }
+      buildDays();
+      triggerEvent("onMonthChange");
+      updateNavigationCurrentMonth();
+    }
+    function clear(triggerChangeEvent, toInitial) {
+      if (triggerChangeEvent === void 0) {
+        triggerChangeEvent = true;
+      }
+      if (toInitial === void 0) {
+        toInitial = true;
+      }
+      self2.input.value = "";
+      if (self2.altInput !== void 0)
+        self2.altInput.value = "";
+      if (self2.mobileInput !== void 0)
+        self2.mobileInput.value = "";
+      self2.selectedDates = [];
+      self2.latestSelectedDateObj = void 0;
+      if (toInitial === true) {
+        self2.currentYear = self2._initialDate.getFullYear();
+        self2.currentMonth = self2._initialDate.getMonth();
+      }
+      if (self2.config.enableTime === true) {
+        var _a = getDefaultHours(self2.config), hours = _a.hours, minutes = _a.minutes, seconds = _a.seconds;
+        setHours(hours, minutes, seconds);
+      }
+      self2.redraw();
+      if (triggerChangeEvent)
+        triggerEvent("onChange");
+    }
+    function close() {
+      self2.isOpen = false;
+      if (!self2.isMobile) {
+        if (self2.calendarContainer !== void 0) {
+          self2.calendarContainer.classList.remove("open");
+        }
+        if (self2._input !== void 0) {
+          self2._input.classList.remove("active");
+        }
+      }
+      triggerEvent("onClose");
+    }
+    function destroy3() {
+      if (self2.config !== void 0)
+        triggerEvent("onDestroy");
+      for (var i = self2._handlers.length; i--; ) {
+        self2._handlers[i].remove();
+      }
+      self2._handlers = [];
+      if (self2.mobileInput) {
+        if (self2.mobileInput.parentNode)
+          self2.mobileInput.parentNode.removeChild(self2.mobileInput);
+        self2.mobileInput = void 0;
+      } else if (self2.calendarContainer && self2.calendarContainer.parentNode) {
+        if (self2.config.static && self2.calendarContainer.parentNode) {
+          var wrapper = self2.calendarContainer.parentNode;
+          wrapper.lastChild && wrapper.removeChild(wrapper.lastChild);
+          if (wrapper.parentNode) {
+            while (wrapper.firstChild)
+              wrapper.parentNode.insertBefore(wrapper.firstChild, wrapper);
+            wrapper.parentNode.removeChild(wrapper);
+          }
+        } else
+          self2.calendarContainer.parentNode.removeChild(self2.calendarContainer);
+      }
+      if (self2.altInput) {
+        self2.input.type = "text";
+        if (self2.altInput.parentNode)
+          self2.altInput.parentNode.removeChild(self2.altInput);
+        delete self2.altInput;
+      }
+      if (self2.input) {
+        self2.input.type = self2.input._type;
+        self2.input.classList.remove("flatpickr-input");
+        self2.input.removeAttribute("readonly");
+      }
+      [
+        "_showTimeInput",
+        "latestSelectedDateObj",
+        "_hideNextMonthArrow",
+        "_hidePrevMonthArrow",
+        "__hideNextMonthArrow",
+        "__hidePrevMonthArrow",
+        "isMobile",
+        "isOpen",
+        "selectedDateElem",
+        "minDateHasTime",
+        "maxDateHasTime",
+        "days",
+        "daysContainer",
+        "_input",
+        "_positionElement",
+        "innerContainer",
+        "rContainer",
+        "monthNav",
+        "todayDateElem",
+        "calendarContainer",
+        "weekdayContainer",
+        "prevMonthNav",
+        "nextMonthNav",
+        "monthsDropdownContainer",
+        "currentMonthElement",
+        "currentYearElement",
+        "navigationCurrentMonth",
+        "selectedDateElem",
+        "config"
+      ].forEach(function(k) {
+        try {
+          delete self2[k];
+        } catch (_) {
+        }
+      });
+    }
+    function isCalendarElem(elem) {
+      return self2.calendarContainer.contains(elem);
+    }
+    function documentClick(e) {
+      if (self2.isOpen && !self2.config.inline) {
+        var eventTarget_1 = getEventTarget(e);
+        var isCalendarElement = isCalendarElem(eventTarget_1);
+        var isInput = eventTarget_1 === self2.input || eventTarget_1 === self2.altInput || self2.element.contains(eventTarget_1) || e.path && e.path.indexOf && (~e.path.indexOf(self2.input) || ~e.path.indexOf(self2.altInput));
+        var lostFocus = !isInput && !isCalendarElement && !isCalendarElem(e.relatedTarget);
+        var isIgnored = !self2.config.ignoredFocusElements.some(function(elem) {
+          return elem.contains(eventTarget_1);
+        });
+        if (lostFocus && isIgnored) {
+          if (self2.config.allowInput) {
+            self2.setDate(self2._input.value, false, self2.config.altInput ? self2.config.altFormat : self2.config.dateFormat);
+          }
+          if (self2.timeContainer !== void 0 && self2.minuteElement !== void 0 && self2.hourElement !== void 0 && self2.input.value !== "" && self2.input.value !== void 0) {
+            updateTime();
+          }
+          self2.close();
+          if (self2.config && self2.config.mode === "range" && self2.selectedDates.length === 1)
+            self2.clear(false);
+        }
+      }
+    }
+    function changeYear(newYear) {
+      if (!newYear || self2.config.minDate && newYear < self2.config.minDate.getFullYear() || self2.config.maxDate && newYear > self2.config.maxDate.getFullYear())
+        return;
+      var newYearNum = newYear, isNewYear = self2.currentYear !== newYearNum;
+      self2.currentYear = newYearNum || self2.currentYear;
+      if (self2.config.maxDate && self2.currentYear === self2.config.maxDate.getFullYear()) {
+        self2.currentMonth = Math.min(self2.config.maxDate.getMonth(), self2.currentMonth);
+      } else if (self2.config.minDate && self2.currentYear === self2.config.minDate.getFullYear()) {
+        self2.currentMonth = Math.max(self2.config.minDate.getMonth(), self2.currentMonth);
+      }
+      if (isNewYear) {
+        self2.redraw();
+        triggerEvent("onYearChange");
+        buildMonthSwitch();
+      }
+    }
+    function isEnabled(date, timeless) {
+      var _a;
+      if (timeless === void 0) {
+        timeless = true;
+      }
+      var dateToCheck = self2.parseDate(date, void 0, timeless);
+      if (self2.config.minDate && dateToCheck && compareDates(dateToCheck, self2.config.minDate, timeless !== void 0 ? timeless : !self2.minDateHasTime) < 0 || self2.config.maxDate && dateToCheck && compareDates(dateToCheck, self2.config.maxDate, timeless !== void 0 ? timeless : !self2.maxDateHasTime) > 0)
+        return false;
+      if (!self2.config.enable && self2.config.disable.length === 0)
+        return true;
+      if (dateToCheck === void 0)
+        return false;
+      var bool = !!self2.config.enable, array = (_a = self2.config.enable) !== null && _a !== void 0 ? _a : self2.config.disable;
+      for (var i = 0, d = void 0; i < array.length; i++) {
+        d = array[i];
+        if (typeof d === "function" && d(dateToCheck))
+          return bool;
+        else if (d instanceof Date && dateToCheck !== void 0 && d.getTime() === dateToCheck.getTime())
+          return bool;
+        else if (typeof d === "string") {
+          var parsed = self2.parseDate(d, void 0, true);
+          return parsed && parsed.getTime() === dateToCheck.getTime() ? bool : !bool;
+        } else if (typeof d === "object" && dateToCheck !== void 0 && d.from && d.to && dateToCheck.getTime() >= d.from.getTime() && dateToCheck.getTime() <= d.to.getTime())
+          return bool;
+      }
+      return !bool;
+    }
+    function isInView(elem) {
+      if (self2.daysContainer !== void 0)
+        return elem.className.indexOf("hidden") === -1 && elem.className.indexOf("flatpickr-disabled") === -1 && self2.daysContainer.contains(elem);
+      return false;
+    }
+    function onBlur(e) {
+      var isInput = e.target === self2._input;
+      var valueChanged = self2._input.value.trimEnd() !== getDateStr();
+      if (isInput && valueChanged && !(e.relatedTarget && isCalendarElem(e.relatedTarget))) {
+        self2.setDate(self2._input.value, true, e.target === self2.altInput ? self2.config.altFormat : self2.config.dateFormat);
+      }
+    }
+    function onKeyDown(e) {
+      var eventTarget = getEventTarget(e);
+      var isInput = self2.config.wrap ? element.contains(eventTarget) : eventTarget === self2._input;
+      var allowInput = self2.config.allowInput;
+      var allowKeydown = self2.isOpen && (!allowInput || !isInput);
+      var allowInlineKeydown = self2.config.inline && isInput && !allowInput;
+      if (e.keyCode === 13 && isInput) {
+        if (allowInput) {
+          self2.setDate(self2._input.value, true, eventTarget === self2.altInput ? self2.config.altFormat : self2.config.dateFormat);
+          self2.close();
+          return eventTarget.blur();
+        } else {
+          self2.open();
+        }
+      } else if (isCalendarElem(eventTarget) || allowKeydown || allowInlineKeydown) {
+        var isTimeObj = !!self2.timeContainer && self2.timeContainer.contains(eventTarget);
+        switch (e.keyCode) {
+          case 13:
+            if (isTimeObj) {
+              e.preventDefault();
+              updateTime();
+              focusAndClose();
+            } else
+              selectDate(e);
+            break;
+          case 27:
+            e.preventDefault();
+            focusAndClose();
+            break;
+          case 8:
+          case 46:
+            if (isInput && !self2.config.allowInput) {
+              e.preventDefault();
+              self2.clear();
+            }
+            break;
+          case 37:
+          case 39:
+            if (!isTimeObj && !isInput) {
+              e.preventDefault();
+              var activeElement = getClosestActiveElement();
+              if (self2.daysContainer !== void 0 && (allowInput === false || activeElement && isInView(activeElement))) {
+                var delta_1 = e.keyCode === 39 ? 1 : -1;
+                if (!e.ctrlKey)
+                  focusOnDay(void 0, delta_1);
+                else {
+                  e.stopPropagation();
+                  changeMonth(delta_1);
+                  focusOnDay(getFirstAvailableDay(1), 0);
+                }
+              }
+            } else if (self2.hourElement)
+              self2.hourElement.focus();
+            break;
+          case 38:
+          case 40:
+            e.preventDefault();
+            var delta = e.keyCode === 40 ? 1 : -1;
+            if (self2.daysContainer && eventTarget.$i !== void 0 || eventTarget === self2.input || eventTarget === self2.altInput) {
+              if (e.ctrlKey) {
+                e.stopPropagation();
+                changeYear(self2.currentYear - delta);
+                focusOnDay(getFirstAvailableDay(1), 0);
+              } else if (!isTimeObj)
+                focusOnDay(void 0, delta * 7);
+            } else if (eventTarget === self2.currentYearElement) {
+              changeYear(self2.currentYear - delta);
+            } else if (self2.config.enableTime) {
+              if (!isTimeObj && self2.hourElement)
+                self2.hourElement.focus();
+              updateTime(e);
+              self2._debouncedChange();
+            }
+            break;
+          case 9:
+            if (isTimeObj) {
+              var elems = [
+                self2.hourElement,
+                self2.minuteElement,
+                self2.secondElement,
+                self2.amPM
+              ].concat(self2.pluginElements).filter(function(x) {
+                return x;
+              });
+              var i = elems.indexOf(eventTarget);
+              if (i !== -1) {
+                var target = elems[i + (e.shiftKey ? -1 : 1)];
+                e.preventDefault();
+                (target || self2._input).focus();
+              }
+            } else if (!self2.config.noCalendar && self2.daysContainer && self2.daysContainer.contains(eventTarget) && e.shiftKey) {
+              e.preventDefault();
+              self2._input.focus();
+            }
+            break;
+          default:
+            break;
+        }
+      }
+      if (self2.amPM !== void 0 && eventTarget === self2.amPM) {
+        switch (e.key) {
+          case self2.l10n.amPM[0].charAt(0):
+          case self2.l10n.amPM[0].charAt(0).toLowerCase():
+            self2.amPM.textContent = self2.l10n.amPM[0];
+            setHoursFromInputs();
+            updateValue();
+            break;
+          case self2.l10n.amPM[1].charAt(0):
+          case self2.l10n.amPM[1].charAt(0).toLowerCase():
+            self2.amPM.textContent = self2.l10n.amPM[1];
+            setHoursFromInputs();
+            updateValue();
+            break;
+        }
+      }
+      if (isInput || isCalendarElem(eventTarget)) {
+        triggerEvent("onKeyDown", e);
+      }
+    }
+    function onMouseOver(elem, cellClass) {
+      if (cellClass === void 0) {
+        cellClass = "flatpickr-day";
+      }
+      if (self2.selectedDates.length !== 1 || elem && (!elem.classList.contains(cellClass) || elem.classList.contains("flatpickr-disabled")))
+        return;
+      var hoverDate = elem ? elem.dateObj.getTime() : self2.days.firstElementChild.dateObj.getTime(), initialDate = self2.parseDate(self2.selectedDates[0], void 0, true).getTime(), rangeStartDate = Math.min(hoverDate, self2.selectedDates[0].getTime()), rangeEndDate = Math.max(hoverDate, self2.selectedDates[0].getTime());
+      var containsDisabled = false;
+      var minRange = 0, maxRange = 0;
+      for (var t = rangeStartDate; t < rangeEndDate; t += duration.DAY) {
+        if (!isEnabled(new Date(t), true)) {
+          containsDisabled = containsDisabled || t > rangeStartDate && t < rangeEndDate;
+          if (t < initialDate && (!minRange || t > minRange))
+            minRange = t;
+          else if (t > initialDate && (!maxRange || t < maxRange))
+            maxRange = t;
+        }
+      }
+      var hoverableCells = Array.from(self2.rContainer.querySelectorAll("*:nth-child(-n+" + self2.config.showMonths + ") > ." + cellClass));
+      hoverableCells.forEach(function(dayElem) {
+        var date = dayElem.dateObj;
+        var timestamp = date.getTime();
+        var outOfRange = minRange > 0 && timestamp < minRange || maxRange > 0 && timestamp > maxRange;
+        if (outOfRange) {
+          dayElem.classList.add("notAllowed");
+          ["inRange", "startRange", "endRange"].forEach(function(c) {
+            dayElem.classList.remove(c);
+          });
+          return;
+        } else if (containsDisabled && !outOfRange)
+          return;
+        ["startRange", "inRange", "endRange", "notAllowed"].forEach(function(c) {
+          dayElem.classList.remove(c);
+        });
+        if (elem !== void 0) {
+          elem.classList.add(hoverDate <= self2.selectedDates[0].getTime() ? "startRange" : "endRange");
+          if (initialDate < hoverDate && timestamp === initialDate)
+            dayElem.classList.add("startRange");
+          else if (initialDate > hoverDate && timestamp === initialDate)
+            dayElem.classList.add("endRange");
+          if (timestamp >= minRange && (maxRange === 0 || timestamp <= maxRange) && isBetween(timestamp, initialDate, hoverDate))
+            dayElem.classList.add("inRange");
+        }
+      });
+    }
+    function onResize() {
+      if (self2.isOpen && !self2.config.static && !self2.config.inline)
+        positionCalendar();
+    }
+    function open(e, positionElement) {
+      if (positionElement === void 0) {
+        positionElement = self2._positionElement;
+      }
+      if (self2.isMobile === true) {
+        if (e) {
+          e.preventDefault();
+          var eventTarget = getEventTarget(e);
+          if (eventTarget) {
+            eventTarget.blur();
+          }
+        }
+        if (self2.mobileInput !== void 0) {
+          self2.mobileInput.focus();
+          self2.mobileInput.click();
+        }
+        triggerEvent("onOpen");
+        return;
+      } else if (self2._input.disabled || self2.config.inline) {
+        return;
+      }
+      var wasOpen = self2.isOpen;
+      self2.isOpen = true;
+      if (!wasOpen) {
+        self2.calendarContainer.classList.add("open");
+        self2._input.classList.add("active");
+        triggerEvent("onOpen");
+        positionCalendar(positionElement);
+      }
+      if (self2.config.enableTime === true && self2.config.noCalendar === true) {
+        if (self2.config.allowInput === false && (e === void 0 || !self2.timeContainer.contains(e.relatedTarget))) {
+          setTimeout(function() {
+            return self2.hourElement.select();
+          }, 50);
+        }
+      }
+    }
+    function minMaxDateSetter(type) {
+      return function(date) {
+        var dateObj = self2.config["_" + type + "Date"] = self2.parseDate(date, self2.config.dateFormat);
+        var inverseDateObj = self2.config["_" + (type === "min" ? "max" : "min") + "Date"];
+        if (dateObj !== void 0) {
+          self2[type === "min" ? "minDateHasTime" : "maxDateHasTime"] = dateObj.getHours() > 0 || dateObj.getMinutes() > 0 || dateObj.getSeconds() > 0;
+        }
+        if (self2.selectedDates) {
+          self2.selectedDates = self2.selectedDates.filter(function(d) {
+            return isEnabled(d);
+          });
+          if (!self2.selectedDates.length && type === "min")
+            setHoursFromDate(dateObj);
+          updateValue();
+        }
+        if (self2.daysContainer) {
+          redraw();
+          if (dateObj !== void 0)
+            self2.currentYearElement[type] = dateObj.getFullYear().toString();
+          else
+            self2.currentYearElement.removeAttribute(type);
+          self2.currentYearElement.disabled = !!inverseDateObj && dateObj !== void 0 && inverseDateObj.getFullYear() === dateObj.getFullYear();
+        }
+      };
+    }
+    function parseConfig() {
+      var boolOpts = [
+        "wrap",
+        "weekNumbers",
+        "allowInput",
+        "allowInvalidPreload",
+        "clickOpens",
+        "time_24hr",
+        "enableTime",
+        "noCalendar",
+        "altInput",
+        "shorthandCurrentMonth",
+        "inline",
+        "static",
+        "enableSeconds",
+        "disableMobile"
+      ];
+      var userConfig = __assign(__assign({}, JSON.parse(JSON.stringify(element.dataset || {}))), instanceConfig);
+      var formats2 = {};
+      self2.config.parseDate = userConfig.parseDate;
+      self2.config.formatDate = userConfig.formatDate;
+      Object.defineProperty(self2.config, "enable", {
+        get: function() {
+          return self2.config._enable;
+        },
+        set: function(dates) {
+          self2.config._enable = parseDateRules(dates);
+        }
+      });
+      Object.defineProperty(self2.config, "disable", {
+        get: function() {
+          return self2.config._disable;
+        },
+        set: function(dates) {
+          self2.config._disable = parseDateRules(dates);
+        }
+      });
+      var timeMode = userConfig.mode === "time";
+      if (!userConfig.dateFormat && (userConfig.enableTime || timeMode)) {
+        var defaultDateFormat = flatpickr.defaultConfig.dateFormat || defaults2.dateFormat;
+        formats2.dateFormat = userConfig.noCalendar || timeMode ? "H:i" + (userConfig.enableSeconds ? ":S" : "") : defaultDateFormat + " H:i" + (userConfig.enableSeconds ? ":S" : "");
+      }
+      if (userConfig.altInput && (userConfig.enableTime || timeMode) && !userConfig.altFormat) {
+        var defaultAltFormat = flatpickr.defaultConfig.altFormat || defaults2.altFormat;
+        formats2.altFormat = userConfig.noCalendar || timeMode ? "h:i" + (userConfig.enableSeconds ? ":S K" : " K") : defaultAltFormat + (" h:i" + (userConfig.enableSeconds ? ":S" : "") + " K");
+      }
+      Object.defineProperty(self2.config, "minDate", {
+        get: function() {
+          return self2.config._minDate;
+        },
+        set: minMaxDateSetter("min")
+      });
+      Object.defineProperty(self2.config, "maxDate", {
+        get: function() {
+          return self2.config._maxDate;
+        },
+        set: minMaxDateSetter("max")
+      });
+      var minMaxTimeSetter = function(type) {
+        return function(val) {
+          self2.config[type === "min" ? "_minTime" : "_maxTime"] = self2.parseDate(val, "H:i:S");
+        };
+      };
+      Object.defineProperty(self2.config, "minTime", {
+        get: function() {
+          return self2.config._minTime;
+        },
+        set: minMaxTimeSetter("min")
+      });
+      Object.defineProperty(self2.config, "maxTime", {
+        get: function() {
+          return self2.config._maxTime;
+        },
+        set: minMaxTimeSetter("max")
+      });
+      if (userConfig.mode === "time") {
+        self2.config.noCalendar = true;
+        self2.config.enableTime = true;
+      }
+      Object.assign(self2.config, formats2, userConfig);
+      for (var i = 0; i < boolOpts.length; i++)
+        self2.config[boolOpts[i]] = self2.config[boolOpts[i]] === true || self2.config[boolOpts[i]] === "true";
+      HOOKS.filter(function(hook) {
+        return self2.config[hook] !== void 0;
+      }).forEach(function(hook) {
+        self2.config[hook] = arrayify(self2.config[hook] || []).map(bindToInstance);
+      });
+      self2.isMobile = !self2.config.disableMobile && !self2.config.inline && self2.config.mode === "single" && !self2.config.disable.length && !self2.config.enable && !self2.config.weekNumbers && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      for (var i = 0; i < self2.config.plugins.length; i++) {
+        var pluginConf = self2.config.plugins[i](self2) || {};
+        for (var key in pluginConf) {
+          if (HOOKS.indexOf(key) > -1) {
+            self2.config[key] = arrayify(pluginConf[key]).map(bindToInstance).concat(self2.config[key]);
+          } else if (typeof userConfig[key] === "undefined")
+            self2.config[key] = pluginConf[key];
+        }
+      }
+      if (!userConfig.altInputClass) {
+        self2.config.altInputClass = getInputElem().className + " " + self2.config.altInputClass;
+      }
+      triggerEvent("onParseConfig");
+    }
+    function getInputElem() {
+      return self2.config.wrap ? element.querySelector("[data-input]") : element;
+    }
+    function setupLocale() {
+      if (typeof self2.config.locale !== "object" && typeof flatpickr.l10ns[self2.config.locale] === "undefined")
+        self2.config.errorHandler(new Error("flatpickr: invalid locale " + self2.config.locale));
+      self2.l10n = __assign(__assign({}, flatpickr.l10ns.default), typeof self2.config.locale === "object" ? self2.config.locale : self2.config.locale !== "default" ? flatpickr.l10ns[self2.config.locale] : void 0);
+      tokenRegex.D = "(" + self2.l10n.weekdays.shorthand.join("|") + ")";
+      tokenRegex.l = "(" + self2.l10n.weekdays.longhand.join("|") + ")";
+      tokenRegex.M = "(" + self2.l10n.months.shorthand.join("|") + ")";
+      tokenRegex.F = "(" + self2.l10n.months.longhand.join("|") + ")";
+      tokenRegex.K = "(" + self2.l10n.amPM[0] + "|" + self2.l10n.amPM[1] + "|" + self2.l10n.amPM[0].toLowerCase() + "|" + self2.l10n.amPM[1].toLowerCase() + ")";
+      var userConfig = __assign(__assign({}, instanceConfig), JSON.parse(JSON.stringify(element.dataset || {})));
+      if (userConfig.time_24hr === void 0 && flatpickr.defaultConfig.time_24hr === void 0) {
+        self2.config.time_24hr = self2.l10n.time_24hr;
+      }
+      self2.formatDate = createDateFormatter(self2);
+      self2.parseDate = createDateParser({ config: self2.config, l10n: self2.l10n });
+    }
+    function positionCalendar(customPositionElement) {
+      if (typeof self2.config.position === "function") {
+        return void self2.config.position(self2, customPositionElement);
+      }
+      if (self2.calendarContainer === void 0)
+        return;
+      triggerEvent("onPreCalendarPosition");
+      var positionElement = customPositionElement || self2._positionElement;
+      var calendarHeight = Array.prototype.reduce.call(self2.calendarContainer.children, function(acc, child) {
+        return acc + child.offsetHeight;
+      }, 0), calendarWidth = self2.calendarContainer.offsetWidth, configPos = self2.config.position.split(" "), configPosVertical = configPos[0], configPosHorizontal = configPos.length > 1 ? configPos[1] : null, inputBounds = positionElement.getBoundingClientRect(), distanceFromBottom = window.innerHeight - inputBounds.bottom, showOnTop = configPosVertical === "above" || configPosVertical !== "below" && distanceFromBottom < calendarHeight && inputBounds.top > calendarHeight;
+      var top2 = window.pageYOffset + inputBounds.top + (!showOnTop ? positionElement.offsetHeight + 2 : -calendarHeight - 2);
+      toggleClass2(self2.calendarContainer, "arrowTop", !showOnTop);
+      toggleClass2(self2.calendarContainer, "arrowBottom", showOnTop);
+      if (self2.config.inline)
+        return;
+      var left = window.pageXOffset + inputBounds.left;
+      var isCenter = false;
+      var isRight = false;
+      if (configPosHorizontal === "center") {
+        left -= (calendarWidth - inputBounds.width) / 2;
+        isCenter = true;
+      } else if (configPosHorizontal === "right") {
+        left -= calendarWidth - inputBounds.width;
+        isRight = true;
+      }
+      toggleClass2(self2.calendarContainer, "arrowLeft", !isCenter && !isRight);
+      toggleClass2(self2.calendarContainer, "arrowCenter", isCenter);
+      toggleClass2(self2.calendarContainer, "arrowRight", isRight);
+      var right = window.document.body.offsetWidth - (window.pageXOffset + inputBounds.right);
+      var rightMost = left + calendarWidth > window.document.body.offsetWidth;
+      var centerMost = right + calendarWidth > window.document.body.offsetWidth;
+      toggleClass2(self2.calendarContainer, "rightMost", rightMost);
+      if (self2.config.static)
+        return;
+      self2.calendarContainer.style.top = top2 + "px";
+      if (!rightMost) {
+        self2.calendarContainer.style.left = left + "px";
+        self2.calendarContainer.style.right = "auto";
+      } else if (!centerMost) {
+        self2.calendarContainer.style.left = "auto";
+        self2.calendarContainer.style.right = right + "px";
+      } else {
+        var doc2 = getDocumentStyleSheet();
+        if (doc2 === void 0)
+          return;
+        var bodyWidth = window.document.body.offsetWidth;
+        var centerLeft = Math.max(0, bodyWidth / 2 - calendarWidth / 2);
+        var centerBefore = ".flatpickr-calendar.centerMost:before";
+        var centerAfter = ".flatpickr-calendar.centerMost:after";
+        var centerIndex = doc2.cssRules.length;
+        var centerStyle = "{left:" + inputBounds.left + "px;right:auto;}";
+        toggleClass2(self2.calendarContainer, "rightMost", false);
+        toggleClass2(self2.calendarContainer, "centerMost", true);
+        doc2.insertRule(centerBefore + "," + centerAfter + centerStyle, centerIndex);
+        self2.calendarContainer.style.left = centerLeft + "px";
+        self2.calendarContainer.style.right = "auto";
+      }
+    }
+    function getDocumentStyleSheet() {
+      var editableSheet = null;
+      for (var i = 0; i < document.styleSheets.length; i++) {
+        var sheet = document.styleSheets[i];
+        if (!sheet.cssRules)
+          continue;
+        try {
+          sheet.cssRules;
+        } catch (err) {
+          continue;
+        }
+        editableSheet = sheet;
+        break;
+      }
+      return editableSheet != null ? editableSheet : createStyleSheet();
+    }
+    function createStyleSheet() {
+      var style = document.createElement("style");
+      document.head.appendChild(style);
+      return style.sheet;
+    }
+    function redraw() {
+      if (self2.config.noCalendar || self2.isMobile)
+        return;
+      buildMonthSwitch();
+      updateNavigationCurrentMonth();
+      buildDays();
+    }
+    function focusAndClose() {
+      self2._input.focus();
+      if (window.navigator.userAgent.indexOf("MSIE") !== -1 || navigator.msMaxTouchPoints !== void 0) {
+        setTimeout(self2.close, 0);
+      } else {
+        self2.close();
+      }
+    }
+    function selectDate(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var isSelectable = function(day) {
+        return day.classList && day.classList.contains("flatpickr-day") && !day.classList.contains("flatpickr-disabled") && !day.classList.contains("notAllowed");
+      };
+      var t = findParent(getEventTarget(e), isSelectable);
+      if (t === void 0)
+        return;
+      var target = t;
+      var selectedDate = self2.latestSelectedDateObj = new Date(target.dateObj.getTime());
+      var shouldChangeMonth = (selectedDate.getMonth() < self2.currentMonth || selectedDate.getMonth() > self2.currentMonth + self2.config.showMonths - 1) && self2.config.mode !== "range";
+      self2.selectedDateElem = target;
+      if (self2.config.mode === "single")
+        self2.selectedDates = [selectedDate];
+      else if (self2.config.mode === "multiple") {
+        var selectedIndex = isDateSelected(selectedDate);
+        if (selectedIndex)
+          self2.selectedDates.splice(parseInt(selectedIndex), 1);
+        else
+          self2.selectedDates.push(selectedDate);
+      } else if (self2.config.mode === "range") {
+        if (self2.selectedDates.length === 2) {
+          self2.clear(false, false);
+        }
+        self2.latestSelectedDateObj = selectedDate;
+        self2.selectedDates.push(selectedDate);
+        if (compareDates(selectedDate, self2.selectedDates[0], true) !== 0)
+          self2.selectedDates.sort(function(a, b) {
+            return a.getTime() - b.getTime();
+          });
+      }
+      setHoursFromInputs();
+      if (shouldChangeMonth) {
+        var isNewYear = self2.currentYear !== selectedDate.getFullYear();
+        self2.currentYear = selectedDate.getFullYear();
+        self2.currentMonth = selectedDate.getMonth();
+        if (isNewYear) {
+          triggerEvent("onYearChange");
+          buildMonthSwitch();
+        }
+        triggerEvent("onMonthChange");
+      }
+      updateNavigationCurrentMonth();
+      buildDays();
+      updateValue();
+      if (!shouldChangeMonth && self2.config.mode !== "range" && self2.config.showMonths === 1)
+        focusOnDayElem(target);
+      else if (self2.selectedDateElem !== void 0 && self2.hourElement === void 0) {
+        self2.selectedDateElem && self2.selectedDateElem.focus();
+      }
+      if (self2.hourElement !== void 0)
+        self2.hourElement !== void 0 && self2.hourElement.focus();
+      if (self2.config.closeOnSelect) {
+        var single = self2.config.mode === "single" && !self2.config.enableTime;
+        var range = self2.config.mode === "range" && self2.selectedDates.length === 2 && !self2.config.enableTime;
+        if (single || range) {
+          focusAndClose();
+        }
+      }
+      triggerChange();
+    }
+    var CALLBACKS = {
+      locale: [setupLocale, updateWeekdays],
+      showMonths: [buildMonths, setCalendarWidth, buildWeekdays],
+      minDate: [jumpToDate],
+      maxDate: [jumpToDate],
+      positionElement: [updatePositionElement],
+      clickOpens: [
+        function() {
+          if (self2.config.clickOpens === true) {
+            bind(self2._input, "focus", self2.open);
+            bind(self2._input, "click", self2.open);
+          } else {
+            self2._input.removeEventListener("focus", self2.open);
+            self2._input.removeEventListener("click", self2.open);
+          }
+        }
+      ]
+    };
+    function set(option2, value) {
+      if (option2 !== null && typeof option2 === "object") {
+        Object.assign(self2.config, option2);
+        for (var key in option2) {
+          if (CALLBACKS[key] !== void 0)
+            CALLBACKS[key].forEach(function(x) {
+              return x();
+            });
+        }
+      } else {
+        self2.config[option2] = value;
+        if (CALLBACKS[option2] !== void 0)
+          CALLBACKS[option2].forEach(function(x) {
+            return x();
+          });
+        else if (HOOKS.indexOf(option2) > -1)
+          self2.config[option2] = arrayify(value);
+      }
+      self2.redraw();
+      updateValue(true);
+    }
+    function setSelectedDate(inputDate, format) {
+      var dates = [];
+      if (inputDate instanceof Array)
+        dates = inputDate.map(function(d) {
+          return self2.parseDate(d, format);
+        });
+      else if (inputDate instanceof Date || typeof inputDate === "number")
+        dates = [self2.parseDate(inputDate, format)];
+      else if (typeof inputDate === "string") {
+        switch (self2.config.mode) {
+          case "single":
+          case "time":
+            dates = [self2.parseDate(inputDate, format)];
+            break;
+          case "multiple":
+            dates = inputDate.split(self2.config.conjunction).map(function(date) {
+              return self2.parseDate(date, format);
+            });
+            break;
+          case "range":
+            dates = inputDate.split(self2.l10n.rangeSeparator).map(function(date) {
+              return self2.parseDate(date, format);
+            });
+            break;
+          default:
+            break;
+        }
+      } else
+        self2.config.errorHandler(new Error("Invalid date supplied: " + JSON.stringify(inputDate)));
+      self2.selectedDates = self2.config.allowInvalidPreload ? dates : dates.filter(function(d) {
+        return d instanceof Date && isEnabled(d, false);
+      });
+      if (self2.config.mode === "range")
+        self2.selectedDates.sort(function(a, b) {
+          return a.getTime() - b.getTime();
+        });
+    }
+    function setDate(date, triggerChange2, format) {
+      if (triggerChange2 === void 0) {
+        triggerChange2 = false;
+      }
+      if (format === void 0) {
+        format = self2.config.dateFormat;
+      }
+      if (date !== 0 && !date || date instanceof Array && date.length === 0)
+        return self2.clear(triggerChange2);
+      setSelectedDate(date, format);
+      self2.latestSelectedDateObj = self2.selectedDates[self2.selectedDates.length - 1];
+      self2.redraw();
+      jumpToDate(void 0, triggerChange2);
+      setHoursFromDate();
+      if (self2.selectedDates.length === 0) {
+        self2.clear(false);
+      }
+      updateValue(triggerChange2);
+      if (triggerChange2)
+        triggerEvent("onChange");
+    }
+    function parseDateRules(arr) {
+      return arr.slice().map(function(rule) {
+        if (typeof rule === "string" || typeof rule === "number" || rule instanceof Date) {
+          return self2.parseDate(rule, void 0, true);
+        } else if (rule && typeof rule === "object" && rule.from && rule.to)
+          return {
+            from: self2.parseDate(rule.from, void 0),
+            to: self2.parseDate(rule.to, void 0)
+          };
+        return rule;
+      }).filter(function(x) {
+        return x;
+      });
+    }
+    function setupDates() {
+      self2.selectedDates = [];
+      self2.now = self2.parseDate(self2.config.now) || /* @__PURE__ */ new Date();
+      var preloadedDate = self2.config.defaultDate || ((self2.input.nodeName === "INPUT" || self2.input.nodeName === "TEXTAREA") && self2.input.placeholder && self2.input.value === self2.input.placeholder ? null : self2.input.value);
+      if (preloadedDate)
+        setSelectedDate(preloadedDate, self2.config.dateFormat);
+      self2._initialDate = self2.selectedDates.length > 0 ? self2.selectedDates[0] : self2.config.minDate && self2.config.minDate.getTime() > self2.now.getTime() ? self2.config.minDate : self2.config.maxDate && self2.config.maxDate.getTime() < self2.now.getTime() ? self2.config.maxDate : self2.now;
+      self2.currentYear = self2._initialDate.getFullYear();
+      self2.currentMonth = self2._initialDate.getMonth();
+      if (self2.selectedDates.length > 0)
+        self2.latestSelectedDateObj = self2.selectedDates[0];
+      if (self2.config.minTime !== void 0)
+        self2.config.minTime = self2.parseDate(self2.config.minTime, "H:i");
+      if (self2.config.maxTime !== void 0)
+        self2.config.maxTime = self2.parseDate(self2.config.maxTime, "H:i");
+      self2.minDateHasTime = !!self2.config.minDate && (self2.config.minDate.getHours() > 0 || self2.config.minDate.getMinutes() > 0 || self2.config.minDate.getSeconds() > 0);
+      self2.maxDateHasTime = !!self2.config.maxDate && (self2.config.maxDate.getHours() > 0 || self2.config.maxDate.getMinutes() > 0 || self2.config.maxDate.getSeconds() > 0);
+    }
+    function setupInputs() {
+      self2.input = getInputElem();
+      if (!self2.input) {
+        self2.config.errorHandler(new Error("Invalid input element specified"));
+        return;
+      }
+      self2.input._type = self2.input.type;
+      self2.input.type = "text";
+      self2.input.classList.add("flatpickr-input");
+      self2._input = self2.input;
+      if (self2.config.altInput) {
+        self2.altInput = createElement(self2.input.nodeName, self2.config.altInputClass);
+        self2._input = self2.altInput;
+        self2.altInput.placeholder = self2.input.placeholder;
+        self2.altInput.disabled = self2.input.disabled;
+        self2.altInput.required = self2.input.required;
+        self2.altInput.tabIndex = self2.input.tabIndex;
+        self2.altInput.type = "text";
+        self2.input.setAttribute("type", "hidden");
+        if (!self2.config.static && self2.input.parentNode)
+          self2.input.parentNode.insertBefore(self2.altInput, self2.input.nextSibling);
+      }
+      if (!self2.config.allowInput)
+        self2._input.setAttribute("readonly", "readonly");
+      updatePositionElement();
+    }
+    function updatePositionElement() {
+      self2._positionElement = self2.config.positionElement || self2._input;
+    }
+    function setupMobile() {
+      var inputType = self2.config.enableTime ? self2.config.noCalendar ? "time" : "datetime-local" : "date";
+      self2.mobileInput = createElement("input", self2.input.className + " flatpickr-mobile");
+      self2.mobileInput.tabIndex = 1;
+      self2.mobileInput.type = inputType;
+      self2.mobileInput.disabled = self2.input.disabled;
+      self2.mobileInput.required = self2.input.required;
+      self2.mobileInput.placeholder = self2.input.placeholder;
+      self2.mobileFormatStr = inputType === "datetime-local" ? "Y-m-d\\TH:i:S" : inputType === "date" ? "Y-m-d" : "H:i:S";
+      if (self2.selectedDates.length > 0) {
+        self2.mobileInput.defaultValue = self2.mobileInput.value = self2.formatDate(self2.selectedDates[0], self2.mobileFormatStr);
+      }
+      if (self2.config.minDate)
+        self2.mobileInput.min = self2.formatDate(self2.config.minDate, "Y-m-d");
+      if (self2.config.maxDate)
+        self2.mobileInput.max = self2.formatDate(self2.config.maxDate, "Y-m-d");
+      if (self2.input.getAttribute("step"))
+        self2.mobileInput.step = String(self2.input.getAttribute("step"));
+      self2.input.type = "hidden";
+      if (self2.altInput !== void 0)
+        self2.altInput.type = "hidden";
+      try {
+        if (self2.input.parentNode)
+          self2.input.parentNode.insertBefore(self2.mobileInput, self2.input.nextSibling);
+      } catch (_a) {
+      }
+      bind(self2.mobileInput, "change", function(e) {
+        self2.setDate(getEventTarget(e).value, false, self2.mobileFormatStr);
+        triggerEvent("onChange");
+        triggerEvent("onClose");
+      });
+    }
+    function toggle(e) {
+      if (self2.isOpen === true)
+        return self2.close();
+      self2.open(e);
+    }
+    function triggerEvent(event, data) {
+      if (self2.config === void 0)
+        return;
+      var hooks = self2.config[event];
+      if (hooks !== void 0 && hooks.length > 0) {
+        for (var i = 0; hooks[i] && i < hooks.length; i++)
+          hooks[i](self2.selectedDates, self2.input.value, self2, data);
+      }
+      if (event === "onChange") {
+        self2.input.dispatchEvent(createEvent("change"));
+        self2.input.dispatchEvent(createEvent("input"));
+      }
+    }
+    function createEvent(name2) {
+      var e = document.createEvent("Event");
+      e.initEvent(name2, true, true);
+      return e;
+    }
+    function isDateSelected(date) {
+      for (var i = 0; i < self2.selectedDates.length; i++) {
+        var selectedDate = self2.selectedDates[i];
+        if (selectedDate instanceof Date && compareDates(selectedDate, date) === 0)
+          return "" + i;
+      }
+      return false;
+    }
+    function isDateInRange(date) {
+      if (self2.config.mode !== "range" || self2.selectedDates.length < 2)
+        return false;
+      return compareDates(date, self2.selectedDates[0]) >= 0 && compareDates(date, self2.selectedDates[1]) <= 0;
+    }
+    function updateNavigationCurrentMonth() {
+      if (self2.config.noCalendar || self2.isMobile || !self2.monthNav)
+        return;
+      self2.yearElements.forEach(function(yearElement, i) {
+        var d = new Date(self2.currentYear, self2.currentMonth, 1);
+        d.setMonth(self2.currentMonth + i);
+        if (self2.config.showMonths > 1 || self2.config.monthSelectorType === "static") {
+          self2.monthElements[i].textContent = monthToStr(d.getMonth(), self2.config.shorthandCurrentMonth, self2.l10n) + " ";
+        } else {
+          self2.monthsDropdownContainer.value = d.getMonth().toString();
+        }
+        yearElement.value = d.getFullYear().toString();
+      });
+      self2._hidePrevMonthArrow = self2.config.minDate !== void 0 && (self2.currentYear === self2.config.minDate.getFullYear() ? self2.currentMonth <= self2.config.minDate.getMonth() : self2.currentYear < self2.config.minDate.getFullYear());
+      self2._hideNextMonthArrow = self2.config.maxDate !== void 0 && (self2.currentYear === self2.config.maxDate.getFullYear() ? self2.currentMonth + 1 > self2.config.maxDate.getMonth() : self2.currentYear > self2.config.maxDate.getFullYear());
+    }
+    function getDateStr(specificFormat) {
+      var format = specificFormat || (self2.config.altInput ? self2.config.altFormat : self2.config.dateFormat);
+      return self2.selectedDates.map(function(dObj) {
+        return self2.formatDate(dObj, format);
+      }).filter(function(d, i, arr) {
+        return self2.config.mode !== "range" || self2.config.enableTime || arr.indexOf(d) === i;
+      }).join(self2.config.mode !== "range" ? self2.config.conjunction : self2.l10n.rangeSeparator);
+    }
+    function updateValue(triggerChange2) {
+      if (triggerChange2 === void 0) {
+        triggerChange2 = true;
+      }
+      if (self2.mobileInput !== void 0 && self2.mobileFormatStr) {
+        self2.mobileInput.value = self2.latestSelectedDateObj !== void 0 ? self2.formatDate(self2.latestSelectedDateObj, self2.mobileFormatStr) : "";
+      }
+      self2.input.value = getDateStr(self2.config.dateFormat);
+      if (self2.altInput !== void 0) {
+        self2.altInput.value = getDateStr(self2.config.altFormat);
+      }
+      if (triggerChange2 !== false)
+        triggerEvent("onValueUpdate");
+    }
+    function onMonthNavClick(e) {
+      var eventTarget = getEventTarget(e);
+      var isPrevMonth = self2.prevMonthNav.contains(eventTarget);
+      var isNextMonth = self2.nextMonthNav.contains(eventTarget);
+      if (isPrevMonth || isNextMonth) {
+        changeMonth(isPrevMonth ? -1 : 1);
+      } else if (self2.yearElements.indexOf(eventTarget) >= 0) {
+        eventTarget.select();
+      } else if (eventTarget.classList.contains("arrowUp")) {
+        self2.changeYear(self2.currentYear + 1);
+      } else if (eventTarget.classList.contains("arrowDown")) {
+        self2.changeYear(self2.currentYear - 1);
+      }
+    }
+    function timeWrapper(e) {
+      e.preventDefault();
+      var isKeyDown = e.type === "keydown", eventTarget = getEventTarget(e), input = eventTarget;
+      if (self2.amPM !== void 0 && eventTarget === self2.amPM) {
+        self2.amPM.textContent = self2.l10n.amPM[int(self2.amPM.textContent === self2.l10n.amPM[0])];
+      }
+      var min = parseFloat(input.getAttribute("min")), max = parseFloat(input.getAttribute("max")), step = parseFloat(input.getAttribute("step")), curValue = parseInt(input.value, 10), delta = e.delta || (isKeyDown ? e.which === 38 ? 1 : -1 : 0);
+      var newValue = curValue + step * delta;
+      if (typeof input.value !== "undefined" && input.value.length === 2) {
+        var isHourElem = input === self2.hourElement, isMinuteElem = input === self2.minuteElement;
+        if (newValue < min) {
+          newValue = max + newValue + int(!isHourElem) + (int(isHourElem) && int(!self2.amPM));
+          if (isMinuteElem)
+            incrementNumInput(void 0, -1, self2.hourElement);
+        } else if (newValue > max) {
+          newValue = input === self2.hourElement ? newValue - max - int(!self2.amPM) : min;
+          if (isMinuteElem)
+            incrementNumInput(void 0, 1, self2.hourElement);
+        }
+        if (self2.amPM && isHourElem && (step === 1 ? newValue + curValue === 23 : Math.abs(newValue - curValue) > step)) {
+          self2.amPM.textContent = self2.l10n.amPM[int(self2.amPM.textContent === self2.l10n.amPM[0])];
+        }
+        input.value = pad(newValue);
+      }
+    }
+    init();
+    return self2;
+  }
+  function _flatpickr(nodeList, config) {
+    var nodes = Array.prototype.slice.call(nodeList).filter(function(x) {
+      return x instanceof HTMLElement;
+    });
+    var instances = [];
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      try {
+        if (node.getAttribute("data-fp-omit") !== null)
+          continue;
+        if (node._flatpickr !== void 0) {
+          node._flatpickr.destroy();
+          node._flatpickr = void 0;
+        }
+        node._flatpickr = FlatpickrInstance(node, config || {});
+        instances.push(node._flatpickr);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return instances.length === 1 ? instances[0] : instances;
+  }
+  if (typeof HTMLElement !== "undefined" && typeof HTMLCollection !== "undefined" && typeof NodeList !== "undefined") {
+    HTMLCollection.prototype.flatpickr = NodeList.prototype.flatpickr = function(config) {
+      return _flatpickr(this, config);
+    };
+    HTMLElement.prototype.flatpickr = function(config) {
+      return _flatpickr([this], config);
+    };
+  }
+  var flatpickr = function(selector, config) {
+    if (typeof selector === "string") {
+      return _flatpickr(window.document.querySelectorAll(selector), config);
+    } else if (selector instanceof Node) {
+      return _flatpickr([selector], config);
+    } else {
+      return _flatpickr(selector, config);
+    }
+  };
+  flatpickr.defaultConfig = {};
+  flatpickr.l10ns = {
+    en: __assign({}, default_default),
+    default: __assign({}, default_default)
+  };
+  flatpickr.localize = function(l10n) {
+    flatpickr.l10ns.default = __assign(__assign({}, flatpickr.l10ns.default), l10n);
+  };
+  flatpickr.setDefaults = function(config) {
+    flatpickr.defaultConfig = __assign(__assign({}, flatpickr.defaultConfig), config);
+  };
+  flatpickr.parseDate = createDateParser({});
+  flatpickr.formatDate = createDateFormatter({});
+  flatpickr.compareDates = compareDates;
+  if (typeof jQuery !== "undefined" && typeof jQuery.fn !== "undefined") {
+    jQuery.fn.flatpickr = function(config) {
+      return _flatpickr(this, config);
+    };
+  }
+  Date.prototype.fp_incr = function(days) {
+    return new Date(this.getFullYear(), this.getMonth(), this.getDate() + (typeof days === "string" ? parseInt(days, 10) : days));
+  };
+  if (typeof window !== "undefined") {
+    window.flatpickr = flatpickr;
+  }
+  var esm_default = flatpickr;
+
   // app/assets/javascripts/comfy/admin/cms/timepicker.js
+  var import_cy = __toESM(require_cy());
+  var import_ka = __toESM(require_ka());
+  var import_sr = __toESM(require_sr());
+  var import_ar_dz = __toESM(require_ar_dz());
+  var import_gr = __toESM(require_gr());
+  var import_no = __toESM(require_no());
+  var import_da = __toESM(require_da());
+  var import_km = __toESM(require_km());
+  var import_sv = __toESM(require_sv());
+  var import_ar = __toESM(require_ar());
+  var import_he = __toESM(require_he());
+  var import_pa = __toESM(require_pa());
+  var import_de = __toESM(require_de());
+  var import_ko = __toESM(require_ko());
+  var import_th = __toESM(require_th());
+  var import_at = __toESM(require_at());
+  var import_hi = __toESM(require_hi());
+  var import_pl = __toESM(require_pl());
+  var import_kz = __toESM(require_kz());
+  var import_tr = __toESM(require_tr());
+  var import_az = __toESM(require_az());
+  var import_hr = __toESM(require_hr());
+  var import_pt = __toESM(require_pt());
+  var import_eo = __toESM(require_eo());
+  var import_lt = __toESM(require_lt());
+  var import_uk = __toESM(require_uk());
+  var import_be = __toESM(require_be());
+  var import_hu = __toESM(require_hu());
+  var import_ro = __toESM(require_ro());
+  var import_es = __toESM(require_es());
+  var import_lv = __toESM(require_lv());
+  var import_uz = __toESM(require_uz());
+  var import_bg = __toESM(require_bg());
+  var import_hy = __toESM(require_hy());
+  var import_ru = __toESM(require_ru());
+  var import_et = __toESM(require_et());
+  var import_mk = __toESM(require_mk());
+  var import_uz_latn = __toESM(require_uz_latn());
+  var import_bn = __toESM(require_bn());
+  var import_id = __toESM(require_id());
+  var import_si = __toESM(require_si());
+  var import_fa = __toESM(require_fa());
+  var import_mn = __toESM(require_mn());
+  var import_vn = __toESM(require_vn());
+  var import_bs = __toESM(require_bs());
+  var import_sk = __toESM(require_sk());
+  var import_fi = __toESM(require_fi());
+  var import_ms = __toESM(require_ms());
+  var import_zh_tw = __toESM(require_zh_tw());
+  var import_cat = __toESM(require_cat());
+  var import_is = __toESM(require_is());
+  var import_sl = __toESM(require_sl());
+  var import_fo = __toESM(require_fo());
+  var import_my = __toESM(require_my());
+  var import_zh = __toESM(require_zh());
+  var import_ckb = __toESM(require_ckb());
+  var import_it = __toESM(require_it());
+  var import_sq = __toESM(require_sq());
+  var import_fr = __toESM(require_fr());
+  var import_nl = __toESM(require_nl());
+  var import_cs = __toESM(require_cs());
+  var import_ja = __toESM(require_ja());
+  var import_sr_cyr = __toESM(require_sr_cyr());
+  var import_ga = __toESM(require_ga());
+  var import_nn = __toESM(require_nn());
   (() => {
     const flatpickrInstances = [];
     window.CMS.timepicker = {
       init(root = document) {
-        const datetimes = root.querySelectorAll("input[type=text][data-cms-datetime]");
+        const datetimes = root.querySelectorAll(
+          "input[type=text][data-cms-datetime]"
+        );
         const dates = root.querySelectorAll("input[type=text][data-cms-date]");
         if (datetimes.length === 0 && dates.length === 0) return;
-        const locale = CMS.getLocale();
+        const locale = "zh";
         for (const datetime of datetimes) {
-          flatpickrInstances.push(flatpickr(datetime, {
-            format: "yyyy-mm-dd hh:ii",
-            enableTime: true,
-            locale
-          }));
+          flatpickrInstances.push(
+            esm_default(datetime, {
+              format: "yyyy-mm-dd hh:ii",
+              enableTime: true,
+              locale
+            })
+          );
         }
         for (const date of dates) {
-          flatpickrInstances.push(flatpickr(date, {
-            format: "yyyy-mm-dd",
-            locale
-          }));
+          flatpickrInstances.push(
+            esm_default(date, {
+              format: "yyyy-mm-dd",
+              locale
+            })
+          );
         }
       },
       dispose() {
@@ -44127,7 +50257,6 @@
 @preserve jQuery.PrettyTextDiff 1.0.4
 See https://github.com/arnab/jQuery.PrettyTextDiff/
  */
-/* flatpickr v4.0.6,, @license MIT */
 /*!
  * Font Awesome Free 5.0.1 by @fontawesome - http://fontawesome.com
  * License - http://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

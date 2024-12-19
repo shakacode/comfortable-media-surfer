@@ -15,9 +15,6 @@ import "../../vendor/redactor/video";
 
 //= require_directory ../../vendor/redactor/i18n/
 
-import "../../vendor/flatpickr.min";
-//= require_directory ../../vendor/flatpickr/i18n/
-
 import "./base";
 import "./categories";
 import "./codemirror";
