@@ -19,3 +19,5 @@ coverage/
 /storage
 db/cms_fixtures/test-site/
 .idea
+
+/node_modules
