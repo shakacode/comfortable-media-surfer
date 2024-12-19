@@ -625,39 +625,39 @@
               }
             });
             if (support.getById) {
-              Expr.filter.ID = function(id2) {
-                var attrId = id2.replace(runescape, funescape);
+              Expr.filter.ID = function(id) {
+                var attrId = id.replace(runescape, funescape);
                 return function(elem) {
                   return elem.getAttribute("id") === attrId;
                 };
               };
-              Expr.find.ID = function(id2, context) {
+              Expr.find.ID = function(id, context) {
                 if (typeof context.getElementById !== "undefined" && documentIsHTML) {
-                  var elem = context.getElementById(id2);
+                  var elem = context.getElementById(id);
                   return elem ? [elem] : [];
                 }
               };
             } else {
-              Expr.filter.ID = function(id2) {
-                var attrId = id2.replace(runescape, funescape);
+              Expr.filter.ID = function(id) {
+                var attrId = id.replace(runescape, funescape);
                 return function(elem) {
                   var node2 = typeof elem.getAttributeNode !== "undefined" && elem.getAttributeNode("id");
                   return node2 && node2.value === attrId;
                 };
               };
-              Expr.find.ID = function(id2, context) {
+              Expr.find.ID = function(id, context) {
                 if (typeof context.getElementById !== "undefined" && documentIsHTML) {
-                  var node2, i2, elems, elem = context.getElementById(id2);
+                  var node2, i2, elems, elem = context.getElementById(id);
                   if (elem) {
                     node2 = elem.getAttributeNode("id");
-                    if (node2 && node2.value === id2) {
+                    if (node2 && node2.value === id) {
                       return [elem];
                     }
-                    elems = context.getElementsByName(id2);
+                    elems = context.getElementsByName(id);
                     i2 = 0;
                     while (elem = elems[i2++]) {
                       node2 = elem.getAttributeNode("id");
-                      if (node2 && node2.value === id2) {
+                      if (node2 && node2.value === id) {
                         return [elem];
                       }
                     }
@@ -3733,19 +3733,19 @@
             // Only Firefox includes border widths
             // in computed dimensions. (gh-4529)
             reliableTrDimensions: function() {
-              var table, tr2, trChild, trStyle;
+              var table, tr, trChild, trStyle;
               if (reliableTrDimensionsVal == null) {
                 table = document2.createElement("table");
-                tr2 = document2.createElement("tr");
+                tr = document2.createElement("tr");
                 trChild = document2.createElement("div");
                 table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
-                tr2.style.cssText = "box-sizing:content-box;border:1px solid";
-                tr2.style.height = "1px";
+                tr.style.cssText = "box-sizing:content-box;border:1px solid";
+                tr.style.height = "1px";
                 trChild.style.height = "9px";
                 trChild.style.display = "block";
-                documentElement.appendChild(table).appendChild(tr2).appendChild(trChild);
-                trStyle = window2.getComputedStyle(tr2);
-                reliableTrDimensionsVal = parseInt(trStyle.height, 10) + parseInt(trStyle.borderTopWidth, 10) + parseInt(trStyle.borderBottomWidth, 10) === tr2.offsetHeight;
+                documentElement.appendChild(table).appendChild(tr).appendChild(trChild);
+                trStyle = window2.getComputedStyle(tr);
+                reliableTrDimensionsVal = parseInt(trStyle.height, 10) + parseInt(trStyle.borderTopWidth, 10) + parseInt(trStyle.borderBottomWidth, 10) === tr.offsetHeight;
                 documentElement.removeChild(table);
               }
               return reliableTrDimensionsVal;
@@ -6378,11 +6378,11 @@
   // app/assets/javascripts/comfy/vendor/diff/pretty_text_diff.js
   var require_pretty_text_diff = __commonJS({
     "app/assets/javascripts/comfy/vendor/diff/pretty_text_diff.js"(exports) {
-      var import_jquery15 = __toESM(require_jquery());
+      var import_jquery16 = __toESM(require_jquery());
       (function() {
-        var $6;
-        $6 = import_jquery15.default;
-        $6.fn.extend({
+        var $7;
+        $7 = import_jquery16.default;
+        $7.fn.extend({
           prettyTextDiff: function(options) {
             var dmp, settings;
             settings = {
@@ -6392,39 +6392,39 @@
               cleanup: true,
               debug: false
             };
-            settings = $6.extend(settings, options);
-            $6.fn.prettyTextDiff.debug("Options: ", settings, settings);
+            settings = $7.extend(settings, options);
+            $7.fn.prettyTextDiff.debug("Options: ", settings, settings);
             dmp = new diff_match_patch();
             return this.each(function() {
               var changed, diff_as_html, diffs, original;
               if (settings.originalContent && settings.changedContent) {
-                original = $6("<div />").html(settings.originalContent).text();
-                changed = $6("<div />").html(settings.changedContent).text();
+                original = $7("<div />").html(settings.originalContent).text();
+                changed = $7("<div />").html(settings.changedContent).text();
               } else {
-                original = $6(settings.originalContainer, this).text();
-                changed = $6(settings.changedContainer, this).text();
+                original = $7(settings.originalContainer, this).text();
+                changed = $7(settings.changedContainer, this).text();
               }
-              $6.fn.prettyTextDiff.debug("Original text found: ", original, settings);
-              $6.fn.prettyTextDiff.debug("Changed  text found: ", changed, settings);
+              $7.fn.prettyTextDiff.debug("Original text found: ", original, settings);
+              $7.fn.prettyTextDiff.debug("Changed  text found: ", changed, settings);
               diffs = dmp.diff_main(original, changed);
               if (settings.cleanup) {
                 dmp.diff_cleanupSemantic(diffs);
               }
-              $6.fn.prettyTextDiff.debug("Diffs: ", diffs, settings);
-              diff_as_html = $6.map(diffs, function(diff) {
-                return $6.fn.prettyTextDiff.createHTML(diff);
+              $7.fn.prettyTextDiff.debug("Diffs: ", diffs, settings);
+              diff_as_html = $7.map(diffs, function(diff) {
+                return $7.fn.prettyTextDiff.createHTML(diff);
               });
-              $6(settings.diffContainer, this).html(diff_as_html.join(""));
+              $7(settings.diffContainer, this).html(diff_as_html.join(""));
               return this;
             });
           }
         });
-        $6.fn.prettyTextDiff.debug = function(message, object, settings) {
+        $7.fn.prettyTextDiff.debug = function(message, object, settings) {
           if (settings.debug) {
             return console.log(message, object);
           }
         };
-        $6.fn.prettyTextDiff.createHTML = function(diff) {
+        $7.fn.prettyTextDiff.createHTML = function(diff) {
           var data, html, operation, pattern_amp, pattern_gt, pattern_lt, pattern_para, text;
           html = [];
           pattern_amp = /&/g;
@@ -6478,8 +6478,8 @@
             }
             callback.apply(null, defs);
           }
-          function define2(id2, dependencies, definition) {
-            if (typeof id2 !== "string") {
+          function define2(id, dependencies, definition) {
+            if (typeof id !== "string") {
               throw "invalid module definition, module id must be defined and be a string";
             }
             if (dependencies === undefined2) {
@@ -6489,35 +6489,35 @@
               throw "invalid module definition, definition function must be specified";
             }
             require2(dependencies, function() {
-              modules[id2] = definition.apply(null, arguments);
+              modules[id] = definition.apply(null, arguments);
             });
           }
-          function defined(id2) {
-            return !!modules[id2];
+          function defined(id) {
+            return !!modules[id];
           }
-          function resolve(id2) {
+          function resolve(id) {
             var target = exports2;
-            var fragments = id2.split(/[.\/]/);
-            for (var fi2 = 0; fi2 < fragments.length; ++fi2) {
-              if (!target[fragments[fi2]]) {
+            var fragments = id.split(/[.\/]/);
+            for (var fi = 0; fi < fragments.length; ++fi) {
+              if (!target[fragments[fi]]) {
                 return;
               }
-              target = target[fragments[fi2]];
+              target = target[fragments[fi]];
             }
             return target;
           }
           function expose(ids) {
             for (var i = 0; i < ids.length; i++) {
               var target = exports2;
-              var id2 = ids[i];
-              var fragments = id2.split(/[.\/]/);
-              for (var fi2 = 0; fi2 < fragments.length - 1; ++fi2) {
-                if (target[fragments[fi2]] === undefined2) {
-                  target[fragments[fi2]] = {};
+              var id = ids[i];
+              var fragments = id.split(/[.\/]/);
+              for (var fi = 0; fi < fragments.length - 1; ++fi) {
+                if (target[fragments[fi]] === undefined2) {
+                  target[fragments[fi]] = {};
                 }
-                target = target[fragments[fi2]];
+                target = target[fragments[fi]];
               }
-              target[fragments[fragments.length - 1]] = modules[id2];
+              target[fragments[fragments.length - 1]] = modules[id];
             }
           }
           define2("moxie/core/utils/Basic", [], function() {
@@ -6878,7 +6878,7 @@
             "moxie/core/utils/Basic"
           ], function(Basic) {
             var UAParser = function(undefined3) {
-              var EMPTY = "", UNKNOWN = "?", FUNC_TYPE = "function", UNDEF_TYPE = "undefined", OBJ_TYPE = "object", MAJOR = "major", MODEL = "model", NAME4 = "name", TYPE = "type", VENDOR = "vendor", VERSION4 = "version", ARCHITECTURE = "architecture", CONSOLE = "console", MOBILE = "mobile", TABLET = "tablet";
+              var EMPTY = "", UNKNOWN = "?", FUNC_TYPE = "function", UNDEF_TYPE = "undefined", OBJ_TYPE = "object", MAJOR = "major", MODEL = "model", NAME5 = "name", TYPE = "type", VENDOR = "vendor", VERSION5 = "version", ARCHITECTURE = "architecture", CONSOLE = "console", MOBILE = "mobile", TABLET = "tablet";
               var util = {
                 has: function(str1, str2) {
                   return str2.toLowerCase().indexOf(str1.toLowerCase()) !== -1;
@@ -7011,12 +7011,12 @@
                     /(opera)[\/\s]+([\w\.]+)/i
                     // Opera < 9.80
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /\s(opr)\/([\w\.]+)/i
                     // Opera Webkit
                   ],
-                  [[NAME4, "Opera"], VERSION4],
+                  [[NAME5, "Opera"], VERSION5],
                   [
                     // Mixed
                     /(kindle)\/([\w\.]+)/i,
@@ -7034,86 +7034,86 @@
                     /(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi)\/([\w\.-]+)/i
                     // Chromium/Flock/RockMelt/Midori/Epiphany/Silk/Skyfire/Bolt/Iron
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /(trident).+rv[:\s]([\w\.]+).+like\sgecko/i
                     // IE11
                   ],
-                  [[NAME4, "IE"], VERSION4],
+                  [[NAME5, "IE"], VERSION5],
                   [
                     /(edge)\/((\d+)?[\w\.]+)/i
                     // Microsoft Edge
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /(yabrowser)\/([\w\.]+)/i
                     // Yandex
                   ],
-                  [[NAME4, "Yandex"], VERSION4],
+                  [[NAME5, "Yandex"], VERSION5],
                   [
                     /(comodo_dragon)\/([\w\.]+)/i
                     // Comodo Dragon
                   ],
-                  [[NAME4, /_/g, " "], VERSION4],
+                  [[NAME5, /_/g, " "], VERSION5],
                   [
                     /(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i,
                     // Chrome/OmniWeb/Arora/Tizen/Nokia
                     /(uc\s?browser|qqbrowser)[\/\s]?([\w\.]+)/i
                     // UCBrowser/QQBrowser
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /(dolfin)\/([\w\.]+)/i
                     // Dolphin
                   ],
-                  [[NAME4, "Dolphin"], VERSION4],
+                  [[NAME5, "Dolphin"], VERSION5],
                   [
                     /((?:android.+)crmo|crios)\/([\w\.]+)/i
                     // Chrome for Android/iOS
                   ],
-                  [[NAME4, "Chrome"], VERSION4],
+                  [[NAME5, "Chrome"], VERSION5],
                   [
                     /XiaoMi\/MiuiBrowser\/([\w\.]+)/i
                     // MIUI Browser
                   ],
-                  [VERSION4, [NAME4, "MIUI Browser"]],
+                  [VERSION5, [NAME5, "MIUI Browser"]],
                   [
                     /android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)/i
                     // Android Browser
                   ],
-                  [VERSION4, [NAME4, "Android Browser"]],
+                  [VERSION5, [NAME5, "Android Browser"]],
                   [
                     /FBAV\/([\w\.]+);/i
                     // Facebook App for iOS
                   ],
-                  [VERSION4, [NAME4, "Facebook"]],
+                  [VERSION5, [NAME5, "Facebook"]],
                   [
                     /version\/([\w\.]+).+?mobile\/\w+\s(safari)/i
                     // Mobile Safari
                   ],
-                  [VERSION4, [NAME4, "Mobile Safari"]],
+                  [VERSION5, [NAME5, "Mobile Safari"]],
                   [
                     /version\/([\w\.]+).+?(mobile\s?safari|safari)/i
                     // Safari & Safari Mobile
                   ],
-                  [VERSION4, NAME4],
+                  [VERSION5, NAME5],
                   [
                     /webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i
                     // Safari < 3.0
                   ],
-                  [NAME4, [VERSION4, mapper.str, maps.browser.oldsafari.version]],
+                  [NAME5, [VERSION5, mapper.str, maps.browser.oldsafari.version]],
                   [
                     /(konqueror)\/([\w\.]+)/i,
                     // Konqueror
                     /(webkit|khtml)\/([\w\.]+)/i
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     // Gecko based
                     /(navigator|netscape)\/([\w\.-]+)/i
                     // Netscape
                   ],
-                  [[NAME4, "Netscape"], VERSION4],
+                  [[NAME5, "Netscape"], VERSION5],
                   [
                     /(swiftfox)/i,
                     // Swiftfox
@@ -7135,14 +7135,14 @@
                     /(mosaic)[\/\s]([\w\.]+)/i
                     // Mosaic
                   ],
-                  [NAME4, VERSION4]
+                  [NAME5, VERSION5]
                 ],
                 engine: [
                   [
                     /windows.+\sedge\/([\w\.]+)/i
                     // EdgeHTML
                   ],
-                  [VERSION4, [NAME4, "EdgeHTML"]],
+                  [VERSION5, [NAME5, "EdgeHTML"]],
                   [
                     /(presto)\/([\w\.]+)/i,
                     // Presto
@@ -7153,12 +7153,12 @@
                     /(icab)[\/\s]([23]\.[\d\.]+)/i
                     // iCab
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /rv\:([\w\.]+).*(gecko)/i
                     // Gecko
                   ],
-                  [VERSION4, NAME4]
+                  [VERSION5, NAME5]
                 ],
                 os: [
                   [
@@ -7166,23 +7166,23 @@
                     /microsoft\s(windows)\s(vista|xp)/i
                     // Windows (iTunes)
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /(windows)\snt\s6\.2;\s(arm)/i,
                     // Windows RT
                     /(windows\sphone(?:\sos)*|windows\smobile|windows)[\s\/]?([ntce\d\.\s]+\w)/i
                   ],
-                  [NAME4, [VERSION4, mapper.str, maps.os.windows.version]],
+                  [NAME5, [VERSION5, mapper.str, maps.os.windows.version]],
                   [
                     /(win(?=3|9|n)|win\s9x\s)([nt\d\.]+)/i
                   ],
-                  [[NAME4, "Windows"], [VERSION4, mapper.str, maps.os.windows.version]],
+                  [[NAME5, "Windows"], [VERSION5, mapper.str, maps.os.windows.version]],
                   [
                     // Mobile/Embedded OS
                     /\((bb)(10);/i
                     // BlackBerry 10
                   ],
-                  [[NAME4, "BlackBerry"], VERSION4],
+                  [[NAME5, "BlackBerry"], VERSION5],
                   [
                     /(blackberry)\w*\/?([\w\.]+)*/i,
                     // Blackberry
@@ -7193,22 +7193,22 @@
                     /linux;.+(sailfish);/i
                     // Sailfish OS
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /(symbian\s?os|symbos|s60(?=;))[\/\s-]?([\w\.]+)*/i
                     // Symbian
                   ],
-                  [[NAME4, "Symbian"], VERSION4],
+                  [[NAME5, "Symbian"], VERSION5],
                   [
                     /\((series40);/i
                     // Series 40
                   ],
-                  [NAME4],
+                  [NAME5],
                   [
                     /mozilla.+\(mobile;.+gecko.+firefox/i
                     // Firefox OS
                   ],
-                  [[NAME4, "Firefox OS"], VERSION4],
+                  [[NAME5, "Firefox OS"], VERSION5],
                   [
                     // Console
                     /(nintendo|playstation)\s([wids3portablevu]+)/i,
@@ -7226,35 +7226,35 @@
                     /(gnu)\s?([\w\.]+)*/i
                     // GNU
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /(cros)\s[\w]+\s([\w\.]+\w)/i
                     // Chromium OS
                   ],
-                  [[NAME4, "Chromium OS"], VERSION4],
+                  [[NAME5, "Chromium OS"], VERSION5],
                   [
                     // Solaris
                     /(sunos)\s?([\w\.]+\d)*/i
                     // Solaris
                   ],
-                  [[NAME4, "Solaris"], VERSION4],
+                  [[NAME5, "Solaris"], VERSION5],
                   [
                     // BSD based
                     /\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i
                     // FreeBSD/NetBSD/OpenBSD/PC-BSD/DragonFly
                   ],
-                  [NAME4, VERSION4],
+                  [NAME5, VERSION5],
                   [
                     /(ip[honead]+)(?:.*os\s*([\w]+)*\slike\smac|;\sopera)/i
                     // iOS
                   ],
-                  [[NAME4, "iOS"], [VERSION4, /_/g, "."]],
+                  [[NAME5, "iOS"], [VERSION5, /_/g, "."]],
                   [
                     /(mac\sos\sx)\s?([\w\s\.]+\w)*/i,
                     /(macintosh|mac(?=_powerpc)\s)/i
                     // Mac OS
                   ],
-                  [[NAME4, "Mac OS"], [VERSION4, /_/g, "."]],
+                  [[NAME5, "Mac OS"], [VERSION5, /_/g, "."]],
                   [
                     // Other
                     /((?:open)?solaris)[\/\s-]?([\w\.]+)*/i,
@@ -7268,7 +7268,7 @@
                     /(unix)\s?([\w\.]+)*/i
                     // UNIX
                   ],
-                  [NAME4, VERSION4]
+                  [NAME5, VERSION5]
                 ]
               };
               var UAParser2 = function(uastring) {
@@ -7623,11 +7623,11 @@
             };
           });
           define2("moxie/core/utils/Dom", ["moxie/core/utils/Env"], function(Env) {
-            var get = function(id2) {
-              if (typeof id2 !== "string") {
-                return id2;
+            var get = function(id) {
+              if (typeof id !== "string") {
+                return id;
               }
-              return document.getElementById(id2);
+              return document.getElementById(id);
             };
             var hasClass = function(obj, name2) {
               if (!obj.className) {
@@ -10700,8 +10700,8 @@
                       img.destroy();
                       self2.trigger("embedded");
                     } else {
-                      var tr2 = new Transporter();
-                      tr2.bind("TransportingComplete", function() {
+                      var tr = new Transporter();
+                      tr.bind("TransportingComplete", function() {
                         runtime = self2.connectRuntime(this.result.ruid);
                         self2.bind("Embedded", function() {
                           Basic.extend(runtime.getShimContainer().style, {
@@ -10716,7 +10716,7 @@
                         runtime.exec.call(self2, "ImageView", "display", this.result.uid, width, height);
                         img.destroy();
                       });
-                      tr2.transport(Encode.atob(dataUrl.substring(dataUrl.indexOf("base64,") + 7)), type, {
+                      tr.transport(Encode.atob(dataUrl.substring(dataUrl.indexOf("base64,") + 7)), type, {
                         required_caps: {
                           display_media: true
                         },
@@ -11623,17 +11623,17 @@
                 }
               });
               function _preloadAndSend(meta, data) {
-                var target = this, blob, fr2;
+                var target = this, blob, fr;
                 blob = data.getBlob().getSource();
-                fr2 = new window.FileReader();
-                fr2.onload = function() {
+                fr = new window.FileReader();
+                fr.onload = function() {
                   data.append(data.getBlobName(), new Blob(null, {
                     type: blob.type,
-                    data: fr2.result
+                    data: fr.result
                   }));
                   self2.send.call(target, meta, data);
                 };
-                fr2.readAsBinaryString(blob);
+                fr.readAsBinaryString(blob);
               }
               function _getNativeXHR() {
                 if (window.XMLHttpRequest && !(Env.browser === "IE" && Env.verComp(Env.version, 8, "<"))) {
@@ -12785,16 +12785,16 @@
                 _img.src = str.substr(0, 5) == "data:" ? str : _toDataUrl(str, _blob.type);
               }
               function _readAsDataUrl(file, callback) {
-                var comp = this, fr2;
+                var comp = this, fr;
                 if (window.FileReader) {
-                  fr2 = new FileReader();
-                  fr2.onload = function() {
+                  fr = new FileReader();
+                  fr.onload = function() {
                     callback.call(comp, this.result);
                   };
-                  fr2.onerror = function() {
+                  fr.onerror = function() {
                     comp.trigger("error", x.ImageError.WRONG_FORMAT);
                   };
-                  fr2.readAsDataURL(file);
+                  fr.readAsDataURL(file);
                 } else {
                   return callback.call(this, file.getAsDataURL());
                 }
@@ -12880,14 +12880,14 @@
               version2 = version2.match(/\d+/g);
               return parseFloat(version2[0] + "." + version2[1]);
             }
-            function removeSWF(id2) {
-              var obj = Dom.get(id2);
+            function removeSWF(id) {
+              var obj = Dom.get(id);
               if (obj && obj.nodeName == "OBJECT") {
                 if (Env.browser === "IE") {
                   obj.style.display = "none";
                   (function onInit() {
                     if (obj.readyState == 4) {
-                      removeObjectInIE(id2);
+                      removeObjectInIE(id);
                     } else {
                       setTimeout(onInit, 10);
                     }
@@ -12897,8 +12897,8 @@
                 }
               }
             }
-            function removeObjectInIE(id2) {
-              var obj = Dom.get(id2);
+            function removeObjectInIE(id) {
+              var obj = Dom.get(id);
               if (obj) {
                 for (var i in obj) {
                   if (typeof obj[i] == "function") {
@@ -13213,11 +13213,11 @@
                   send();
                 }
                 function attachBlob(blob2, cb) {
-                  var tr2 = new Transporter();
-                  tr2.bind("TransportingComplete", function() {
+                  var tr = new Transporter();
+                  tr.bind("TransportingComplete", function() {
                     cb(this.result);
                   });
-                  tr2.transport(blob2.getSource(), blob2.type, {
+                  tr.transport(blob2.getSource(), blob2.type, {
                     ruid: self2.uid
                   });
                 }
@@ -13309,11 +13309,11 @@
                   comp = self2 = null;
                 }
                 if (blob.isDetached()) {
-                  var tr2 = new Transporter();
-                  tr2.bind("TransportingComplete", function() {
-                    exec(tr2.result.getSource());
+                  var tr = new Transporter();
+                  tr.bind("TransportingComplete", function() {
+                    exec(tr.result.getSource());
                   });
-                  tr2.transport(blob.getSource(), blob.type, { ruid: self2.uid });
+                  tr.transport(blob.getSource(), blob.type, { ruid: self2.uid });
                 } else {
                   exec(blob.getSource());
                 }
@@ -16937,4503 +16937,6 @@
     }
   });
 
-  // node_modules/flatpickr/dist/l10n/cy.js
-  var require_cy = __commonJS({
-    "node_modules/flatpickr/dist/l10n/cy.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.cy = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Welsh = {
-          weekdays: {
-            shorthand: ["Sul", "Llun", "Maw", "Mer", "Iau", "Gwe", "Sad"],
-            longhand: [
-              "Dydd Sul",
-              "Dydd Llun",
-              "Dydd Mawrth",
-              "Dydd Mercher",
-              "Dydd Iau",
-              "Dydd Gwener",
-              "Dydd Sadwrn"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Ion",
-              "Chwef",
-              "Maw",
-              "Ebr",
-              "Mai",
-              "Meh",
-              "Gorff",
-              "Awst",
-              "Medi",
-              "Hyd",
-              "Tach",
-              "Rhag"
-            ],
-            longhand: [
-              "Ionawr",
-              "Chwefror",
-              "Mawrth",
-              "Ebrill",
-              "Mai",
-              "Mehefin",
-              "Gorffennaf",
-              "Awst",
-              "Medi",
-              "Hydref",
-              "Tachwedd",
-              "Rhagfyr"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function(nth) {
-            if (nth === 1)
-              return "af";
-            if (nth === 2)
-              return "ail";
-            if (nth === 3 || nth === 4)
-              return "ydd";
-            if (nth === 5 || nth === 6)
-              return "ed";
-            if (nth >= 7 && nth <= 10 || nth == 12 || nth == 15 || nth == 18 || nth == 20)
-              return "fed";
-            if (nth == 11 || nth == 13 || nth == 14 || nth == 16 || nth == 17 || nth == 19)
-              return "eg";
-            if (nth >= 21 && nth <= 39)
-              return "ain";
-            return "";
-          },
-          time_24hr: true
-        };
-        fp.l10ns.cy = Welsh;
-        var cy2 = fp.l10ns;
-        exports2.Welsh = Welsh;
-        exports2.default = cy2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ka.js
-  var require_ka = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ka.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ka = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Georgian = {
-          weekdays: {
-            shorthand: ["\u10D9\u10D5", "\u10DD\u10E0", "\u10E1\u10D0", "\u10DD\u10D7", "\u10EE\u10E3", "\u10DE\u10D0", "\u10E8\u10D0"],
-            longhand: [
-              "\u10D9\u10D5\u10D8\u10E0\u10D0",
-              "\u10DD\u10E0\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
-              "\u10E1\u10D0\u10DB\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
-              "\u10DD\u10D7\u10EE\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
-              "\u10EE\u10E3\u10D7\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8",
-              "\u10DE\u10D0\u10E0\u10D0\u10E1\u10D9\u10D4\u10D5\u10D8",
-              "\u10E8\u10D0\u10D1\u10D0\u10D7\u10D8"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u10D8\u10D0\u10DC",
-              "\u10D7\u10D4\u10D1",
-              "\u10DB\u10D0\u10E0",
-              "\u10D0\u10DE\u10E0",
-              "\u10DB\u10D0\u10D8",
-              "\u10D8\u10D5\u10DC",
-              "\u10D8\u10D5\u10DA",
-              "\u10D0\u10D2\u10D5",
-              "\u10E1\u10D4\u10E5",
-              "\u10DD\u10E5\u10E2",
-              "\u10DC\u10DD\u10D4",
-              "\u10D3\u10D4\u10D9"
-            ],
-            longhand: [
-              "\u10D8\u10D0\u10DC\u10D5\u10D0\u10E0\u10D8",
-              "\u10D7\u10D4\u10D1\u10D4\u10E0\u10D5\u10D0\u10DA\u10D8",
-              "\u10DB\u10D0\u10E0\u10E2\u10D8",
-              "\u10D0\u10DE\u10E0\u10D8\u10DA\u10D8",
-              "\u10DB\u10D0\u10D8\u10E1\u10D8",
-              "\u10D8\u10D5\u10DC\u10D8\u10E1\u10D8",
-              "\u10D8\u10D5\u10DA\u10D8\u10E1\u10D8",
-              "\u10D0\u10D2\u10D5\u10D8\u10E1\u10E2\u10DD",
-              "\u10E1\u10D4\u10E5\u10E2\u10D4\u10DB\u10D1\u10D4\u10E0\u10D8",
-              "\u10DD\u10E5\u10E2\u10DD\u10DB\u10D1\u10D4\u10E0\u10D8",
-              "\u10DC\u10DD\u10D4\u10DB\u10D1\u10D4\u10E0\u10D8",
-              "\u10D3\u10D4\u10D9\u10D4\u10DB\u10D1\u10D4\u10E0\u10D8"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          rangeSeparator: " \u2014 ",
-          weekAbbreviation: "\u10D9\u10D5.",
-          scrollTitle: "\u10D3\u10D0\u10E1\u10E5\u10E0\u10DD\u10DA\u10D4\u10D7 \u10D2\u10D0\u10E1\u10D0\u10D3\u10D8\u10D3\u10D4\u10D1\u10DA\u10D0\u10D3",
-          toggleTitle: "\u10D3\u10D0\u10D0\u10D9\u10DA\u10D8\u10D9\u10D4\u10D7 \u10D2\u10D0\u10D3\u10D0\u10E0\u10D7\u10D5\u10D8\u10E1\u10D7\u10D5\u10D8\u10E1",
-          amPM: ["AM", "PM"],
-          yearAriaLabel: "\u10EC\u10D4\u10DA\u10D8",
-          time_24hr: true
-        };
-        fp.l10ns.ka = Georgian;
-        var ka2 = fp.l10ns;
-        exports2.Georgian = Georgian;
-        exports2.default = ka2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/sr.js
-  var require_sr = __commonJS({
-    "node_modules/flatpickr/dist/l10n/sr.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sr = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Serbian = {
-          weekdays: {
-            shorthand: ["Ned", "Pon", "Uto", "Sre", "\u010Cet", "Pet", "Sub"],
-            longhand: [
-              "Nedelja",
-              "Ponedeljak",
-              "Utorak",
-              "Sreda",
-              "\u010Cetvrtak",
-              "Petak",
-              "Subota"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Maj",
-              "Jun",
-              "Jul",
-              "Avg",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dec"
-            ],
-            longhand: [
-              "Januar",
-              "Februar",
-              "Mart",
-              "April",
-              "Maj",
-              "Jun",
-              "Jul",
-              "Avgust",
-              "Septembar",
-              "Oktobar",
-              "Novembar",
-              "Decembar"
-            ]
-          },
-          firstDayOfWeek: 1,
-          weekAbbreviation: "Ned.",
-          rangeSeparator: " do ",
-          time_24hr: true
-        };
-        fp.l10ns.sr = Serbian;
-        var sr2 = fp.l10ns;
-        exports2.Serbian = Serbian;
-        exports2.default = sr2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ar-dz.js
-  var require_ar_dz = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ar-dz.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2["ar-dz"] = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var AlgerianArabic = {
-          weekdays: {
-            shorthand: ["\u0623\u062D\u062F", "\u0627\u062B\u0646\u064A\u0646", "\u062B\u0644\u0627\u062B\u0627\u0621", "\u0623\u0631\u0628\u0639\u0627\u0621", "\u062E\u0645\u064A\u0633", "\u062C\u0645\u0639\u0629", "\u0633\u0628\u062A"],
-            longhand: [
-              "\u0627\u0644\u0623\u062D\u062F",
-              "\u0627\u0644\u0627\u062B\u0646\u064A\u0646",
-              "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621",
-              "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621",
-              "\u0627\u0644\u062E\u0645\u064A\u0633",
-              "\u0627\u0644\u062C\u0645\u0639\u0629",
-              "\u0627\u0644\u0633\u0628\u062A"
-            ]
-          },
-          months: {
-            shorthand: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-            longhand: [
-              "\u062C\u0627\u0646\u0641\u064A",
-              "\u0641\u064A\u0641\u0631\u064A",
-              "\u0645\u0627\u0631\u0633",
-              "\u0623\u0641\u0631\u064A\u0644",
-              "\u0645\u0627\u064A",
-              "\u062C\u0648\u0627\u0646",
-              "\u062C\u0648\u064A\u0644\u064A\u0647",
-              "\u0623\u0648\u062A",
-              "\u0633\u0628\u062A\u0645\u0628\u0631",
-              "\u0623\u0643\u062A\u0648\u0628\u0631",
-              "\u0646\u0648\u0641\u0645\u0628\u0631",
-              "\u062F\u064A\u0633\u0645\u0628\u0631"
-            ]
-          },
-          firstDayOfWeek: 0,
-          rangeSeparator: " \u0625\u0644\u0649 ",
-          weekAbbreviation: "Wk",
-          scrollTitle: "\u0642\u0645 \u0628\u0627\u0644\u062A\u0645\u0631\u064A\u0631 \u0644\u0644\u0632\u064A\u0627\u062F\u0629",
-          toggleTitle: "\u0627\u0636\u063A\u0637 \u0644\u0644\u062A\u0628\u062F\u064A\u0644",
-          yearAriaLabel: "\u0633\u0646\u0629",
-          monthAriaLabel: "\u0634\u0647\u0631",
-          hourAriaLabel: "\u0633\u0627\u0639\u0629",
-          minuteAriaLabel: "\u062F\u0642\u064A\u0642\u0629",
-          time_24hr: true
-        };
-        fp.l10ns.ar = AlgerianArabic;
-        var arDz = fp.l10ns;
-        exports2.AlgerianArabic = AlgerianArabic;
-        exports2.default = arDz;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/gr.js
-  var require_gr = __commonJS({
-    "node_modules/flatpickr/dist/l10n/gr.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.gr = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Greek = {
-          weekdays: {
-            shorthand: ["\u039A\u03C5", "\u0394\u03B5", "\u03A4\u03C1", "\u03A4\u03B5", "\u03A0\u03AD", "\u03A0\u03B1", "\u03A3\u03AC"],
-            longhand: [
-              "\u039A\u03C5\u03C1\u03B9\u03B1\u03BA\u03AE",
-              "\u0394\u03B5\u03C5\u03C4\u03AD\u03C1\u03B1",
-              "\u03A4\u03C1\u03AF\u03C4\u03B7",
-              "\u03A4\u03B5\u03C4\u03AC\u03C1\u03C4\u03B7",
-              "\u03A0\u03AD\u03BC\u03C0\u03C4\u03B7",
-              "\u03A0\u03B1\u03C1\u03B1\u03C3\u03BA\u03B5\u03C5\u03AE",
-              "\u03A3\u03AC\u03B2\u03B2\u03B1\u03C4\u03BF"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0399\u03B1\u03BD",
-              "\u03A6\u03B5\u03B2",
-              "\u039C\u03AC\u03C1",
-              "\u0391\u03C0\u03C1",
-              "\u039C\u03AC\u03B9",
-              "\u0399\u03BF\u03CD\u03BD",
-              "\u0399\u03BF\u03CD\u03BB",
-              "\u0391\u03CD\u03B3",
-              "\u03A3\u03B5\u03C0",
-              "\u039F\u03BA\u03C4",
-              "\u039D\u03BF\u03AD",
-              "\u0394\u03B5\u03BA"
-            ],
-            longhand: [
-              "\u0399\u03B1\u03BD\u03BF\u03C5\u03AC\u03C1\u03B9\u03BF\u03C2",
-              "\u03A6\u03B5\u03B2\u03C1\u03BF\u03C5\u03AC\u03C1\u03B9\u03BF\u03C2",
-              "\u039C\u03AC\u03C1\u03C4\u03B9\u03BF\u03C2",
-              "\u0391\u03C0\u03C1\u03AF\u03BB\u03B9\u03BF\u03C2",
-              "\u039C\u03AC\u03B9\u03BF\u03C2",
-              "\u0399\u03BF\u03CD\u03BD\u03B9\u03BF\u03C2",
-              "\u0399\u03BF\u03CD\u03BB\u03B9\u03BF\u03C2",
-              "\u0391\u03CD\u03B3\u03BF\u03C5\u03C3\u03C4\u03BF\u03C2",
-              "\u03A3\u03B5\u03C0\u03C4\u03AD\u03BC\u03B2\u03C1\u03B9\u03BF\u03C2",
-              "\u039F\u03BA\u03C4\u03CE\u03B2\u03C1\u03B9\u03BF\u03C2",
-              "\u039D\u03BF\u03AD\u03BC\u03B2\u03C1\u03B9\u03BF\u03C2",
-              "\u0394\u03B5\u03BA\u03AD\u03BC\u03B2\u03C1\u03B9\u03BF\u03C2"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          weekAbbreviation: "\u0395\u03B2\u03B4",
-          rangeSeparator: " \u03AD\u03C9\u03C2 ",
-          scrollTitle: "\u039C\u03B5\u03C4\u03B1\u03BA\u03C5\u03BB\u03AE\u03C3\u03C4\u03B5 \u03B3\u03B9\u03B1 \u03C0\u03C1\u03BF\u03C3\u03B1\u03CD\u03BE\u03B7\u03C3\u03B7",
-          toggleTitle: "\u039A\u03AC\u03BD\u03C4\u03B5 \u03BA\u03BB\u03B9\u03BA \u03B3\u03B9\u03B1 \u03B1\u03BB\u03BB\u03B1\u03B3\u03AE",
-          amPM: ["\u03A0\u039C", "\u039C\u039C"],
-          yearAriaLabel: "\u03C7\u03C1\u03CC\u03BD\u03BF\u03C2",
-          monthAriaLabel: "\u03BC\u03AE\u03BD\u03B1\u03C2",
-          hourAriaLabel: "\u03CE\u03C1\u03B1",
-          minuteAriaLabel: "\u03BB\u03B5\u03C0\u03C4\u03CC"
-        };
-        fp.l10ns.gr = Greek;
-        var gr2 = fp.l10ns;
-        exports2.Greek = Greek;
-        exports2.default = gr2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/no.js
-  var require_no = __commonJS({
-    "node_modules/flatpickr/dist/l10n/no.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.no = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Norwegian = {
-          weekdays: {
-            shorthand: ["S\xF8n", "Man", "Tir", "Ons", "Tor", "Fre", "L\xF8r"],
-            longhand: [
-              "S\xF8ndag",
-              "Mandag",
-              "Tirsdag",
-              "Onsdag",
-              "Torsdag",
-              "Fredag",
-              "L\xF8rdag"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Mai",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Des"
-            ],
-            longhand: [
-              "Januar",
-              "Februar",
-              "Mars",
-              "April",
-              "Mai",
-              "Juni",
-              "Juli",
-              "August",
-              "September",
-              "Oktober",
-              "November",
-              "Desember"
-            ]
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " til ",
-          weekAbbreviation: "Uke",
-          scrollTitle: "Scroll for \xE5 endre",
-          toggleTitle: "Klikk for \xE5 veksle",
-          time_24hr: true,
-          ordinal: function() {
-            return ".";
-          }
-        };
-        fp.l10ns.no = Norwegian;
-        var no2 = fp.l10ns;
-        exports2.Norwegian = Norwegian;
-        exports2.default = no2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/da.js
-  var require_da = __commonJS({
-    "node_modules/flatpickr/dist/l10n/da.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.da = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Danish = {
-          weekdays: {
-            shorthand: ["s\xF8n", "man", "tir", "ons", "tors", "fre", "l\xF8r"],
-            longhand: [
-              "s\xF8ndag",
-              "mandag",
-              "tirsdag",
-              "onsdag",
-              "torsdag",
-              "fredag",
-              "l\xF8rdag"
-            ]
-          },
-          months: {
-            shorthand: [
-              "jan",
-              "feb",
-              "mar",
-              "apr",
-              "maj",
-              "jun",
-              "jul",
-              "aug",
-              "sep",
-              "okt",
-              "nov",
-              "dec"
-            ],
-            longhand: [
-              "januar",
-              "februar",
-              "marts",
-              "april",
-              "maj",
-              "juni",
-              "juli",
-              "august",
-              "september",
-              "oktober",
-              "november",
-              "december"
-            ]
-          },
-          ordinal: function() {
-            return ".";
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " til ",
-          weekAbbreviation: "uge",
-          time_24hr: true
-        };
-        fp.l10ns.da = Danish;
-        var da2 = fp.l10ns;
-        exports2.Danish = Danish;
-        exports2.default = da2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/km.js
-  var require_km = __commonJS({
-    "node_modules/flatpickr/dist/l10n/km.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.km = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Khmer = {
-          weekdays: {
-            shorthand: ["\u17A2\u17B6\u1791\u17B7\u178F\u17D2\u1799", "\u1785\u1793\u17D2\u1791", "\u17A2\u1784\u17D2\u1782\u17B6\u179A", "\u1796\u17BB\u1792", "\u1796\u17D2\u179A\u17A0\u179F.", "\u179F\u17BB\u1780\u17D2\u179A", "\u179F\u17C5\u179A\u17CD"],
-            longhand: [
-              "\u17A2\u17B6\u1791\u17B7\u178F\u17D2\u1799",
-              "\u1785\u1793\u17D2\u1791",
-              "\u17A2\u1784\u17D2\u1782\u17B6\u179A",
-              "\u1796\u17BB\u1792",
-              "\u1796\u17D2\u179A\u17A0\u179F\u17D2\u1794\u178F\u17B7\u17CD",
-              "\u179F\u17BB\u1780\u17D2\u179A",
-              "\u179F\u17C5\u179A\u17CD"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u1798\u1780\u179A\u17B6",
-              "\u1780\u17BB\u1798\u17D2\u1797\u17C7",
-              "\u1798\u17B8\u1793\u17B6",
-              "\u1798\u17C1\u179F\u17B6",
-              "\u17A7\u179F\u1797\u17B6",
-              "\u1798\u17B7\u1790\u17BB\u1793\u17B6",
-              "\u1780\u1780\u17D2\u1780\u178A\u17B6",
-              "\u179F\u17B8\u17A0\u17B6",
-              "\u1780\u1789\u17D2\u1789\u17B6",
-              "\u178F\u17BB\u179B\u17B6",
-              "\u179C\u17B7\u1785\u17D2\u1786\u17B7\u1780\u17B6",
-              "\u1792\u17D2\u1793\u17BC"
-            ],
-            longhand: [
-              "\u1798\u1780\u179A\u17B6",
-              "\u1780\u17BB\u1798\u17D2\u1797\u17C7",
-              "\u1798\u17B8\u1793\u17B6",
-              "\u1798\u17C1\u179F\u17B6",
-              "\u17A7\u179F\u1797\u17B6",
-              "\u1798\u17B7\u1790\u17BB\u1793\u17B6",
-              "\u1780\u1780\u17D2\u1780\u178A\u17B6",
-              "\u179F\u17B8\u17A0\u17B6",
-              "\u1780\u1789\u17D2\u1789\u17B6",
-              "\u178F\u17BB\u179B\u17B6",
-              "\u179C\u17B7\u1785\u17D2\u1786\u17B7\u1780\u17B6",
-              "\u1792\u17D2\u1793\u17BC"
-            ]
-          },
-          ordinal: function() {
-            return "";
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " \u178A\u179B\u17CB ",
-          weekAbbreviation: "\u179F\u1794\u17D2\u178F\u17B6\u17A0\u17CD",
-          scrollTitle: "\u179A\u17C6\u1780\u17B7\u179B\u178A\u17BE\u1798\u17D2\u1794\u17B8\u1794\u1784\u17D2\u1780\u17BE\u1793",
-          toggleTitle: "\u1785\u17BB\u1785\u178A\u17BE\u1798\u17D2\u1794\u17B8\u1795\u17D2\u179B\u17B6\u179F\u17CB\u1794\u17D2\u178A\u17BC\u179A",
-          yearAriaLabel: "\u1786\u17D2\u1793\u17B6\u17C6",
-          time_24hr: true
-        };
-        fp.l10ns.km = Khmer;
-        var km2 = fp.l10ns;
-        exports2.Khmer = Khmer;
-        exports2.default = km2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/sv.js
-  var require_sv = __commonJS({
-    "node_modules/flatpickr/dist/l10n/sv.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sv = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Swedish = {
-          firstDayOfWeek: 1,
-          weekAbbreviation: "v",
-          weekdays: {
-            shorthand: ["s\xF6n", "m\xE5n", "tis", "ons", "tor", "fre", "l\xF6r"],
-            longhand: [
-              "s\xF6ndag",
-              "m\xE5ndag",
-              "tisdag",
-              "onsdag",
-              "torsdag",
-              "fredag",
-              "l\xF6rdag"
-            ]
-          },
-          months: {
-            shorthand: [
-              "jan",
-              "feb",
-              "mar",
-              "apr",
-              "maj",
-              "jun",
-              "jul",
-              "aug",
-              "sep",
-              "okt",
-              "nov",
-              "dec"
-            ],
-            longhand: [
-              "januari",
-              "februari",
-              "mars",
-              "april",
-              "maj",
-              "juni",
-              "juli",
-              "augusti",
-              "september",
-              "oktober",
-              "november",
-              "december"
-            ]
-          },
-          rangeSeparator: " till ",
-          time_24hr: true,
-          ordinal: function() {
-            return ".";
-          }
-        };
-        fp.l10ns.sv = Swedish;
-        var sv2 = fp.l10ns;
-        exports2.Swedish = Swedish;
-        exports2.default = sv2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ar.js
-  var require_ar = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ar.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ar = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Arabic = {
-          weekdays: {
-            shorthand: ["\u0623\u062D\u062F", "\u0627\u062B\u0646\u064A\u0646", "\u062B\u0644\u0627\u062B\u0627\u0621", "\u0623\u0631\u0628\u0639\u0627\u0621", "\u062E\u0645\u064A\u0633", "\u062C\u0645\u0639\u0629", "\u0633\u0628\u062A"],
-            longhand: [
-              "\u0627\u0644\u0623\u062D\u062F",
-              "\u0627\u0644\u0627\u062B\u0646\u064A\u0646",
-              "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621",
-              "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621",
-              "\u0627\u0644\u062E\u0645\u064A\u0633",
-              "\u0627\u0644\u062C\u0645\u0639\u0629",
-              "\u0627\u0644\u0633\u0628\u062A"
-            ]
-          },
-          months: {
-            shorthand: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-            longhand: [
-              "\u064A\u0646\u0627\u064A\u0631",
-              "\u0641\u0628\u0631\u0627\u064A\u0631",
-              "\u0645\u0627\u0631\u0633",
-              "\u0623\u0628\u0631\u064A\u0644",
-              "\u0645\u0627\u064A\u0648",
-              "\u064A\u0648\u0646\u064A\u0648",
-              "\u064A\u0648\u0644\u064A\u0648",
-              "\u0623\u063A\u0633\u0637\u0633",
-              "\u0633\u0628\u062A\u0645\u0628\u0631",
-              "\u0623\u0643\u062A\u0648\u0628\u0631",
-              "\u0646\u0648\u0641\u0645\u0628\u0631",
-              "\u062F\u064A\u0633\u0645\u0628\u0631"
-            ]
-          },
-          firstDayOfWeek: 6,
-          rangeSeparator: " \u0625\u0644\u0649 ",
-          weekAbbreviation: "Wk",
-          scrollTitle: "\u0642\u0645 \u0628\u0627\u0644\u062A\u0645\u0631\u064A\u0631 \u0644\u0644\u0632\u064A\u0627\u062F\u0629",
-          toggleTitle: "\u0627\u0636\u063A\u0637 \u0644\u0644\u062A\u0628\u062F\u064A\u0644",
-          amPM: ["\u0635", "\u0645"],
-          yearAriaLabel: "\u0633\u0646\u0629",
-          monthAriaLabel: "\u0634\u0647\u0631",
-          hourAriaLabel: "\u0633\u0627\u0639\u0629",
-          minuteAriaLabel: "\u062F\u0642\u064A\u0642\u0629",
-          time_24hr: false
-        };
-        fp.l10ns.ar = Arabic;
-        var ar2 = fp.l10ns;
-        exports2.Arabic = Arabic;
-        exports2.default = ar2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/he.js
-  var require_he = __commonJS({
-    "node_modules/flatpickr/dist/l10n/he.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.he = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Hebrew = {
-          weekdays: {
-            shorthand: ["\u05D0", "\u05D1", "\u05D2", "\u05D3", "\u05D4", "\u05D5", "\u05E9"],
-            longhand: ["\u05E8\u05D0\u05E9\u05D5\u05DF", "\u05E9\u05E0\u05D9", "\u05E9\u05DC\u05D9\u05E9\u05D9", "\u05E8\u05D1\u05D9\u05E2\u05D9", "\u05D7\u05DE\u05D9\u05E9\u05D9", "\u05E9\u05D9\u05E9\u05D9", "\u05E9\u05D1\u05EA"]
-          },
-          months: {
-            shorthand: [
-              "\u05D9\u05E0\u05D5\u05F3",
-              "\u05E4\u05D1\u05E8\u05F3",
-              "\u05DE\u05E8\u05E5",
-              "\u05D0\u05E4\u05E8\u05F3",
-              "\u05DE\u05D0\u05D9",
-              "\u05D9\u05D5\u05E0\u05D9",
-              "\u05D9\u05D5\u05DC\u05D9",
-              "\u05D0\u05D5\u05D2\u05F3",
-              "\u05E1\u05E4\u05D8\u05F3",
-              "\u05D0\u05D5\u05E7\u05F3",
-              "\u05E0\u05D5\u05D1\u05F3",
-              "\u05D3\u05E6\u05DE\u05F3"
-            ],
-            longhand: [
-              "\u05D9\u05E0\u05D5\u05D0\u05E8",
-              "\u05E4\u05D1\u05E8\u05D5\u05D0\u05E8",
-              "\u05DE\u05E8\u05E5",
-              "\u05D0\u05E4\u05E8\u05D9\u05DC",
-              "\u05DE\u05D0\u05D9",
-              "\u05D9\u05D5\u05E0\u05D9",
-              "\u05D9\u05D5\u05DC\u05D9",
-              "\u05D0\u05D5\u05D2\u05D5\u05E1\u05D8",
-              "\u05E1\u05E4\u05D8\u05DE\u05D1\u05E8",
-              "\u05D0\u05D5\u05E7\u05D8\u05D5\u05D1\u05E8",
-              "\u05E0\u05D5\u05D1\u05DE\u05D1\u05E8",
-              "\u05D3\u05E6\u05DE\u05D1\u05E8"
-            ]
-          },
-          rangeSeparator: " \u05D0\u05DC ",
-          time_24hr: true
-        };
-        fp.l10ns.he = Hebrew;
-        var he2 = fp.l10ns;
-        exports2.Hebrew = Hebrew;
-        exports2.default = he2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/pa.js
-  var require_pa = __commonJS({
-    "node_modules/flatpickr/dist/l10n/pa.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.pa = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Punjabi = {
-          weekdays: {
-            shorthand: ["\u0A10\u0A24", "\u0A38\u0A4B\u0A2E", "\u0A2E\u0A70\u0A17\u0A32", "\u0A2C\u0A41\u0A71\u0A27", "\u0A35\u0A40\u0A30", "\u0A38\u0A3C\u0A41\u0A71\u0A15\u0A30", "\u0A38\u0A3C\u0A28\u0A3F\u0A71\u0A1A\u0A30"],
-            longhand: [
-              "\u0A10\u0A24\u0A35\u0A3E\u0A30",
-              "\u0A38\u0A4B\u0A2E\u0A35\u0A3E\u0A30",
-              "\u0A2E\u0A70\u0A17\u0A32\u0A35\u0A3E\u0A30",
-              "\u0A2C\u0A41\u0A71\u0A27\u0A35\u0A3E\u0A30",
-              "\u0A35\u0A40\u0A30\u0A35\u0A3E\u0A30",
-              "\u0A38\u0A3C\u0A41\u0A71\u0A15\u0A30\u0A35\u0A3E\u0A30",
-              "\u0A38\u0A3C\u0A28\u0A3F\u0A71\u0A1A\u0A30\u0A35\u0A3E\u0A30"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0A1C\u0A28",
-              "\u0A2B\u0A3C\u0A30",
-              "\u0A2E\u0A3E\u0A30",
-              "\u0A05\u0A2A\u0A4D\u0A30\u0A48",
-              "\u0A2E\u0A08",
-              "\u0A1C\u0A42\u0A28",
-              "\u0A1C\u0A41\u0A32\u0A3E",
-              "\u0A05\u0A17",
-              "\u0A38\u0A24\u0A70",
-              "\u0A05\u0A15",
-              "\u0A28\u0A35\u0A70",
-              "\u0A26\u0A38\u0A70"
-            ],
-            longhand: [
-              "\u0A1C\u0A28\u0A35\u0A30\u0A40",
-              "\u0A2B\u0A3C\u0A30\u0A35\u0A30\u0A40",
-              "\u0A2E\u0A3E\u0A30\u0A1A",
-              "\u0A05\u0A2A\u0A4D\u0A30\u0A48\u0A32",
-              "\u0A2E\u0A08",
-              "\u0A1C\u0A42\u0A28",
-              "\u0A1C\u0A41\u0A32\u0A3E\u0A08",
-              "\u0A05\u0A17\u0A38\u0A24",
-              "\u0A38\u0A24\u0A70\u0A2C\u0A30",
-              "\u0A05\u0A15\u0A24\u0A42\u0A2C\u0A30",
-              "\u0A28\u0A35\u0A70\u0A2C\u0A30",
-              "\u0A26\u0A38\u0A70\u0A2C\u0A30"
-            ]
-          },
-          time_24hr: true
-        };
-        fp.l10ns.pa = Punjabi;
-        var pa2 = fp.l10ns;
-        exports2.Punjabi = Punjabi;
-        exports2.default = pa2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/de.js
-  var require_de = __commonJS({
-    "node_modules/flatpickr/dist/l10n/de.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.de = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var German = {
-          weekdays: {
-            shorthand: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-            longhand: [
-              "Sonntag",
-              "Montag",
-              "Dienstag",
-              "Mittwoch",
-              "Donnerstag",
-              "Freitag",
-              "Samstag"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "M\xE4r",
-              "Apr",
-              "Mai",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dez"
-            ],
-            longhand: [
-              "Januar",
-              "Februar",
-              "M\xE4rz",
-              "April",
-              "Mai",
-              "Juni",
-              "Juli",
-              "August",
-              "September",
-              "Oktober",
-              "November",
-              "Dezember"
-            ]
-          },
-          firstDayOfWeek: 1,
-          weekAbbreviation: "KW",
-          rangeSeparator: " bis ",
-          scrollTitle: "Zum \xC4ndern scrollen",
-          toggleTitle: "Zum Umschalten klicken",
-          time_24hr: true
-        };
-        fp.l10ns.de = German;
-        var de2 = fp.l10ns;
-        exports2.German = German;
-        exports2.default = de2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ko.js
-  var require_ko = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ko.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ko = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Korean = {
-          weekdays: {
-            shorthand: ["\uC77C", "\uC6D4", "\uD654", "\uC218", "\uBAA9", "\uAE08", "\uD1A0"],
-            longhand: [
-              "\uC77C\uC694\uC77C",
-              "\uC6D4\uC694\uC77C",
-              "\uD654\uC694\uC77C",
-              "\uC218\uC694\uC77C",
-              "\uBAA9\uC694\uC77C",
-              "\uAE08\uC694\uC77C",
-              "\uD1A0\uC694\uC77C"
-            ]
-          },
-          months: {
-            shorthand: [
-              "1\uC6D4",
-              "2\uC6D4",
-              "3\uC6D4",
-              "4\uC6D4",
-              "5\uC6D4",
-              "6\uC6D4",
-              "7\uC6D4",
-              "8\uC6D4",
-              "9\uC6D4",
-              "10\uC6D4",
-              "11\uC6D4",
-              "12\uC6D4"
-            ],
-            longhand: [
-              "1\uC6D4",
-              "2\uC6D4",
-              "3\uC6D4",
-              "4\uC6D4",
-              "5\uC6D4",
-              "6\uC6D4",
-              "7\uC6D4",
-              "8\uC6D4",
-              "9\uC6D4",
-              "10\uC6D4",
-              "11\uC6D4",
-              "12\uC6D4"
-            ]
-          },
-          ordinal: function() {
-            return "\uC77C";
-          },
-          rangeSeparator: " ~ ",
-          amPM: ["\uC624\uC804", "\uC624\uD6C4"]
-        };
-        fp.l10ns.ko = Korean;
-        var ko2 = fp.l10ns;
-        exports2.Korean = Korean;
-        exports2.default = ko2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/th.js
-  var require_th = __commonJS({
-    "node_modules/flatpickr/dist/l10n/th.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.th = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Thai = {
-          weekdays: {
-            shorthand: ["\u0E2D\u0E32", "\u0E08", "\u0E2D", "\u0E1E", "\u0E1E\u0E24", "\u0E28", "\u0E2A"],
-            longhand: [
-              "\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C",
-              "\u0E08\u0E31\u0E19\u0E17\u0E23\u0E4C",
-              "\u0E2D\u0E31\u0E07\u0E04\u0E32\u0E23",
-              "\u0E1E\u0E38\u0E18",
-              "\u0E1E\u0E24\u0E2B\u0E31\u0E2A\u0E1A\u0E14\u0E35",
-              "\u0E28\u0E38\u0E01\u0E23\u0E4C",
-              "\u0E40\u0E2A\u0E32\u0E23\u0E4C"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0E21.\u0E04.",
-              "\u0E01.\u0E1E.",
-              "\u0E21\u0E35.\u0E04.",
-              "\u0E40\u0E21.\u0E22.",
-              "\u0E1E.\u0E04.",
-              "\u0E21\u0E34.\u0E22.",
-              "\u0E01.\u0E04.",
-              "\u0E2A.\u0E04.",
-              "\u0E01.\u0E22.",
-              "\u0E15.\u0E04.",
-              "\u0E1E.\u0E22.",
-              "\u0E18.\u0E04."
-            ],
-            longhand: [
-              "\u0E21\u0E01\u0E23\u0E32\u0E04\u0E21",
-              "\u0E01\u0E38\u0E21\u0E20\u0E32\u0E1E\u0E31\u0E19\u0E18\u0E4C",
-              "\u0E21\u0E35\u0E19\u0E32\u0E04\u0E21",
-              "\u0E40\u0E21\u0E29\u0E32\u0E22\u0E19",
-              "\u0E1E\u0E24\u0E29\u0E20\u0E32\u0E04\u0E21",
-              "\u0E21\u0E34\u0E16\u0E38\u0E19\u0E32\u0E22\u0E19",
-              "\u0E01\u0E23\u0E01\u0E0E\u0E32\u0E04\u0E21",
-              "\u0E2A\u0E34\u0E07\u0E2B\u0E32\u0E04\u0E21",
-              "\u0E01\u0E31\u0E19\u0E22\u0E32\u0E22\u0E19",
-              "\u0E15\u0E38\u0E25\u0E32\u0E04\u0E21",
-              "\u0E1E\u0E24\u0E28\u0E08\u0E34\u0E01\u0E32\u0E22\u0E19",
-              "\u0E18\u0E31\u0E19\u0E27\u0E32\u0E04\u0E21"
-            ]
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " \u0E16\u0E36\u0E07 ",
-          scrollTitle: "\u0E40\u0E25\u0E37\u0E48\u0E2D\u0E19\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E2B\u0E23\u0E37\u0E2D\u0E25\u0E14",
-          toggleTitle: "\u0E04\u0E25\u0E34\u0E01\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E25\u0E35\u0E48\u0E22\u0E19",
-          time_24hr: true,
-          ordinal: function() {
-            return "";
-          }
-        };
-        fp.l10ns.th = Thai;
-        var th2 = fp.l10ns;
-        exports2.Thai = Thai;
-        exports2.default = th2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/at.js
-  var require_at = __commonJS({
-    "node_modules/flatpickr/dist/l10n/at.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.at = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Austria = {
-          weekdays: {
-            shorthand: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-            longhand: [
-              "Sonntag",
-              "Montag",
-              "Dienstag",
-              "Mittwoch",
-              "Donnerstag",
-              "Freitag",
-              "Samstag"
-            ]
-          },
-          months: {
-            shorthand: [
-              "J\xE4n",
-              "Feb",
-              "M\xE4r",
-              "Apr",
-              "Mai",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dez"
-            ],
-            longhand: [
-              "J\xE4nner",
-              "Februar",
-              "M\xE4rz",
-              "April",
-              "Mai",
-              "Juni",
-              "Juli",
-              "August",
-              "September",
-              "Oktober",
-              "November",
-              "Dezember"
-            ]
-          },
-          firstDayOfWeek: 1,
-          weekAbbreviation: "KW",
-          rangeSeparator: " bis ",
-          scrollTitle: "Zum \xC4ndern scrollen",
-          toggleTitle: "Zum Umschalten klicken",
-          time_24hr: true
-        };
-        fp.l10ns.at = Austria;
-        var at2 = fp.l10ns;
-        exports2.Austria = Austria;
-        exports2.default = at2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/hi.js
-  var require_hi = __commonJS({
-    "node_modules/flatpickr/dist/l10n/hi.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hi = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Hindi = {
-          weekdays: {
-            shorthand: ["\u0930\u0935\u093F", "\u0938\u094B\u092E", "\u092E\u0902\u0917\u0932", "\u092C\u0941\u0927", "\u0917\u0941\u0930\u0941", "\u0936\u0941\u0915\u094D\u0930", "\u0936\u0928\u093F"],
-            longhand: [
-              "\u0930\u0935\u093F\u0935\u093E\u0930",
-              "\u0938\u094B\u092E\u0935\u093E\u0930",
-              "\u092E\u0902\u0917\u0932\u0935\u093E\u0930",
-              "\u092C\u0941\u0927\u0935\u093E\u0930",
-              "\u0917\u0941\u0930\u0941\u0935\u093E\u0930",
-              "\u0936\u0941\u0915\u094D\u0930\u0935\u093E\u0930",
-              "\u0936\u0928\u093F\u0935\u093E\u0930"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u091C\u0928",
-              "\u092B\u0930",
-              "\u092E\u093E\u0930\u094D\u091A",
-              "\u0905\u092A\u094D\u0930\u0947\u0932",
-              "\u092E\u0908",
-              "\u091C\u0942\u0928",
-              "\u091C\u0942\u0932\u093E\u0908",
-              "\u0905\u0917",
-              "\u0938\u093F\u0924",
-              "\u0905\u0915\u094D\u091F",
-              "\u0928\u0935",
-              "\u0926\u093F"
-            ],
-            longhand: [
-              "\u091C\u0928\u0935\u0930\u0940 ",
-              "\u092B\u0930\u0935\u0930\u0940",
-              "\u092E\u093E\u0930\u094D\u091A",
-              "\u0905\u092A\u094D\u0930\u0947\u0932",
-              "\u092E\u0908",
-              "\u091C\u0942\u0928",
-              "\u091C\u0942\u0932\u093E\u0908",
-              "\u0905\u0917\u0938\u094D\u0924 ",
-              "\u0938\u093F\u0924\u092E\u094D\u092C\u0930",
-              "\u0905\u0915\u094D\u091F\u0942\u092C\u0930",
-              "\u0928\u0935\u092E\u094D\u092C\u0930",
-              "\u0926\u093F\u0938\u092E\u094D\u092C\u0930"
-            ]
-          }
-        };
-        fp.l10ns.hi = Hindi;
-        var hi2 = fp.l10ns;
-        exports2.Hindi = Hindi;
-        exports2.default = hi2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/pl.js
-  var require_pl = __commonJS({
-    "node_modules/flatpickr/dist/l10n/pl.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.pl = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Polish = {
-          weekdays: {
-            shorthand: ["Nd", "Pn", "Wt", "\u015Ar", "Cz", "Pt", "So"],
-            longhand: [
-              "Niedziela",
-              "Poniedzia\u0142ek",
-              "Wtorek",
-              "\u015Aroda",
-              "Czwartek",
-              "Pi\u0105tek",
-              "Sobota"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Sty",
-              "Lut",
-              "Mar",
-              "Kwi",
-              "Maj",
-              "Cze",
-              "Lip",
-              "Sie",
-              "Wrz",
-              "Pa\u017A",
-              "Lis",
-              "Gru"
-            ],
-            longhand: [
-              "Stycze\u0144",
-              "Luty",
-              "Marzec",
-              "Kwiecie\u0144",
-              "Maj",
-              "Czerwiec",
-              "Lipiec",
-              "Sierpie\u0144",
-              "Wrzesie\u0144",
-              "Pa\u017Adziernik",
-              "Listopad",
-              "Grudzie\u0144"
-            ]
-          },
-          rangeSeparator: " do ",
-          weekAbbreviation: "tydz.",
-          scrollTitle: "Przewi\u0144, aby zwi\u0119kszy\u0107",
-          toggleTitle: "Kliknij, aby prze\u0142\u0105czy\u0107",
-          firstDayOfWeek: 1,
-          time_24hr: true,
-          ordinal: function() {
-            return ".";
-          }
-        };
-        fp.l10ns.pl = Polish;
-        var pl2 = fp.l10ns;
-        exports2.Polish = Polish;
-        exports2.default = pl2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/kz.js
-  var require_kz = __commonJS({
-    "node_modules/flatpickr/dist/l10n/kz.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.kz = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Kazakh = {
-          weekdays: {
-            shorthand: ["\u0416\u0441", "\u0414\u0441", "\u0421c", "\u0421\u0440", "\u0411\u0441", "\u0416\u043C", "\u0421\u0431"],
-            longhand: [
-              "\u0416\u0435\u043A\u0441\u0435\u043D\u0431i",
-              "\u0414\u04AF\u0439\u0441\u0435\u043D\u0431i",
-              "\u0421\u0435\u0439\u0441\u0435\u043D\u0431i",
-              "\u0421\u04D9\u0440\u0441\u0435\u043D\u0431i",
-              "\u0411\u0435\u0439\u0441\u0435\u043D\u0431i",
-              "\u0416\u04B1\u043C\u0430",
-              "\u0421\u0435\u043D\u0431i"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u049A\u0430\u04A3",
-              "\u0410\u049B\u043F",
-              "\u041D\u0430\u0443",
-              "\u0421\u04D9\u0443",
-              "\u041C\u0430\u043C",
-              "\u041C\u0430\u0443",
-              "\u0428i\u043B",
-              "\u0422\u0430\u043C",
-              "\u049A\u044B\u0440",
-              "\u049A\u0430\u0437",
-              "\u049A\u0430\u0440",
-              "\u0416\u0435\u043B"
-            ],
-            longhand: [
-              "\u049A\u0430\u04A3\u0442\u0430\u0440",
-              "\u0410\u049B\u043F\u0430\u043D",
-              "\u041D\u0430\u0443\u0440\u044B\u0437",
-              "\u0421\u04D9\u0443i\u0440",
-              "\u041C\u0430\u043C\u044B\u0440",
-              "\u041C\u0430\u0443\u0441\u044B\u043C",
-              "\u0428i\u043B\u0434\u0435",
-              "\u0422\u0430\u043C\u044B\u0437",
-              "\u049A\u044B\u0440\u043A\u04AF\u0439\u0435\u043A",
-              "\u049A\u0430\u0437\u0430\u043D",
-              "\u049A\u0430\u0440\u0430\u0448\u0430",
-              "\u0416\u0435\u043B\u0442\u043E\u049B\u0441\u0430\u043D"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          rangeSeparator: " \u2014 ",
-          weekAbbreviation: "\u0410\u043F\u0442\u0430",
-          scrollTitle: "\u04AE\u043B\u043A\u0435\u0439\u0442\u0443 \u04AF\u0448\u0456\u043D \u0430\u0439\u043D\u0430\u043B\u0434\u044B\u0440\u044B\u04A3\u044B\u0437",
-          toggleTitle: "\u0410\u0443\u044B\u0441\u0442\u044B\u0440\u0443 \u04AF\u0448\u0456\u043D \u0431\u0430\u0441\u044B\u04A3\u044B\u0437",
-          amPM: ["\u0422\u0414", "\u0422\u041A"],
-          yearAriaLabel: "\u0416\u044B\u043B"
-        };
-        fp.l10ns.kz = Kazakh;
-        var kz2 = fp.l10ns;
-        exports2.Kazakh = Kazakh;
-        exports2.default = kz2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/tr.js
-  var require_tr = __commonJS({
-    "node_modules/flatpickr/dist/l10n/tr.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.tr = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Turkish = {
-          weekdays: {
-            shorthand: ["Paz", "Pzt", "Sal", "\xC7ar", "Per", "Cum", "Cmt"],
-            longhand: [
-              "Pazar",
-              "Pazartesi",
-              "Sal\u0131",
-              "\xC7ar\u015Famba",
-              "Per\u015Fembe",
-              "Cuma",
-              "Cumartesi"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Oca",
-              "\u015Eub",
-              "Mar",
-              "Nis",
-              "May",
-              "Haz",
-              "Tem",
-              "A\u011Fu",
-              "Eyl",
-              "Eki",
-              "Kas",
-              "Ara"
-            ],
-            longhand: [
-              "Ocak",
-              "\u015Eubat",
-              "Mart",
-              "Nisan",
-              "May\u0131s",
-              "Haziran",
-              "Temmuz",
-              "A\u011Fustos",
-              "Eyl\xFCl",
-              "Ekim",
-              "Kas\u0131m",
-              "Aral\u0131k"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return ".";
-          },
-          rangeSeparator: " - ",
-          weekAbbreviation: "Hf",
-          scrollTitle: "Art\u0131rmak i\xE7in kayd\u0131r\u0131n",
-          toggleTitle: "A\xE7/Kapa",
-          amPM: ["\xD6\xD6", "\xD6S"],
-          time_24hr: true
-        };
-        fp.l10ns.tr = Turkish;
-        var tr2 = fp.l10ns;
-        exports2.Turkish = Turkish;
-        exports2.default = tr2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/az.js
-  var require_az = __commonJS({
-    "node_modules/flatpickr/dist/l10n/az.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.az = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Azerbaijan = {
-          weekdays: {
-            shorthand: ["B.", "B.e.", "\xC7.a.", "\xC7.", "C.a.", "C.", "\u015E."],
-            longhand: [
-              "Bazar",
-              "Bazar ert\u0259si",
-              "\xC7\u0259r\u015F\u0259nb\u0259 ax\u015Fam\u0131",
-              "\xC7\u0259r\u015F\u0259nb\u0259",
-              "C\xFCm\u0259 ax\u015Fam\u0131",
-              "C\xFCm\u0259",
-              "\u015E\u0259nb\u0259"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Yan",
-              "Fev",
-              "Mar",
-              "Apr",
-              "May",
-              "\u0130yn",
-              "\u0130yl",
-              "Avq",
-              "Sen",
-              "Okt",
-              "Noy",
-              "Dek"
-            ],
-            longhand: [
-              "Yanvar",
-              "Fevral",
-              "Mart",
-              "Aprel",
-              "May",
-              "\u0130yun",
-              "\u0130yul",
-              "Avqust",
-              "Sentyabr",
-              "Oktyabr",
-              "Noyabr",
-              "Dekabr"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return ".";
-          },
-          rangeSeparator: " - ",
-          weekAbbreviation: "Hf",
-          scrollTitle: "Art\u0131rmaq \xFC\xE7\xFCn s\xFCr\xFC\u015Fd\xFCr\xFCn",
-          toggleTitle: "A\xE7 / Ba\u011Fla",
-          amPM: ["G\u018F", "GS"],
-          time_24hr: true
-        };
-        fp.l10ns.az = Azerbaijan;
-        var az2 = fp.l10ns;
-        exports2.Azerbaijan = Azerbaijan;
-        exports2.default = az2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/hr.js
-  var require_hr = __commonJS({
-    "node_modules/flatpickr/dist/l10n/hr.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hr = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Croatian = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["Ned", "Pon", "Uto", "Sri", "\u010Cet", "Pet", "Sub"],
-            longhand: [
-              "Nedjelja",
-              "Ponedjeljak",
-              "Utorak",
-              "Srijeda",
-              "\u010Cetvrtak",
-              "Petak",
-              "Subota"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Sij",
-              "Velj",
-              "O\u017Eu",
-              "Tra",
-              "Svi",
-              "Lip",
-              "Srp",
-              "Kol",
-              "Ruj",
-              "Lis",
-              "Stu",
-              "Pro"
-            ],
-            longhand: [
-              "Sije\u010Danj",
-              "Velja\u010Da",
-              "O\u017Eujak",
-              "Travanj",
-              "Svibanj",
-              "Lipanj",
-              "Srpanj",
-              "Kolovoz",
-              "Rujan",
-              "Listopad",
-              "Studeni",
-              "Prosinac"
-            ]
-          },
-          time_24hr: true
-        };
-        fp.l10ns.hr = Croatian;
-        var hr2 = fp.l10ns;
-        exports2.Croatian = Croatian;
-        exports2.default = hr2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/pt.js
-  var require_pt = __commonJS({
-    "node_modules/flatpickr/dist/l10n/pt.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.pt = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Portuguese = {
-          weekdays: {
-            shorthand: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "S\xE1b"],
-            longhand: [
-              "Domingo",
-              "Segunda-feira",
-              "Ter\xE7a-feira",
-              "Quarta-feira",
-              "Quinta-feira",
-              "Sexta-feira",
-              "S\xE1bado"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Fev",
-              "Mar",
-              "Abr",
-              "Mai",
-              "Jun",
-              "Jul",
-              "Ago",
-              "Set",
-              "Out",
-              "Nov",
-              "Dez"
-            ],
-            longhand: [
-              "Janeiro",
-              "Fevereiro",
-              "Mar\xE7o",
-              "Abril",
-              "Maio",
-              "Junho",
-              "Julho",
-              "Agosto",
-              "Setembro",
-              "Outubro",
-              "Novembro",
-              "Dezembro"
-            ]
-          },
-          rangeSeparator: " at\xE9 ",
-          time_24hr: true
-        };
-        fp.l10ns.pt = Portuguese;
-        var pt2 = fp.l10ns;
-        exports2.Portuguese = Portuguese;
-        exports2.default = pt2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/eo.js
-  var require_eo = __commonJS({
-    "node_modules/flatpickr/dist/l10n/eo.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.eo = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Esperanto = {
-          firstDayOfWeek: 1,
-          rangeSeparator: " \u011Dis ",
-          weekAbbreviation: "Sem",
-          scrollTitle: "Rulumu por pligrandigi la valoron",
-          toggleTitle: "Klaku por \u015Dalti",
-          weekdays: {
-            shorthand: ["Dim", "Lun", "Mar", "Mer", "\u0134a\u016D", "Ven", "Sab"],
-            longhand: [
-              "diman\u0109o",
-              "lundo",
-              "mardo",
-              "merkredo",
-              "\u0135a\u016Ddo",
-              "vendredo",
-              "sabato"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Maj",
-              "Jun",
-              "Jul",
-              "A\u016Dg",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dec"
-            ],
-            longhand: [
-              "januaro",
-              "februaro",
-              "marto",
-              "aprilo",
-              "majo",
-              "junio",
-              "julio",
-              "a\u016Dgusto",
-              "septembro",
-              "oktobro",
-              "novembro",
-              "decembro"
-            ]
-          },
-          ordinal: function() {
-            return "-a";
-          },
-          time_24hr: true
-        };
-        fp.l10ns.eo = Esperanto;
-        var eo2 = fp.l10ns;
-        exports2.Esperanto = Esperanto;
-        exports2.default = eo2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/lt.js
-  var require_lt = __commonJS({
-    "node_modules/flatpickr/dist/l10n/lt.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.lt = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Lithuanian = {
-          weekdays: {
-            shorthand: ["S", "Pr", "A", "T", "K", "Pn", "\u0160"],
-            longhand: [
-              "Sekmadienis",
-              "Pirmadienis",
-              "Antradienis",
-              "Tre\u010Diadienis",
-              "Ketvirtadienis",
-              "Penktadienis",
-              "\u0160e\u0161tadienis"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Sau",
-              "Vas",
-              "Kov",
-              "Bal",
-              "Geg",
-              "Bir",
-              "Lie",
-              "Rgp",
-              "Rgs",
-              "Spl",
-              "Lap",
-              "Grd"
-            ],
-            longhand: [
-              "Sausis",
-              "Vasaris",
-              "Kovas",
-              "Balandis",
-              "Gegu\u017E\u0117",
-              "Bir\u017Eelis",
-              "Liepa",
-              "Rugpju\u0304tis",
-              "Rugse\u0307jis",
-              "Spalis",
-              "Lapkritis",
-              "Gruodis"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "-a";
-          },
-          rangeSeparator: " iki ",
-          weekAbbreviation: "Sav",
-          scrollTitle: "Keisti laik\u0105 pel\u0117s rateliu",
-          toggleTitle: "Perjungti laiko format\u0105",
-          time_24hr: true
-        };
-        fp.l10ns.lt = Lithuanian;
-        var lt2 = fp.l10ns;
-        exports2.Lithuanian = Lithuanian;
-        exports2.default = lt2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/uk.js
-  var require_uk = __commonJS({
-    "node_modules/flatpickr/dist/l10n/uk.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.uk = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Ukrainian = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["\u041D\u0434", "\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431"],
-            longhand: [
-              "\u041D\u0435\u0434\u0456\u043B\u044F",
-              "\u041F\u043E\u043D\u0435\u0434\u0456\u043B\u043E\u043A",
-              "\u0412\u0456\u0432\u0442\u043E\u0440\u043E\u043A",
-              "\u0421\u0435\u0440\u0435\u0434\u0430",
-              "\u0427\u0435\u0442\u0432\u0435\u0440",
-              "\u041F'\u044F\u0442\u043D\u0438\u0446\u044F",
-              "\u0421\u0443\u0431\u043E\u0442\u0430"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0421\u0456\u0447",
-              "\u041B\u044E\u0442",
-              "\u0411\u0435\u0440",
-              "\u041A\u0432\u0456",
-              "\u0422\u0440\u0430",
-              "\u0427\u0435\u0440",
-              "\u041B\u0438\u043F",
-              "\u0421\u0435\u0440",
-              "\u0412\u0435\u0440",
-              "\u0416\u043E\u0432",
-              "\u041B\u0438\u0441",
-              "\u0413\u0440\u0443"
-            ],
-            longhand: [
-              "\u0421\u0456\u0447\u0435\u043D\u044C",
-              "\u041B\u044E\u0442\u0438\u0439",
-              "\u0411\u0435\u0440\u0435\u0437\u0435\u043D\u044C",
-              "\u041A\u0432\u0456\u0442\u0435\u043D\u044C",
-              "\u0422\u0440\u0430\u0432\u0435\u043D\u044C",
-              "\u0427\u0435\u0440\u0432\u0435\u043D\u044C",
-              "\u041B\u0438\u043F\u0435\u043D\u044C",
-              "\u0421\u0435\u0440\u043F\u0435\u043D\u044C",
-              "\u0412\u0435\u0440\u0435\u0441\u0435\u043D\u044C",
-              "\u0416\u043E\u0432\u0442\u0435\u043D\u044C",
-              "\u041B\u0438\u0441\u0442\u043E\u043F\u0430\u0434",
-              "\u0413\u0440\u0443\u0434\u0435\u043D\u044C"
-            ]
-          },
-          time_24hr: true
-        };
-        fp.l10ns.uk = Ukrainian;
-        var uk2 = fp.l10ns;
-        exports2.Ukrainian = Ukrainian;
-        exports2.default = uk2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/be.js
-  var require_be = __commonJS({
-    "node_modules/flatpickr/dist/l10n/be.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.be = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Belarusian = {
-          weekdays: {
-            shorthand: ["\u041D\u0434", "\u041F\u043D", "\u0410\u045E", "\u0421\u0440", "\u0427\u0446", "\u041F\u0442", "\u0421\u0431"],
-            longhand: [
-              "\u041D\u044F\u0434\u0437\u0435\u043B\u044F",
-              "\u041F\u0430\u043D\u044F\u0434\u0437\u0435\u043B\u0430\u043A",
-              "\u0410\u045E\u0442\u043E\u0440\u0430\u043A",
-              "\u0421\u0435\u0440\u0430\u0434\u0430",
-              "\u0427\u0430\u0446\u0432\u0435\u0440",
-              "\u041F\u044F\u0442\u043D\u0456\u0446\u0430",
-              "\u0421\u0443\u0431\u043E\u0442\u0430"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0421\u0442\u0443",
-              "\u041B\u044E\u0442",
-              "\u0421\u0430\u043A",
-              "\u041A\u0440\u0430",
-              "\u0422\u0440\u0430",
-              "\u0427\u044D\u0440",
-              "\u041B\u0456\u043F",
-              "\u0416\u043D\u0456",
-              "\u0412\u0435\u0440",
-              "\u041A\u0430\u0441",
-              "\u041B\u0456\u0441",
-              "\u0421\u043D\u0435"
-            ],
-            longhand: [
-              "\u0421\u0442\u0443\u0434\u0437\u0435\u043D\u044C",
-              "\u041B\u044E\u0442\u044B",
-              "\u0421\u0430\u043A\u0430\u0432\u0456\u043A",
-              "\u041A\u0440\u0430\u0441\u0430\u0432\u0456\u043A",
-              "\u0422\u0440\u0430\u0432\u0435\u043D\u044C",
-              "\u0427\u044D\u0440\u0432\u0435\u043D\u044C",
-              "\u041B\u0456\u043F\u0435\u043D\u044C",
-              "\u0416\u043D\u0456\u0432\u0435\u043D\u044C",
-              "\u0412\u0435\u0440\u0430\u0441\u0435\u043D\u044C",
-              "\u041A\u0430\u0441\u0442\u0440\u044B\u0447\u043D\u0456\u043A",
-              "\u041B\u0456\u0441\u0442\u0430\u043F\u0430\u0434",
-              "\u0421\u043D\u0435\u0436\u0430\u043D\u044C"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          rangeSeparator: " \u2014 ",
-          weekAbbreviation: "\u0422\u044B\u0434.",
-          scrollTitle: "\u041F\u0440\u0430\u043A\u0440\u0443\u0446\u0456\u0446\u0435 \u0434\u043B\u044F \u043F\u0430\u0432\u0435\u043B\u0456\u0447\u044D\u043D\u043D\u044F",
-          toggleTitle: "\u041D\u0430\u0446\u0456\u0441\u043D\u0456\u0446\u0435 \u0434\u043B\u044F \u043F\u0435\u0440\u0430\u043A\u043B\u044E\u0447\u044D\u043D\u043D\u044F",
-          amPM: ["\u0414\u041F", "\u041F\u041F"],
-          yearAriaLabel: "\u0413\u043E\u0434",
-          time_24hr: true
-        };
-        fp.l10ns.be = Belarusian;
-        var be2 = fp.l10ns;
-        exports2.Belarusian = Belarusian;
-        exports2.default = be2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/hu.js
-  var require_hu = __commonJS({
-    "node_modules/flatpickr/dist/l10n/hu.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hu = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Hungarian = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["V", "H", "K", "Sz", "Cs", "P", "Szo"],
-            longhand: [
-              "Vas\xE1rnap",
-              "H\xE9tf\u0151",
-              "Kedd",
-              "Szerda",
-              "Cs\xFCt\xF6rt\xF6k",
-              "P\xE9ntek",
-              "Szombat"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "M\xE1r",
-              "\xC1pr",
-              "M\xE1j",
-              "J\xFAn",
-              "J\xFAl",
-              "Aug",
-              "Szep",
-              "Okt",
-              "Nov",
-              "Dec"
-            ],
-            longhand: [
-              "Janu\xE1r",
-              "Febru\xE1r",
-              "M\xE1rcius",
-              "\xC1prilis",
-              "M\xE1jus",
-              "J\xFAnius",
-              "J\xFAlius",
-              "Augusztus",
-              "Szeptember",
-              "Okt\xF3ber",
-              "November",
-              "December"
-            ]
-          },
-          ordinal: function() {
-            return ".";
-          },
-          weekAbbreviation: "H\xE9t",
-          scrollTitle: "G\xF6rgessen",
-          toggleTitle: "Kattintson a v\xE1lt\xE1shoz",
-          rangeSeparator: " - ",
-          time_24hr: true
-        };
-        fp.l10ns.hu = Hungarian;
-        var hu2 = fp.l10ns;
-        exports2.Hungarian = Hungarian;
-        exports2.default = hu2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ro.js
-  var require_ro = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ro.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ro = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Romanian = {
-          weekdays: {
-            shorthand: ["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "S\xE2m"],
-            longhand: [
-              "Duminic\u0103",
-              "Luni",
-              "Mar\u021Bi",
-              "Miercuri",
-              "Joi",
-              "Vineri",
-              "S\xE2mb\u0103t\u0103"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Ian",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Mai",
-              "Iun",
-              "Iul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Noi",
-              "Dec"
-            ],
-            longhand: [
-              "Ianuarie",
-              "Februarie",
-              "Martie",
-              "Aprilie",
-              "Mai",
-              "Iunie",
-              "Iulie",
-              "August",
-              "Septembrie",
-              "Octombrie",
-              "Noiembrie",
-              "Decembrie"
-            ]
-          },
-          firstDayOfWeek: 1,
-          time_24hr: true,
-          ordinal: function() {
-            return "";
-          }
-        };
-        fp.l10ns.ro = Romanian;
-        var ro2 = fp.l10ns;
-        exports2.Romanian = Romanian;
-        exports2.default = ro2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/es.js
-  var require_es = __commonJS({
-    "node_modules/flatpickr/dist/l10n/es.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.es = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Spanish = {
-          weekdays: {
-            shorthand: ["Dom", "Lun", "Mar", "Mi\xE9", "Jue", "Vie", "S\xE1b"],
-            longhand: [
-              "Domingo",
-              "Lunes",
-              "Martes",
-              "Mi\xE9rcoles",
-              "Jueves",
-              "Viernes",
-              "S\xE1bado"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Ene",
-              "Feb",
-              "Mar",
-              "Abr",
-              "May",
-              "Jun",
-              "Jul",
-              "Ago",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dic"
-            ],
-            longhand: [
-              "Enero",
-              "Febrero",
-              "Marzo",
-              "Abril",
-              "Mayo",
-              "Junio",
-              "Julio",
-              "Agosto",
-              "Septiembre",
-              "Octubre",
-              "Noviembre",
-              "Diciembre"
-            ]
-          },
-          ordinal: function() {
-            return "\xBA";
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " a ",
-          time_24hr: true
-        };
-        fp.l10ns.es = Spanish;
-        var es2 = fp.l10ns;
-        exports2.Spanish = Spanish;
-        exports2.default = es2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/lv.js
-  var require_lv = __commonJS({
-    "node_modules/flatpickr/dist/l10n/lv.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.lv = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Latvian = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["Sv", "Pr", "Ot", "Tr", "Ce", "Pk", "Se"],
-            longhand: [
-              "Sv\u0113tdiena",
-              "Pirmdiena",
-              "Otrdiena",
-              "Tre\u0161diena",
-              "Ceturtdiena",
-              "Piektdiena",
-              "Sestdiena"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Mai",
-              "J\u016Bn",
-              "J\u016Bl",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dec"
-            ],
-            longhand: [
-              "Janv\u0101ris",
-              "Febru\u0101ris",
-              "Marts",
-              "Apr\u012Blis",
-              "Maijs",
-              "J\u016Bnijs",
-              "J\u016Blijs",
-              "Augusts",
-              "Septembris",
-              "Oktobris",
-              "Novembris",
-              "Decembris"
-            ]
-          },
-          rangeSeparator: " l\u012Bdz ",
-          time_24hr: true
-        };
-        fp.l10ns.lv = Latvian;
-        var lv2 = fp.l10ns;
-        exports2.Latvian = Latvian;
-        exports2.default = lv2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/uz.js
-  var require_uz = __commonJS({
-    "node_modules/flatpickr/dist/l10n/uz.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.uz = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Uzbek = {
-          weekdays: {
-            shorthand: ["\u042F\u043A\u0448", "\u0414\u0443\u0448", "\u0421\u0435\u0448", "\u0427\u043E\u0440", "\u041F\u0430\u0439", "\u0416\u0443\u043C", "\u0428\u0430\u043D"],
-            longhand: [
-              "\u042F\u043A\u0448\u0430\u043D\u0431\u0430",
-              "\u0414\u0443\u0448\u0430\u043D\u0431\u0430",
-              "\u0421\u0435\u0448\u0430\u043D\u0431\u0430",
-              "\u0427\u043E\u0440\u0448\u0430\u043D\u0431\u0430",
-              "\u041F\u0430\u0439\u0448\u0430\u043D\u0431\u0430",
-              "\u0416\u0443\u043C\u0430",
-              "\u0428\u0430\u043D\u0431\u0430"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u042F\u043D\u0432",
-              "\u0424\u0435\u0432",
-              "\u041C\u0430\u0440",
-              "\u0410\u043F\u0440",
-              "\u041C\u0430\u0439",
-              "\u0418\u044E\u043D",
-              "\u0418\u044E\u043B",
-              "\u0410\u0432\u0433",
-              "\u0421\u0435\u043D",
-              "\u041E\u043A\u0442",
-              "\u041D\u043E\u044F",
-              "\u0414\u0435\u043A"
-            ],
-            longhand: [
-              "\u042F\u043D\u0432\u0430\u0440",
-              "\u0424\u0435\u0432\u0440\u0430\u043B",
-              "\u041C\u0430\u0440\u0442",
-              "\u0410\u043F\u0440\u0435\u043B",
-              "\u041C\u0430\u0439",
-              "\u0418\u044E\u043D",
-              "\u0418\u044E\u043B",
-              "\u0410\u0432\u0433\u0443\u0441\u0442",
-              "\u0421\u0435\u043D\u0442\u044F\u0431\u0440",
-              "\u041E\u043A\u0442\u044F\u0431\u0440",
-              "\u041D\u043E\u044F\u0431\u0440",
-              "\u0414\u0435\u043A\u0430\u0431\u0440"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          rangeSeparator: " \u2014 ",
-          weekAbbreviation: "\u04B2\u0430\u0444\u0442\u0430",
-          scrollTitle: "\u041A\u0430\u0442\u0442\u0430\u043B\u0430\u0448\u0442\u0438\u0440\u0438\u0448 \u0443\u0447\u0443\u043D \u0430\u0439\u043B\u0430\u043D\u0442\u0438\u0440\u0438\u043D\u0433",
-          toggleTitle: "\u040E\u0442\u0438\u0448 \u0443\u0447\u0443\u043D \u0431\u043E\u0441\u0438\u043D\u0433",
-          amPM: ["AM", "PM"],
-          yearAriaLabel: "\u0419\u0438\u043B",
-          time_24hr: true
-        };
-        fp.l10ns.uz = Uzbek;
-        var uz2 = fp.l10ns;
-        exports2.Uzbek = Uzbek;
-        exports2.default = uz2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/bg.js
-  var require_bg = __commonJS({
-    "node_modules/flatpickr/dist/l10n/bg.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.bg = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Bulgarian = {
-          weekdays: {
-            shorthand: ["\u041D\u0434", "\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431"],
-            longhand: [
-              "\u041D\u0435\u0434\u0435\u043B\u044F",
-              "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u043D\u0438\u043A",
-              "\u0412\u0442\u043E\u0440\u043D\u0438\u043A",
-              "\u0421\u0440\u044F\u0434\u0430",
-              "\u0427\u0435\u0442\u0432\u044A\u0440\u0442\u044A\u043A",
-              "\u041F\u0435\u0442\u044A\u043A",
-              "\u0421\u044A\u0431\u043E\u0442\u0430"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u042F\u043D\u0443",
-              "\u0424\u0435\u0432",
-              "\u041C\u0430\u0440\u0442",
-              "\u0410\u043F\u0440",
-              "\u041C\u0430\u0439",
-              "\u042E\u043D\u0438",
-              "\u042E\u043B\u0438",
-              "\u0410\u0432\u0433",
-              "\u0421\u0435\u043F",
-              "\u041E\u043A\u0442",
-              "\u041D\u043E\u0435",
-              "\u0414\u0435\u043A"
-            ],
-            longhand: [
-              "\u042F\u043D\u0443\u0430\u0440\u0438",
-              "\u0424\u0435\u0432\u0440\u0443\u0430\u0440\u0438",
-              "\u041C\u0430\u0440\u0442",
-              "\u0410\u043F\u0440\u0438\u043B",
-              "\u041C\u0430\u0439",
-              "\u042E\u043D\u0438",
-              "\u042E\u043B\u0438",
-              "\u0410\u0432\u0433\u0443\u0441\u0442",
-              "\u0421\u0435\u043F\u0442\u0435\u043C\u0432\u0440\u0438",
-              "\u041E\u043A\u0442\u043E\u043C\u0432\u0440\u0438",
-              "\u041D\u043E\u0435\u043C\u0432\u0440\u0438",
-              "\u0414\u0435\u043A\u0435\u043C\u0432\u0440\u0438"
-            ]
-          },
-          time_24hr: true,
-          firstDayOfWeek: 1
-        };
-        fp.l10ns.bg = Bulgarian;
-        var bg2 = fp.l10ns;
-        exports2.Bulgarian = Bulgarian;
-        exports2.default = bg2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/hy.js
-  var require_hy = __commonJS({
-    "node_modules/flatpickr/dist/l10n/hy.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.hy = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Armenian = {
-          weekdays: {
-            shorthand: ["\u053F\u056B\u0580", "\u0535\u0580\u056F", "\u0535\u0580\u0584", "\u0549\u0580\u0584", "\u0540\u0576\u0563", "\u0548\u0582\u0580\u0562", "\u0547\u0562\u0569"],
-            longhand: [
-              "\u053F\u056B\u0580\u0561\u056F\u056B",
-              "\u0535\u056F\u0578\u0582\u0577\u0561\u0562\u0569\u056B",
-              "\u0535\u0580\u0565\u0584\u0577\u0561\u0562\u0569\u056B",
-              "\u0549\u0578\u0580\u0565\u0584\u0577\u0561\u0562\u0569\u056B",
-              "\u0540\u056B\u0576\u0563\u0577\u0561\u0562\u0569\u056B",
-              "\u0548\u0582\u0580\u0562\u0561\u0569",
-              "\u0547\u0561\u0562\u0561\u0569"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0540\u0576\u057E",
-              "\u0553\u057F\u0580",
-              "\u0544\u0561\u0580",
-              "\u0531\u057A\u0580",
-              "\u0544\u0561\u0575",
-              "\u0540\u0576\u057D",
-              "\u0540\u056C\u057D",
-              "\u0555\u0563\u057D",
-              "\u054D\u0565\u057A",
-              "\u0540\u0578\u056F",
-              "\u0546\u0574\u0562",
-              "\u0534\u0565\u056F"
-            ],
-            longhand: [
-              "\u0540\u0578\u0582\u0576\u057E\u0561\u0580",
-              "\u0553\u0565\u057F\u0580\u057E\u0561\u0580",
-              "\u0544\u0561\u0580\u057F",
-              "\u0531\u057A\u0580\u056B\u056C",
-              "\u0544\u0561\u0575\u056B\u057D",
-              "\u0540\u0578\u0582\u0576\u056B\u057D",
-              "\u0540\u0578\u0582\u056C\u056B\u057D",
-              "\u0555\u0563\u0578\u057D\u057F\u0578\u057D",
-              "\u054D\u0565\u057A\u057F\u0565\u0574\u0562\u0565\u0580",
-              "\u0540\u0578\u056F\u057F\u0565\u0574\u0562\u0565\u0580",
-              "\u0546\u0578\u0575\u0565\u0574\u0562\u0565\u0580",
-              "\u0534\u0565\u056F\u057F\u0565\u0574\u0562\u0565\u0580"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          rangeSeparator: " \u2014 ",
-          weekAbbreviation: "\u0547\u0532\u054F",
-          scrollTitle: "\u0548\u056C\u0578\u0580\u0565\u0584\u055D \u0574\u0565\u056E\u0561\u0581\u0576\u0565\u056C\u0578\u0582 \u0570\u0561\u0574\u0561\u0580",
-          toggleTitle: "\u054D\u0565\u0572\u0574\u0565\u0584\u055D \u0583\u0578\u056D\u0565\u056C\u0578\u0582 \u0570\u0561\u0574\u0561\u0580",
-          amPM: ["\u0544\u053F", "\u053F\u0540"],
-          yearAriaLabel: "\u054F\u0561\u0580\u056B",
-          monthAriaLabel: "\u0531\u0574\u056B\u057D",
-          hourAriaLabel: "\u053A\u0561\u0574",
-          minuteAriaLabel: "\u0550\u0578\u057A\u0565",
-          time_24hr: true
-        };
-        fp.l10ns.hy = Armenian;
-        var hy2 = fp.l10ns;
-        exports2.Armenian = Armenian;
-        exports2.default = hy2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ru.js
-  var require_ru = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ru.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ru = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Russian = {
-          weekdays: {
-            shorthand: ["\u0412\u0441", "\u041F\u043D", "\u0412\u0442", "\u0421\u0440", "\u0427\u0442", "\u041F\u0442", "\u0421\u0431"],
-            longhand: [
-              "\u0412\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435",
-              "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A",
-              "\u0412\u0442\u043E\u0440\u043D\u0438\u043A",
-              "\u0421\u0440\u0435\u0434\u0430",
-              "\u0427\u0435\u0442\u0432\u0435\u0440\u0433",
-              "\u041F\u044F\u0442\u043D\u0438\u0446\u0430",
-              "\u0421\u0443\u0431\u0431\u043E\u0442\u0430"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u042F\u043D\u0432",
-              "\u0424\u0435\u0432",
-              "\u041C\u0430\u0440\u0442",
-              "\u0410\u043F\u0440",
-              "\u041C\u0430\u0439",
-              "\u0418\u044E\u043D\u044C",
-              "\u0418\u044E\u043B\u044C",
-              "\u0410\u0432\u0433",
-              "\u0421\u0435\u043D",
-              "\u041E\u043A\u0442",
-              "\u041D\u043E\u044F",
-              "\u0414\u0435\u043A"
-            ],
-            longhand: [
-              "\u042F\u043D\u0432\u0430\u0440\u044C",
-              "\u0424\u0435\u0432\u0440\u0430\u043B\u044C",
-              "\u041C\u0430\u0440\u0442",
-              "\u0410\u043F\u0440\u0435\u043B\u044C",
-              "\u041C\u0430\u0439",
-              "\u0418\u044E\u043D\u044C",
-              "\u0418\u044E\u043B\u044C",
-              "\u0410\u0432\u0433\u0443\u0441\u0442",
-              "\u0421\u0435\u043D\u0442\u044F\u0431\u0440\u044C",
-              "\u041E\u043A\u0442\u044F\u0431\u0440\u044C",
-              "\u041D\u043E\u044F\u0431\u0440\u044C",
-              "\u0414\u0435\u043A\u0430\u0431\u0440\u044C"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          rangeSeparator: " \u2014 ",
-          weekAbbreviation: "\u041D\u0435\u0434.",
-          scrollTitle: "\u041F\u0440\u043E\u043A\u0440\u0443\u0442\u0438\u0442\u0435 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F",
-          toggleTitle: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F",
-          amPM: ["\u0414\u041F", "\u041F\u041F"],
-          yearAriaLabel: "\u0413\u043E\u0434",
-          time_24hr: true
-        };
-        fp.l10ns.ru = Russian;
-        var ru2 = fp.l10ns;
-        exports2.Russian = Russian;
-        exports2.default = ru2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/et.js
-  var require_et = __commonJS({
-    "node_modules/flatpickr/dist/l10n/et.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.et = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Estonian = {
-          weekdays: {
-            shorthand: ["P", "E", "T", "K", "N", "R", "L"],
-            longhand: [
-              "P\xFChap\xE4ev",
-              "Esmasp\xE4ev",
-              "Teisip\xE4ev",
-              "Kolmap\xE4ev",
-              "Neljap\xE4ev",
-              "Reede",
-              "Laup\xE4ev"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jaan",
-              "Veebr",
-              "M\xE4rts",
-              "Apr",
-              "Mai",
-              "Juuni",
-              "Juuli",
-              "Aug",
-              "Sept",
-              "Okt",
-              "Nov",
-              "Dets"
-            ],
-            longhand: [
-              "Jaanuar",
-              "Veebruar",
-              "M\xE4rts",
-              "Aprill",
-              "Mai",
-              "Juuni",
-              "Juuli",
-              "August",
-              "September",
-              "Oktoober",
-              "November",
-              "Detsember"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return ".";
-          },
-          weekAbbreviation: "N\xE4d",
-          rangeSeparator: " kuni ",
-          scrollTitle: "Keri, et suurendada",
-          toggleTitle: "Kl\xF5psa, et vahetada",
-          time_24hr: true
-        };
-        fp.l10ns.et = Estonian;
-        var et2 = fp.l10ns;
-        exports2.Estonian = Estonian;
-        exports2.default = et2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/mk.js
-  var require_mk = __commonJS({
-    "node_modules/flatpickr/dist/l10n/mk.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.mk = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Macedonian = {
-          weekdays: {
-            shorthand: ["\u041D\u0435", "\u041F\u043E", "\u0412\u0442", "\u0421\u0440", "\u0427\u0435", "\u041F\u0435", "\u0421\u0430"],
-            longhand: [
-              "\u041D\u0435\u0434\u0435\u043B\u0430",
-              "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u043D\u0438\u043A",
-              "\u0412\u0442\u043E\u0440\u043D\u0438\u043A",
-              "\u0421\u0440\u0435\u0434\u0430",
-              "\u0427\u0435\u0442\u0432\u0440\u0442\u043E\u043A",
-              "\u041F\u0435\u0442\u043E\u043A",
-              "\u0421\u0430\u0431\u043E\u0442\u0430"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0408\u0430\u043D",
-              "\u0424\u0435\u0432",
-              "\u041C\u0430\u0440",
-              "\u0410\u043F\u0440",
-              "\u041C\u0430\u0458",
-              "\u0408\u0443\u043D",
-              "\u0408\u0443\u043B",
-              "\u0410\u0432\u0433",
-              "\u0421\u0435\u043F",
-              "\u041E\u043A\u0442",
-              "\u041D\u043E\u0435",
-              "\u0414\u0435\u043A"
-            ],
-            longhand: [
-              "\u0408\u0430\u043D\u0443\u0430\u0440\u0438",
-              "\u0424\u0435\u0432\u0440\u0443\u0430\u0440\u0438",
-              "\u041C\u0430\u0440\u0442",
-              "\u0410\u043F\u0440\u0438\u043B",
-              "\u041C\u0430\u0458",
-              "\u0408\u0443\u043D\u0438",
-              "\u0408\u0443\u043B\u0438",
-              "\u0410\u0432\u0433\u0443\u0441\u0442",
-              "\u0421\u0435\u043F\u0442\u0435\u043C\u0432\u0440\u0438",
-              "\u041E\u043A\u0442\u043E\u043C\u0432\u0440\u0438",
-              "\u041D\u043E\u0435\u043C\u0432\u0440\u0438",
-              "\u0414\u0435\u043A\u0435\u043C\u0432\u0440\u0438"
-            ]
-          },
-          firstDayOfWeek: 1,
-          weekAbbreviation: "\u041D\u0435\u0434.",
-          rangeSeparator: " \u0434\u043E ",
-          time_24hr: true
-        };
-        fp.l10ns.mk = Macedonian;
-        var mk2 = fp.l10ns;
-        exports2.Macedonian = Macedonian;
-        exports2.default = mk2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/uz_latn.js
-  var require_uz_latn = __commonJS({
-    "node_modules/flatpickr/dist/l10n/uz_latn.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.uz_latn = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var UzbekLatin = {
-          weekdays: {
-            shorthand: ["Ya", "Du", "Se", "Cho", "Pa", "Ju", "Sha"],
-            longhand: [
-              "Yakshanba",
-              "Dushanba",
-              "Seshanba",
-              "Chorshanba",
-              "Payshanba",
-              "Juma",
-              "Shanba"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Yan",
-              "Fev",
-              "Mar",
-              "Apr",
-              "May",
-              "Iyun",
-              "Iyul",
-              "Avg",
-              "Sen",
-              "Okt",
-              "Noy",
-              "Dek"
-            ],
-            longhand: [
-              "Yanvar",
-              "Fevral",
-              "Mart",
-              "Aprel",
-              "May",
-              "Iyun",
-              "Iyul",
-              "Avgust",
-              "Sentabr",
-              "Oktabr",
-              "Noyabr",
-              "Dekabr"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          rangeSeparator: " \u2014 ",
-          weekAbbreviation: "Hafta",
-          scrollTitle: "Kattalashtirish uchun aylantiring",
-          toggleTitle: "O\u2018tish uchun bosing",
-          amPM: ["AM", "PM"],
-          yearAriaLabel: "Yil",
-          time_24hr: true
-        };
-        fp.l10ns["uz_latn"] = UzbekLatin;
-        var uz_latn2 = fp.l10ns;
-        exports2.UzbekLatin = UzbekLatin;
-        exports2.default = uz_latn2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/bn.js
-  var require_bn = __commonJS({
-    "node_modules/flatpickr/dist/l10n/bn.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.bn = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Bangla = {
-          weekdays: {
-            shorthand: ["\u09B0\u09AC\u09BF", "\u09B8\u09CB\u09AE", "\u09AE\u0999\u09CD\u0997\u09B2", "\u09AC\u09C1\u09A7", "\u09AC\u09C3\u09B9\u09B8\u09CD\u09AA\u09A4\u09BF", "\u09B6\u09C1\u0995\u09CD\u09B0", "\u09B6\u09A8\u09BF"],
-            longhand: [
-              "\u09B0\u09AC\u09BF\u09AC\u09BE\u09B0",
-              "\u09B8\u09CB\u09AE\u09AC\u09BE\u09B0",
-              "\u09AE\u0999\u09CD\u0997\u09B2\u09AC\u09BE\u09B0",
-              "\u09AC\u09C1\u09A7\u09AC\u09BE\u09B0",
-              "\u09AC\u09C3\u09B9\u09B8\u09CD\u09AA\u09A4\u09BF\u09AC\u09BE\u09B0",
-              "\u09B6\u09C1\u0995\u09CD\u09B0\u09AC\u09BE\u09B0",
-              "\u09B6\u09A8\u09BF\u09AC\u09BE\u09B0"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u099C\u09BE\u09A8\u09C1",
-              "\u09AB\u09C7\u09AC\u09CD\u09B0\u09C1",
-              "\u09AE\u09BE\u09B0\u09CD\u099A",
-              "\u098F\u09AA\u09CD\u09B0\u09BF\u09B2",
-              "\u09AE\u09C7",
-              "\u099C\u09C1\u09A8",
-              "\u099C\u09C1\u09B2\u09BE\u0987",
-              "\u0986\u0997",
-              "\u09B8\u09C7\u09AA\u09CD\u099F\u09C7",
-              "\u0985\u0995\u09CD\u099F\u09CB",
-              "\u09A8\u09AD\u09C7",
-              "\u09A1\u09BF\u09B8\u09C7"
-            ],
-            longhand: [
-              "\u099C\u09BE\u09A8\u09C1\u09AF\u09BC\u09BE\u09B0\u09C0",
-              "\u09AB\u09C7\u09AC\u09CD\u09B0\u09C1\u09AF\u09BC\u09BE\u09B0\u09C0",
-              "\u09AE\u09BE\u09B0\u09CD\u099A",
-              "\u098F\u09AA\u09CD\u09B0\u09BF\u09B2",
-              "\u09AE\u09C7",
-              "\u099C\u09C1\u09A8",
-              "\u099C\u09C1\u09B2\u09BE\u0987",
-              "\u0986\u0997\u09B8\u09CD\u099F",
-              "\u09B8\u09C7\u09AA\u09CD\u099F\u09C7\u09AE\u09CD\u09AC\u09B0",
-              "\u0985\u0995\u09CD\u099F\u09CB\u09AC\u09B0",
-              "\u09A8\u09AD\u09C7\u09AE\u09CD\u09AC\u09B0",
-              "\u09A1\u09BF\u09B8\u09C7\u09AE\u09CD\u09AC\u09B0"
-            ]
-          }
-        };
-        fp.l10ns.bn = Bangla;
-        var bn2 = fp.l10ns;
-        exports2.Bangla = Bangla;
-        exports2.default = bn2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/id.js
-  var require_id = __commonJS({
-    "node_modules/flatpickr/dist/l10n/id.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.id = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Indonesian = {
-          weekdays: {
-            shorthand: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
-            longhand: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Mei",
-              "Jun",
-              "Jul",
-              "Agu",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Des"
-            ],
-            longhand: [
-              "Januari",
-              "Februari",
-              "Maret",
-              "April",
-              "Mei",
-              "Juni",
-              "Juli",
-              "Agustus",
-              "September",
-              "Oktober",
-              "November",
-              "Desember"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          time_24hr: true,
-          rangeSeparator: " - "
-        };
-        fp.l10ns.id = Indonesian;
-        var id2 = fp.l10ns;
-        exports2.Indonesian = Indonesian;
-        exports2.default = id2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/si.js
-  var require_si = __commonJS({
-    "node_modules/flatpickr/dist/l10n/si.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.si = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Sinhala = {
-          weekdays: {
-            shorthand: ["\u0D89", "\u0DC3", "\u0D85", "\u0DB6", "\u0DB6\u0DCA\u200D\u0DBB", "\u0DC3\u0DD2", "\u0DC3\u0DD9"],
-            longhand: [
-              "\u0D89\u0DBB\u0DD2\u0DAF\u0DCF",
-              "\u0DC3\u0DB3\u0DD4\u0DAF\u0DCF",
-              "\u0D85\u0D9F\u0DC4\u0DBB\u0DD4\u0DC0\u0DCF\u0DAF\u0DCF",
-              "\u0DB6\u0DAF\u0DCF\u0DAF\u0DCF",
-              "\u0DB6\u0DCA\u200D\u0DBB\u0DC4\u0DC3\u0DCA\u0DB4\u0DAD\u0DD2\u0DB1\u0DCA\u0DAF\u0DCF",
-              "\u0DC3\u0DD2\u0D9A\u0DD4\u0DBB\u0DCF\u0DAF\u0DCF",
-              "\u0DC3\u0DD9\u0DB1\u0DC3\u0DD4\u0DBB\u0DCF\u0DAF\u0DCF"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0DA2\u0DB1",
-              "\u0DB4\u0DD9\u0DB6",
-              "\u0DB8\u0DCF\u0DBB\u0DCA",
-              "\u0D85\u0DB4\u0DCA\u200D\u0DBB\u0DDA",
-              "\u0DB8\u0DD0\u0DBA\u0DD2",
-              "\u0DA2\u0DD4\u0DB1\u0DD2",
-              "\u0DA2\u0DD6\u0DBD\u0DD2",
-              "\u0D85\u0D9C\u0DDD",
-              "\u0DC3\u0DD0\u0DB4\u0DCA",
-              "\u0D94\u0D9A\u0DCA",
-              "\u0DB1\u0DDC\u0DC0\u0DD0",
-              "\u0DAF\u0DD9\u0DC3\u0DD0"
-            ],
-            longhand: [
-              "\u0DA2\u0DB1\u0DC0\u0DCF\u0DBB\u0DD2",
-              "\u0DB4\u0DD9\u0DB6\u0DBB\u0DC0\u0DCF\u0DBB\u0DD2",
-              "\u0DB8\u0DCF\u0DBB\u0DCA\u0DAD\u0DD4",
-              "\u0D85\u0DB4\u0DCA\u200D\u0DBB\u0DDA\u0DBD\u0DCA",
-              "\u0DB8\u0DD0\u0DBA\u0DD2",
-              "\u0DA2\u0DD4\u0DB1\u0DD2",
-              "\u0DA2\u0DD6\u0DBD\u0DD2",
-              "\u0D85\u0D9C\u0DDD\u0DC3\u0DCA\u0DAD\u0DD4",
-              "\u0DC3\u0DD0\u0DB4\u0DCA\u0DAD\u0DD0\u0DB8\u0DCA\u0DB6\u0DBB\u0DCA",
-              "\u0D94\u0D9A\u0DCA\u0DAD\u0DDD\u0DB6\u0DBB\u0DCA",
-              "\u0DB1\u0DDC\u0DC0\u0DD0\u0DB8\u0DCA\u0DB6\u0DBB\u0DCA",
-              "\u0DAF\u0DD9\u0DC3\u0DD0\u0DB8\u0DCA\u0DB6\u0DBB\u0DCA"
-            ]
-          },
-          time_24hr: true
-        };
-        fp.l10ns.si = Sinhala;
-        var si2 = fp.l10ns;
-        exports2.Sinhala = Sinhala;
-        exports2.default = si2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/fa.js
-  var require_fa = __commonJS({
-    "node_modules/flatpickr/dist/l10n/fa.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fa = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Persian = {
-          weekdays: {
-            shorthand: ["\u06CC\u06A9", "\u062F\u0648", "\u0633\u0647", "\u0686\u0647\u0627\u0631", "\u067E\u0646\u062C", "\u062C\u0645\u0639\u0647", "\u0634\u0646\u0628\u0647"],
-            longhand: [
-              "\u06CC\u06A9\u200C\u0634\u0646\u0628\u0647",
-              "\u062F\u0648\u0634\u0646\u0628\u0647",
-              "\u0633\u0647\u200C\u0634\u0646\u0628\u0647",
-              "\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647",
-              "\u067E\u0646\u0686\u200C\u0634\u0646\u0628\u0647",
-              "\u062C\u0645\u0639\u0647",
-              "\u0634\u0646\u0628\u0647"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0698\u0627\u0646\u0648\u06CC\u0647",
-              "\u0641\u0648\u0631\u06CC\u0647",
-              "\u0645\u0627\u0631\u0633",
-              "\u0622\u0648\u0631\u06CC\u0644",
-              "\u0645\u0647",
-              "\u0698\u0648\u0626\u0646",
-              "\u0698\u0648\u0626\u06CC\u0647",
-              "\u0627\u0648\u062A",
-              "\u0633\u067E\u062A\u0627\u0645\u0628\u0631",
-              "\u0627\u06A9\u062A\u0628\u0631",
-              "\u0646\u0648\u0627\u0645\u0628\u0631",
-              "\u062F\u0633\u0627\u0645\u0628\u0631"
-            ],
-            longhand: [
-              "\u0698\u0627\u0646\u0648\u06CC\u0647",
-              "\u0641\u0648\u0631\u06CC\u0647",
-              "\u0645\u0627\u0631\u0633",
-              "\u0622\u0648\u0631\u06CC\u0644",
-              "\u0645\u0647",
-              "\u0698\u0648\u0626\u0646",
-              "\u0698\u0648\u0626\u06CC\u0647",
-              "\u0627\u0648\u062A",
-              "\u0633\u067E\u062A\u0627\u0645\u0628\u0631",
-              "\u0627\u06A9\u062A\u0628\u0631",
-              "\u0646\u0648\u0627\u0645\u0628\u0631",
-              "\u062F\u0633\u0627\u0645\u0628\u0631"
-            ]
-          },
-          firstDayOfWeek: 6,
-          ordinal: function() {
-            return "";
-          }
-        };
-        fp.l10ns.fa = Persian;
-        var fa2 = fp.l10ns;
-        exports2.Persian = Persian;
-        exports2.default = fa2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/mn.js
-  var require_mn = __commonJS({
-    "node_modules/flatpickr/dist/l10n/mn.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.mn = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Mongolian = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["\u0414\u0430", "\u041C\u044F", "\u041B\u0445", "\u041F\u04AF", "\u0411\u0430", "\u0411\u044F", "\u041D\u044F"],
-            longhand: ["\u0414\u0430\u0432\u0430\u0430", "\u041C\u044F\u0433\u043C\u0430\u0440", "\u041B\u0445\u0430\u0433\u0432\u0430", "\u041F\u04AF\u0440\u044D\u0432", "\u0411\u0430\u0430\u0441\u0430\u043D", "\u0411\u044F\u043C\u0431\u0430", "\u041D\u044F\u043C"]
-          },
-          months: {
-            shorthand: [
-              "1-\u0440 \u0441\u0430\u0440",
-              "2-\u0440 \u0441\u0430\u0440",
-              "3-\u0440 \u0441\u0430\u0440",
-              "4-\u0440 \u0441\u0430\u0440",
-              "5-\u0440 \u0441\u0430\u0440",
-              "6-\u0440 \u0441\u0430\u0440",
-              "7-\u0440 \u0441\u0430\u0440",
-              "8-\u0440 \u0441\u0430\u0440",
-              "9-\u0440 \u0441\u0430\u0440",
-              "10-\u0440 \u0441\u0430\u0440",
-              "11-\u0440 \u0441\u0430\u0440",
-              "12-\u0440 \u0441\u0430\u0440"
-            ],
-            longhand: [
-              "\u041D\u044D\u0433\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
-              "\u0425\u043E\u0451\u0440\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
-              "\u0413\u0443\u0440\u0430\u0432\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
-              "\u0414\u04E9\u0440\u04E9\u0432\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
-              "\u0422\u0430\u0432\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
-              "\u0417\u0443\u0440\u0433\u0430\u0430\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
-              "\u0414\u043E\u043B\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
-              "\u041D\u0430\u0439\u043C\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
-              "\u0415\u0441\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
-              "\u0410\u0440\u0430\u0432\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440",
-              "\u0410\u0440\u0432\u0430\u043D\u043D\u044D\u0433\u0434\u04AF\u0433\u044D\u044D\u0440 \u0441\u0430\u0440",
-              "\u0410\u0440\u0432\u0430\u043D\u0445\u043E\u0451\u0440\u0434\u0443\u0433\u0430\u0430\u0440 \u0441\u0430\u0440"
-            ]
-          },
-          rangeSeparator: "-\u0441 ",
-          time_24hr: true
-        };
-        fp.l10ns.mn = Mongolian;
-        var mn2 = fp.l10ns;
-        exports2.Mongolian = Mongolian;
-        exports2.default = mn2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/vn.js
-  var require_vn = __commonJS({
-    "node_modules/flatpickr/dist/l10n/vn.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.vn = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Vietnamese = {
-          weekdays: {
-            shorthand: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-            longhand: [
-              "Ch\u1EE7 nh\u1EADt",
-              "Th\u1EE9 hai",
-              "Th\u1EE9 ba",
-              "Th\u1EE9 t\u01B0",
-              "Th\u1EE9 n\u0103m",
-              "Th\u1EE9 s\xE1u",
-              "Th\u1EE9 b\u1EA3y"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Th1",
-              "Th2",
-              "Th3",
-              "Th4",
-              "Th5",
-              "Th6",
-              "Th7",
-              "Th8",
-              "Th9",
-              "Th10",
-              "Th11",
-              "Th12"
-            ],
-            longhand: [
-              "Th\xE1ng m\u1ED9t",
-              "Th\xE1ng hai",
-              "Th\xE1ng ba",
-              "Th\xE1ng t\u01B0",
-              "Th\xE1ng n\u0103m",
-              "Th\xE1ng s\xE1u",
-              "Th\xE1ng b\u1EA3y",
-              "Th\xE1ng t\xE1m",
-              "Th\xE1ng ch\xEDn",
-              "Th\xE1ng m\u01B0\u1EDDi",
-              "Th\xE1ng m\u01B0\u1EDDi m\u1ED9t",
-              "Th\xE1ng m\u01B0\u1EDDi hai"
-            ]
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " \u0111\u1EBFn "
-        };
-        fp.l10ns.vn = Vietnamese;
-        var vn2 = fp.l10ns;
-        exports2.Vietnamese = Vietnamese;
-        exports2.default = vn2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/bs.js
-  var require_bs = __commonJS({
-    "node_modules/flatpickr/dist/l10n/bs.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.bs = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Bosnian = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["Ned", "Pon", "Uto", "Sri", "\u010Cet", "Pet", "Sub"],
-            longhand: [
-              "Nedjelja",
-              "Ponedjeljak",
-              "Utorak",
-              "Srijeda",
-              "\u010Cetvrtak",
-              "Petak",
-              "Subota"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Maj",
-              "Jun",
-              "Jul",
-              "Avg",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dec"
-            ],
-            longhand: [
-              "Januar",
-              "Februar",
-              "Mart",
-              "April",
-              "Maj",
-              "Juni",
-              "Juli",
-              "Avgust",
-              "Septembar",
-              "Oktobar",
-              "Novembar",
-              "Decembar"
-            ]
-          },
-          time_24hr: true
-        };
-        fp.l10ns.bs = Bosnian;
-        var bs2 = fp.l10ns;
-        exports2.Bosnian = Bosnian;
-        exports2.default = bs2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/sk.js
-  var require_sk = __commonJS({
-    "node_modules/flatpickr/dist/l10n/sk.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sk = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Slovak = {
-          weekdays: {
-            shorthand: ["Ned", "Pon", "Ut", "Str", "\u0160tv", "Pia", "Sob"],
-            longhand: [
-              "Nede\u013Ea",
-              "Pondelok",
-              "Utorok",
-              "Streda",
-              "\u0160tvrtok",
-              "Piatok",
-              "Sobota"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "M\xE1j",
-              "J\xFAn",
-              "J\xFAl",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dec"
-            ],
-            longhand: [
-              "Janu\xE1r",
-              "Febru\xE1r",
-              "Marec",
-              "Apr\xEDl",
-              "M\xE1j",
-              "J\xFAn",
-              "J\xFAl",
-              "August",
-              "September",
-              "Okt\xF3ber",
-              "November",
-              "December"
-            ]
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " do ",
-          time_24hr: true,
-          ordinal: function() {
-            return ".";
-          }
-        };
-        fp.l10ns.sk = Slovak;
-        var sk2 = fp.l10ns;
-        exports2.Slovak = Slovak;
-        exports2.default = sk2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/fi.js
-  var require_fi = __commonJS({
-    "node_modules/flatpickr/dist/l10n/fi.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fi = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Finnish = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["su", "ma", "ti", "ke", "to", "pe", "la"],
-            longhand: [
-              "sunnuntai",
-              "maanantai",
-              "tiistai",
-              "keskiviikko",
-              "torstai",
-              "perjantai",
-              "lauantai"
-            ]
-          },
-          months: {
-            shorthand: [
-              "tammi",
-              "helmi",
-              "maalis",
-              "huhti",
-              "touko",
-              "kes\xE4",
-              "hein\xE4",
-              "elo",
-              "syys",
-              "loka",
-              "marras",
-              "joulu"
-            ],
-            longhand: [
-              "tammikuu",
-              "helmikuu",
-              "maaliskuu",
-              "huhtikuu",
-              "toukokuu",
-              "kes\xE4kuu",
-              "hein\xE4kuu",
-              "elokuu",
-              "syyskuu",
-              "lokakuu",
-              "marraskuu",
-              "joulukuu"
-            ]
-          },
-          ordinal: function() {
-            return ".";
-          },
-          time_24hr: true
-        };
-        fp.l10ns.fi = Finnish;
-        var fi2 = fp.l10ns;
-        exports2.Finnish = Finnish;
-        exports2.default = fi2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ms.js
-  var require_ms = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ms.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ms = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Malaysian = {
-          weekdays: {
-            shorthand: ["Aha", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"],
-            longhand: ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mac",
-              "Apr",
-              "Mei",
-              "Jun",
-              "Jul",
-              "Ogo",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dis"
-            ],
-            longhand: [
-              "Januari",
-              "Februari",
-              "Mac",
-              "April",
-              "Mei",
-              "Jun",
-              "Julai",
-              "Ogos",
-              "September",
-              "Oktober",
-              "November",
-              "Disember"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          }
-        };
-        var ms2 = fp.l10ns;
-        exports2.Malaysian = Malaysian;
-        exports2.default = ms2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/zh-tw.js
-  var require_zh_tw = __commonJS({
-    "node_modules/flatpickr/dist/l10n/zh-tw.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2["zh-tw"] = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var MandarinTraditional = {
-          weekdays: {
-            shorthand: ["\u9031\u65E5", "\u9031\u4E00", "\u9031\u4E8C", "\u9031\u4E09", "\u9031\u56DB", "\u9031\u4E94", "\u9031\u516D"],
-            longhand: [
-              "\u661F\u671F\u65E5",
-              "\u661F\u671F\u4E00",
-              "\u661F\u671F\u4E8C",
-              "\u661F\u671F\u4E09",
-              "\u661F\u671F\u56DB",
-              "\u661F\u671F\u4E94",
-              "\u661F\u671F\u516D"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u4E00\u6708",
-              "\u4E8C\u6708",
-              "\u4E09\u6708",
-              "\u56DB\u6708",
-              "\u4E94\u6708",
-              "\u516D\u6708",
-              "\u4E03\u6708",
-              "\u516B\u6708",
-              "\u4E5D\u6708",
-              "\u5341\u6708",
-              "\u5341\u4E00\u6708",
-              "\u5341\u4E8C\u6708"
-            ],
-            longhand: [
-              "\u4E00\u6708",
-              "\u4E8C\u6708",
-              "\u4E09\u6708",
-              "\u56DB\u6708",
-              "\u4E94\u6708",
-              "\u516D\u6708",
-              "\u4E03\u6708",
-              "\u516B\u6708",
-              "\u4E5D\u6708",
-              "\u5341\u6708",
-              "\u5341\u4E00\u6708",
-              "\u5341\u4E8C\u6708"
-            ]
-          },
-          rangeSeparator: " \u81F3 ",
-          weekAbbreviation: "\u9031",
-          scrollTitle: "\u6EFE\u52D5\u5207\u63DB",
-          toggleTitle: "\u9EDE\u64CA\u5207\u63DB 12/24 \u5C0F\u6642\u6642\u5236"
-        };
-        fp.l10ns.zh_tw = MandarinTraditional;
-        var zhTw = fp.l10ns;
-        exports2.MandarinTraditional = MandarinTraditional;
-        exports2.default = zhTw;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/cat.js
-  var require_cat = __commonJS({
-    "node_modules/flatpickr/dist/l10n/cat.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.cat = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Catalan = {
-          weekdays: {
-            shorthand: ["Dg", "Dl", "Dt", "Dc", "Dj", "Dv", "Ds"],
-            longhand: [
-              "Diumenge",
-              "Dilluns",
-              "Dimarts",
-              "Dimecres",
-              "Dijous",
-              "Divendres",
-              "Dissabte"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Gen",
-              "Febr",
-              "Mar\xE7",
-              "Abr",
-              "Maig",
-              "Juny",
-              "Jul",
-              "Ag",
-              "Set",
-              "Oct",
-              "Nov",
-              "Des"
-            ],
-            longhand: [
-              "Gener",
-              "Febrer",
-              "Mar\xE7",
-              "Abril",
-              "Maig",
-              "Juny",
-              "Juliol",
-              "Agost",
-              "Setembre",
-              "Octubre",
-              "Novembre",
-              "Desembre"
-            ]
-          },
-          ordinal: function(nth) {
-            var s = nth % 100;
-            if (s > 3 && s < 21)
-              return "\xE8";
-            switch (s % 10) {
-              case 1:
-                return "r";
-              case 2:
-                return "n";
-              case 3:
-                return "r";
-              case 4:
-                return "t";
-              default:
-                return "\xE8";
-            }
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " a ",
-          time_24hr: true
-        };
-        fp.l10ns.cat = fp.l10ns.ca = Catalan;
-        var cat2 = fp.l10ns;
-        exports2.Catalan = Catalan;
-        exports2.default = cat2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/is.js
-  var require_is = __commonJS({
-    "node_modules/flatpickr/dist/l10n/is.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.is = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Icelandic = {
-          weekdays: {
-            shorthand: ["Sun", "M\xE1n", "\xDEri", "Mi\xF0", "Fim", "F\xF6s", "Lau"],
-            longhand: [
-              "Sunnudagur",
-              "M\xE1nudagur",
-              "\xDEri\xF0judagur",
-              "Mi\xF0vikudagur",
-              "Fimmtudagur",
-              "F\xF6studagur",
-              "Laugardagur"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Ma\xED",
-              "J\xFAn",
-              "J\xFAl",
-              "\xC1g\xFA",
-              "Sep",
-              "Okt",
-              "N\xF3v",
-              "Des"
-            ],
-            longhand: [
-              "Jan\xFAar",
-              "Febr\xFAar",
-              "Mars",
-              "Apr\xEDl",
-              "Ma\xED",
-              "J\xFAn\xED",
-              "J\xFAl\xED",
-              "\xC1g\xFAst",
-              "September",
-              "Okt\xF3ber",
-              "N\xF3vember",
-              "Desember"
-            ]
-          },
-          ordinal: function() {
-            return ".";
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " til ",
-          weekAbbreviation: "vika",
-          yearAriaLabel: "\xC1r",
-          time_24hr: true
-        };
-        fp.l10ns.is = Icelandic;
-        var is3 = fp.l10ns;
-        exports2.Icelandic = Icelandic;
-        exports2.default = is3;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/sl.js
-  var require_sl = __commonJS({
-    "node_modules/flatpickr/dist/l10n/sl.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sl = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Slovenian = {
-          weekdays: {
-            shorthand: ["Ned", "Pon", "Tor", "Sre", "\u010Cet", "Pet", "Sob"],
-            longhand: [
-              "Nedelja",
-              "Ponedeljek",
-              "Torek",
-              "Sreda",
-              "\u010Cetrtek",
-              "Petek",
-              "Sobota"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Maj",
-              "Jun",
-              "Jul",
-              "Avg",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dec"
-            ],
-            longhand: [
-              "Januar",
-              "Februar",
-              "Marec",
-              "April",
-              "Maj",
-              "Junij",
-              "Julij",
-              "Avgust",
-              "September",
-              "Oktober",
-              "November",
-              "December"
-            ]
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " do ",
-          time_24hr: true,
-          ordinal: function() {
-            return ".";
-          }
-        };
-        fp.l10ns.sl = Slovenian;
-        var sl2 = fp.l10ns;
-        exports2.Slovenian = Slovenian;
-        exports2.default = sl2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/fo.js
-  var require_fo = __commonJS({
-    "node_modules/flatpickr/dist/l10n/fo.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fo = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Faroese = {
-          weekdays: {
-            shorthand: ["Sun", "M\xE1n", "T\xFDs", "Mik", "H\xF3s", "Fr\xED", "Ley"],
-            longhand: [
-              "Sunnudagur",
-              "M\xE1nadagur",
-              "T\xFDsdagur",
-              "Mikudagur",
-              "H\xF3sdagur",
-              "Fr\xEDggjadagur",
-              "Leygardagur"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Mai",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Des"
-            ],
-            longhand: [
-              "Januar",
-              "Februar",
-              "Mars",
-              "Apr\xEDl",
-              "Mai",
-              "Juni",
-              "Juli",
-              "August",
-              "Septembur",
-              "Oktobur",
-              "Novembur",
-              "Desembur"
-            ]
-          },
-          ordinal: function() {
-            return ".";
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " til ",
-          weekAbbreviation: "vika",
-          scrollTitle: "Rulla fyri at broyta",
-          toggleTitle: "Tr\xFDst fyri at skifta",
-          yearAriaLabel: "\xC1r",
-          time_24hr: true
-        };
-        fp.l10ns.fo = Faroese;
-        var fo2 = fp.l10ns;
-        exports2.Faroese = Faroese;
-        exports2.default = fo2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/my.js
-  var require_my = __commonJS({
-    "node_modules/flatpickr/dist/l10n/my.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.my = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Burmese = {
-          weekdays: {
-            shorthand: ["\u1014\u103D\u1031", "\u101C\u102C", "\u1002\u102B", "\u101F\u1030\u1038", "\u1000\u103C\u102C", "\u101E\u1031\u102C", "\u1014\u1031"],
-            longhand: [
-              "\u1010\u1014\u1004\u103A\u1039\u1002\u1014\u103D\u1031",
-              "\u1010\u1014\u1004\u103A\u1039\u101C\u102C",
-              "\u1021\u1004\u103A\u1039\u1002\u102B",
-              "\u1017\u102F\u1012\u1039\u1013\u101F\u1030\u1038",
-              "\u1000\u103C\u102C\u101E\u1015\u1010\u1031\u1038",
-              "\u101E\u1031\u102C\u1000\u103C\u102C",
-              "\u1005\u1014\u1031"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u1007\u1014\u103A",
-              "\u1016\u1031",
-              "\u1019\u1010\u103A",
-              "\u1015\u103C\u102E",
-              "\u1019\u1031",
-              "\u1007\u103D\u1014\u103A",
-              "\u101C\u102D\u102F\u1004\u103A",
-              "\u101E\u103C",
-              "\u1005\u1000\u103A",
-              "\u1021\u1031\u102C\u1000\u103A",
-              "\u1014\u102D\u102F",
-              "\u1012\u102E"
-            ],
-            longhand: [
-              "\u1007\u1014\u103A\u1014\u101D\u102B\u101B\u102E",
-              "\u1016\u1031\u1016\u1031\u102C\u103A\u101D\u102B\u101B\u102E",
-              "\u1019\u1010\u103A",
-              "\u1027\u1015\u103C\u102E",
-              "\u1019\u1031",
-              "\u1007\u103D\u1014\u103A",
-              "\u1007\u1030\u101C\u102D\u102F\u1004\u103A",
-              "\u101E\u103C\u1002\u102F\u1010\u103A",
-              "\u1005\u1000\u103A\u1010\u1004\u103A\u1018\u102C",
-              "\u1021\u1031\u102C\u1000\u103A\u1010\u102D\u102F\u1018\u102C",
-              "\u1014\u102D\u102F\u101D\u1004\u103A\u1018\u102C",
-              "\u1012\u102E\u1007\u1004\u103A\u1018\u102C"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "";
-          },
-          time_24hr: true
-        };
-        fp.l10ns.my = Burmese;
-        var my2 = fp.l10ns;
-        exports2.Burmese = Burmese;
-        exports2.default = my2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/zh.js
-  var require_zh = __commonJS({
-    "node_modules/flatpickr/dist/l10n/zh.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.zh = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Mandarin = {
-          weekdays: {
-            shorthand: ["\u5468\u65E5", "\u5468\u4E00", "\u5468\u4E8C", "\u5468\u4E09", "\u5468\u56DB", "\u5468\u4E94", "\u5468\u516D"],
-            longhand: [
-              "\u661F\u671F\u65E5",
-              "\u661F\u671F\u4E00",
-              "\u661F\u671F\u4E8C",
-              "\u661F\u671F\u4E09",
-              "\u661F\u671F\u56DB",
-              "\u661F\u671F\u4E94",
-              "\u661F\u671F\u516D"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u4E00\u6708",
-              "\u4E8C\u6708",
-              "\u4E09\u6708",
-              "\u56DB\u6708",
-              "\u4E94\u6708",
-              "\u516D\u6708",
-              "\u4E03\u6708",
-              "\u516B\u6708",
-              "\u4E5D\u6708",
-              "\u5341\u6708",
-              "\u5341\u4E00\u6708",
-              "\u5341\u4E8C\u6708"
-            ],
-            longhand: [
-              "\u4E00\u6708",
-              "\u4E8C\u6708",
-              "\u4E09\u6708",
-              "\u56DB\u6708",
-              "\u4E94\u6708",
-              "\u516D\u6708",
-              "\u4E03\u6708",
-              "\u516B\u6708",
-              "\u4E5D\u6708",
-              "\u5341\u6708",
-              "\u5341\u4E00\u6708",
-              "\u5341\u4E8C\u6708"
-            ]
-          },
-          rangeSeparator: " \u81F3 ",
-          weekAbbreviation: "\u5468",
-          scrollTitle: "\u6EDA\u52A8\u5207\u6362",
-          toggleTitle: "\u70B9\u51FB\u5207\u6362 12/24 \u5C0F\u65F6\u65F6\u5236"
-        };
-        fp.l10ns.zh = Mandarin;
-        var zh2 = fp.l10ns;
-        exports2.Mandarin = Mandarin;
-        exports2.default = zh2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ckb.js
-  var require_ckb = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ckb.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ckb = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Kurdish = {
-          weekdays: {
-            shorthand: [
-              "\u06CC\u06D5\u06A9\u0634\u06D5\u0645\u0645\u06D5",
-              "\u062F\u0648\u0648\u0634\u06D5\u0645\u0645\u06D5",
-              "\u0633\u06CE\u0634\u06D5\u0645\u0645\u06D5",
-              "\u0686\u0648\u0627\u0631\u0634\u06D5\u0645\u0645\u06D5",
-              "\u067E\u06CE\u0646\u062C\u0634\u06D5\u0645\u0645\u06D5",
-              "\u0647\u06D5\u06CC\u0646\u06CC",
-              "\u0634\u06D5\u0645\u0645\u06D5"
-            ],
-            longhand: [
-              "\u06CC\u06D5\u06A9\u0634\u06D5\u0645\u0645\u06D5",
-              "\u062F\u0648\u0648\u0634\u06D5\u0645\u0645\u06D5",
-              "\u0633\u06CE\u0634\u06D5\u0645\u0645\u06D5",
-              "\u0686\u0648\u0627\u0631\u0634\u06D5\u0645\u0645\u06D5",
-              "\u067E\u06CE\u0646\u062C\u0634\u06D5\u0645\u0645\u06D5",
-              "\u0647\u06D5\u06CC\u0646\u06CC",
-              "\u0634\u06D5\u0645\u0645\u06D5"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0695\u06CE\u0628\u06D5\u0646\u062F\u0627\u0646",
-              "\u0695\u06D5\u0634\u06D5\u0645\u06D5",
-              "\u0646\u06D5\u0648\u0631\u06C6\u0632",
-              "\u06AF\u0648\u06B5\u0627\u0646",
-              "\u062C\u06C6\u0632\u06D5\u0631\u062F\u0627\u0646",
-              "\u067E\u0648\u0648\u0634\u067E\u06D5\u0695",
-              "\u06AF\u06D5\u0644\u0627\u0648\u06CE\u0698",
-              "\u062E\u06D5\u0631\u0645\u0627\u0646\u0627\u0646",
-              "\u0695\u06D5\u0632\u0628\u06D5\u0631",
-              "\u06AF\u06D5\u06B5\u0627\u0695\u06CE\u0632\u0627\u0646",
-              "\u0633\u06D5\u0631\u0645\u0627\u0648\u06D5\u0632",
-              "\u0628\u06D5\u0641\u0631\u0627\u0646\u0628\u0627\u0631"
-            ],
-            longhand: [
-              "\u0695\u06CE\u0628\u06D5\u0646\u062F\u0627\u0646",
-              "\u0695\u06D5\u0634\u06D5\u0645\u06D5",
-              "\u0646\u06D5\u0648\u0631\u06C6\u0632",
-              "\u06AF\u0648\u06B5\u0627\u0646",
-              "\u062C\u06C6\u0632\u06D5\u0631\u062F\u0627\u0646",
-              "\u067E\u0648\u0648\u0634\u067E\u06D5\u0695",
-              "\u06AF\u06D5\u0644\u0627\u0648\u06CE\u0698",
-              "\u062E\u06D5\u0631\u0645\u0627\u0646\u0627\u0646",
-              "\u0695\u06D5\u0632\u0628\u06D5\u0631",
-              "\u06AF\u06D5\u06B5\u0627\u0695\u06CE\u0632\u0627\u0646",
-              "\u0633\u06D5\u0631\u0645\u0627\u0648\u06D5\u0632",
-              "\u0628\u06D5\u0641\u0631\u0627\u0646\u0628\u0627\u0631"
-            ]
-          },
-          firstDayOfWeek: 6,
-          ordinal: function() {
-            return "";
-          }
-        };
-        fp.l10ns.ckb = Kurdish;
-        var ckb2 = fp.l10ns;
-        exports2.Kurdish = Kurdish;
-        exports2.default = ckb2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/it.js
-  var require_it = __commonJS({
-    "node_modules/flatpickr/dist/l10n/it.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.it = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Italian = {
-          weekdays: {
-            shorthand: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
-            longhand: [
-              "Domenica",
-              "Luned\xEC",
-              "Marted\xEC",
-              "Mercoled\xEC",
-              "Gioved\xEC",
-              "Venerd\xEC",
-              "Sabato"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Gen",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Mag",
-              "Giu",
-              "Lug",
-              "Ago",
-              "Set",
-              "Ott",
-              "Nov",
-              "Dic"
-            ],
-            longhand: [
-              "Gennaio",
-              "Febbraio",
-              "Marzo",
-              "Aprile",
-              "Maggio",
-              "Giugno",
-              "Luglio",
-              "Agosto",
-              "Settembre",
-              "Ottobre",
-              "Novembre",
-              "Dicembre"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return "\xB0";
-          },
-          rangeSeparator: " al ",
-          weekAbbreviation: "Se",
-          scrollTitle: "Scrolla per aumentare",
-          toggleTitle: "Clicca per cambiare",
-          time_24hr: true
-        };
-        fp.l10ns.it = Italian;
-        var it2 = fp.l10ns;
-        exports2.Italian = Italian;
-        exports2.default = it2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/sq.js
-  var require_sq = __commonJS({
-    "node_modules/flatpickr/dist/l10n/sq.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.sq = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Albanian = {
-          weekdays: {
-            shorthand: ["Di", "H\xEB", "Ma", "M\xEB", "En", "Pr", "Sh"],
-            longhand: [
-              "E Diel",
-              "E H\xEBn\xEB",
-              "E Mart\xEB",
-              "E M\xEBrkur\xEB",
-              "E Enjte",
-              "E Premte",
-              "E Shtun\xEB"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Shk",
-              "Mar",
-              "Pri",
-              "Maj",
-              "Qer",
-              "Kor",
-              "Gus",
-              "Sht",
-              "Tet",
-              "N\xEBn",
-              "Dhj"
-            ],
-            longhand: [
-              "Janar",
-              "Shkurt",
-              "Mars",
-              "Prill",
-              "Maj",
-              "Qershor",
-              "Korrik",
-              "Gusht",
-              "Shtator",
-              "Tetor",
-              "N\xEBntor",
-              "Dhjetor"
-            ]
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " deri ",
-          weekAbbreviation: "Java",
-          yearAriaLabel: "Viti",
-          monthAriaLabel: "Muaji",
-          hourAriaLabel: "Ora",
-          minuteAriaLabel: "Minuta",
-          time_24hr: true
-        };
-        fp.l10ns.sq = Albanian;
-        var sq2 = fp.l10ns;
-        exports2.Albanian = Albanian;
-        exports2.default = sq2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/fr.js
-  var require_fr = __commonJS({
-    "node_modules/flatpickr/dist/l10n/fr.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.fr = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var French = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"],
-            longhand: [
-              "dimanche",
-              "lundi",
-              "mardi",
-              "mercredi",
-              "jeudi",
-              "vendredi",
-              "samedi"
-            ]
-          },
-          months: {
-            shorthand: [
-              "janv",
-              "f\xE9vr",
-              "mars",
-              "avr",
-              "mai",
-              "juin",
-              "juil",
-              "ao\xFBt",
-              "sept",
-              "oct",
-              "nov",
-              "d\xE9c"
-            ],
-            longhand: [
-              "janvier",
-              "f\xE9vrier",
-              "mars",
-              "avril",
-              "mai",
-              "juin",
-              "juillet",
-              "ao\xFBt",
-              "septembre",
-              "octobre",
-              "novembre",
-              "d\xE9cembre"
-            ]
-          },
-          ordinal: function(nth) {
-            if (nth > 1)
-              return "";
-            return "er";
-          },
-          rangeSeparator: " au ",
-          weekAbbreviation: "Sem",
-          scrollTitle: "D\xE9filer pour augmenter la valeur",
-          toggleTitle: "Cliquer pour basculer",
-          time_24hr: true
-        };
-        fp.l10ns.fr = French;
-        var fr2 = fp.l10ns;
-        exports2.French = French;
-        exports2.default = fr2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/nl.js
-  var require_nl = __commonJS({
-    "node_modules/flatpickr/dist/l10n/nl.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.nl = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Dutch = {
-          weekdays: {
-            shorthand: ["zo", "ma", "di", "wo", "do", "vr", "za"],
-            longhand: [
-              "zondag",
-              "maandag",
-              "dinsdag",
-              "woensdag",
-              "donderdag",
-              "vrijdag",
-              "zaterdag"
-            ]
-          },
-          months: {
-            shorthand: [
-              "jan",
-              "feb",
-              "mrt",
-              "apr",
-              "mei",
-              "jun",
-              "jul",
-              "aug",
-              "sept",
-              "okt",
-              "nov",
-              "dec"
-            ],
-            longhand: [
-              "januari",
-              "februari",
-              "maart",
-              "april",
-              "mei",
-              "juni",
-              "juli",
-              "augustus",
-              "september",
-              "oktober",
-              "november",
-              "december"
-            ]
-          },
-          firstDayOfWeek: 1,
-          weekAbbreviation: "wk",
-          rangeSeparator: " t/m ",
-          scrollTitle: "Scroll voor volgende / vorige",
-          toggleTitle: "Klik om te wisselen",
-          time_24hr: true,
-          ordinal: function(nth) {
-            if (nth === 1 || nth === 8 || nth >= 20)
-              return "ste";
-            return "de";
-          }
-        };
-        fp.l10ns.nl = Dutch;
-        var nl2 = fp.l10ns;
-        exports2.Dutch = Dutch;
-        exports2.default = nl2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/cs.js
-  var require_cs = __commonJS({
-    "node_modules/flatpickr/dist/l10n/cs.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.cs = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Czech = {
-          weekdays: {
-            shorthand: ["Ne", "Po", "\xDAt", "St", "\u010Ct", "P\xE1", "So"],
-            longhand: [
-              "Ned\u011Ble",
-              "Pond\u011Bl\xED",
-              "\xDAter\xFD",
-              "St\u0159eda",
-              "\u010Ctvrtek",
-              "P\xE1tek",
-              "Sobota"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Led",
-              "\xDAn",
-              "B\u0159e",
-              "Dub",
-              "Kv\u011B",
-              "\u010Cer",
-              "\u010Cvc",
-              "Srp",
-              "Z\xE1\u0159",
-              "\u0158\xEDj",
-              "Lis",
-              "Pro"
-            ],
-            longhand: [
-              "Leden",
-              "\xDAnor",
-              "B\u0159ezen",
-              "Duben",
-              "Kv\u011Bten",
-              "\u010Cerven",
-              "\u010Cervenec",
-              "Srpen",
-              "Z\xE1\u0159\xED",
-              "\u0158\xEDjen",
-              "Listopad",
-              "Prosinec"
-            ]
-          },
-          firstDayOfWeek: 1,
-          ordinal: function() {
-            return ".";
-          },
-          rangeSeparator: " do ",
-          weekAbbreviation: "T\xFDd.",
-          scrollTitle: "Rolujte pro zm\u011Bnu",
-          toggleTitle: "P\u0159epnout dopoledne/odpoledne",
-          amPM: ["dop.", "odp."],
-          yearAriaLabel: "Rok",
-          time_24hr: true
-        };
-        fp.l10ns.cs = Czech;
-        var cs2 = fp.l10ns;
-        exports2.Czech = Czech;
-        exports2.default = cs2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ja.js
-  var require_ja = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ja.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ja = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Japanese = {
-          weekdays: {
-            shorthand: ["\u65E5", "\u6708", "\u706B", "\u6C34", "\u6728", "\u91D1", "\u571F"],
-            longhand: [
-              "\u65E5\u66DC\u65E5",
-              "\u6708\u66DC\u65E5",
-              "\u706B\u66DC\u65E5",
-              "\u6C34\u66DC\u65E5",
-              "\u6728\u66DC\u65E5",
-              "\u91D1\u66DC\u65E5",
-              "\u571F\u66DC\u65E5"
-            ]
-          },
-          months: {
-            shorthand: [
-              "1\u6708",
-              "2\u6708",
-              "3\u6708",
-              "4\u6708",
-              "5\u6708",
-              "6\u6708",
-              "7\u6708",
-              "8\u6708",
-              "9\u6708",
-              "10\u6708",
-              "11\u6708",
-              "12\u6708"
-            ],
-            longhand: [
-              "1\u6708",
-              "2\u6708",
-              "3\u6708",
-              "4\u6708",
-              "5\u6708",
-              "6\u6708",
-              "7\u6708",
-              "8\u6708",
-              "9\u6708",
-              "10\u6708",
-              "11\u6708",
-              "12\u6708"
-            ]
-          },
-          time_24hr: true,
-          rangeSeparator: " \u304B\u3089 ",
-          monthAriaLabel: "\u6708",
-          amPM: ["\u5348\u524D", "\u5348\u5F8C"],
-          yearAriaLabel: "\u5E74",
-          hourAriaLabel: "\u6642\u9593",
-          minuteAriaLabel: "\u5206"
-        };
-        fp.l10ns.ja = Japanese;
-        var ja2 = fp.l10ns;
-        exports2.Japanese = Japanese;
-        exports2.default = ja2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/sr-cyr.js
-  var require_sr_cyr = __commonJS({
-    "node_modules/flatpickr/dist/l10n/sr-cyr.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2["sr-cyr"] = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var SerbianCyrillic = {
-          weekdays: {
-            shorthand: ["\u041D\u0435\u0434", "\u041F\u043E\u043D", "\u0423\u0442\u043E", "\u0421\u0440\u0435", "\u0427\u0435\u0442", "\u041F\u0435\u0442", "\u0421\u0443\u0431"],
-            longhand: [
-              "\u041D\u0435\u0434\u0435\u0459\u0430",
-              "\u041F\u043E\u043D\u0435\u0434\u0435\u0459\u0430\u043A",
-              "\u0423\u0442\u043E\u0440\u0430\u043A",
-              "\u0421\u0440\u0435\u0434\u0430",
-              "\u0427\u0435\u0442\u0432\u0440\u0442\u0430\u043A",
-              "\u041F\u0435\u0442\u0430\u043A",
-              "\u0421\u0443\u0431\u043E\u0442\u0430"
-            ]
-          },
-          months: {
-            shorthand: [
-              "\u0408\u0430\u043D",
-              "\u0424\u0435\u0431",
-              "\u041C\u0430\u0440",
-              "\u0410\u043F\u0440",
-              "\u041C\u0430\u0458",
-              "\u0408\u0443\u043D",
-              "\u0408\u0443\u043B",
-              "\u0410\u0432\u0433",
-              "\u0421\u0435\u043F",
-              "\u041E\u043A\u0442",
-              "\u041D\u043E\u0432",
-              "\u0414\u0435\u0446"
-            ],
-            longhand: [
-              "\u0408\u0430\u043D\u0443\u0430\u0440",
-              "\u0424\u0435\u0431\u0440\u0443\u0430\u0440",
-              "\u041C\u0430\u0440\u0442",
-              "\u0410\u043F\u0440\u0438\u043B",
-              "\u041C\u0430\u0458",
-              "\u0408\u0443\u043D",
-              "\u0408\u0443\u043B",
-              "\u0410\u0432\u0433\u0443\u0441\u0442",
-              "\u0421\u0435\u043F\u0442\u0435\u043C\u0431\u0430\u0440",
-              "\u041E\u043A\u0442\u043E\u0431\u0430\u0440",
-              "\u041D\u043E\u0432\u0435\u043C\u0431\u0430\u0440",
-              "\u0414\u0435\u0446\u0435\u043C\u0431\u0430\u0440"
-            ]
-          },
-          firstDayOfWeek: 1,
-          weekAbbreviation: "\u041D\u0435\u0434.",
-          rangeSeparator: " \u0434\u043E "
-        };
-        fp.l10ns.sr = SerbianCyrillic;
-        var srCyr = fp.l10ns;
-        exports2.SerbianCyrillic = SerbianCyrillic;
-        exports2.default = srCyr;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/ga.js
-  var require_ga = __commonJS({
-    "node_modules/flatpickr/dist/l10n/ga.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.ga = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var Irish = {
-          firstDayOfWeek: 1,
-          weekdays: {
-            shorthand: ["Dom", "Lua", "M\xE1i", "C\xE9a", "D\xE9a", "Aoi", "Sat"],
-            longhand: [
-              "D\xE9 Domhnaigh",
-              "D\xE9 Luain",
-              "D\xE9 M\xE1irt",
-              "D\xE9 C\xE9adaoin",
-              "D\xE9ardaoin",
-              "D\xE9 hAoine",
-              "D\xE9 Sathairn"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Ean",
-              "Fea",
-              "M\xE1r",
-              "Aib",
-              "Bea",
-              "Mei",
-              "I\xFAi",
-              "L\xFAn",
-              "MFo",
-              "DFo",
-              "Sam",
-              "Nol"
-            ],
-            longhand: [
-              "Ean\xE1ir",
-              "Feabhra",
-              "M\xE1rta",
-              "Aibre\xE1n",
-              "Bealtaine",
-              "Meitheamh",
-              "I\xFAil",
-              "L\xFAnasa",
-              "Me\xE1n F\xF3mhair",
-              "Deireadh F\xF3mhair",
-              "Samhain",
-              "Nollaig"
-            ]
-          },
-          time_24hr: true
-        };
-        fp.l10ns.hr = Irish;
-        var ga2 = fp.l10ns;
-        exports2.Irish = Irish;
-        exports2.default = ga2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
-  // node_modules/flatpickr/dist/l10n/nn.js
-  var require_nn = __commonJS({
-    "node_modules/flatpickr/dist/l10n/nn.js"(exports, module) {
-      (function(global2, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.nn = {}));
-      })(exports, function(exports2) {
-        "use strict";
-        var fp = typeof window !== "undefined" && window.flatpickr !== void 0 ? window.flatpickr : {
-          l10ns: {}
-        };
-        var NorwegianNynorsk = {
-          weekdays: {
-            shorthand: ["S\xF8.", "M\xE5.", "Ty.", "On.", "To.", "Fr.", "La."],
-            longhand: [
-              "S\xF8ndag",
-              "M\xE5ndag",
-              "Tysdag",
-              "Onsdag",
-              "Torsdag",
-              "Fredag",
-              "Laurdag"
-            ]
-          },
-          months: {
-            shorthand: [
-              "Jan",
-              "Feb",
-              "Mars",
-              "Apr",
-              "Mai",
-              "Juni",
-              "Juli",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Des"
-            ],
-            longhand: [
-              "Januar",
-              "Februar",
-              "Mars",
-              "April",
-              "Mai",
-              "Juni",
-              "Juli",
-              "August",
-              "September",
-              "Oktober",
-              "November",
-              "Desember"
-            ]
-          },
-          firstDayOfWeek: 1,
-          rangeSeparator: " til ",
-          weekAbbreviation: "Veke",
-          scrollTitle: "Scroll for \xE5 endre",
-          toggleTitle: "Klikk for \xE5 veksle",
-          time_24hr: true,
-          ordinal: function() {
-            return ".";
-          }
-        };
-        fp.l10ns.nn = NorwegianNynorsk;
-        var nn2 = fp.l10ns;
-        exports2.NorwegianNynorsk = NorwegianNynorsk;
-        exports2.default = nn2;
-        Object.defineProperty(exports2, "__esModule", { value: true });
-      });
-    }
-  });
-
   // node_modules/@rails/ujs/app/assets/javascripts/rails-ujs.esm.js
   var linkClickSelector = "a[data-confirm], a[data-method], a[data-remote]:not([disabled]), a[data-disable-with], a[data-disable]";
   var buttonClickSelector = {
@@ -22343,6 +17846,274 @@
     return Tab._jQueryInterface;
   };
 
+  // node_modules/bootstrap/js/src/collapse.js
+  var import_jquery3 = __toESM(require_jquery());
+  var NAME2 = "collapse";
+  var VERSION2 = "4.3.1";
+  var DATA_KEY2 = "bs.collapse";
+  var EVENT_KEY2 = `.${DATA_KEY2}`;
+  var DATA_API_KEY2 = ".data-api";
+  var JQUERY_NO_CONFLICT2 = import_jquery3.default.fn[NAME2];
+  var Default = {
+    toggle: true,
+    parent: ""
+  };
+  var DefaultType = {
+    toggle: "boolean",
+    parent: "(string|element)"
+  };
+  var Event3 = {
+    SHOW: `show${EVENT_KEY2}`,
+    SHOWN: `shown${EVENT_KEY2}`,
+    HIDE: `hide${EVENT_KEY2}`,
+    HIDDEN: `hidden${EVENT_KEY2}`,
+    CLICK_DATA_API: `click${EVENT_KEY2}${DATA_API_KEY2}`
+  };
+  var ClassName2 = {
+    SHOW: "show",
+    COLLAPSE: "collapse",
+    COLLAPSING: "collapsing",
+    COLLAPSED: "collapsed"
+  };
+  var Dimension = {
+    WIDTH: "width",
+    HEIGHT: "height"
+  };
+  var Selector2 = {
+    ACTIVES: ".show, .collapsing",
+    DATA_TOGGLE: '[data-toggle="collapse"]'
+  };
+  var Collapse = class _Collapse {
+    constructor(element, config) {
+      this._isTransitioning = false;
+      this._element = element;
+      this._config = this._getConfig(config);
+      this._triggerArray = [].slice.call(document.querySelectorAll(
+        `[data-toggle="collapse"][href="#${element.id}"],[data-toggle="collapse"][data-target="#${element.id}"]`
+      ));
+      const toggleList = [].slice.call(document.querySelectorAll(Selector2.DATA_TOGGLE));
+      for (let i = 0, len = toggleList.length; i < len; i++) {
+        const elem = toggleList[i];
+        const selector = util_default.getSelectorFromElement(elem);
+        const filterElement = [].slice.call(document.querySelectorAll(selector)).filter((foundElem) => foundElem === element);
+        if (selector !== null && filterElement.length > 0) {
+          this._selector = selector;
+          this._triggerArray.push(elem);
+        }
+      }
+      this._parent = this._config.parent ? this._getParent() : null;
+      if (!this._config.parent) {
+        this._addAriaAndCollapsedClass(this._element, this._triggerArray);
+      }
+      if (this._config.toggle) {
+        this.toggle();
+      }
+    }
+    // Getters
+    static get VERSION() {
+      return VERSION2;
+    }
+    static get Default() {
+      return Default;
+    }
+    // Public
+    toggle() {
+      if ((0, import_jquery3.default)(this._element).hasClass(ClassName2.SHOW)) {
+        this.hide();
+      } else {
+        this.show();
+      }
+    }
+    show() {
+      if (this._isTransitioning || (0, import_jquery3.default)(this._element).hasClass(ClassName2.SHOW)) {
+        return;
+      }
+      let actives;
+      let activesData;
+      if (this._parent) {
+        actives = [].slice.call(this._parent.querySelectorAll(Selector2.ACTIVES)).filter((elem) => {
+          if (typeof this._config.parent === "string") {
+            return elem.getAttribute("data-parent") === this._config.parent;
+          }
+          return elem.classList.contains(ClassName2.COLLAPSE);
+        });
+        if (actives.length === 0) {
+          actives = null;
+        }
+      }
+      if (actives) {
+        activesData = (0, import_jquery3.default)(actives).not(this._selector).data(DATA_KEY2);
+        if (activesData && activesData._isTransitioning) {
+          return;
+        }
+      }
+      const startEvent = import_jquery3.default.Event(Event3.SHOW);
+      (0, import_jquery3.default)(this._element).trigger(startEvent);
+      if (startEvent.isDefaultPrevented()) {
+        return;
+      }
+      if (actives) {
+        _Collapse._jQueryInterface.call((0, import_jquery3.default)(actives).not(this._selector), "hide");
+        if (!activesData) {
+          (0, import_jquery3.default)(actives).data(DATA_KEY2, null);
+        }
+      }
+      const dimension = this._getDimension();
+      (0, import_jquery3.default)(this._element).removeClass(ClassName2.COLLAPSE).addClass(ClassName2.COLLAPSING);
+      this._element.style[dimension] = 0;
+      if (this._triggerArray.length) {
+        (0, import_jquery3.default)(this._triggerArray).removeClass(ClassName2.COLLAPSED).attr("aria-expanded", true);
+      }
+      this.setTransitioning(true);
+      const complete = () => {
+        (0, import_jquery3.default)(this._element).removeClass(ClassName2.COLLAPSING).addClass(ClassName2.COLLAPSE).addClass(ClassName2.SHOW);
+        this._element.style[dimension] = "";
+        this.setTransitioning(false);
+        (0, import_jquery3.default)(this._element).trigger(Event3.SHOWN);
+      };
+      const capitalizedDimension = dimension[0].toUpperCase() + dimension.slice(1);
+      const scrollSize = `scroll${capitalizedDimension}`;
+      const transitionDuration = util_default.getTransitionDurationFromElement(this._element);
+      (0, import_jquery3.default)(this._element).one(util_default.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
+      this._element.style[dimension] = `${this._element[scrollSize]}px`;
+    }
+    hide() {
+      if (this._isTransitioning || !(0, import_jquery3.default)(this._element).hasClass(ClassName2.SHOW)) {
+        return;
+      }
+      const startEvent = import_jquery3.default.Event(Event3.HIDE);
+      (0, import_jquery3.default)(this._element).trigger(startEvent);
+      if (startEvent.isDefaultPrevented()) {
+        return;
+      }
+      const dimension = this._getDimension();
+      this._element.style[dimension] = `${this._element.getBoundingClientRect()[dimension]}px`;
+      util_default.reflow(this._element);
+      (0, import_jquery3.default)(this._element).addClass(ClassName2.COLLAPSING).removeClass(ClassName2.COLLAPSE).removeClass(ClassName2.SHOW);
+      const triggerArrayLength = this._triggerArray.length;
+      if (triggerArrayLength > 0) {
+        for (let i = 0; i < triggerArrayLength; i++) {
+          const trigger = this._triggerArray[i];
+          const selector = util_default.getSelectorFromElement(trigger);
+          if (selector !== null) {
+            const $elem = (0, import_jquery3.default)([].slice.call(document.querySelectorAll(selector)));
+            if (!$elem.hasClass(ClassName2.SHOW)) {
+              (0, import_jquery3.default)(trigger).addClass(ClassName2.COLLAPSED).attr("aria-expanded", false);
+            }
+          }
+        }
+      }
+      this.setTransitioning(true);
+      const complete = () => {
+        this.setTransitioning(false);
+        (0, import_jquery3.default)(this._element).removeClass(ClassName2.COLLAPSING).addClass(ClassName2.COLLAPSE).trigger(Event3.HIDDEN);
+      };
+      this._element.style[dimension] = "";
+      const transitionDuration = util_default.getTransitionDurationFromElement(this._element);
+      (0, import_jquery3.default)(this._element).one(util_default.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
+    }
+    setTransitioning(isTransitioning) {
+      this._isTransitioning = isTransitioning;
+    }
+    dispose() {
+      import_jquery3.default.removeData(this._element, DATA_KEY2);
+      this._config = null;
+      this._parent = null;
+      this._element = null;
+      this._triggerArray = null;
+      this._isTransitioning = null;
+    }
+    // Private
+    _getConfig(config) {
+      config = {
+        ...Default,
+        ...config
+      };
+      config.toggle = Boolean(config.toggle);
+      util_default.typeCheckConfig(NAME2, config, DefaultType);
+      return config;
+    }
+    _getDimension() {
+      const hasWidth = (0, import_jquery3.default)(this._element).hasClass(Dimension.WIDTH);
+      return hasWidth ? Dimension.WIDTH : Dimension.HEIGHT;
+    }
+    _getParent() {
+      let parent;
+      if (util_default.isElement(this._config.parent)) {
+        parent = this._config.parent;
+        if (typeof this._config.parent.jquery !== "undefined") {
+          parent = this._config.parent[0];
+        }
+      } else {
+        parent = document.querySelector(this._config.parent);
+      }
+      const selector = `[data-toggle="collapse"][data-parent="${this._config.parent}"]`;
+      const children = [].slice.call(parent.querySelectorAll(selector));
+      (0, import_jquery3.default)(children).each((i, element) => {
+        this._addAriaAndCollapsedClass(
+          _Collapse._getTargetFromElement(element),
+          [element]
+        );
+      });
+      return parent;
+    }
+    _addAriaAndCollapsedClass(element, triggerArray) {
+      const isOpen = (0, import_jquery3.default)(element).hasClass(ClassName2.SHOW);
+      if (triggerArray.length) {
+        (0, import_jquery3.default)(triggerArray).toggleClass(ClassName2.COLLAPSED, !isOpen).attr("aria-expanded", isOpen);
+      }
+    }
+    // Static
+    static _getTargetFromElement(element) {
+      const selector = util_default.getSelectorFromElement(element);
+      return selector ? document.querySelector(selector) : null;
+    }
+    static _jQueryInterface(config) {
+      return this.each(function() {
+        const $this = (0, import_jquery3.default)(this);
+        let data = $this.data(DATA_KEY2);
+        const _config = {
+          ...Default,
+          ...$this.data(),
+          ...typeof config === "object" && config ? config : {}
+        };
+        if (!data && _config.toggle && /show|hide/.test(config)) {
+          _config.toggle = false;
+        }
+        if (!data) {
+          data = new _Collapse(this, _config);
+          $this.data(DATA_KEY2, data);
+        }
+        if (typeof config === "string") {
+          if (typeof data[config] === "undefined") {
+            throw new TypeError(`No method named "${config}"`);
+          }
+          data[config]();
+        }
+      });
+    }
+  };
+  (0, import_jquery3.default)(document).on(Event3.CLICK_DATA_API, Selector2.DATA_TOGGLE, function(event) {
+    if (event.currentTarget.tagName === "A") {
+      event.preventDefault();
+    }
+    const $trigger = (0, import_jquery3.default)(this);
+    const selector = util_default.getSelectorFromElement(this);
+    const selectors = [].slice.call(document.querySelectorAll(selector));
+    (0, import_jquery3.default)(selectors).each(function() {
+      const $target = (0, import_jquery3.default)(this);
+      const data = $target.data(DATA_KEY2);
+      const config = data ? "toggle" : $trigger.data();
+      Collapse._jQueryInterface.call($target, config);
+    });
+  });
+  import_jquery3.default.fn[NAME2] = Collapse._jQueryInterface;
+  import_jquery3.default.fn[NAME2].Constructor = Collapse;
+  import_jquery3.default.fn[NAME2].noConflict = () => {
+    import_jquery3.default.fn[NAME2] = JQUERY_NO_CONFLICT2;
+    return Collapse._jQueryInterface;
+  };
+
   // app/assets/javascripts/comfy/vendor/diff/diff_match_patch.min.js
   (function() {
     function diff_match_patch2() {
@@ -23073,7 +18844,7 @@
       return { outer: { transform: "translate(" + h2 / 2 + " 256)" }, inner: { transform: "translate(" + 32 * l2.x + ", " + 32 * l2.y + ")  " + ("scale(" + l2.size / 16 * (l2.flipX ? -1 : 1) + ", " + l2.size / 16 * (l2.flipY ? -1 : 1) + ") ") + " " + ("rotate(" + l2.rotate + " 0 0)") }, path: { transform: "translate(" + v2 / 2 * -1 + " -256)" } };
     }
     function M(c2) {
-      var l2 = c2.transform, h2 = c2.width, v2 = void 0 === h2 ? $6 : h2, z2 = c2.height, e2 = void 0 === z2 ? $6 : z2, a2 = c2.startCentered, m3 = void 0 !== a2 && a2, t2 = "";
+      var l2 = c2.transform, h2 = c2.width, v2 = void 0 === h2 ? $7 : h2, z2 = c2.height, e2 = void 0 === z2 ? $7 : z2, a2 = c2.startCentered, m3 = void 0 !== a2 && a2, t2 = "";
       return t2 += m3 && Z ? "translate(" + (l2.x / oc - v2 / 2) + "em, " + (l2.y / oc - e2 / 2) + "em) " : m3 ? "translate(calc(-50% + " + l2.x / oc + "em), calc(-50% + " + l2.y / oc + "em)) " : "translate(" + l2.x / oc + "em, " + l2.y / oc + "em) ", t2 += "scale(" + l2.size / oc * (l2.flipX ? -1 : 1) + ", " + l2.size / oc * (l2.flipY ? -1 : 1) + ") ", t2 += "rotate(" + l2.rotate + "deg) ";
     }
     function i(c2) {
@@ -23235,7 +19006,7 @@
       return { found: true, width: c2[0], height: c2[1], icon: { tag: "path", attributes: { fill: "currentColor", d: c2.slice(4)[0] } } };
     }
     function j() {
-      Hc.autoAddCss && (sl2 || h(tl()), sl2 = true);
+      Hc.autoAddCss && (sl || h(tl()), sl = true);
     }
     function F(c2, l2) {
       return Object.defineProperty(c2, "abstract", { get: l2 }), Object.defineProperty(c2, "html", { get: function() {
@@ -23259,7 +19030,7 @@
       "undefined" != typeof window && (I = window), "undefined" != typeof document && (R = document), "undefined" != typeof MutationObserver && (B = MutationObserver), "undefined" != typeof performance && (X = performance);
     } catch (c2) {
     }
-    var Y = (I.navigator || {}).userAgent, D = void 0 === Y ? "" : Y, U = I, K = R, G = B, J = X, Q = !!U.document, Z = ~D.indexOf("MSIE") || ~D.indexOf("Trident/"), $6 = 16, cc = "data-fa-processed", lc = "data-fa-pseudo-element", hc = "fontawesome-i2svg", vc = function() {
+    var Y = (I.navigator || {}).userAgent, D = void 0 === Y ? "" : Y, U = I, K = R, G = B, J = X, Q = !!U.document, Z = ~D.indexOf("MSIE") || ~D.indexOf("Trident/"), $7 = 16, cc = "data-fa-processed", lc = "data-fa-pseudo-element", hc = "fontawesome-i2svg", vc = function() {
       try {
         return true;
       } catch (c2) {
@@ -23303,7 +19074,7 @@
     nc.autoReplaceSvg || (nc.observeMutations = false);
     var Hc = fc({}, nc);
     U.FontAwesomeConfig = Hc;
-    var oc = $6, Vc = { size: 16, x: 0, y: 0, rotate: 0, flipX: false, flipY: false }, Cc = 0, Lc = { x: 0, y: 0, width: "100%", height: "100%" }, uc = function(c2) {
+    var oc = $7, Vc = { size: 16, x: 0, y: 0, rotate: 0, flipX: false, flipY: false }, Cc = 0, Lc = { x: 0, y: 0, width: "100%", height: "100%" }, uc = function(c2) {
       var l2 = c2.children, h2 = c2.attributes, z2 = c2.main, e2 = c2.mask, a2 = c2.transform, m3 = z2.width, t2 = z2.icon, s2 = e2.width, r2 = e2.icon, M2 = f({ transform: a2, containerWidth: s2, iconWidth: m3 }), i2 = { tag: "rect", attributes: fc({}, Lc, { fill: "white" }) }, n2 = { tag: "g", attributes: fc({}, M2.inner), children: [{ tag: "path", attributes: fc({}, t2.attributes, M2.path, { fill: "black" }) }] }, H2 = { tag: "g", attributes: fc({}, M2.outer), children: [n2] }, o2 = "mask-" + v(), V2 = "clip-" + v(), C3 = { tag: "defs", children: [{ tag: "clipPath", attributes: { id: V2 }, children: [r2] }, { tag: "mask", attributes: fc({}, Lc, { id: o2, maskUnits: "userSpaceOnUse", maskContentUnits: "userSpaceOnUse" }), children: [i2, H2] }] };
       return l2.push(C3, { tag: "rect", attributes: fc({ fill: "currentColor", "clip-path": "url(#" + V2 + ")", mask: "url(#" + o2 + ")" }, Lc) }), { children: l2, attributes: h2 };
     }, dc = function(c2) {
@@ -23458,7 +19229,7 @@
         v2 = v2.replace(z2, "." + l2 + "-").replace(e2, "." + h2);
       }
       return v2;
-    }, sl2 = false, rl = new (function() {
+    }, sl = false, rl = new (function() {
       function c2() {
         tc(this, c2), this.definitions = {};
       }
@@ -23542,8 +19313,8 @@
   }();
 
   // app/assets/javascripts/comfy/vendor/redactor.js
-  var import_jquery3 = __toESM(require_jquery());
-  (function($6) {
+  var import_jquery4 = __toESM(require_jquery());
+  (function($7) {
     "use strict";
     if (!Function.prototype.bind) {
       Function.prototype.bind = function(scope) {
@@ -23554,12 +19325,12 @@
       };
     }
     var uuid = 0;
-    $6.fn.redactor = function(options) {
+    $7.fn.redactor = function(options) {
       var val = [];
       var args = Array.prototype.slice.call(arguments, 1);
       if (typeof options === "string") {
         this.each(function() {
-          var instance = $6.data(this, "redactor");
+          var instance = $7.data(this, "redactor");
           var func;
           if (options.search(/\./) != "-1") {
             func = options.split(".");
@@ -23569,19 +19340,19 @@
           } else {
             func = instance[options];
           }
-          if (typeof instance !== "undefined" && $6.isFunction(func)) {
+          if (typeof instance !== "undefined" && $7.isFunction(func)) {
             var methodVal = func.apply(instance, args);
             if (methodVal !== void 0 && methodVal !== instance) {
               val.push(methodVal);
             }
           } else {
-            $6.error('No such method "' + options + '" for Redactor');
+            $7.error('No such method "' + options + '" for Redactor');
           }
         });
       } else {
         this.each(function() {
-          $6.data(this, "redactor", {});
-          $6.data(this, "redactor", Redactor(this, options));
+          $7.data(this, "redactor", {});
+          $7.data(this, "redactor", Redactor(this, options));
         });
       }
       if (val.length === 0) return this;
@@ -23591,9 +19362,9 @@
     function Redactor(el, options) {
       return new Redactor.prototype.init(el, options);
     }
-    $6.Redactor = Redactor;
-    $6.Redactor.VERSION = "10.2.5";
-    $6.Redactor.modules = [
+    $7.Redactor = Redactor;
+    $7.Redactor.VERSION = "10.2.5";
+    $7.Redactor.modules = [
       "alignment",
       "autosave",
       "block",
@@ -23632,7 +19403,7 @@
       "upload",
       "utils"
     ];
-    $6.Redactor.opts = {
+    $7.Redactor.opts = {
       // settings
       lang: "en",
       direction: "ltr",
@@ -23979,7 +19750,7 @@
       },
       codemirror: false
     };
-    Redactor.fn = $6.Redactor.prototype = {
+    Redactor.fn = $7.Redactor.prototype = {
       keyCode: {
         BACKSPACE: 8,
         DELETE: 46,
@@ -23999,14 +19770,14 @@
       },
       // Initialization
       init: function(el, options) {
-        this.$element = $6(el);
+        this.$element = $7(el);
         this.uuid = uuid++;
         this.rtePaste = false;
         this.$pasteBox = false;
         this.loadOptions(options);
         this.loadModules();
         this.formatting = {};
-        $6.merge(this.opts.blockLevelElements, this.opts.alignmentTags);
+        $7.merge(this.opts.blockLevelElements, this.opts.alignmentTags);
         this.reIsBlock = new RegExp(
           "^(" + this.opts.blockLevelElements.join("|") + ")$",
           "i"
@@ -24019,15 +19790,15 @@
           }
         }
         this.lang.load();
-        $6.extend(this.opts.shortcuts, this.opts.shortcutsAdd);
+        $7.extend(this.opts.shortcuts, this.opts.shortcutsAdd);
         this.core.setCallback("start");
         this.start = true;
         this.build.run();
       },
       loadOptions: function(options) {
-        this.opts = $6.extend(
+        this.opts = $7.extend(
           {},
-          $6.extend(true, {}, $6.Redactor.opts),
+          $7.extend(true, {}, $7.Redactor.opts),
           this.$element.data(),
           options
         );
@@ -24038,9 +19809,9 @@
         });
       },
       loadModules: function() {
-        var len = $6.Redactor.modules.length;
+        var len = $7.Redactor.modules.length;
         for (var i = 0; i < len; i++) {
-          this.bindModuleMethods($6.Redactor.modules[i]);
+          this.bindModuleMethods($7.Redactor.modules[i]);
         }
       },
       bindModuleMethods: function(module) {
@@ -24084,12 +19855,12 @@
           },
           setText: function() {
             var wrapper = this.selection.wrap("div");
-            $6(wrapper).attr("data-tagblock", "redactor").css("text-align", this.alignment.type);
+            $7(wrapper).attr("data-tagblock", "redactor").css("text-align", this.alignment.type);
           },
           setBlocks: function() {
-            $6.each(
+            $7.each(
               this.alignment.blocks,
-              $6.proxy(function(i, el) {
+              $7.proxy(function(i, el) {
                 var $el = this.utils.getAlignmentElement(el);
                 if (!$el) return;
                 if (this.alignment.isNeedReplaceElement($el)) {
@@ -24139,7 +19910,7 @@
             data["name"] = this.autosave.name;
             data[this.autosave.name] = this.autosave.source;
             data = this.autosave.getHiddenFields(data);
-            var jsxhr = $6.ajax({
+            var jsxhr = $7.ajax({
               url: this.opts.autosave,
               type: "post",
               data
@@ -24150,10 +19921,10 @@
             if (this.opts.autosaveFields === false || typeof this.opts.autosaveFields !== "object") {
               return data;
             }
-            $6.each(
+            $7.each(
               this.opts.autosaveFields,
-              $6.proxy(function(k, v) {
-                if (v !== null && v.toString().indexOf("#") === 0) v = $6(v).val();
+              $7.proxy(function(k, v) {
+                if (v !== null && v.toString().indexOf("#") === 0) v = $7(v).val();
                 data[k] = v;
               }, this)
             );
@@ -24162,7 +19933,7 @@
           success: function(data) {
             var json;
             try {
-              json = $6.parseJSON(data);
+              json = $7.parseJSON(data);
             } catch (e) {
               json = data;
             }
@@ -24204,10 +19975,10 @@
               "h5",
               "h6"
             ];
-            if ($6.inArray(tag, formatTags) == -1) return;
+            if ($7.inArray(tag, formatTags) == -1) return;
             this.block.isRemoveInline = tag == "pre" || tag.search(/h[1-6]/i) != -1;
             if (!this.utils.browser("msie")) this.$editor.focus();
-            var html = $6.trim(this.$editor.html());
+            var html = $7.trim(this.$editor.html());
             this.block.isEmpty = this.utils.isEmpty(html);
             if (this.utils.browser("mozilla") && !this.focus.isFocused()) {
               if (this.block.isEmpty) {
@@ -24256,10 +20027,10 @@
             if (isContainerTable && !this.opts.linebreaks) {
               document.execCommand("formatblock", false, "<" + tag + ">");
               block = this.selection.getBlock();
-              this.block.toggle($6(block));
+              this.block.toggle($7(block));
             } else if (block.tagName.toLowerCase() != tag) {
               if (this.opts.linebreaks && tag == "p") {
-                $6(block).append("<br>");
+                $7(block).append("<br>");
                 this.utils.replaceWithContents(block);
               } else {
                 var $formatted = this.utils.replaceToTag(block, tag);
@@ -24274,17 +20045,17 @@
               }
             } else if (tag == "blockquote" && block.tagName.toLowerCase() == tag) {
               if (this.opts.linebreaks) {
-                $6(block).append("<br>");
+                $7(block).append("<br>");
                 this.utils.replaceWithContents(block);
               } else {
                 var $el = this.utils.replaceToTag(block, "p");
                 this.block.toggle($el);
               }
             } else if (block.tagName.toLowerCase() == tag) {
-              this.block.toggle($6(block));
+              this.block.toggle($7(block));
             }
             if (typeof this.block.type == "undefined" && typeof this.block.value == "undefined") {
-              $6(block).removeAttr("class").removeAttr("style");
+              $7(block).removeAttr("class").removeAttr("style");
             }
           },
           setMultiple: function(tag) {
@@ -24293,7 +20064,7 @@
             if (block !== false && this.block.blocksSize === 1) {
               if (block.tagName.toLowerCase() == tag && tag == "blockquote") {
                 if (this.opts.linebreaks) {
-                  $6(block).append("<br>");
+                  $7(block).append("<br>");
                   this.utils.replaceWithContents(block);
                 } else {
                   var $el = this.utils.replaceToTag(block, "p");
@@ -24308,7 +20079,7 @@
                 this.block.formatWrap(tag);
               } else {
                 if (this.opts.linebreaks && tag == "p") {
-                  $6(block).prepend("<br>").append("<br>");
+                  $7(block).prepend("<br>").append("<br>");
                   this.utils.replaceWithContents(block);
                 } else if (block.tagName === "TD") {
                   this.block.formatWrap(tag);
@@ -24329,12 +20100,12 @@
                     if (this.block.blocks[i].tagName == "BLOCKQUOTE") count++;
                   }
                   if (count == this.block.blocksSize) {
-                    $6.each(
+                    $7.each(
                       this.block.blocks,
-                      $6.proxy(function(i2, s) {
+                      $7.proxy(function(i2, s) {
                         var $formatted2 = false;
                         if (this.opts.linebreaks) {
-                          $6(s).prepend("<br>").append("<br>");
+                          $7(s).prepend("<br>").append("<br>");
                           $formatted2 = this.utils.replaceWithContents(s);
                         } else {
                           $formatted2 = this.utils.replaceToTag(s, "p");
@@ -24353,7 +20124,7 @@
                 var toggleType = false;
                 if (this.block.type == "class") {
                   toggleType = "toggle";
-                  classSize = $6(this.block.blocks).filter(
+                  classSize = $7(this.block.blocks).filter(
                     "." + this.block.value
                   ).length;
                   if (this.block.blocksSize == classSize) toggleType = "toggle";
@@ -24361,10 +20132,10 @@
                   else if (classSize === 0) toggleType = "set";
                 }
                 var exceptTags = ["ul", "ol", "li", "td", "th", "dl", "dt", "dd"];
-                $6.each(
+                $7.each(
                   this.block.blocks,
-                  $6.proxy(function(i2, s) {
-                    if ($6.inArray(s.tagName.toLowerCase(), exceptTags) != -1)
+                  $7.proxy(function(i2, s) {
+                    if ($7.inArray(s.tagName.toLowerCase(), exceptTags) != -1)
                       return;
                     var $formatted2 = this.utils.replaceToTag(s, tag);
                     if (toggleType) {
@@ -24423,12 +20194,12 @@
             $el.removeClass(this.block.value);
           },
           formatListToBlockquote: function() {
-            var block = $6(this.block.blocks[0]).closest(
+            var block = $7(this.block.blocks[0]).closest(
               "ul, ol",
               this.$editor[0]
             );
-            $6(block).find("ul, ol").contents().unwrap();
-            $6(block).find("li").append($6("<br>")).contents().unwrap();
+            $7(block).find("ul, ol").contents().unwrap();
+            $7(block).find("li").append($7("<br>")).contents().unwrap();
             var $el = this.utils.replaceToTag(block, "blockquote");
             this.block.toggle($el);
           },
@@ -24439,12 +20210,12 @@
             this.$editor.find("p:empty").remove();
             var formatted = this.selection.getBlock();
             if (tag != "p") {
-              $6(formatted).find("img").remove();
+              $7(formatted).find("img").remove();
             }
             if (!this.opts.linebreaks) {
-              this.block.toggle($6(formatted));
+              this.block.toggle($7(formatted));
             }
-            this.$editor.find("ul, ol, tr, blockquote, p").each($6.proxy(this.utils.removeEmpty, this));
+            this.$editor.find("ul, ol, tr, blockquote, p").each($7.proxy(this.utils.removeEmpty, this));
             if (this.opts.linebreaks && tag == "p") {
               this.utils.replaceWithContents(formatted);
             }
@@ -24459,7 +20230,7 @@
             }
             var formatted = this.selection.wrap(tag);
             if (formatted === false) return;
-            var $formatted = $6(formatted);
+            var $formatted = $7(formatted);
             this.block.formatTableWrapping($formatted);
             var $elements = $formatted.find(
               this.opts.blockLevelElements.join(",") + ", td, table, thead, tbody, tfoot, th, tr"
@@ -24467,12 +20238,12 @@
             $elements.contents().unwrap();
             if (tag != "p" && tag != "blockquote")
               $formatted.find("img").remove();
-            $6.each(this.block.blocks, $6.proxy(this.utils.removeEmpty, this));
+            $7.each(this.block.blocks, $7.proxy(this.utils.removeEmpty, this));
             $formatted.append(this.selection.getMarker(2));
             if (!this.opts.linebreaks) {
               this.block.toggle($formatted);
             }
-            this.$editor.find("ul, ol, tr, blockquote, p").each($6.proxy(this.utils.removeEmpty, this));
+            this.$editor.find("ul, ol, tr, blockquote, p").each($7.proxy(this.utils.removeEmpty, this));
             $formatted.find("blockquote:empty").remove();
             if (this.block.isRemoveInline) {
               this.utils.removeInlineTags($formatted);
@@ -24497,58 +20268,58 @@
           },
           removeData: function(name2, value) {
             var blocks = this.selection.getBlocks();
-            $6(blocks).removeAttr("data-" + name2);
+            $7(blocks).removeAttr("data-" + name2);
             this.code.sync();
           },
           setData: function(name2, value) {
             var blocks = this.selection.getBlocks();
-            $6(blocks).attr("data-" + name2, value);
+            $7(blocks).attr("data-" + name2, value);
             this.code.sync();
           },
           toggleData: function(name2, value) {
             var blocks = this.selection.getBlocks();
-            $6.each(blocks, function() {
-              if ($6(this).attr("data-" + name2)) {
-                $6(this).removeAttr("data-" + name2);
+            $7.each(blocks, function() {
+              if ($7(this).attr("data-" + name2)) {
+                $7(this).removeAttr("data-" + name2);
               } else {
-                $6(this).attr("data-" + name2, value);
+                $7(this).attr("data-" + name2, value);
               }
             });
           },
           removeAttr: function(attr, value) {
             var blocks = this.selection.getBlocks();
-            $6(blocks).removeAttr(attr);
+            $7(blocks).removeAttr(attr);
             this.code.sync();
           },
           setAttr: function(attr, value) {
             var blocks = this.selection.getBlocks();
-            $6(blocks).attr(attr, value);
+            $7(blocks).attr(attr, value);
             this.code.sync();
           },
           toggleAttr: function(attr, value) {
             var blocks = this.selection.getBlocks();
-            $6.each(blocks, function() {
-              if ($6(this).attr(name)) {
-                $6(this).removeAttr(name);
+            $7.each(blocks, function() {
+              if ($7(this).attr(name)) {
+                $7(this).removeAttr(name);
               } else {
-                $6(this).attr(name, value);
+                $7(this).attr(name, value);
               }
             });
           },
           removeClass: function(className) {
             var blocks = this.selection.getBlocks();
-            $6(blocks).removeClass(className);
+            $7(blocks).removeClass(className);
             this.utils.removeEmptyAttr(blocks, "class");
             this.code.sync();
           },
           setClass: function(className) {
             var blocks = this.selection.getBlocks();
-            $6(blocks).addClass(className);
+            $7(blocks).addClass(className);
             this.code.sync();
           },
           toggleClass: function(className) {
             var blocks = this.selection.getBlocks();
-            $6(blocks).toggleClass(className);
+            $7(blocks).toggleClass(className);
             this.code.sync();
           }
         };
@@ -24586,14 +20357,14 @@
             this.buffer.set("redo");
             this.buffer.getUndo();
             this.selection.restore();
-            setTimeout($6.proxy(this.observe.load, this), 50);
+            setTimeout($7.proxy(this.observe.load, this), 50);
           },
           redo: function() {
             if (this.opts.rebuffer.length === 0) return;
             this.buffer.set("undo");
             this.buffer.getRedo();
             this.selection.restore();
-            setTimeout($6.proxy(this.observe.load, this), 50);
+            setTimeout($7.proxy(this.observe.load, this), 50);
           }
         };
       },
@@ -24612,10 +20383,10 @@
             return this.$element[0].tagName === "TEXTAREA";
           },
           createContainerBox: function() {
-            this.$box = $6('<div class="redactor-box" role="application" />');
+            this.$box = $7('<div class="redactor-box" role="application" />');
           },
           createTextarea: function() {
-            this.$textarea = $6("<textarea />").attr(
+            this.$textarea = $7("<textarea />").attr(
               "name",
               this.build.getTextareaName()
             );
@@ -24625,7 +20396,7 @@
           },
           loadContent: function() {
             var func = this.build.isTextarea() ? "val" : "html";
-            this.content = $6.trim(this.$element[func]());
+            this.content = $7.trim(this.$element[func]());
           },
           enableEditor: function() {
             this.$editor.attr({
@@ -24638,7 +20409,7 @@
             this.build[func]();
           },
           fromTextarea: function() {
-            this.$editor = $6("<div />");
+            this.$editor = $7("<div />");
             this.$textarea = this.$element;
             this.$box.insertAfter(this.$element).append(this.$editor).append(this.$element);
             this.$editor.addClass("redactor-editor");
@@ -24656,7 +20427,7 @@
             this.build.setOptions();
             this.build.callEditor();
             if (this.opts.visual) return;
-            setTimeout($6.proxy(this.code.showCode, this), 200);
+            setTimeout($7.proxy(this.code.showCode, this), 200);
           },
           callEditor: function() {
             this.build.disableMozillaEditing();
@@ -24669,11 +20440,11 @@
             }
             this.modal.loadTemplates();
             this.build.plugins();
-            setTimeout($6.proxy(this.observe.load, this), 4);
+            setTimeout($7.proxy(this.observe.load, this), 4);
             this.core.setCallback("init");
           },
           setOptions: function() {
-            $6(this.$textarea).attr("dir", this.opts.direction);
+            $7(this.$textarea).attr("dir", this.opts.direction);
             if (this.opts.linebreaks)
               this.$editor.addClass("redactor-linebreaks");
             if (this.opts.tabindex)
@@ -24705,7 +20476,7 @@
             });
             this.$editor.on(
               "drop.redactor",
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 e = e.originalEvent || e;
                 if (window.FormData === void 0 || !e.dataTransfer) return true;
                 if (e.dataTransfer.files.length === 0) {
@@ -24719,7 +20490,7 @@
             );
             this.$editor.on(
               "click.redactor",
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 var event = this.core.getEvent();
                 var type = event == "click" || event == "arrow" ? false : "click";
                 this.core.addEvent(type);
@@ -24727,26 +20498,26 @@
                 this.core.setCallback("click", e);
               }, this)
             );
-            this.$editor.on("paste.redactor", $6.proxy(this.paste.init, this));
-            this.$editor.on("cut.redactor", $6.proxy(this.code.sync, this));
-            this.$editor.on("keydown.redactor", $6.proxy(this.keydown.init, this));
-            this.$editor.on("keyup.redactor", $6.proxy(this.keyup.init, this));
-            if ($6.isFunction(this.opts.codeKeydownCallback)) {
+            this.$editor.on("paste.redactor", $7.proxy(this.paste.init, this));
+            this.$editor.on("cut.redactor", $7.proxy(this.code.sync, this));
+            this.$editor.on("keydown.redactor", $7.proxy(this.keydown.init, this));
+            this.$editor.on("keyup.redactor", $7.proxy(this.keyup.init, this));
+            if ($7.isFunction(this.opts.codeKeydownCallback)) {
               this.$textarea.on(
                 "keydown.redactor-textarea",
-                $6.proxy(this.opts.codeKeydownCallback, this)
+                $7.proxy(this.opts.codeKeydownCallback, this)
               );
             }
-            if ($6.isFunction(this.opts.codeKeyupCallback)) {
+            if ($7.isFunction(this.opts.codeKeyupCallback)) {
               this.$textarea.on(
                 "keyup.redactor-textarea",
-                $6.proxy(this.opts.codeKeyupCallback, this)
+                $7.proxy(this.opts.codeKeyupCallback, this)
               );
             }
             this.$editor.on(
               "focus.redactor",
-              $6.proxy(function(e) {
-                if ($6.isFunction(this.opts.focusCallback)) {
+              $7.proxy(function(e) {
+                if ($7.isFunction(this.opts.focusCallback)) {
                   this.core.setCallback("focus", e);
                 }
                 this.build.focused = true;
@@ -24759,18 +20530,18 @@
                 }
               }, this)
             );
-            $6(document).on(
+            $7(document).on(
               "mousedown.redactor-blur." + this.uuid,
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 if (this.start) return;
                 if (this.rtePaste) return;
-                if ($6(e.target).closest(
+                if ($7(e.target).closest(
                   ".redactor-editor, .redactor-toolbar, .redactor-dropdown"
                 ).length !== 0) {
                   return;
                 }
                 this.utils.disableSelectAll();
-                if (!this.build.blured && $6.isFunction(this.opts.blurCallback)) {
+                if (!this.build.blured && $7.isFunction(this.opts.blurCallback)) {
                   this.core.setCallback("blur", e);
                 }
                 this.build.focused = false;
@@ -24788,11 +20559,11 @@
           },
           plugins: function() {
             if (!this.opts.plugins) return;
-            $6.each(
+            $7.each(
               this.opts.plugins,
-              $6.proxy(function(i, s) {
+              $7.proxy(function(i, s) {
                 var func = typeof RedactorPlugins !== "undefined" && typeof RedactorPlugins[s] !== "undefined" ? RedactorPlugins : Redactor.fn;
-                if (!$6.isFunction(func[s])) {
+                if (!$7.isFunction(func[s])) {
                   return;
                 }
                 this[s] = func[s]();
@@ -24801,7 +20572,7 @@
                 for (var z = 0; z < len; z++) {
                   this[s][methods[z]] = this[s][methods[z]].bind(this);
                 }
-                if ($6.isFunction(this[s].init)) {
+                if ($7.isFunction(this[s].init)) {
                   this[s].init();
                 }
               }, this)
@@ -24824,7 +20595,7 @@
       button: function() {
         return {
           build: function(btnName, btnObject) {
-            var $button = $6(
+            var $button = $7(
               '<a href="#" class="re-icon re-' + btnName + '" rel="' + btnName + '" />'
             ).attr({
               role: "button",
@@ -24836,7 +20607,7 @@
             }
             if (btnObject.dropdown) {
               $button.addClass("redactor-toolbar-link-dropdown").attr("aria-haspopup", true);
-              var $dropdown = $6(
+              var $dropdown = $7(
                 '<div class="redactor-dropdown redactor-dropdown-' + this.uuid + " redactor-dropdown-box-" + btnName + '" style="display: none;">'
               );
               $button.data("dropdown", $dropdown);
@@ -24850,7 +20621,7 @@
           setEvent: function($button, btnName, btnObject) {
             $button.on(
               "touchstart click",
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 if ($button.hasClass("redactor-button-disabled")) return false;
                 var type = "func";
                 var callback = btnObject.func;
@@ -24866,12 +20637,12 @@
             );
           },
           createTooltip: function($button, name2, title) {
-            var $tooltip = $6("<span>").addClass(
+            var $tooltip = $7("<span>").addClass(
               "redactor-toolbar-tooltip redactor-toolbar-tooltip-" + this.uuid + " redactor-toolbar-tooltip-" + name2
             ).hide().html(title);
             $tooltip.appendTo("body");
             $button.on("mouseover", function() {
-              if ($6(this).hasClass("redactor-button-disabled")) {
+              if ($7(this).hasClass("redactor-button-disabled")) {
                 return;
               }
               var pos = $button.offset();
@@ -24888,7 +20659,7 @@
           onClick: function(e, btnName, type, callback) {
             this.button.caretOffset = this.caret.getOffset();
             e.preventDefault();
-            $6(document).find(".redactor-toolbar-tooltip").hide();
+            $7(document).find(".redactor-toolbar-tooltip").hide();
             if (this.utils.browser("msie")) e.returnValue = false;
             if (type == "command") this.inline.format(callback);
             else if (type == "dropdown") this.dropdown.show(e, btnName);
@@ -24896,7 +20667,7 @@
           },
           onClickCallback: function(e, callback, btnName) {
             var func;
-            if ($6.isFunction(callback)) callback.call(this, btnName);
+            if ($7.isFunction(callback)) callback.call(this, btnName);
             else if (callback.search(/\./) != "-1") {
               func = callback.split(".");
               if (typeof this[func[0]] == "undefined") return;
@@ -24943,7 +20714,7 @@
             var key = $btn.attr("rel");
             $btn.on(
               "touchstart click",
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 if ($btn.hasClass("redactor-button-disabled")) return false;
                 this.button.onClick(e, key, type, callback);
               }, this)
@@ -24953,7 +20724,7 @@
             $btn.addClass("redactor-toolbar-link-dropdown").attr("aria-haspopup", true);
             var key = $btn.attr("rel");
             this.button.addCallback($btn, "dropdown");
-            var $dropdown = $6(
+            var $dropdown = $7(
               '<div class="redactor-dropdown redactor-dropdown-' + this.uuid + " redactor-dropdown-box-" + key + '" style="display: none;">'
             );
             $btn.data("dropdown", $dropdown);
@@ -24965,7 +20736,7 @@
             if (this.button.isMobileUndoRedo(key)) return "buffer";
             var btn = this.button.build(key, { title });
             btn.addClass("redactor-btn-image");
-            this.$toolbar.append($6("<li>").append(btn));
+            this.$toolbar.append($7("<li>").append(btn));
             return btn;
           },
           addFirst: function(key, title) {
@@ -24973,7 +20744,7 @@
             if (this.button.isMobileUndoRedo(key)) return "buffer";
             var btn = this.button.build(key, { title });
             btn.addClass("redactor-btn-image");
-            this.$toolbar.prepend($6("<li>").append(btn));
+            this.$toolbar.prepend($7("<li>").append(btn));
             return btn;
           },
           addAfter: function(afterkey, key, title) {
@@ -24982,8 +20753,8 @@
             var btn = this.button.build(key, { title });
             btn.addClass("redactor-btn-image");
             var $btn = this.button.get(afterkey);
-            if ($btn.length !== 0) $btn.parent().after($6("<li>").append(btn));
-            else this.$toolbar.append($6("<li>").append(btn));
+            if ($btn.length !== 0) $btn.parent().after($7("<li>").append(btn));
+            else this.$toolbar.append($7("<li>").append(btn));
             return btn;
           },
           addBefore: function(beforekey, key, title) {
@@ -24992,8 +20763,8 @@
             var btn = this.button.build(key, { title });
             btn.addClass("redactor-btn-image");
             var $btn = this.button.get(beforekey);
-            if ($btn.length !== 0) $btn.parent().before($6("<li>").append(btn));
-            else this.$toolbar.append($6("<li>").append(btn));
+            if ($btn.length !== 0) $btn.parent().before($7("<li>").append(btn));
+            else this.$toolbar.append($7("<li>").append(btn));
             return btn;
           },
           remove: function(key) {
@@ -25009,7 +20780,7 @@
           setStart: function(node) {
             if (!this.utils.isBlock(node)) {
               var space = this.utils.createSpaceElement();
-              $6(node).prepend(space);
+              $7(node).prepend(space);
               this.caret.setEnd(space);
             } else {
               this.caret.set(node, 0, node, 0);
@@ -25029,8 +20800,8 @@
               orgn.innerHTML = this.opts.invisibleSpace;
             }
             if (orgn.tagName == "BR" && this.opts.linebreaks === false) {
-              var parent = $6(this.opts.emptyHtml)[0];
-              $6(orgn).replaceWith(parent);
+              var parent = $7(this.opts.emptyHtml)[0];
+              $7(orgn).replaceWith(parent);
               orgn = parent;
               focn = orgn;
             }
@@ -25044,27 +20815,27 @@
           },
           setAfter: function(node) {
             try {
-              var tag = $6(node)[0].tagName;
+              var tag = $7(node)[0].tagName;
               if (tag != "BR" && !this.utils.isBlock(node)) {
                 var space = this.utils.createSpaceElement();
-                $6(node).after(space);
+                $7(node).after(space);
                 this.caret.setEnd(space);
               } else {
                 if (tag != "BR" && this.utils.browser("msie")) {
-                  this.caret.setStart($6(node).next());
+                  this.caret.setStart($7(node).next());
                 } else {
                   this.caret.setAfterOrBefore(node, "after");
                 }
               }
             } catch (e) {
               var space = this.utils.createSpaceElement();
-              $6(node).after(space);
+              $7(node).after(space);
               this.caret.setEnd(space);
             }
           },
           setBefore: function(node) {
             if (this.utils.isBlock(node)) {
-              this.caret.setEnd($6(node).prev());
+              this.caret.setEnd($7(node).prev());
             } else {
               this.caret.setAfterOrBefore(node, "before");
             }
@@ -25095,7 +20866,7 @@
             var cloned = this.range.cloneRange();
             cloned.selectNodeContents(node);
             cloned.setEnd(this.range.endContainer, this.range.endOffset);
-            return $6.trim(cloned.toString()).length;
+            return $7.trim(cloned.toString()).length;
           },
           getOffset: function() {
             var offset2 = 0;
@@ -25161,13 +20932,13 @@
             if (this.opts.linebreaks)
               html = this.clean.replaceParagraphsToBr(html);
             html = this.clean.saveFormTags(html);
-            var $div = $6("<div>");
+            var $div = $7("<div>");
             $div.html(html);
             var fonts = $div.find("font[style]");
             if (fonts.length !== 0) {
               fonts.replaceWith(function() {
-                var $el = $6(this);
-                var $span = $6("<span>").attr("style", $el.attr("style"));
+                var $el = $7(this);
+                var $span = $7("<span>").attr("style", $el.attr("style"));
                 return $span.append($el.contents());
               });
               html = $div.html();
@@ -25203,7 +20974,7 @@
               "\u2014": "&mdash;",
               "\u2010": "&dash;"
             };
-            $6.each(chars, function(i, s) {
+            $7.each(chars, function(i, s) {
               html = html.replace(new RegExp(i, "g"), s);
             });
             if (this.utils.browser("mozilla")) {
@@ -25224,10 +20995,10 @@
               /<(.*?) data-verified="redactor"(.*?[^>])>/gi,
               "<$1$2>"
             );
-            var $div = $6("<div/>").html($6.parseHTML(html, document, true));
+            var $div = $7("<div/>").html($7.parseHTML(html, document, true));
             $div.find("span").removeAttr("rel");
             $div.find("pre .redactor-invisible-space").each(function() {
-              $6(this).contents().unwrap();
+              $7(this).contents().unwrap();
             });
             html = $div.html();
             html = html.replace(
@@ -25274,7 +21045,7 @@
             return html;
           },
           onPaste: function(html, setMode) {
-            html = $6.trim(html);
+            html = $7.trim(html);
             html = html.replace(/\$/g, "&#36;");
             html = html.replace(/<span class="s[0-9]">/gi, "<span>");
             html = html.replace(
@@ -25371,25 +21142,25 @@
               html = this.clean.onPasteIeFixLinks(html);
               html = html.replace(/<img(.*?)v:shapes=(.*?)>/gi, "");
               html = html.replace(/src="file\:\/\/(.*?)"/, 'src=""');
-              var $div = $6("<div/>").html(html);
+              var $div = $7("<div/>").html(html);
               var lastList = false;
               var lastLevel = 1;
               var listsIds = [];
               $div.find("p[style]").each(function() {
-                var matches3 = $6(this).attr("style").match(/mso\-list\:l([0-9]+)\slevel([0-9]+)/);
+                var matches3 = $7(this).attr("style").match(/mso\-list\:l([0-9]+)\slevel([0-9]+)/);
                 if (matches3) {
                   var currentList = parseInt(matches3[1]);
                   var currentLevel = parseInt(matches3[2]);
-                  var listType = $6(this).html().match(/^[\w]+\./) ? "ol" : "ul";
-                  var $li = $6("<li/>").html($6(this).html());
+                  var listType = $7(this).html().match(/^[\w]+\./) ? "ol" : "ul";
+                  var $li = $7("<li/>").html($7(this).html());
                   $li.html($li.html().replace(/^([\w\.]+)</, "<"));
                   $li.find("span:first").remove();
-                  if (currentLevel == 1 && $6.inArray(currentList, listsIds) == -1) {
-                    var $list = $6("<" + listType + "/>").attr({
+                  if (currentLevel == 1 && $7.inArray(currentList, listsIds) == -1) {
+                    var $list = $7("<" + listType + "/>").attr({
                       "data-level": currentLevel,
                       "data-list": currentList
                     }).html($li);
-                    $6(this).replaceWith($list);
+                    $7(this).replaceWith($list);
                     lastList = currentList;
                     listsIds.push(currentList);
                   } else {
@@ -25399,7 +21170,7 @@
                       );
                       var $lastList = $prevList;
                       for (var i = lastLevel; i < currentLevel; i++) {
-                        $list = $6("<" + listType + "/>");
+                        $list = $7("<" + listType + "/>");
                         $list.appendTo($lastList.find("li").last());
                         $lastList = $list;
                       }
@@ -25415,7 +21186,7 @@
                     }
                     lastLevel = currentLevel;
                     lastList = currentList;
-                    $6(this).remove();
+                    $7(this).remove();
                   }
                 }
               });
@@ -25658,7 +21429,7 @@
           },
           onPasteIeFixLinks: function(html) {
             if (!this.utils.browser("msie")) return html;
-            var tmp = $6.trim(html);
+            var tmp = $7.trim(html);
             if (tmp.search(/^<a(.*?)>(.*?)<\/a>$/i) === 0) {
               html = html.replace(/^<a(.*?)>(.*?)<\/a>$/i, "$2");
             }
@@ -25698,9 +21469,9 @@
           savePreFormatting: function(html) {
             var pre = html.match(/<pre(.*?)>([\w\W]*?)<\/pre>/gi);
             if (pre !== null) {
-              $6.each(
+              $7.each(
                 pre,
-                $6.proxy(function(i, s) {
+                $7.proxy(function(i, s) {
                   var arr = s.match(/<pre(.*?)>([\w\W]*?)<\/pre>/i);
                   arr[2] = arr[2].replace(/<br\s?\/?>/g, "\n");
                   arr[2] = arr[2].replace(/&nbsp;/g, " ");
@@ -25724,9 +21495,9 @@
           saveCodeFormatting: function(html) {
             var code = html.match(/<code(.*?)>([\w\W]*?)<\/code>/gi);
             if (code !== null) {
-              $6.each(
+              $7.each(
                 code,
-                $6.proxy(function(i, s) {
+                $7.proxy(function(i, s) {
                   var arr = s.match(/<code(.*?)>([\w\W]*?)<\/code>/i);
                   arr[2] = arr[2].replace(/&nbsp;/g, " ");
                   arr[2] = this.clean.encodeEntities(arr[2]);
@@ -25755,7 +21526,7 @@
             var tmp = document.createElement("div");
             tmp.innerHTML = html;
             html = tmp.textContent || tmp.innerText;
-            return $6.trim(html);
+            return $7.trim(html);
           },
           getPlainText: function(html, paragraphize) {
             html = this.clean.getTextFromHtml(html);
@@ -25811,9 +21582,9 @@
             if (this.utils.browser("msie")) return html;
             var div = document.createElement("div");
             div.innerHTML = html;
-            this.clean.clearUnverifiedRemove($6(div));
+            this.clean.clearUnverifiedRemove($7(div));
             html = div.innerHTML;
-            $6(div).remove();
+            $7(div).remove();
             return html;
           },
           clearUnverified: function() {
@@ -25830,7 +21601,7 @@
             $editor.find(
               'span[data-verified="redactor"], img[data-verified="redactor"]'
             ).each(function(i, s) {
-              var $s = $6(s);
+              var $s = $7(s);
               $s.attr("style", $s.attr("rel"));
             });
           },
@@ -25865,11 +21636,11 @@
             return html;
           },
           convertInline: function(html) {
-            var $div = $6("<div />").html(html);
+            var $div = $7("<div />").html(html);
             var tags = this.opts.inlineTags;
             tags.push("span");
             $div.find(tags.join(",")).each(function() {
-              var $el = $6(this);
+              var $el = $7(this);
               var tag = this.tagName.toLowerCase();
               $el.attr("data-redactor-tag", tag);
               if (tag == "span") {
@@ -25885,9 +21656,9 @@
           },
           normalizeLists: function() {
             this.$editor.find("li").each(function(i, s) {
-              var $next = $6(s).next();
+              var $next = $7(s).next();
               if ($next.length !== 0 && ($next[0].tagName == "UL" || $next[0].tagName == "OL")) {
-                $6(s).append($next);
+                $7(s).append($next);
               }
             });
           },
@@ -25946,7 +21717,7 @@
       code: function() {
         return {
           set: function(html) {
-            html = $6.trim(html.toString());
+            html = $7.trim(html.toString());
             html = this.clean.onSet(html);
             if (this.utils.browser("msie")) {
               html = html.replace(
@@ -25957,7 +21728,7 @@
             this.$editor.html(html);
             this.code.sync();
             if (html !== "") this.placeholder.remove();
-            setTimeout($6.proxy(this.buffer.add, this), 15);
+            setTimeout($7.proxy(this.buffer.add, this), 15);
             if (this.start === false) this.observe.load();
           },
           get: function() {
@@ -25969,7 +21740,7 @@
             return code;
           },
           sync: function() {
-            setTimeout($6.proxy(this.code.startSync, this), 10);
+            setTimeout($7.proxy(this.code.startSync, this), 10);
           },
           startSync: function() {
             var html = this.$editor.html();
@@ -26006,15 +21777,15 @@
           showCode: function() {
             this.selection.save();
             this.code.offset = this.caret.getOffset();
-            var scroll = $6(window).scrollTop();
+            var scroll = $7(window).scrollTop();
             var width2 = this.$editor.innerWidth(), height2 = this.$editor.innerHeight();
             this.$editor.hide();
             var html = this.$textarea.val();
             this.modified = this.clean.removeSpaces(html);
             html = this.tabifier.get(html);
             var start2 = 0, end = 0;
-            var $editorDiv = $6("<div/>").append(
-              $6.parseHTML(this.clean.onSync(this.$editor.html()), document, true)
+            var $editorDiv = $7("<div/>").append(
+              $7.parseHTML(this.clean.onSync(this.$editor.html()), document, true)
             );
             var $selectionMarkers = $editorDiv.find(
               "span.redactor-selection-marker"
@@ -26042,7 +21813,7 @@
             this.$textarea.val(html);
             if (this.opts.codemirror) {
               this.$textarea.next(".CodeMirror").each(function(i, el) {
-                $6(el).show();
+                $7(el).show();
                 el.CodeMirror.setValue(html);
                 el.CodeMirror.setSize("100%", height2);
                 el.CodeMirror.refresh();
@@ -26071,7 +21842,7 @@
                 "keydown.redactor-textarea-indenting",
                 this.code.textareaIndenting
               );
-              $6(window).scrollTop(scroll);
+              $7(window).scrollTop(scroll);
               if (this.$textarea[0].setSelectionRange) {
                 this.$textarea[0].setSelectionRange(start2, end);
               }
@@ -26163,7 +21934,7 @@
       core: function() {
         return {
           getObject: function() {
-            return $6.extend({}, this);
+            return $7.extend({}, this);
           },
           getEditor: function() {
             return this.$editor;
@@ -26192,11 +21963,11 @@
             var callback = this.opts[eventName];
             if (this.$textarea) {
               var returnValue = false;
-              var events = $6._data(this.$textarea[0], "events");
+              var events = $7._data(this.$textarea[0], "events");
               if (typeof events != "undefined" && typeof events[eventName] != "undefined") {
-                $6.each(
+                $7.each(
                   events[eventName],
-                  $6.proxy(function(key, value) {
+                  $7.proxy(function(key, value) {
                     if (value["namespace"] == eventNamespace) {
                       var data2 = typeof data2 == "undefined" ? [e] : [e, data2];
                       returnValue = typeof data2 == "undefined" ? value.handler.call(this, e) : value.handler.call(this, e, data2);
@@ -26206,7 +21977,7 @@
               }
               if (returnValue) return returnValue;
             }
-            if ($6.isFunction(callback)) {
+            if ($7.isFunction(callback)) {
               return typeof data == "undefined" ? callback.call(this, e) : callback.call(this, e, data);
             } else {
               return typeof data == "undefined" ? e : data;
@@ -26217,15 +21988,15 @@
             this.core.setCallback("destroy");
             this.$element.off(".redactor").removeData("redactor");
             this.$editor.off(".redactor");
-            $6(document).off("mousedown.redactor-blur." + this.uuid);
-            $6(document).off("mousedown.redactor." + this.uuid);
-            $6(document).off("click.redactor-image-delete." + this.uuid);
-            $6(document).off("click.redactor-image-resize-hide." + this.uuid);
-            $6(document).off(
+            $7(document).off("mousedown.redactor-blur." + this.uuid);
+            $7(document).off("mousedown.redactor." + this.uuid);
+            $7(document).off("click.redactor-image-delete." + this.uuid);
+            $7(document).off("click.redactor-image-resize-hide." + this.uuid);
+            $7(document).off(
               "touchstart.redactor." + this.uuid + " click.redactor." + this.uuid
             );
-            $6("body").off("scroll.redactor." + this.uuid);
-            $6(this.opts.toolbarFixedTarget).off("scroll.redactor." + this.uuid);
+            $7("body").off("scroll.redactor." + this.uuid);
+            $7(this.opts.toolbarFixedTarget).off("scroll.redactor." + this.uuid);
             this.$editor.removeClass(
               "redactor-editor redactor-linebreaks redactor-placeholder"
             );
@@ -26233,7 +22004,7 @@
             var html = this.code.get();
             if (this.opts.toolbar) {
               this.$toolbar.find("a").each(function() {
-                var $el = $6(this);
+                var $el = $7(this);
                 if ($el.data("dropdown")) {
                   $el.data("dropdown").remove();
                   $el.data("dropdown", {});
@@ -26252,7 +22023,7 @@
             if (this.$pasteBox) this.$pasteBox.remove();
             if (this.$modalBox) this.$modalBox.remove();
             if (this.$modalOverlay) this.$modalOverlay.remove();
-            $6(".redactor-toolbar-tooltip-" + this.uuid).remove();
+            $7(".redactor-toolbar-tooltip-" + this.uuid).remove();
             clearInterval(this.autosaveInterval);
           }
         };
@@ -26261,9 +22032,9 @@
         return {
           build: function(name2, $dropdown, dropdownObject) {
             if (name2 == "formatting" && this.opts.formattingAdd) {
-              $6.each(
+              $7.each(
                 this.opts.formattingAdd,
-                $6.proxy(function(i, s) {
+                $7.proxy(function(i, s) {
                   var name3 = s.tag, func;
                   if (typeof s["class"] != "undefined") {
                     name3 = name3 + "-" + s["class"];
@@ -26291,17 +22062,17 @@
                 }, this)
               );
             }
-            $6.each(
+            $7.each(
               dropdownObject,
-              $6.proxy(function(btnName, btnObject) {
-                var $item = $6(
+              $7.proxy(function(btnName, btnObject) {
+                var $item = $7(
                   '<a href="#" class="redactor-dropdown-' + btnName + '" role="button">' + btnObject.title + "</a>"
                 );
                 if (name2 == "formatting")
                   $item.addClass("redactor-formatting-" + btnName);
                 $item.on(
                   "click",
-                  $6.proxy(function(e) {
+                  $7.proxy(function(e) {
                     e.preventDefault();
                     var type = "func";
                     var callback = btnObject.func;
@@ -26312,7 +22083,7 @@
                       type = "dropdown";
                       callback = btnObject.dropdown;
                     }
-                    if ($6(e.target).hasClass("redactor-dropdown-link-inactive"))
+                    if ($7(e.target).hasClass("redactor-dropdown-link-inactive"))
                       return;
                     this.button.onClick(e, btnName, type, callback);
                     this.dropdown.hideAll();
@@ -26347,7 +22118,7 @@
               $button.addClass("dropact");
               var keyPosition = $button.offset();
               var dropdownWidth = $dropdown.width();
-              if (keyPosition.left + dropdownWidth > $6(document).width()) {
+              if (keyPosition.left + dropdownWidth > $7(document).width()) {
                 keyPosition.left = Math.max(0, keyPosition.left - dropdownWidth);
               }
               var left = keyPosition.left + "px";
@@ -26370,24 +22141,24 @@
               });
               this.$dropdown = $dropdown;
             }
-            $6(document).one(
+            $7(document).one(
               "click.redactor-dropdown",
-              $6.proxy(this.dropdown.hide, this)
+              $7.proxy(this.dropdown.hide, this)
             );
             this.$editor.one(
               "click.redactor-dropdown",
-              $6.proxy(this.dropdown.hide, this)
+              $7.proxy(this.dropdown.hide, this)
             );
-            $6(document).one(
+            $7(document).one(
               "keyup.redactor-dropdown",
-              $6.proxy(this.dropdown.closeHandler, this)
+              $7.proxy(this.dropdown.closeHandler, this)
             );
             $dropdown.on(
               "mouseover.redactor-dropdown",
-              $6.proxy(this.utils.disableBodyScroll, this)
+              $7.proxy(this.utils.disableBodyScroll, this)
             ).on(
               "mouseout.redactor-dropdown",
-              $6.proxy(this.utils.enableBodyScroll, this)
+              $7.proxy(this.utils.enableBodyScroll, this)
             );
             e.stopPropagation();
           },
@@ -26399,8 +22170,8 @@
           hideAll: function() {
             this.$toolbar.find("a.dropact").removeClass("redactor-act").removeClass("dropact");
             this.utils.enableBodyScroll();
-            $6(".redactor-dropdown-" + this.uuid).hide();
-            $6(".redactor-dropdown-link-selected").removeClass(
+            $7(".redactor-dropdown-" + this.uuid).hide();
+            $7(".redactor-dropdown-link-selected").removeClass(
               "redactor-dropdown-link-selected"
             );
             if (this.$dropdown) {
@@ -26410,7 +22181,7 @@
             }
           },
           hide: function(e) {
-            var $dropdown = $6(e.target);
+            var $dropdown = $7(e.target);
             if (!$dropdown.hasClass("dropact") && !$dropdown.hasClass("redactor-dropdown-link-inactive")) {
               if ($dropdown.hasClass("redactor-dropdown")) {
                 $dropdown.removeClass("dropact");
@@ -26433,7 +22204,7 @@
             this.selection.save();
             this.selection.get();
             var text = this.sel.toString();
-            $6("#redactor-filename").val(text);
+            $7("#redactor-filename").val(text);
             this.modal.show();
           },
           insert: function(json, direct, e) {
@@ -26447,7 +22218,7 @@
             if (typeof json == "string") {
               link = json;
             } else {
-              var text = $6("#redactor-filename").val();
+              var text = $7("#redactor-filename").val();
               if (typeof text == "undefined" || text === "") text = json.filename;
               link = '<a href="' + json.filelink + '" id="filelink-marker">' + text + "</a>";
             }
@@ -26462,7 +22233,7 @@
             this.buffer.set();
             this.insert.htmlWithoutClean(link);
             if (typeof json == "string") return;
-            var linkmarker = $6(this.$editor.find("a#filelink-marker"));
+            var linkmarker = $7(this.$editor.find("a#filelink-marker"));
             if (linkmarker.length !== 0) {
               linkmarker.removeAttr("id").removeAttr("style");
             } else linkmarker = false;
@@ -26541,39 +22312,39 @@
             );
             this.image.buttonDelete.on(
               "click",
-              $6.proxy(function() {
+              $7.proxy(function() {
                 this.image.remove($image);
               }, this)
             );
             this.image.buttonSave.on(
               "click",
-              $6.proxy(function() {
+              $7.proxy(function() {
                 this.image.update($image);
               }, this)
             );
-            $6(".redactor-link-tooltip").remove();
-            $6("#redactor-image-title").val($image.attr("alt"));
-            if (!this.opts.imageLink) $6(".redactor-image-link-option").hide();
+            $7(".redactor-link-tooltip").remove();
+            $7("#redactor-image-title").val($image.attr("alt"));
+            if (!this.opts.imageLink) $7(".redactor-image-link-option").hide();
             else {
-              var $redactorImageLink = $6("#redactor-image-link");
+              var $redactorImageLink = $7("#redactor-image-link");
               $redactorImageLink.attr("href", $image.attr("src"));
               if ($link.length !== 0) {
                 $redactorImageLink.val($link.attr("href"));
                 if ($link.attr("target") == "_blank")
-                  $6("#redactor-image-link-blank").prop("checked", true);
+                  $7("#redactor-image-link-blank").prop("checked", true);
               }
             }
             if (!this.opts.imagePosition)
-              $6(".redactor-image-position-option").hide();
+              $7(".redactor-image-position-option").hide();
             else {
               var floatValue = $image.css("display") == "block" && $image.css("float") == "none" ? "center" : $image.css("float");
-              $6("#redactor-image-align").val(floatValue);
+              $7("#redactor-image-align").val(floatValue);
             }
             this.modal.show();
-            $6("#redactor-image-title").focus();
+            $7("#redactor-image-title").focus();
           },
           setFloating: function($image) {
-            var floating = $6("#redactor-image-align").val();
+            var floating = $7("#redactor-image-align").val();
             var imageFloat = "";
             var imageDisplay = "";
             var imageMargin = "";
@@ -26602,10 +22373,10 @@
             this.image.hideResize();
             this.buffer.set();
             var $link = $image.closest("a", this.$editor[0]);
-            var title = $6("#redactor-image-title").val().replace(/(<([^>]+)>)/gi, "");
+            var title = $7("#redactor-image-title").val().replace(/(<([^>]+)>)/gi, "");
             $image.attr("alt", title);
             this.image.setFloating($image);
-            var link = $6.trim($6("#redactor-image-link").val());
+            var link = $7.trim($7("#redactor-image-link").val());
             var link = link.replace(/(<([^>]+)>)/gi, "");
             if (link !== "") {
               var pattern = "((xn--)?[a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}";
@@ -26614,9 +22385,9 @@
               if (link.search(re) == -1 && link.search(re2) === 0 && this.opts.linkProtocol) {
                 link = this.opts.linkProtocol + "://" + link;
               }
-              var target = $6("#redactor-image-link-blank").prop("checked") ? true : false;
+              var target = $7("#redactor-image-link-blank").prop("checked") ? true : false;
               if ($link.length === 0) {
-                var a = $6(
+                var a = $7(
                   '<a href="' + link + '">' + this.utils.getOuterHtml($image) + "</a>"
                 );
                 if (target) a.attr("target", "_blank");
@@ -26638,24 +22409,24 @@
           },
           setEditable: function($image) {
             if (this.opts.imageEditable) {
-              $image.on("dragstart", $6.proxy(this.image.onDrag, this));
+              $image.on("dragstart", $7.proxy(this.image.onDrag, this));
             }
-            var handler = $6.proxy(function(e) {
+            var handler = $7.proxy(function(e) {
               this.observe.image = $image;
               this.image.resizer = this.image.loadEditableControls($image);
-              $6(document).on(
+              $7(document).on(
                 "mousedown.redactor-image-resize-hide." + this.uuid,
-                $6.proxy(this.image.hideResize, this)
+                $7.proxy(this.image.hideResize, this)
               );
               if (!this.opts.imageResizable) return;
               this.image.resizer.on(
                 "mousedown.redactor touchstart.redactor",
-                $6.proxy(function(e2) {
+                $7.proxy(function(e2) {
                   this.image.setResizable(e2, $image);
                 }, this)
               );
             }, this);
-            $image.off("mousedown.redactor").on("mousedown.redactor", $6.proxy(this.image.hideResize, this));
+            $image.off("mousedown.redactor").on("mousedown.redactor", $7.proxy(this.image.hideResize, this));
             $image.off("click.redactor touchstart.redactor").on("click.redactor touchstart.redactor", handler);
           },
           setResizable: function(e, $image) {
@@ -26675,13 +22446,13 @@
             this.image.startResize();
           },
           startResize: function() {
-            $6(document).on(
+            $7(document).on(
               "mousemove.redactor-image-resize touchmove.redactor-image-resize",
-              $6.proxy(this.image.moveResize, this)
+              $7.proxy(this.image.moveResize, this)
             );
-            $6(document).on(
+            $7(document).on(
               "mouseup.redactor-image-resize touchend.redactor-image-resize",
-              $6.proxy(this.image.stopResize, this)
+              $7.proxy(this.image.stopResize, this)
             );
           },
           moveResize: function(e) {
@@ -26703,7 +22474,7 @@
           },
           stopResize: function() {
             this.handle = false;
-            $6(document).off(".redactor-image-resize");
+            $7(document).off(".redactor-image-resize");
             this.image.hideResize();
           },
           onDrag: function(e) {
@@ -26713,8 +22484,8 @@
             }
             this.$editor.on(
               "drop.redactor-image-inside-drop",
-              $6.proxy(function() {
-                setTimeout($6.proxy(this.image.onDrop, this), 1);
+              $7.proxy(function() {
+                setTimeout($7.proxy(this.image.onDrop, this), 1);
               }, this)
             );
           },
@@ -26727,22 +22498,22 @@
           },
           fixImageSourceAfterDrop: function() {
             this.$editor.find("img[data-save-url]").each(function() {
-              var $el = $6(this);
+              var $el = $7(this);
               $el.attr("src", $el.attr("data-save-url"));
               $el.removeAttr("data-save-url");
             });
           },
           hideResize: function(e) {
-            if (e && $6(e.target).closest("#redactor-image-box", this.$editor[0]).length !== 0)
+            if (e && $7(e.target).closest("#redactor-image-box", this.$editor[0]).length !== 0)
               return;
             if (e && e.target.tagName == "IMG") {
-              var $image = $6(e.target);
+              var $image = $7(e.target);
               $image.attr("data-save-url", $image.attr("src"));
             }
             var imageBox = this.$editor.find("#redactor-image-box");
             if (imageBox.length === 0) return;
-            $6("#redactor-image-editter").remove();
-            $6("#redactor-image-resizer").remove();
+            $7("#redactor-image-editter").remove();
+            $7("#redactor-image-resizer").remove();
             imageBox.find("img").css({
               marginTop: imageBox[0].style.marginTop,
               marginBottom: imageBox[0].style.marginBottom,
@@ -26752,9 +22523,9 @@
             imageBox.css("margin", "");
             imageBox.find("img").css("opacity", "");
             imageBox.replaceWith(function() {
-              return $6(this).contents();
+              return $7(this).contents();
             });
-            $6(document).off("mousedown.redactor-image-resize-hide." + this.uuid);
+            $7(document).off("mousedown.redactor-image-resize-hide." + this.uuid);
             if (typeof this.image.resizeHandle !== "undefined") {
               this.image.resizeHandle.el.attr(
                 "rel",
@@ -26765,7 +22536,7 @@
           },
           loadResizableControls: function($image, imageBox) {
             if (this.opts.imageResizable && !this.utils.isMobile()) {
-              var imageResizer = $6(
+              var imageResizer = $7(
                 '<span id="redactor-image-resizer" data-redactor="verified"></span>'
               );
               if (!this.utils.isDesktop()) {
@@ -26781,7 +22552,7 @@
             }
           },
           loadEditableControls: function($image) {
-            var imageBox = $6(
+            var imageBox = $7(
               '<span id="redactor-image-box" data-redactor="verified">'
             );
             imageBox.css("float", $image.css("float")).attr("contenteditable", false);
@@ -26798,13 +22569,13 @@
             }
             $image.css("opacity", ".5").after(imageBox);
             if (this.opts.imageEditable) {
-              this.image.editter = $6(
+              this.image.editter = $7(
                 '<span id="redactor-image-editter" data-redactor="verified">' + this.lang.get("edit") + "</span>"
               );
               this.image.editter.attr("contenteditable", false);
               this.image.editter.on(
                 "click",
-                $6.proxy(function() {
+                $7.proxy(function() {
                   this.image.showEdit($image);
                 }, this)
               );
@@ -26815,12 +22586,12 @@
             return this.image.loadResizableControls($image, imageBox);
           },
           remove: function(image) {
-            var $image = $6(image);
+            var $image = $7(image);
             var $link = $image.closest("a", this.$editor[0]);
             var $figure = $image.closest("figure", this.$editor[0]);
             var $parent = $image.parent();
-            if ($6("#redactor-image-box").length !== 0) {
-              $parent = $6("#redactor-image-box").parent();
+            if ($7("#redactor-image-box").length !== 0) {
+              $parent = $7("#redactor-image-box").parent();
             }
             var $next;
             if ($figure.length !== 0) {
@@ -26832,7 +22603,7 @@
             } else {
               $image.remove();
             }
-            $6("#redactor-image-box").remove();
+            $7("#redactor-image-box").remove();
             if ($figure.length !== 0) {
               this.caret.setStart($next);
             } else {
@@ -26851,15 +22622,15 @@
             }
             var $img;
             if (typeof json == "string") {
-              $img = $6(json).attr("data-redactor-inserted-image", "true");
+              $img = $7(json).attr("data-redactor-inserted-image", "true");
             } else {
-              $img = $6("<img>");
+              $img = $7("<img>");
               $img.attr("src", json.filelink).attr("data-redactor-inserted-image", "true");
             }
             var node = $img;
             var isP = this.utils.isCurrentOrParent("P");
             if (isP) {
-              node = $6("<blockquote />").append($img);
+              node = $7("<blockquote />").append($img);
             }
             if (direct) {
               this.selection.removeMarkers();
@@ -26909,9 +22680,9 @@
             this.clean.clearUnverified();
           },
           increaseBlocks: function() {
-            $6.each(
+            $7.each(
               this.selection.getBlocks(),
-              $6.proxy(function(i, elem) {
+              $7.proxy(function(i, elem) {
                 if (elem.tagName === "TD" || elem.tagName === "TH") return;
                 var $el = this.utils.getAlignmentElement(elem);
                 var left = this.utils.normalize($el.css("margin-left")) + this.opts.indentValue;
@@ -26921,8 +22692,8 @@
           },
           increaseText: function() {
             var wrapper = this.selection.wrap("div");
-            $6(wrapper).attr("data-tagblock", "redactor");
-            $6(wrapper).css("margin-left", this.opts.indentValue + "px");
+            $7(wrapper).attr("data-tagblock", "redactor");
+            $7(wrapper).css("margin-left", this.opts.indentValue + "px");
           },
           decrease: function() {
             this.buffer.set();
@@ -26939,18 +22710,18 @@
           decreaseLists: function() {
             document.execCommand("outdent");
             var current = this.selection.getCurrent();
-            var $item = $6(current).closest("li", this.$editor[0]);
+            var $item = $7(current).closest("li", this.$editor[0]);
             this.indent.fixEmptyIndent();
             if (!this.opts.linebreaks && $item.length === 0) {
               document.execCommand("formatblock", false, "p");
-              this.$editor.find("ul, ol, blockquote, p").each($6.proxy(this.utils.removeEmpty, this));
+              this.$editor.find("ul, ol, blockquote, p").each($7.proxy(this.utils.removeEmpty, this));
             }
             this.clean.clearUnverified();
           },
           decreaseBlocks: function() {
-            $6.each(
+            $7.each(
               this.selection.getBlocks(),
-              $6.proxy(function(i, elem) {
+              $7.proxy(function(i, elem) {
                 var $el = this.utils.getAlignmentElement(elem);
                 var left = this.utils.normalize($el.css("margin-left")) - this.opts.indentValue;
                 if (left <= 0) {
@@ -26968,8 +22739,8 @@
           },
           fixEmptyIndent: function() {
             var block = this.selection.getBlock();
-            if (this.range.collapsed && block && block.tagName == "LI" && this.utils.isEmpty($6(block).text())) {
-              var $block = $6(block);
+            if (this.range.collapsed && block && block.tagName == "LI" && this.utils.isEmpty($7(block).text())) {
+              var $block = $7(block);
               $block.find("span").not(".redactor-selection-marker").contents().unwrap();
               $block.append("<br>");
             }
@@ -27017,9 +22788,9 @@
               if (tag == tags[i]) tag = replaced[i];
             }
             if (this.opts.allowedTags) {
-              if ($6.inArray(tag, this.opts.allowedTags) == -1) return;
+              if ($7.inArray(tag, this.opts.allowedTags) == -1) return;
             } else {
-              if ($6.inArray(tag, this.opts.deniedTags) !== -1) return;
+              if ($7.inArray(tag, this.opts.deniedTags) !== -1) return;
             }
             this.inline.type = type || false;
             this.inline.value = value || false;
@@ -27036,7 +22807,7 @@
           },
           formatCollapsed: function(tag) {
             var current = this.selection.getCurrent();
-            var $parent = $6(current).closest(
+            var $parent = $7(current).closest(
               tag + "[data-redactor-tag=" + tag + "]",
               this.$editor[0]
             );
@@ -27050,7 +22821,7 @@
               }
               return;
             }
-            var node = $6("<" + tag + ">").attr("data-verified", "redactor").attr("data-redactor-tag", tag);
+            var node = $7("<" + tag + ">").attr("data-verified", "redactor").attr("data-redactor-tag", tag);
             node.html(this.opts.invisibleSpace);
             node = this.inline.setFormat(node);
             var node = this.insert.node(node);
@@ -27062,15 +22833,15 @@
             this.selection.save();
             document.execCommand("strikethrough");
             this.$editor.find("strike").each(
-              $6.proxy(function(i, s) {
-                var $el = $6(s);
+              $7.proxy(function(i, s) {
+                var $el = $7(s);
                 this.inline.formatRemoveSameChildren($el, tag);
                 var $span;
                 if (this.inline.type) {
-                  $span = $6("<span>").attr("data-redactor-tag", tag).attr("data-verified", "redactor");
+                  $span = $7("<span>").attr("data-redactor-tag", tag).attr("data-verified", "redactor");
                   $span = this.inline.setFormat($span);
                 } else {
-                  $span = $6("<" + tag + ">").attr("data-redactor-tag", tag).attr("data-verified", "redactor");
+                  $span = $7("<" + tag + ">").attr("data-redactor-tag", tag).attr("data-verified", "redactor");
                 }
                 $el.replaceWith($span.html($el.contents()));
                 var $parent = $span.parent();
@@ -27094,8 +22865,8 @@
             );
             if (tag != "span") {
               this.$editor.find(this.opts.inlineTags.join(", ")).each(
-                $6.proxy(function(i, s) {
-                  var $el = $6(s);
+                $7.proxy(function(i, s) {
+                  var $el = $7(s);
                   if (s.tagName === "U" && s.attributes.length === 0) {
                     $el.replaceWith($el.contents());
                     return;
@@ -27126,7 +22897,7 @@
           formatRemoveSameChildren: function($el, tag) {
             var self2 = this;
             $el.children(tag).each(function() {
-              var $child = $6(this);
+              var $child = $7(this);
               if (!$child.hasClass("redactor-selection-marker")) {
                 if (self2.inline.type == "style") {
                   var arr = self2.inline.value.split(";");
@@ -27165,15 +22936,15 @@
             }
             if (tag != "span") {
               this.$editor.find(tag).each(function() {
-                var $el = $6(this);
-                $el.replaceWith($6("<strike />").html($el.contents()));
+                var $el = $7(this);
+                $el.replaceWith($7("<strike />").html($el.contents()));
               });
             }
             this.$editor.find('[data-redactor-tag="' + tag + '"]' + find4).each(function() {
               if (find4 === "" && tag == "span" && this.tagName.toLowerCase() == tag)
                 return;
-              var $el = $6(this);
-              $el.replaceWith($6("<strike />").html($el.contents()));
+              var $el = $7(this);
+              $el.replaceWith($7("<strike />").html($el.contents()));
             });
             this.selection.restore();
           },
@@ -27201,17 +22972,17 @@
             var nodes = this.selection.getInlines();
             this.selection.save();
             if (current && current.tagName === "SPAN") {
-              var $s = $6(current);
+              var $s = $7(current);
               $s.removeAttr("style");
               if ($s[0].attributes.length === 0) {
                 $s.replaceWith($s.contents());
               }
             }
-            $6.each(
+            $7.each(
               nodes,
-              $6.proxy(function(i, s) {
-                var $s2 = $6(s);
-                if ($6.inArray(s.tagName.toLowerCase(), this.opts.inlineTags) != -1 && !$s2.hasClass("redactor-selection-marker")) {
+              $7.proxy(function(i, s) {
+                var $s2 = $7(s);
+                if ($7.inArray(s.tagName.toLowerCase(), this.opts.inlineTags) != -1 && !$s2.hasClass("redactor-selection-marker")) {
                   $s2.removeAttr("style");
                   if ($s2[0].attributes.length === 0) {
                     $s2.replaceWith($s2.contents());
@@ -27228,18 +22999,18 @@
             var nodes = this.selection.getInlines();
             this.selection.save();
             if (parent && parent.tagName === "SPAN") {
-              var $s = $6(parent);
+              var $s = $7(parent);
               $s.css(name2, "");
               this.utils.removeEmptyAttr($s, "style");
               if ($s[0].attributes.length === 0) {
                 $s.replaceWith($s.contents());
               }
             }
-            $6.each(
+            $7.each(
               nodes,
-              $6.proxy(function(i, s) {
-                var $s2 = $6(s);
-                if ($6.inArray(s.tagName.toLowerCase(), this.opts.inlineTags) != -1 && !$s2.hasClass("redactor-selection-marker")) {
+              $7.proxy(function(i, s) {
+                var $s2 = $7(s);
+                if ($7.inArray(s.tagName.toLowerCase(), this.opts.inlineTags) != -1 && !$s2.hasClass("redactor-selection-marker")) {
                   $s2.css(name2, "");
                   this.utils.removeEmptyAttr($s2, "style");
                   if ($s2[0].attributes.length === 0) {
@@ -27257,13 +23028,13 @@
             this.selection.save();
             document.execCommand("removeFormat");
             if (current && current.tagName === "SPAN") {
-              $6(current).replaceWith($6(current).contents());
+              $7(current).replaceWith($7(current).contents());
             }
-            $6.each(
+            $7.each(
               this.selection.getNodes(),
-              $6.proxy(function(i, s) {
-                var $s = $6(s);
-                if ($6.inArray(s.tagName.toLowerCase(), this.opts.inlineTags) != -1 && !$s.hasClass("redactor-selection-marker")) {
+              $7.proxy(function(i, s) {
+                var $s = $7(s);
+                if ($7.inArray(s.tagName.toLowerCase(), this.opts.inlineTags) != -1 && !$s.hasClass("redactor-selection-marker")) {
                   $s.replaceWith($s.contents());
                 }
               }, this)
@@ -27294,13 +23065,13 @@
             this.code.sync();
             this.observe.load();
             if (typeof clean == "undefined") {
-              setTimeout($6.proxy(this.clean.clearUnverified, this), 10);
+              setTimeout($7.proxy(this.clean.clearUnverified, this), 10);
             }
           },
           text: function(text) {
             this.placeholder.remove();
             text = text.toString();
-            text = $6.trim(text);
+            text = $7.trim(text);
             text = this.clean.getPlainText(text, false);
             this.$editor.focus();
             if (this.utils.browser("msie")) {
@@ -27348,7 +23119,7 @@
             }
             this.clean.normalizeLists();
             if (!this.opts.linebreaks) {
-              this.$editor.find("p").each($6.proxy(this.utils.removeEmpty, this));
+              this.$editor.find("p").each($7.proxy(this.utils.removeEmpty, this));
             }
             this.code.sync();
             this.observe.load();
@@ -27358,7 +23129,7 @@
           },
           htmlFixMozilla: function() {
             if (!this.utils.browser("mozilla")) return;
-            var $next = $6(this.selection.getBlock()).next();
+            var $next = $7(this.selection.getBlock()).next();
             if ($next.length > 0 && $next[0].tagName == "P" && $next.html() === "") {
               $next.remove();
             }
@@ -27366,7 +23137,7 @@
           htmlIe: function(html) {
             if (this.utils.isIe11()) {
               var parent = this.utils.isCurrentOrParent("P");
-              var $html = $6("<div>").append(html);
+              var $html = $7("<div>").append(html);
               var blocksMatch = $html.contents().is(
                 "p, :header, dl, ul, ol, div, table, td, blockquote, pre, address, section, header, footer, aside, article"
               );
@@ -27397,7 +23168,7 @@
             var html = this.utils.getOuterHtml(node);
             html = this.clean.setVerified(html);
             if (html.match(/</g) !== null) {
-              node = $6(html)[0];
+              node = $7(html)[0];
             }
             this.selection.get();
             if (deleteContents !== false) {
@@ -27457,13 +23228,13 @@
             var node = document.createElement("span");
             node.className = "redactor-ie-paste";
             this.insert.node(node);
-            var parHtml = $6(parent).html();
+            var parHtml = $7(parent).html();
             parHtml = "<p>" + parHtml.replace(
               /<span class="redactor-ie-paste"><\/span>/gi,
               "</p>" + html + "<p>"
             ) + "</p>";
             parHtml = parHtml.replace(/<p><\/p>/gi, "");
-            $6(parent).replaceWith(parHtml);
+            $7(parent).replaceWith(parHtml);
           },
           ie11PasteFrag: function(html) {
             this.selection.get();
@@ -27515,13 +23286,13 @@
               var isEndOfTable = false;
               var $table = false;
               if (this.keydown.block && this.keydown.block.tagName === "TD") {
-                $table = $6(this.keydown.block).closest("table", this.$editor[0]);
+                $table = $7(this.keydown.block).closest("table", this.$editor[0]);
               }
               if ($table && $table.find("td").last()[0] === this.keydown.block) {
                 isEndOfTable = true;
               }
               if (this.utils.isEndOfElement() && isEndOfTable) {
-                var node = $6(this.opts.emptyHtml);
+                var node = $7(this.opts.emptyHtml);
                 $table.after(node);
                 this.caret.setStart(node);
               }
@@ -27548,7 +23319,7 @@
                 return this.keydown.insertNewLine(e);
               } else if (this.keydown.blockquote || this.keydown.figcaption) {
                 current = this.selection.getCurrent();
-                $next = $6(current).next();
+                $next = $7(current).next();
                 if ($next.length !== 0 && $next[0].tagName == "BR") {
                   return this.keydown.insertBreakLine(e);
                 } else if (this.utils.isEndOfElement() && current && current != "SPAN") {
@@ -27558,12 +23329,12 @@
                 }
               } else if (this.opts.linebreaks && !this.keydown.block) {
                 current = this.selection.getCurrent();
-                $next = $6(this.keydown.current).next();
+                $next = $7(this.keydown.current).next();
                 if ($next.length !== 0 && $next[0].tagName == "BR") {
                   return this.keydown.insertBreakLine(e);
-                } else if (current !== false && $6(current).hasClass("redactor-invisible-space")) {
+                } else if (current !== false && $7(current).hasClass("redactor-invisible-space")) {
                   this.caret.setAfter(current);
-                  $6(current).contents().unwrap();
+                  $7(current).contents().unwrap();
                   return this.keydown.insertDblBreakLine(e);
                 } else {
                   if (this.utils.isEndOfEditor()) {
@@ -27574,16 +23345,16 @@
                   return this.keydown.insertBreakLine(e);
                 }
               } else if (this.opts.linebreaks && this.keydown.block) {
-                setTimeout($6.proxy(this.keydown.replaceDivToBreakLine, this), 1);
+                setTimeout($7.proxy(this.keydown.replaceDivToBreakLine, this), 1);
               } else if (!this.opts.linebreaks && this.keydown.block) {
-                setTimeout($6.proxy(this.keydown.replaceDivToParagraph, this), 1);
+                setTimeout($7.proxy(this.keydown.replaceDivToParagraph, this), 1);
                 if (this.keydown.block.tagName === "LI") {
                   current = this.selection.getCurrent();
-                  var $parent = $6(current).closest("li", this.$editor[0]);
+                  var $parent = $7(current).closest("li", this.$editor[0]);
                   var $list = $parent.closest("ul,ol", this.$editor[0]);
                   if ($parent.length !== 0 && this.utils.isEmpty($parent.html()) && $list.next().length === 0 && this.utils.isEmpty($list.find("li").last().html())) {
                     $list.find("li").last().remove();
-                    var node = $6(this.opts.emptyHtml);
+                    var node = $7(this.opts.emptyHtml);
                     $list.after(node);
                     this.caret.setStart(node);
                     return false;
@@ -27605,11 +23376,11 @@
                 var len = nodes.length;
                 var last;
                 for (var i = 0; i < len; i++) {
-                  var children = $6(nodes[i]).children("img");
+                  var children = $7(nodes[i]).children("img");
                   if (children.length !== 0) {
                     var self2 = this;
-                    $6.each(children, function(z, s) {
-                      var $s = $6(s);
+                    $7.each(children, function(z, s) {
+                      var $s = $7(s);
                       if ($s.css("float") != "none") return;
                       self2.core.setCallback("imageDelete", s.src, $s);
                       last = s;
@@ -27619,7 +23390,7 @@
                       this.core.setCallback(
                         "imageDelete",
                         nodes[i].src,
-                        $6(nodes[i])
+                        $7(nodes[i])
                       );
                       last = nodes[i];
                     }
@@ -27629,7 +23400,7 @@
             }
             if (key === this.keyCode.BACKSPACE) {
               var block = this.selection.getBlock();
-              var indented = $6(block).css("margin-left") !== "0px";
+              var indented = $7(block).css("margin-left") !== "0px";
               if (block && indented && this.range.collapsed && this.utils.isStartOfElement()) {
                 this.indent.decrease();
                 e.preventDefault();
@@ -27637,9 +23408,9 @@
               }
               if (this.utils.browser("mozilla")) {
                 var prev = this.selection.getPrev();
-                var prev2 = $6(prev).prev()[0];
-                if (prev && prev.tagName === "HR") $6(prev).remove();
-                if (prev2 && prev2.tagName === "HR") $6(prev2).remove();
+                var prev2 = $7(prev).prev()[0];
+                if (prev && prev.tagName === "HR") $7(prev).remove();
+                if (prev2 && prev2.tagName === "HR") $7(prev2).remove();
               }
               this.keydown.removeInvisibleSpace();
               this.keydown.removeEmptyListInTable(e);
@@ -27667,7 +23438,7 @@
               k.ALT,
               k.SHIFT
             ];
-            return $6.inArray(key, keys) == -1 ? true : false;
+            return $7.inArray(key, keys) == -1 ? true : false;
           },
           addArrowsEvent: function(arrow2) {
             if (!arrow2) return;
@@ -27748,9 +23519,9 @@
           replaceDivToBreakLine: function() {
             var blockElem = this.selection.getBlock();
             var blockHtml = blockElem.innerHTML.replace(/<br\s?\/?>/gi, "");
-            if ((blockElem.tagName === "DIV" || blockElem.tagName === "P") && blockHtml === "" && !$6(blockElem).hasClass("redactor-editor")) {
+            if ((blockElem.tagName === "DIV" || blockElem.tagName === "P") && blockHtml === "" && !$7(blockElem).hasClass("redactor-editor")) {
               var br = document.createElement("br");
-              $6(blockElem).replaceWith(br);
+              $7(blockElem).replaceWith(br);
               this.caret.setBefore(br);
               this.code.sync();
               return false;
@@ -27759,15 +23530,15 @@
           replaceDivToParagraph: function() {
             var blockElem = this.selection.getBlock();
             var blockHtml = blockElem.innerHTML.replace(/<br\s?\/?>/gi, "");
-            if (blockElem.tagName === "DIV" && this.utils.isEmpty(blockHtml) && !$6(blockElem).hasClass("redactor-editor")) {
+            if (blockElem.tagName === "DIV" && this.utils.isEmpty(blockHtml) && !$7(blockElem).hasClass("redactor-editor")) {
               var p = document.createElement("p");
               p.innerHTML = this.opts.invisibleSpace;
-              $6(blockElem).replaceWith(p);
+              $7(blockElem).replaceWith(p);
               this.caret.setStart(p);
               this.code.sync();
               return false;
             } else if (this.opts.cleanStyleOnEnter && blockElem.tagName == "P") {
-              $6(blockElem).removeAttr("class").removeAttr("style");
+              $7(blockElem).removeAttr("class").removeAttr("style");
             }
           },
           insertParagraph: function(e) {
@@ -27783,17 +23554,17 @@
           },
           exitFromBlockquote: function(e) {
             if (!this.utils.isEndOfElement()) return;
-            var tmp = $6.trim($6(this.keydown.block).html());
+            var tmp = $7.trim($7(this.keydown.block).html());
             if (tmp.search(/(<br\s?\/?>){2}$/i) != -1) {
               e.preventDefault();
               if (this.opts.linebreaks) {
                 var br = document.createElement("br");
-                $6(this.keydown.blockquote).after(br);
+                $7(this.keydown.blockquote).after(br);
                 this.caret.setBefore(br);
-                $6(this.keydown.block).html(tmp.replace(/<br\s?\/?>$/i, ""));
+                $7(this.keydown.block).html(tmp.replace(/<br\s?\/?>$/i, ""));
               } else {
-                var node = $6(this.opts.emptyHtml);
-                $6(this.keydown.blockquote).after(node);
+                var node = $7(this.opts.emptyHtml);
+                $7(this.keydown.blockquote).after(node);
                 this.caret.setStart(node);
               }
               return true;
@@ -27804,7 +23575,7 @@
             if (!this.utils.isEndOfElement()) return;
             this.buffer.set();
             if (this.opts.linebreaks) {
-              var contents = $6("<div>").append($6.trim(this.$editor.html())).contents();
+              var contents = $7("<div>").append($7.trim(this.$editor.html())).contents();
               var last = contents.last()[0];
               if (last.tagName == "SPAN" && last.innerHTML === "") {
                 last = contents.prev()[0];
@@ -27812,12 +23583,12 @@
               if (this.utils.getOuterHtml(last) != this.utils.getOuterHtml(element))
                 return;
               var br = document.createElement("br");
-              $6(element).after(br);
+              $7(element).after(br);
               this.caret.setAfter(br);
             } else {
               if (this.$editor.contents().last()[0] !== element) return;
-              var node = $6(this.opts.emptyHtml);
-              $6(element).after(node);
+              var node = $7(this.opts.emptyHtml);
+              $7(element).after(node);
               this.caret.setStart(node);
             }
           },
@@ -27848,13 +23619,13 @@
               this.range.deleteContents();
             }
             this.range.insertNode(br1);
-            var $parentA = $6(br1).parent("a");
+            var $parentA = $7(br1).parent("a");
             if ($parentA.length > 0) {
               $parentA.find(br1).remove();
               $parentA.after(br1);
             }
             if (dbl === true) {
-              var $next = $6(br1).next();
+              var $next = $7(br1).next();
               if ($next.length !== 0 && $next[0].tagName === "BR" && this.utils.isEndOfEditor()) {
                 this.caret.setAfter(br1);
                 this.code.sync();
@@ -27867,10 +23638,10 @@
               if (this.utils.browser("msie")) {
                 var space = document.createElement("span");
                 space.innerHTML = "&#x200b;";
-                $6(br1).after(space);
+                $7(br1).after(space);
                 this.range.setStartAfter(space);
                 this.range.setEndAfter(space);
-                $6(space).remove();
+                $7(space).remove();
               } else {
                 var range = document.createRange();
                 range.setStartAfter(br1);
@@ -27884,14 +23655,14 @@
             return false;
           },
           removeInvisibleSpace: function() {
-            var $current = $6(this.keydown.current);
+            var $current = $7(this.keydown.current);
             if ($current.text().search(/^\u200B$/g) === 0) {
               $current.remove();
             }
           },
           removeEmptyListInTable: function(e) {
-            var $current = $6(this.keydown.current);
-            var $parent = $6(this.keydown.parent);
+            var $current = $7(this.keydown.current);
+            var $parent = $7(this.keydown.parent);
             var td = $current.closest("td", this.$editor[0]);
             if (td.length !== 0 && $current.closest("li", this.$editor[0]) && $parent.children("li").length === 1) {
               if (!this.utils.isEmpty($current.text())) return;
@@ -27911,7 +23682,7 @@
             this.keyup.current = this.selection.getCurrent();
             this.keyup.parent = this.selection.getParent();
             var $parent = this.utils.isRedactorParent(
-              $6(this.keyup.parent).parent()
+              $7(this.keyup.parent).parent()
             );
             var keyupStop = this.core.setCallback("keyup", e);
             if (keyupStop === false) {
@@ -27924,15 +23695,15 @@
             if (!this.opts.linebreaks && this.utils.isRedactorParent(this.keyup.current) && this.keyup.current.tagName === "DIV") {
               this.keyup.replaceToParagraph(false);
             }
-            if (!this.opts.linebreaks && $6(this.keyup.parent).hasClass("redactor-invisible-space") && ($parent === false || $parent[0].tagName == "BODY")) {
-              $6(this.keyup.parent).contents().unwrap();
+            if (!this.opts.linebreaks && $7(this.keyup.parent).hasClass("redactor-invisible-space") && ($parent === false || $parent[0].tagName == "BODY")) {
+              $7(this.keyup.parent).contents().unwrap();
               this.keyup.replaceToParagraph();
             }
             if (this.linkify.isEnabled() && this.linkify.isKey(key))
               this.linkify.format();
             if (key === this.keyCode.DELETE || key === this.keyCode.BACKSPACE) {
               if (this.utils.browser("mozilla")) {
-                var td = $6(this.keydown.current).closest("td", this.$editor[0]);
+                var td = $7(this.keydown.current).closest("td", this.$editor[0]);
                 if (td.size() !== 0 && td.text() !== "") {
                   e.preventDefault();
                   return false;
@@ -27948,29 +23719,29 @@
                 return false;
               }
               this.$editor.find("p").each(
-                $6.proxy(function(i, s) {
-                  this.utils.removeEmpty(i, $6(s).html());
+                $7.proxy(function(i, s) {
+                  this.utils.removeEmpty(i, $7(s).html());
                 }, this)
               );
               if (this.opts.linebreaks && this.keyup.current && this.keyup.current.tagName == "DIV" && this.utils.isEmpty(this.keyup.current.innerHTML)) {
-                $6(this.keyup.current).after(this.selection.getMarkerAsHtml());
+                $7(this.keyup.current).after(this.selection.getMarkerAsHtml());
                 this.selection.restore();
-                $6(this.keyup.current).remove();
+                $7(this.keyup.current).remove();
               }
               this.keyup.removeEmptyLists();
               return this.keyup.formatEmpty(e);
             }
           },
           replaceToParagraph: function(clone2) {
-            var $current = $6(this.keyup.current);
+            var $current = $7(this.keyup.current);
             var node;
             if (clone2 === false) {
-              node = $6("<p>").append($current.html());
+              node = $7("<p>").append($current.html());
             } else {
-              node = $6("<p>").append($current.clone());
+              node = $7("<p>").append($current.clone());
             }
             $current.replaceWith(node);
-            var next = $6(node).next();
+            var next = $7(node).next();
             if (typeof next[0] !== "undefined" && next[0].tagName == "BR") {
               next.remove();
             }
@@ -27978,16 +23749,16 @@
           },
           removeEmptyLists: function() {
             var removeIt = function() {
-              var html = $6.trim(this.innerHTML).replace(/\/t\/n/g, "");
+              var html = $7.trim(this.innerHTML).replace(/\/t\/n/g, "");
               if (html === "") {
-                $6(this).remove();
+                $7(this).remove();
               }
             };
             this.$editor.find("li").each(removeIt);
             this.$editor.find("ul, ol").each(removeIt);
           },
           formatEmpty: function(e) {
-            var html = $6.trim(this.$editor.html());
+            var html = $7.trim(this.$editor.html());
             if (!this.utils.isEmpty(html)) return;
             e.preventDefault();
             if (this.opts.linebreaks) {
@@ -28042,8 +23813,8 @@
             var first = blocks[0].tagName.toLowerCase();
             var last = this.selection.getLastBlock();
             last = typeof last == "undefined" ? first : last.tagName.toLowerCase();
-            var firstFound = $6.inArray(first, exceptTags) != -1;
-            var lastFound = $6.inArray(last, exceptTags) != -1;
+            var firstFound = $7.inArray(first, exceptTags) != -1;
+            var lastFound = $7.inArray(last, exceptTags) != -1;
             if (firstFound && lastFound || firstFound) {
               return true;
             }
@@ -28065,11 +23836,11 @@
           },
           setFocus: function() {
             var node = this.$editor.find("#redactor-insert-line");
-            var next = $6(node).next()[0];
+            var next = $7(node).next()[0];
             var target = next;
             if (this.utils.browser("mozilla") && next && next.innerHTML === "") {
-              target = $6(next).next()[0];
-              $6(next).remove();
+              target = $7(next).next()[0];
+              $7(next).remove();
             }
             if (target) {
               node.remove();
@@ -28109,13 +23880,13 @@
             this.link.getData();
             this.link.cleanUrl();
             if (this.link.target == "_blank")
-              $6("#redactor-link-blank").prop("checked", true);
-            this.link.$inputUrl = $6("#redactor-link-url");
-            this.link.$inputText = $6("#redactor-link-url-text");
+              $7("#redactor-link-blank").prop("checked", true);
+            this.link.$inputUrl = $7("#redactor-link-url");
+            this.link.$inputText = $7("#redactor-link-url-text");
             this.link.$inputText.val(this.link.text);
             this.link.$inputUrl.val(this.link.url);
-            this.link.buttonInsert.on("click", $6.proxy(this.link.insert, this));
-            $6(".redactor-link-tooltip").remove();
+            this.link.buttonInsert.on("click", $7.proxy(this.link.insert, this));
+            $7(".redactor-link-tooltip").remove();
             this.selection.save();
             this.modal.show();
             this.link.$inputUrl.focus();
@@ -28137,7 +23908,7 @@
           },
           getData: function() {
             this.link.$node = false;
-            var $el = $6(this.selection.getCurrent()).closest(
+            var $el = $7(this.selection.getCurrent()).closest(
               "a",
               this.$editor[0]
             );
@@ -28157,10 +23928,10 @@
             var target = "";
             var link = this.link.$inputUrl.val();
             var text = this.link.$inputText.val().replace(/(<([^>]+)>)/gi, "");
-            if ($6.trim(link) === "") {
+            if ($7.trim(link) === "") {
               this.link.$inputUrl.addClass("redactor-input-error").on("keyup", function() {
-                $6(this).removeClass("redactor-input-error");
-                $6(this).off("keyup");
+                $7(this).removeClass("redactor-input-error");
+                $7(this).off("keyup");
               });
               return;
             }
@@ -28168,7 +23939,7 @@
               link = link.replace("mailto:", "");
               link = "mailto:" + link;
             } else if (link.search("#") !== 0) {
-              if ($6("#redactor-link-blank").prop("checked")) {
+              if ($7("#redactor-link-blank").prop("checked")) {
                 target = "_blank";
               }
               var pattern = "((xn--)?[a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}";
@@ -28183,7 +23954,7 @@
             this.modal.close();
           },
           set: function(text, link, target) {
-            text = $6.trim(text.replace(/<|>/g, ""));
+            text = $7.trim(text.replace(/<|>/g, ""));
             this.selection.restore();
             var blocks = this.selection.getBlocks();
             if (text === "" && link === "") return;
@@ -28210,9 +23981,9 @@
               this.code.sync();
             } else {
               if (this.utils.browser("mozilla") && this.link.text === "") {
-                var $a = $6("<a />").attr("href", link).text(text);
+                var $a = $7("<a />").attr("href", link).text(text);
                 if (target !== "") $a.attr("target", target);
-                $a = $6(this.insert.node($a));
+                $a = $7(this.insert.node($a));
                 if (this.opts.linebreaks) {
                   $a.after("&nbsp;");
                 }
@@ -28220,21 +23991,21 @@
               } else {
                 var $a;
                 if (this.utils.browser("msie")) {
-                  $a = $6('<a href="' + link + '">').text(text);
+                  $a = $7('<a href="' + link + '">').text(text);
                   if (target !== "") $a.attr("target", target);
-                  $a = $6(this.insert.node($a));
+                  $a = $7(this.insert.node($a));
                   if (this.selection.getText().match(/\s$/)) {
                     $a.after(" ");
                   }
                   this.selection.selectElement($a);
                 } else {
                   document.execCommand("createLink", false, link);
-                  $a = $6(this.selection.getCurrent()).closest(
+                  $a = $7(this.selection.getCurrent()).closest(
                     "a",
                     this.$editor[0]
                   );
                   if (this.utils.browser("mozilla")) {
-                    $a = $6('a[_moz_dirty=""]');
+                    $a = $7('a[_moz_dirty=""]');
                   }
                   if (target !== "") $a.attr("target", target);
                   $a.removeAttr("style").removeAttr("_moz_dirty");
@@ -28255,7 +24026,7 @@
               this.core.setCallback("insertedLink", $a);
             }
             setTimeout(
-              $6.proxy(function() {
+              $7.proxy(function() {
                 this.observe.links();
               }, this),
               5
@@ -28274,11 +24045,11 @@
               if (nodes[i].tagName === "A") {
                 links.push(nodes[i]);
               }
-              var $node = $6(nodes[i]).closest("a", this.$editor[0]);
+              var $node = $7(nodes[i]).closest("a", this.$editor[0]);
               $node.replaceWith($node.contents());
             }
             this.core.setCallback("deletedLink", links);
-            $6(".redactor-link-tooltip").remove();
+            $7(".redactor-link-tooltip").remove();
             this.code.sync();
           },
           toggleClass: function(className) {
@@ -28293,8 +24064,8 @@
           setClass: function(className, func) {
             var links = this.selection.getInlinesTags(["a"]);
             if (links === false) return;
-            $6.each(links, function() {
-              $6(this)[func](className);
+            $7.each(links, function() {
+              $7(this)[func](className);
             });
           }
         };
@@ -28310,9 +24081,9 @@
           format: function() {
             var linkify = this.linkify, opts = this.opts;
             this.$editor.find(":not(iframe,img,a,pre)").addBack().contents().filter(function() {
-              return this.nodeType === 3 && $6.trim(this.nodeValue) != "" && !$6(this).parent().is("pre") && (this.nodeValue.match(opts.linkify.regexps.youtube) || this.nodeValue.match(opts.linkify.regexps.vimeo) || this.nodeValue.match(opts.linkify.regexps.image) || this.nodeValue.match(opts.linkify.regexps.url));
+              return this.nodeType === 3 && $7.trim(this.nodeValue) != "" && !$7(this).parent().is("pre") && (this.nodeValue.match(opts.linkify.regexps.youtube) || this.nodeValue.match(opts.linkify.regexps.vimeo) || this.nodeValue.match(opts.linkify.regexps.image) || this.nodeValue.match(opts.linkify.regexps.url));
             }).each(function() {
-              var text = $6(this).text(), html = text;
+              var text = $7(this).text(), html = text;
               if (opts.convertVideoLinks && (html.match(opts.linkify.regexps.youtube) || html.match(opts.linkify.regexps.vimeo))) {
                 html = linkify.convertVideoLinks(html);
               } else if (opts.convertImageLinks && html.match(opts.linkify.regexps.image)) {
@@ -28320,16 +24091,16 @@
               } else if (opts.convertUrlLinks) {
                 html = linkify.convertLinks(html);
               }
-              $6(this).before(text.replace(text, html)).remove();
+              $7(this).before(text.replace(text, html)).remove();
             });
             var objects = this.$editor.find(".redactor-linkify-object").each(function() {
-              var $el = $6(this);
+              var $el = $7(this);
               $el.removeClass("redactor-linkify-object");
               if ($el.attr("class") === "") $el.removeAttr("class");
               return $el[0];
             });
             setTimeout(
-              $6.proxy(function() {
+              $7.proxy(function() {
                 this.observe.load();
                 this.core.setCallback("linkify", objects);
               }, this),
@@ -28372,8 +24143,8 @@
           convertLinks: function(html) {
             var matches3 = html.match(this.opts.linkify.regexps.url);
             if (matches3) {
-              matches3 = $6.grep(matches3, function(v, k) {
-                return $6.inArray(v, matches3) === k;
+              matches3 = $7.grep(matches3, function(v, k) {
+                return $7.inArray(v, matches3) === k;
               });
               var length = matches3.length;
               for (var i = 0; i < length; i++) {
@@ -28388,7 +24159,7 @@
                   text = decodeURIComponent(text);
                 }
                 var regexB = "\\b";
-                if ($6.inArray(href2.slice(-1), ["/", "&", "="]) != -1) {
+                if ($7.inArray(href2.slice(-1), ["/", "&", "="]) != -1) {
                   regexB = "";
                 }
                 var regexp = new RegExp(
@@ -28397,7 +24168,7 @@
                 );
                 html = html.replace(
                   regexp,
-                  '<a href="' + linkProtocol + $6.trim(href2) + '" class="redactor-linkify-object">' + $6.trim(text) + "</a>"
+                  '<a href="' + linkProtocol + $7.trim(href2) + '" class="redactor-linkify-object">' + $7.trim(text) + "</a>"
                 );
               }
             }
@@ -28415,7 +24186,7 @@
             this.buffer.set();
             this.selection.save();
             var parent = this.selection.getParent();
-            var $list = $6(parent).closest("ol, ul", this.$editor[0]);
+            var $list = $7(parent).closest("ol, ul", this.$editor[0]);
             if (!this.utils.isRedactorParent($list) && $list.length !== 0) {
               $list = false;
             }
@@ -28443,14 +24214,14 @@
           },
           insert: function(cmd) {
             var current = this.selection.getCurrent();
-            var $td = $6(current).closest("td, th", this.$editor[0]);
+            var $td = $7(current).closest("td, th", this.$editor[0]);
             if (this.utils.browser("msie") && this.opts.linebreaks) {
               this.list.insertInIe(cmd);
             } else {
               document.execCommand("insert" + cmd);
             }
             var parent = this.selection.getParent();
-            var $list = $6(parent).closest("ol, ul", this.$editor[0]);
+            var $list = $7(parent).closest("ol, ul", this.$editor[0]);
             if ($td.length !== 0) {
               var newTd = $td.clone();
               $td.after(newTd).remove("");
@@ -28476,10 +24247,10 @@
           },
           insertInIe: function(cmd) {
             var wrapper = this.selection.wrap("div");
-            var wrapperHtml = $6(wrapper).html();
-            var tmpList = cmd == "orderedlist" ? $6("<ol>") : $6("<ul>");
-            var tmpLi = $6("<li>");
-            if ($6.trim(wrapperHtml) === "") {
+            var wrapperHtml = $7(wrapper).html();
+            var tmpList = cmd == "orderedlist" ? $7("<ol>") : $7("<ul>");
+            var tmpLi = $7("<li>");
+            if ($7.trim(wrapperHtml) === "") {
               tmpLi.append(this.selection.getMarkerAsHtml());
               tmpList.append(tmpLi);
               this.$editor.find("#selection-marker-1").replaceWith(tmpList);
@@ -28487,28 +24258,28 @@
               var items = wrapperHtml.split(/<br\s?\/?>/gi);
               if (items) {
                 for (var i = 0; i < items.length; i++) {
-                  if ($6.trim(items[i]) !== "") {
-                    tmpList.append($6("<li>").html(items[i]));
+                  if ($7.trim(items[i]) !== "") {
+                    tmpList.append($7("<li>").html(items[i]));
                   }
                 }
               } else {
                 tmpLi.append(wrapperHtml);
                 tmpList.append(tmpLi);
               }
-              $6(wrapper).replaceWith(tmpList);
+              $7(wrapper).replaceWith(tmpList);
             }
           },
           remove: function(cmd, $list) {
-            if ($6.inArray("ul", this.selection.getBlocks()))
+            if ($7.inArray("ul", this.selection.getBlocks()))
               cmd = "unorderedlist";
             document.execCommand("insert" + cmd);
-            var $current = $6(this.selection.getCurrent());
+            var $current = $7(this.selection.getCurrent());
             this.indent.fixEmptyIndent();
             if (!this.opts.linebreaks && $current.closest("li, th, td", this.$editor[0]).length === 0) {
               document.execCommand("formatblock", false, "p");
-              this.$editor.find("ul, ol, blockquote").each($6.proxy(this.utils.removeEmpty, this));
+              this.$editor.find("ul, ol, blockquote").each($7.proxy(this.utils.removeEmpty, this));
             }
-            var $table = $6(this.selection.getCurrent()).closest(
+            var $table = $7(this.selection.getCurrent()).closest(
               "table",
               this.$editor[0]
             );
@@ -28530,27 +24301,27 @@
               file: String() + '<section id="redactor-modal-file-insert"><div id="redactor-modal-file-upload-box"><label>' + this.lang.get("filename") + '</label><input type="text" id="redactor-filename" aria-label="' + this.lang.get("filename") + '" /><br><br><div id="redactor-modal-file-upload"></div></div></section>',
               link: String() + '<section id="redactor-modal-link-insert"><label>URL</label><input type="url" id="redactor-link-url" aria-label="URL" /><label>' + this.lang.get("text") + '</label><input type="text" id="redactor-link-url-text" aria-label="' + this.lang.get("text") + '" /><label><input type="checkbox" id="redactor-link-blank"> ' + this.lang.get("link_new_tab") + "</label></section>"
             };
-            $6.extend(this.opts, this.opts.modal);
+            $7.extend(this.opts, this.opts.modal);
           },
           addCallback: function(name2, callback) {
             this.modal.callbacks[name2] = callback;
           },
           createTabber: function($modal) {
-            this.modal.$tabber = $6("<div>").attr("id", "redactor-modal-tabber");
+            this.modal.$tabber = $7("<div>").attr("id", "redactor-modal-tabber");
             $modal.prepend(this.modal.$tabber);
           },
-          addTab: function(id2, name2, active) {
-            var $tab = $6('<a href="#" rel="tab' + id2 + '">').text(name2);
+          addTab: function(id, name2, active) {
+            var $tab = $7('<a href="#" rel="tab' + id + '">').text(name2);
             if (active) {
               $tab.addClass("active");
             }
             var self2 = this;
             $tab.on("click", function(e) {
               e.preventDefault();
-              $6(".redactor-tab").hide();
-              $6(".redactor-" + $6(this).attr("rel")).show();
+              $7(".redactor-tab").hide();
+              $7(".redactor-" + $7(this).attr("rel")).show();
               self2.modal.$tabber.find("a").removeClass("active");
-              $6(this).addClass("active");
+              $7(this).addClass("active");
             });
             this.modal.$tabber.append($tab);
           },
@@ -28592,10 +24363,10 @@
             this.modal.setButtonsWidth();
             this.utils.saveScroll();
             if (!this.utils.isMobile()) {
-              setTimeout($6.proxy(this.modal.showOnDesktop, this), 0);
-              $6(window).on(
+              setTimeout($7.proxy(this.modal.showOnDesktop, this), 0);
+              $7(window).on(
                 "resize.redactor-modal",
-                $6.proxy(this.modal.resize, this)
+                $7.proxy(this.modal.resize, this)
               );
             }
             this.core.setCallback(
@@ -28603,13 +24374,13 @@
               this.modal.templateName,
               this.$modal
             );
-            $6(document).off("focusin.modal");
-            this.$modal.find("input[type=text],input[type=url],input[type=email]").on("keydown.redactor-modal", $6.proxy(this.modal.setEnter, this));
+            $7(document).off("focusin.modal");
+            this.$modal.find("input[type=text],input[type=url],input[type=email]").on("keydown.redactor-modal", $7.proxy(this.modal.setEnter, this));
           },
           showOnDesktop: function() {
             var height2 = this.$modal.outerHeight();
-            var windowHeight = $6(window).height();
-            var windowWidth = $6(window).width();
+            var windowHeight = $7(window).height();
+            var windowWidth = $7(window).width();
             if (this.modal.width > windowWidth) {
               this.$modal.css({
                 width: "96%",
@@ -28649,7 +24420,7 @@
             this.$modalBody.html(this.modal.getTemplate(this.modal.templateName));
           },
           setDraggable: function() {
-            if (typeof $6.fn.draggable === "undefined") return;
+            if (typeof $7.fn.draggable === "undefined") return;
             this.$modal.draggable({ handle: this.$modalHeader });
             this.$modalHeader.css("cursor", "move");
           },
@@ -28659,8 +24430,8 @@
             this.$modal.find("button.redactor-modal-action-btn").click();
           },
           createCancelButton: function() {
-            var button = $6("<button>").addClass("redactor-modal-btn redactor-modal-close-btn").html(this.lang.get("cancel"));
-            button.on("click", $6.proxy(this.modal.close, this));
+            var button = $7("<button>").addClass("redactor-modal-btn redactor-modal-close-btn").html(this.lang.get("cancel"));
+            button.on("click", $7.proxy(this.modal.close, this));
             this.$modalFooter.append(button);
           },
           createDeleteButton: function(label) {
@@ -28670,7 +24441,7 @@
             return this.modal.createButton(label, "action");
           },
           createButton: function(label, className) {
-            var button = $6("<button>").addClass("redactor-modal-btn").addClass("redactor-modal-" + className + "-btn").html(label);
+            var button = $7("<button>").addClass("redactor-modal-btn").addClass("redactor-modal-" + className + "-btn").html(label);
             this.$modalFooter.append(button);
             return button;
           },
@@ -28682,16 +24453,16 @@
           },
           build: function() {
             this.modal.buildOverlay();
-            this.$modalBox = $6('<div id="redactor-modal-box"/>').hide();
-            this.$modal = $6(
+            this.$modalBox = $7('<div id="redactor-modal-box"/>').hide();
+            this.$modal = $7(
               '<div id="redactor-modal" role="dialog" aria-labelledby="redactor-modal-header" />'
             );
-            this.$modalHeader = $6('<header id="redactor-modal-header"/>');
-            this.$modalClose = $6(
+            this.$modalHeader = $7('<header id="redactor-modal-header"/>');
+            this.$modalClose = $7(
               '<button type="button" id="redactor-modal-close" tabindex="1" aria-label="Close" />'
             ).html("&times;");
-            this.$modalBody = $6('<div id="redactor-modal-body" />');
-            this.$modalFooter = $6("<footer />");
+            this.$modalBody = $7('<div id="redactor-modal-body" />');
+            this.$modalFooter = $7("<footer />");
             this.$modal.append(this.$modalHeader);
             this.$modal.append(this.$modalClose);
             this.$modal.append(this.$modalBody);
@@ -28700,33 +24471,33 @@
             this.$modalBox.appendTo(document.body);
           },
           buildOverlay: function() {
-            this.$modalOverlay = $6('<div id="redactor-modal-overlay">').hide();
-            $6("body").prepend(this.$modalOverlay);
+            this.$modalOverlay = $7('<div id="redactor-modal-overlay">').hide();
+            $7("body").prepend(this.$modalOverlay);
           },
           enableEvents: function() {
             this.$modalClose.on(
               "click.redactor-modal",
-              $6.proxy(this.modal.close, this)
+              $7.proxy(this.modal.close, this)
             );
-            $6(document).on(
+            $7(document).on(
               "keyup.redactor-modal",
-              $6.proxy(this.modal.closeHandler, this)
+              $7.proxy(this.modal.closeHandler, this)
             );
             this.$editor.on(
               "keyup.redactor-modal",
-              $6.proxy(this.modal.closeHandler, this)
+              $7.proxy(this.modal.closeHandler, this)
             );
             this.$modalBox.on(
               "click.redactor-modal",
-              $6.proxy(this.modal.close, this)
+              $7.proxy(this.modal.close, this)
             );
           },
           disableEvents: function() {
             this.$modalClose.off("click.redactor-modal");
-            $6(document).off("keyup.redactor-modal");
+            $7(document).off("keyup.redactor-modal");
             this.$editor.off("keyup.redactor-modal");
             this.$modalBox.off("click.redactor-modal");
-            $6(window).off("resize.redactor-modal");
+            $7(window).off("resize.redactor-modal");
           },
           closeHandler: function(e) {
             if (e.which != this.keyCode.ESC) return;
@@ -28734,7 +24505,7 @@
           },
           close: function(e) {
             if (e) {
-              if (!$6(e.target).hasClass("redactor-modal-close-btn") && e.target != this.$modalClose[0] && e.target != this.$modalBox[0]) {
+              if (!$7(e.target).hasClass("redactor-modal-close-btn") && e.target != this.$modalClose[0] && e.target != this.$modalBox[0]) {
                 return;
               }
               e.preventDefault();
@@ -28745,11 +24516,11 @@
             this.$modalOverlay.remove();
             this.$modalBox.fadeOut(
               "fast",
-              $6.proxy(function() {
+              $7.proxy(function() {
                 this.$modalBox.remove();
-                setTimeout($6.proxy(this.utils.restoreScroll, this), 0);
+                setTimeout($7.proxy(this.utils.restoreScroll, this), 0);
                 if (e !== void 0) this.selection.restore();
-                $6(document.body).css("overflow", this.modal.bodyOveflow);
+                $7(document.body).css("overflow", this.modal.bodyOveflow);
                 this.core.setCallback("modalClosed", this.modal.templateName);
               }, this)
             );
@@ -28764,10 +24535,10 @@
               var self2 = this;
               this.$editor.find("pre, code").on("mouseover", function() {
                 self2.$editor.attr("contenteditable", false);
-                $6(this).attr("contenteditable", true);
+                $7(this).attr("contenteditable", true);
               }).on("mouseout", function() {
                 self2.$editor.attr("contenteditable", true);
-                $6(this).removeAttr("contenteditable");
+                $7(this).removeAttr("contenteditable");
               });
             }
             this.observe.images();
@@ -28779,15 +24550,15 @@
           },
           isCurrent: function($el, $current) {
             if (typeof $current == "undefined") {
-              var $current = $6(this.selection.getCurrent());
+              var $current = $7(this.selection.getCurrent());
             }
             return $current.is($el) || $current.parents($el).length > 0;
           },
           dropdowns: function() {
-            var $current = $6(this.selection.getCurrent());
-            $6.each(
+            var $current = $7(this.selection.getCurrent());
+            $7.each(
               this.opts.observe.dropdowns,
-              $6.proxy(function(key, value) {
+              $7.proxy(function(key, value) {
                 var observe = value.observe, element = observe.element, $item = value.item, inValues = typeof observe["in"] != "undefined" ? observe["in"] : false, outValues = typeof observe["out"] != "undefined" ? observe["out"] : false;
                 if ($current.closest(element).length > 0) {
                   this.observe.setDropdownProperties($item, inValues, outValues);
@@ -28809,7 +24580,7 @@
             }
           },
           setDropdownAttr: function($item, properties, isDelete) {
-            $6.each(properties, function(key, value) {
+            $7.each(properties, function(key, value) {
               if (key == "class") {
                 if (!isDelete) {
                   $item.addClass(value);
@@ -28839,15 +24610,15 @@
               this.button.setInactiveAll(btnName);
             }
             if (e === false && btnName !== "html") {
-              if ($6.inArray(btnName, this.opts.activeButtons) != -1)
+              if ($7.inArray(btnName, this.opts.activeButtons) != -1)
                 this.button.toggleActive(btnName);
               return;
             }
-            $6.each(
+            $7.each(
               this.opts.activeButtonsStates,
-              $6.proxy(function(key, value) {
-                var parentEl2 = $6(parent).closest(key, this.$editor[0]);
-                var currentEl = $6(current).closest(key, this.$editor[0]);
+              $7.proxy(function(key, value) {
+                var parentEl2 = $7(parent).closest(key, this.$editor[0]);
+                var currentEl = $7(current).closest(key, this.$editor[0]);
                 if (parentEl2.length !== 0 && !this.utils.isRedactorParent(parentEl2))
                   return;
                 if (!this.utils.isRedactorParent(currentEl)) return;
@@ -28856,7 +24627,7 @@
                 }
               }, this)
             );
-            var $parent = $6(parent).closest(
+            var $parent = $7(parent).closest(
               this.opts.alignmentTags.toString().toLowerCase(),
               this.$editor[0]
             );
@@ -28871,8 +24642,8 @@
           },
           images: function() {
             this.$editor.find("img").each(
-              $6.proxy(function(i, img) {
-                var $img = $6(img);
+              $7.proxy(function(i, img) {
+                var $img = $7(img);
                 $img.closest("a", this.$editor[0]).on("click", function(e) {
                   e.preventDefault();
                 });
@@ -28880,9 +24651,9 @@
                 this.image.setEditable($img);
               }, this)
             );
-            $6(document).on(
+            $7(document).on(
               "click.redactor-image-delete." + this.uuid,
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 this.observe.image = false;
                 if (e.target.tagName == "IMG" && this.utils.isRedactorParent(e.target)) {
                   this.observe.image = this.observe.image && this.observe.image == e.target ? false : e.target;
@@ -28894,56 +24665,56 @@
             if (!this.opts.linkTooltip) return;
             this.$editor.find("a").on(
               "touchstart.redactor." + this.uuid + " click.redactor." + this.uuid,
-              $6.proxy(this.observe.showTooltip, this)
+              $7.proxy(this.observe.showTooltip, this)
             );
             this.$editor.on(
               "touchstart.redactor." + this.uuid + " click.redactor." + this.uuid,
-              $6.proxy(this.observe.closeTooltip, this)
+              $7.proxy(this.observe.closeTooltip, this)
             );
-            $6(document).on(
+            $7(document).on(
               "touchstart.redactor." + this.uuid + " click.redactor." + this.uuid,
-              $6.proxy(this.observe.closeTooltip, this)
+              $7.proxy(this.observe.closeTooltip, this)
             );
           },
           getTooltipPosition: function($link) {
             return $link.offset();
           },
           showTooltip: function(e) {
-            var $el = $6(e.target);
+            var $el = $7(e.target);
             if ($el[0].tagName == "IMG") return;
             if ($el[0].tagName !== "A") $el = $el.closest("a", this.$editor[0]);
             if ($el[0].tagName !== "A") return;
             var $link = $el;
             var pos = this.observe.getTooltipPosition($link);
-            var tooltip = $6('<span class="redactor-link-tooltip"></span>');
+            var tooltip = $7('<span class="redactor-link-tooltip"></span>');
             var href2 = $link.attr("href");
             if (href2 === void 0) {
               href2 = "";
             }
             if (href2.length > 24) href2 = href2.substring(0, 24) + "...";
-            var aLink = $6(
+            var aLink = $7(
               '<a href="' + $link.attr("href") + '" target="_blank" />'
             ).html(href2).addClass("redactor-link-tooltip-action");
-            var aEdit = $6('<a href="#" />').html(this.lang.get("edit")).on("click", $6.proxy(this.link.show, this)).addClass("redactor-link-tooltip-action");
-            var aUnlink = $6('<a href="#" />').html(this.lang.get("unlink")).on("click", $6.proxy(this.link.unlink, this)).addClass("redactor-link-tooltip-action");
+            var aEdit = $7('<a href="#" />').html(this.lang.get("edit")).on("click", $7.proxy(this.link.show, this)).addClass("redactor-link-tooltip-action");
+            var aUnlink = $7('<a href="#" />').html(this.lang.get("unlink")).on("click", $7.proxy(this.link.unlink, this)).addClass("redactor-link-tooltip-action");
             tooltip.append(aLink).append(" | ").append(aEdit).append(" | ").append(aUnlink);
             tooltip.css({
               top: pos.top + parseInt($link.css("line-height"), 10) + "px",
               left: pos.left + "px"
             });
-            $6(".redactor-link-tooltip").remove();
-            $6("body").append(tooltip);
+            $7(".redactor-link-tooltip").remove();
+            $7("body").append(tooltip);
           },
           closeTooltip: function(e) {
             e = e.originalEvent || e;
             var target = e.target;
-            var $parent = $6(target).closest("a", this.$editor[0]);
+            var $parent = $7(target).closest("a", this.$editor[0]);
             if ($parent.length !== 0 && $parent[0].tagName === "A" && target.tagName !== "A") {
               return;
-            } else if (target.tagName === "A" && this.utils.isRedactorParent(target) || $6(target).hasClass("redactor-link-tooltip-action")) {
+            } else if (target.tagName === "A" && this.utils.isRedactorParent(target) || $7(target).hasClass("redactor-link-tooltip-action")) {
               return;
             }
-            $6(".redactor-link-tooltip").remove();
+            $7(".redactor-link-tooltip").remove();
           }
         };
       },
@@ -28972,16 +24743,16 @@
               ),
               "<p><br /></p>\n<$1$2>"
             );
-            return $6.trim(html);
+            return $7.trim(html);
           },
           getSafes: function(html) {
-            var $div = $6("<div />").append(html);
+            var $div = $7("<div />").append(html);
             $div.find("blockquote p").replaceWith(function() {
-              return $6(this).append("<br />").contents();
+              return $7(this).append("<br />").contents();
             });
             html = $div.html();
             $div.find(this.opts.paragraphizeBlocks.join(", ")).each(
-              $6.proxy(function(i, s) {
+              $7.proxy(function(i, s) {
                 this.paragraphize.z++;
                 this.paragraphize.safes[this.paragraphize.z] = s.outerHTML;
                 html = html.replace(
@@ -28995,9 +24766,9 @@
           getSafesComments: function(html) {
             var commentsMatches = html.match(/<!--([\w\W]*?)-->/gi);
             if (!commentsMatches) return html;
-            $6.each(
+            $7.each(
               commentsMatches,
-              $6.proxy(function(i, s) {
+              $7.proxy(function(i, s) {
                 this.paragraphize.z++;
                 this.paragraphize.safes[this.paragraphize.z] = s;
                 html = html.replace(s, "\n{replace" + this.paragraphize.z + "}");
@@ -29006,7 +24777,7 @@
             return html;
           },
           restoreSafes: function(html) {
-            $6.each(this.paragraphize.safes, function(i, s) {
+            $7.each(this.paragraphize.safes, function(i, s) {
               s = typeof s !== "undefined" ? s.replace(/\$/g, "&#36;") : s;
               html = html.replace("{replace" + i + "}", s);
             });
@@ -29070,7 +24841,7 @@
         return {
           init: function(e) {
             if (!this.opts.cleanOnPaste) {
-              setTimeout($6.proxy(this.code.sync, this), 1);
+              setTimeout($7.proxy(this.code.sync, this), 1);
               return;
             }
             this.rtePaste = true;
@@ -29078,20 +24849,20 @@
             this.selection.save();
             this.utils.saveScroll();
             this.paste.createPasteBox();
-            $6(window).on(
+            $7(window).on(
               "scroll.redactor-freeze",
-              $6.proxy(function() {
-                $6(window).scrollTop(this.saveBodyScroll);
+              $7.proxy(function() {
+                $7(window).scrollTop(this.saveBodyScroll);
               }, this)
             );
             setTimeout(
-              $6.proxy(function() {
+              $7.proxy(function() {
                 var html = this.$pasteBox.html();
                 this.$pasteBox.remove();
                 this.selection.restore();
                 this.utils.restoreScroll();
                 this.paste.insert(html);
-                $6(window).off("scroll.redactor-freeze");
+                $7(window).off("scroll.redactor-freeze");
                 if (this.linkify.isEnabled()) {
                   this.linkify.format();
                 }
@@ -29100,15 +24871,15 @@
             );
           },
           createPasteBox: function() {
-            this.$pasteBox = $6("<div>").html("").attr("contenteditable", "true").css({ position: "fixed", width: 0, top: 0, left: "-9999px" });
+            this.$pasteBox = $7("<div>").html("").attr("contenteditable", "true").css({ position: "fixed", width: 0, top: 0, left: "-9999px" });
             if (this.utils.browser("msie")) {
               this.$box.append(this.$pasteBox);
             } else {
-              var $visibleModals = $6(".modal-body:visible");
+              var $visibleModals = $7(".modal-body:visible");
               if ($visibleModals.length > 0) {
                 $visibleModals.append(this.$pasteBox);
               } else {
-                $6("body").append(this.$pasteBox);
+                $7("body").append(this.$pasteBox);
               }
             }
             this.$pasteBox.get(0).focus();
@@ -29124,13 +24895,13 @@
             }
             this.utils.disableSelectAll();
             this.rtePaste = false;
-            setTimeout($6.proxy(this.clean.clearUnverified, this), 10);
+            setTimeout($7.proxy(this.clean.clearUnverified, this), 10);
             setTimeout(
-              $6.proxy(function() {
+              $7.proxy(function() {
                 var spans = this.$editor.find("span");
-                $6.each(spans, function(i, s) {
+                $7.each(spans, function(i, s) {
                   var html2 = s.innerHTML.replace(/\u200B/, "");
-                  if (html2 === "" && s.attributes.length === 0) $6(s).remove();
+                  if (html2 === "" && s.attributes.length === 0) $7(s).remove();
                 });
               }, this),
               10
@@ -29146,12 +24917,12 @@
             this.placeholder.toggle();
             this.$editor.on(
               "keydown.redactor-placeholder",
-              $6.proxy(this.placeholder.toggle, this)
+              $7.proxy(this.placeholder.toggle, this)
             );
           },
           toggle: function() {
             setTimeout(
-              $6.proxy(function() {
+              $7.proxy(function() {
                 var func = this.utils.isEmpty(this.$editor.html(), false) ? "addClass" : "removeClass";
                 this.$editor[func]("redactor-placeholder");
               }, this),
@@ -29173,14 +24944,14 @@
       progress: function() {
         return {
           show: function() {
-            $6(document.body).append(
-              $6('<div id="redactor-progress"><span></span></div>')
+            $7(document.body).append(
+              $7('<div id="redactor-progress"><span></span></div>')
             );
-            $6("#redactor-progress").fadeIn();
+            $7("#redactor-progress").fadeIn();
           },
           hide: function() {
-            $6("#redactor-progress").fadeOut(1500, function() {
-              $6(this).remove();
+            $7("#redactor-progress").fadeOut(1500, function() {
+              $7(this).remove();
             });
           }
         };
@@ -29213,7 +24984,7 @@
           getParent: function(elem) {
             elem = elem || this.selection.getCurrent();
             if (elem) {
-              return this.utils.isRedactorParent($6(elem).parent()[0]);
+              return this.utils.isRedactorParent($7(elem).parent()[0]);
             }
             return false;
           },
@@ -29227,7 +24998,7 @@
             node = node || this.selection.getCurrent();
             while (node) {
               if (this.utils.isBlockTag(node.tagName)) {
-                return $6(node).hasClass("redactor-editor") ? false : node;
+                return $7(node).hasClass("redactor-editor") ? false : node;
               }
               node = node.parentNode;
             }
@@ -29247,10 +25018,10 @@
                 inlineTags.push(tags[i]);
               }
             }
-            $6.each(
+            $7.each(
               nodes,
-              $6.proxy(function(i2, node) {
-                if ($6.inArray(node.tagName.toLowerCase(), inlineTags) != -1) {
+              $7.proxy(function(i2, node) {
+                if ($7.inArray(node.tagName.toLowerCase(), inlineTags) != -1) {
                   inlines.push(node);
                 }
               }, this)
@@ -29264,10 +25035,10 @@
             }
             var inlines = [];
             var nodes = this.selection.getNodes();
-            $6.each(
+            $7.each(
               nodes,
-              $6.proxy(function(i, node) {
-                if ($6.inArray(node.tagName.toLowerCase(), tags) != -1) {
+              $7.proxy(function(i, node) {
+                if ($7.inArray(node.tagName.toLowerCase(), tags) != -1) {
                   inlines.push(node);
                 }
               }, this)
@@ -29281,9 +25052,9 @@
             }
             var blocks = [];
             nodes = typeof nodes == "undefined" ? this.selection.getNodes() : nodes;
-            $6.each(
+            $7.each(
               nodes,
-              $6.proxy(function(i, node) {
+              $7.proxy(function(i, node) {
                 if (this.utils.isBlock(node)) {
                   blocks.push(node);
                 }
@@ -29325,7 +25096,7 @@
             var self2 = this;
             this.$editor.find("*").each(function() {
               if (this == startNode) {
-                var parent = $6(this).parent();
+                var parent = $7(this).parent();
                 if (parent.length !== 0 && parent[0].tagName != "BODY" && self2.utils.isRedactorParent(parent[0])) {
                   nodes.push(parent[0]);
                 }
@@ -29352,7 +25123,7 @@
             return finalNodes;
           },
           getNodesMarker: function(num) {
-            return $6(
+            return $7(
               '<span id="nodes-marker-' + num + '" class="redactor-nodes-marker" data-verified="redactor">' + this.opts.invisibleSpace + "</span>"
             )[0];
           },
@@ -29365,7 +25136,7 @@
             }
           },
           removeNodesMarkers: function() {
-            $6(document).find("span.redactor-nodes-marker").remove();
+            $7(document).find("span.redactor-nodes-marker").remove();
             this.$editor.find("span.redactor-nodes-marker").remove();
           },
           fromPoint: function(start2, end) {
@@ -29414,7 +25185,7 @@
           },
           getMarker: function(num) {
             if (typeof num == "undefined") num = 1;
-            return $6(
+            return $7(
               '<span id="selection-marker-' + num + '" class="redactor-selection-marker"  data-verified="redactor">' + this.opts.invisibleSpace + "</span>"
             )[0];
           },
@@ -29448,11 +25219,11 @@
           },
           removeMarkers: function() {
             this.$editor.find("span.redactor-selection-marker").each(function(i, s) {
-              var text = $6(s).text().replace(/\u200B/g, "");
-              if (text === "") $6(s).remove();
+              var text = $7(s).text().replace(/\u200B/g, "");
+              if (text === "") $7(s).remove();
               else
-                $6(s).replaceWith(function() {
-                  return $6(this).contents();
+                $7(s).replaceWith(function() {
+                  return $7(this).contents();
                 });
             });
           },
@@ -29505,17 +25276,17 @@
                 e.preventDefault();
               return false;
             }
-            $6.each(
+            $7.each(
               this.opts.shortcuts,
-              $6.proxy(function(str, command) {
+              $7.proxy(function(str, command) {
                 var keys = str.split(",");
                 var len = keys.length;
                 for (var i = 0; i < len; i++) {
                   if (typeof keys[i] === "string") {
                     this.shortcuts.handler(
                       e,
-                      $6.trim(keys[i]),
-                      $6.proxy(function() {
+                      $7.trim(keys[i]),
+                      $7.proxy(function() {
                         var func;
                         if (command.func.search(/\./) != "-1") {
                           func = command.func.split(".");
@@ -29622,7 +25393,7 @@
             };
             keys = keys.toLowerCase().split(" ");
             var special = hotkeysSpecialKeys[e.keyCode], character = String.fromCharCode(e.which).toLowerCase(), modif = "", possible = {};
-            $6.each(
+            $7.each(
               ["alt", "ctrl", "meta", "shift"],
               function(index2, specialKey) {
                 if (e[specialKey + "Key"] && special !== specialKey) {
@@ -29796,15 +25567,15 @@
             return tagout.replace(/\s*$/, "") + suffix + ">";
           },
           placeTag: function(tag, out) {
-            var nl2 = tag.match(this.tabifier.newLevel);
-            if (tag.match(this.tabifier.lineBefore) || nl2) {
+            var nl = tag.match(this.tabifier.newLevel);
+            if (tag.match(this.tabifier.lineBefore) || nl) {
               out = out.replace(/\s*$/, "");
               out += "\n";
             }
-            if (nl2 && "/" == tag.charAt(1)) this.tabifier.cleanlevel--;
+            if (nl && "/" == tag.charAt(1)) this.tabifier.cleanlevel--;
             if ("\n" == out.charAt(out.length - 1))
               out += this.tabifier.getTabs();
-            if (nl2 && "/" != tag.charAt(1)) this.tabifier.cleanlevel++;
+            if (nl && "/" != tag.charAt(1)) this.tabifier.cleanlevel++;
             out += tag;
             if (tag.match(this.tabifier.lineAfter) || tag.match(this.tabifier.newLevel)) {
               out = out.replace(/ *$/, "");
@@ -29816,7 +25587,7 @@
       tidy: function() {
         return {
           setupAllowed: function() {
-            var index2 = $6.inArray("span", this.opts.removeEmpty);
+            var index2 = $7.inArray("span", this.opts.removeEmpty);
             if (index2 !== -1) {
               this.opts.removeEmpty.splice(index2, 1);
             }
@@ -29830,7 +25601,7 @@
           addToAllowed: function(tags) {
             var len = tags.length;
             for (var i = 0; i < len; i++) {
-              if ($6.inArray(tags[i], this.opts.allowedTags) == -1) {
+              if ($7.inArray(tags[i], this.opts.allowedTags) == -1) {
                 this.opts.allowedTags.push(tags[i]);
               }
             }
@@ -29838,7 +25609,7 @@
           removeFromDenied: function(tags) {
             var len = tags.length;
             for (var i = 0; i < len; i++) {
-              var pos = $6.inArray(tags[i], this.opts.deniedTags);
+              var pos = $7.inArray(tags[i], this.opts.deniedTags);
               if (pos != -1) {
                 this.opts.deniedTags.splice(pos, 1);
               }
@@ -29857,9 +25628,9 @@
               removeWithoutAttr: this.opts.removeWithoutAttr,
               removeEmpty: this.opts.removeEmpty
             };
-            $6.extend(this.tidy.settings, options);
+            $7.extend(this.tidy.settings, options);
             html = this.tidy.removeComments(html);
-            this.tidy.$div = $6("<div />").append(html);
+            this.tidy.$div = $7("<div />").append(html);
             this.tidy.replaceTags();
             this.tidy.replaceStyles();
             this.tidy.removeTags();
@@ -29884,11 +25655,11 @@
               rTags.push(this.tidy.settings.replaceTags[i][1]);
               replacement.push(this.tidy.settings.replaceTags[i][0]);
             }
-            $6.each(
+            $7.each(
               replacement,
-              $6.proxy(function(key, value) {
+              $7.proxy(function(key, value) {
                 this.tidy.$div.find(value).replaceWith(function() {
-                  return $6("<" + rTags[key] + " />", { html: $6(this).html() });
+                  return $7("<" + rTags[key] + " />", { html: $7(this).html() });
                 });
               }, this)
             );
@@ -29897,8 +25668,8 @@
             if (!this.tidy.settings.replaceStyles) return;
             var len = this.tidy.settings.replaceStyles.length;
             this.tidy.$div.find("span").each(
-              $6.proxy(function(n, s) {
-                var $el = $6(s);
+              $7.proxy(function(n, s) {
+                var $el = $7(s);
                 var style = $el.attr("style");
                 for (var i = 0; i < len; i++) {
                   if (style && style.match(
@@ -29910,7 +25681,7 @@
                     var tagName = this.tidy.settings.replaceStyles[i][1];
                     $el.replaceWith(function() {
                       var tag = document.createElement(tagName);
-                      return $6(tag).append($6(this).contents());
+                      return $7(tag).append($7(this).contents());
                     });
                   }
                 }
@@ -29920,16 +25691,16 @@
           removeTags: function() {
             if (!this.tidy.settings.deniedTags && this.tidy.settings.allowedTags) {
               this.tidy.$div.find("*").not(this.tidy.settings.allowedTags.join(",")).each(function(i, s) {
-                if (s.innerHTML === "") $6(s).remove();
-                else $6(s).contents().unwrap();
+                if (s.innerHTML === "") $7(s).remove();
+                else $7(s).contents().unwrap();
               });
             }
             if (this.tidy.settings.deniedTags) {
               this.tidy.$div.find(this.tidy.settings.deniedTags.join(",")).each(function(i, s) {
-                if ($6(s).hasClass("redactor-script-tag") || $6(s).hasClass("redactor-selection-marker"))
+                if ($7(s).hasClass("redactor-script-tag") || $7(s).hasClass("redactor-selection-marker"))
                   return;
-                if (s.innerHTML === "") $6(s).remove();
-                else $6(s).contents().unwrap();
+                if (s.innerHTML === "") $7(s).remove();
+                else $7(s).contents().unwrap();
               });
             }
           },
@@ -29943,9 +25714,9 @@
                 allowedAttrData.push(this.tidy.settings.allowedAttr[i][1]);
               }
               this.tidy.$div.find("*").each(
-                $6.proxy(function(n, s) {
-                  var $el = $6(s);
-                  var pos = $6.inArray(
+                $7.proxy(function(n, s) {
+                  var $el = $7(s);
+                  var pos = $7.inArray(
                     $el[0].tagName.toLowerCase(),
                     allowedAttrTags
                   );
@@ -29955,7 +25726,7 @@
                     $el
                   );
                   if (attributesRemove) {
-                    $6.each(attributesRemove, function(z, f) {
+                    $7.each(attributesRemove, function(z, f) {
                       $el.removeAttr(f);
                     });
                   }
@@ -29966,7 +25737,7 @@
               len = this.tidy.settings.removeAttr.length;
               for (var i = 0; i < len; i++) {
                 var attrs = this.tidy.settings.removeAttr[i][1];
-                if ($6.isArray(attrs)) attrs = attrs.join(" ");
+                if ($7.isArray(attrs)) attrs = attrs.join(" ");
                 this.tidy.$div.find(this.tidy.settings.removeAttr[i][0]).removeAttr(attrs);
               }
             }
@@ -29974,15 +25745,15 @@
           removeAttrGetRemoves: function(pos, allowed, $el) {
             var attributesRemove = [];
             if (pos == -1) {
-              $6.each($el[0].attributes, function(i, item) {
+              $7.each($el[0].attributes, function(i, item) {
                 attributesRemove.push(item.name);
               });
             } else if (allowed[pos] == "*") {
               attributesRemove = [];
             } else {
-              $6.each($el[0].attributes, function(i, item) {
-                if ($6.isArray(allowed[pos])) {
-                  if ($6.inArray(item.name, allowed[pos]) == -1) {
+              $7.each($el[0].attributes, function(i, item) {
+                if ($7.isArray(allowed[pos])) {
+                  if ($7.inArray(item.name, allowed[pos]) == -1) {
                     attributesRemove.push(item.name);
                   }
                 } else if (allowed[pos] != item.name) {
@@ -29995,7 +25766,7 @@
           removeAttrs: function(el, regex) {
             regex = new RegExp(regex, "g");
             return el.each(function() {
-              var self2 = $6(this);
+              var self2 = $7(this);
               var len = this.attributes.length - 1;
               for (var i = len; i >= 0; i--) {
                 var item = this.attributes[i];
@@ -30008,7 +25779,7 @@
           removeEmpty: function() {
             if (!this.tidy.settings.removeEmpty) return;
             this.tidy.$div.find(this.tidy.settings.removeEmpty.join(",")).each(function() {
-              var $el = $6(this);
+              var $el = $7(this);
               var text = $el.text();
               text = text.replace(/\u200B/g, "");
               text = text.replace(/&nbsp;/gi, "");
@@ -30024,7 +25795,7 @@
           removeDataAttr: function() {
             if (!this.tidy.settings.removeDataAttr) return;
             var tags = this.tidy.settings.removeDataAttr;
-            if ($6.isArray(this.tidy.settings.removeDataAttr))
+            if ($7.isArray(this.tidy.settings.removeDataAttr))
               tags = this.tidy.settings.removeDataAttr.join(",");
             this.tidy.removeAttrs(this.tidy.$div.find(tags), "^(data-)");
           },
@@ -30032,7 +25803,7 @@
             if (!this.tidy.settings.removeWithoutAttr) return;
             this.tidy.$div.find(this.tidy.settings.removeWithoutAttr.join(",")).each(function() {
               if (this.attributes.length === 0) {
-                $6(this).contents().unwrap();
+                $7(this).contents().unwrap();
               }
             });
           }
@@ -30195,26 +25966,26 @@
             if (this.opts.activeButtons) {
               this.$editor.on(
                 "mouseup.redactor keyup.redactor focus.redactor",
-                $6.proxy(this.observe.toolbar, this)
+                $7.proxy(this.observe.toolbar, this)
               );
             }
           },
           createContainer: function() {
-            return $6("<ul>").addClass("redactor-toolbar").attr({ id: "redactor-toolbar-" + this.uuid, role: "toolbar" });
+            return $7("<ul>").addClass("redactor-toolbar").attr({ id: "redactor-toolbar-" + this.uuid, role: "toolbar" });
           },
           setFormattingTags: function() {
-            $6.each(
+            $7.each(
               this.opts.toolbar.formatting.dropdown,
-              $6.proxy(function(i, s) {
-                if ($6.inArray(i, this.opts.formatting) == -1)
+              $7.proxy(function(i, s) {
+                if ($7.inArray(i, this.opts.formatting) == -1)
                   delete this.opts.toolbar.formatting.dropdown[i];
               }, this)
             );
           },
           loadButtons: function() {
-            $6.each(
+            $7.each(
               this.opts.buttons,
-              $6.proxy(function(i, btnName) {
+              $7.proxy(function(i, btnName) {
                 if (!this.opts.toolbar[btnName]) return;
                 if (btnName === "file") {
                   if (this.opts.fileUpload === false) return;
@@ -30228,7 +25999,7 @@
                 }
                 var btnObject = this.opts.toolbar[btnName];
                 this.$toolbar.append(
-                  $6("<li>").append(this.button.build(btnName, btnObject))
+                  $7("<li>").append(this.button.build(btnName, btnObject))
                 );
               }, this)
             );
@@ -30236,7 +26007,7 @@
           append: function() {
             if (this.opts.toolbarExternal) {
               this.$toolbar.addClass("redactor-toolbar-external");
-              $6(this.opts.toolbarExternal).html(this.$toolbar);
+              $7(this.opts.toolbarExternal).html(this.$toolbar);
             } else {
               this.$box.prepend(this.$toolbar);
             }
@@ -30246,9 +26017,9 @@
             if (this.opts.toolbarExternal) return;
             if (!this.opts.toolbarFixed) return;
             this.toolbar.observeScroll();
-            $6(this.opts.toolbarFixedTarget).on(
+            $7(this.opts.toolbarFixedTarget).on(
               "scroll.redactor." + this.uuid,
-              $6.proxy(this.toolbar.observeScroll, this)
+              $7.proxy(this.toolbar.observeScroll, this)
             );
           },
           setOverflow: function() {
@@ -30265,9 +26036,9 @@
           },
           hideButtons: function() {
             if (this.opts.buttonsHide.length === 0) return;
-            $6.each(
+            $7.each(
               this.opts.buttonsHide,
-              $6.proxy(function(i, s) {
+              $7.proxy(function(i, s) {
                 var index2 = this.opts.buttons.indexOf(s);
                 this.opts.buttons.splice(index2, 1);
               }, this)
@@ -30276,16 +26047,16 @@
           hideButtonsOnMobile: function() {
             if (!this.utils.isMobile() || this.opts.buttonsHideOnMobile.length === 0)
               return;
-            $6.each(
+            $7.each(
               this.opts.buttonsHideOnMobile,
-              $6.proxy(function(i, s) {
+              $7.proxy(function(i, s) {
                 var index2 = this.opts.buttons.indexOf(s);
                 this.opts.buttons.splice(index2, 1);
               }, this)
             );
           },
           observeScroll: function() {
-            var scrollTop = $6(this.opts.toolbarFixedTarget).scrollTop();
+            var scrollTop = $7(this.opts.toolbarFixedTarget).scrollTop();
             var boxTop = 1;
             if (this.opts.toolbarFixedTarget === document) {
               boxTop = this.$box.offset().top;
@@ -30309,7 +26080,7 @@
               left
             });
             if (scrollTop > end)
-              $6(".redactor-dropdown-" + this.uuid + ":visible").hide();
+              $7(".redactor-dropdown-" + this.uuid + ":visible").hide();
             this.toolbar.setDropdownsFixed();
             this.$toolbar.css(
               "visibility",
@@ -30334,30 +26105,30 @@
               top2 = this.$toolbar.innerHeight() + this.$toolbar.offset().top + this.opts.toolbarFixedTopOffset;
               position = "absolute";
             }
-            $6(".redactor-dropdown-" + this.uuid).each(function() {
-              $6(this).css({ position, top: top2 + "px" });
+            $7(".redactor-dropdown-" + this.uuid).each(function() {
+              $7(this).css({ position, top: top2 + "px" });
             });
           },
           unsetDropdownsFixed: function() {
             var top2 = this.$toolbar.innerHeight() + this.$toolbar.offset().top;
-            $6(".redactor-dropdown-" + this.uuid).each(function() {
-              $6(this).css({ position: "absolute", top: top2 + "px" });
+            $7(".redactor-dropdown-" + this.uuid).each(function() {
+              $7(this).css({ position: "absolute", top: top2 + "px" });
             });
           }
         };
       },
       upload: function() {
         return {
-          init: function(id2, url, callback) {
+          init: function(id, url, callback) {
             this.upload.direct = false;
             this.upload.callback = callback;
             this.upload.url = url;
-            this.upload.$el = $6(id2);
-            this.upload.$droparea = $6('<div id="redactor-droparea" />');
-            this.upload.$placeholdler = $6(
+            this.upload.$el = $7(id);
+            this.upload.$droparea = $7('<div id="redactor-droparea" />');
+            this.upload.$placeholdler = $7(
               '<div id="redactor-droparea-placeholder" />'
             ).text(this.lang.get("upload_label"));
-            this.upload.$input = $6('<input type="file" name="file" />');
+            this.upload.$input = $7('<input type="file" name="file" />');
             this.upload.$placeholdler.append(this.upload.$input);
             this.upload.$droparea.append(this.upload.$placeholdler);
             this.upload.$el.append(this.upload.$droparea);
@@ -30365,22 +26136,22 @@
             this.upload.$input.off("redactor.upload");
             this.upload.$droparea.on(
               "dragover.redactor.upload",
-              $6.proxy(this.upload.onDrag, this)
+              $7.proxy(this.upload.onDrag, this)
             );
             this.upload.$droparea.on(
               "dragleave.redactor.upload",
-              $6.proxy(this.upload.onDragLeave, this)
+              $7.proxy(this.upload.onDragLeave, this)
             );
             this.upload.$input.on(
               "change.redactor.upload",
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 e = e.originalEvent || e;
                 this.upload.traverseFile(this.upload.$input[0].files[0], e);
               }, this)
             );
             this.upload.$droparea.on(
               "drop.redactor.upload",
-              $6.proxy(function(e) {
+              $7.proxy(function(e) {
                 e.preventDefault();
                 this.upload.$droparea.removeClass("drag-hover").addClass("drag-drop");
                 this.upload.onDrop(e);
@@ -30430,10 +26201,10 @@
           },
           getHiddenFields: function(obj, fd) {
             if (obj === false || typeof obj !== "object") return fd;
-            $6.each(
+            $7.each(
               obj,
-              $6.proxy(function(k, v) {
-                if (v !== null && v.toString().indexOf("#") === 0) v = $6(v).val();
+              $7.proxy(function(k, v) {
+                if (v !== null && v.toString().indexOf("#") === 0) v = $7(v).val();
                 fd.append(k, v);
               }, this)
             );
@@ -30462,14 +26233,14 @@
             var xhr = new XMLHttpRequest();
             xhr.open("POST", this.upload.url);
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-            xhr.onreadystatechange = $6.proxy(function() {
+            xhr.onreadystatechange = $7.proxy(function() {
               if (xhr.readyState == 4) {
                 var data = xhr.responseText;
                 data = data.replace(/^\[/, "");
                 data = data.replace(/\]$/, "");
                 var json;
                 try {
-                  json = typeof data === "string" ? $6.parseJSON(data) : data;
+                  json = typeof data === "string" ? $7.parseJSON(data) : data;
                 } catch (err) {
                   json = {
                     error: true
@@ -30514,7 +26285,7 @@
           s3uploadFile: function(file) {
             this.upload.s3executeOnSignedUrl(
               file,
-              $6.proxy(function(signedURL) {
+              $7.proxy(function(signedURL) {
                 this.upload.s3uploadToS3(file, signedURL);
               }, this)
             );
@@ -30555,7 +26326,7 @@
             var xhr = this.upload.s3createCORSRequest("PUT", url);
             if (!xhr) {
             } else {
-              xhr.onload = $6.proxy(function() {
+              xhr.onload = $7.proxy(function() {
                 if (xhr.status == 200) {
                   this.progress.hide();
                   var s3file = url.split("?");
@@ -30610,7 +26381,7 @@
               html = html.replace(/<[^\/>][^>]*><\/[^>]+>/gi, "");
               html = html.replace(/<[^\/>][^>]*><\/[^>]+>/gi, "");
             }
-            html = $6.trim(html);
+            html = $7.trim(html);
             return html === "";
           },
           normalize: function(str) {
@@ -30628,20 +26399,20 @@
             return "rgb(" + parseInt(result[1], 16) + ", " + parseInt(result[2], 16) + ", " + parseInt(result[3], 16) + ")";
           },
           getOuterHtml: function(el) {
-            return $6("<div>").append($6(el).eq(0).clone()).html();
+            return $7("<div>").append($7(el).eq(0).clone()).html();
           },
           getAlignmentElement: function(el) {
-            if ($6.inArray(el.tagName, this.opts.alignmentTags) !== -1) {
-              return $6(el);
+            if ($7.inArray(el.tagName, this.opts.alignmentTags) !== -1) {
+              return $7(el);
             } else {
-              return $6(el).closest(
+              return $7(el).closest(
                 this.opts.alignmentTags.toString().toLowerCase(),
                 this.$editor[0]
               );
             }
           },
           removeEmptyAttr: function(el, attr) {
-            var $el = $6(el);
+            var $el = $7(el);
             if (typeof $el.attr(attr) == "undefined") {
               return true;
             }
@@ -30652,10 +26423,10 @@
             return false;
           },
           removeEmpty: function(i, s) {
-            var $s = $6($6.parseHTML(s));
+            var $s = $7($7.parseHTML(s));
             $s.find(".redactor-invisible-space").removeAttr("style").removeAttr("class");
             if ($s.find("hr, br, img, iframe, source").length !== 0) return;
-            var text = $6.trim($s.text());
+            var text = $7.trim($s.text());
             if (this.utils.isEmpty(text, false)) {
               $s.remove();
             }
@@ -30663,17 +26434,17 @@
           // save and restore scroll
           saveScroll: function() {
             this.saveEditorScroll = this.$editor.scrollTop();
-            this.saveBodyScroll = $6(window).scrollTop();
+            this.saveBodyScroll = $7(window).scrollTop();
             if (this.opts.scrollTarget)
-              this.saveTargetScroll = $6(this.opts.scrollTarget).scrollTop();
+              this.saveTargetScroll = $7(this.opts.scrollTarget).scrollTop();
           },
           restoreScroll: function() {
             if (typeof this.saveScroll === "undefined" && typeof this.saveBodyScroll === "undefined")
               return;
-            $6(window).scrollTop(this.saveBodyScroll);
+            $7(window).scrollTop(this.saveBodyScroll);
             this.$editor.scrollTop(this.saveEditorScroll);
             if (this.opts.scrollTarget)
-              $6(this.opts.scrollTarget).scrollTop(this.saveTargetScroll);
+              $7(this.opts.scrollTarget).scrollTop(this.saveTargetScroll);
           },
           // get invisible space element
           createSpaceElement: function() {
@@ -30687,21 +26458,21 @@
             var tags = this.opts.inlineTags;
             tags.push("span");
             if (node.tagName == "PRE") tags.push("a");
-            $6(node).find(tags.join(",")).not("span.redactor-selection-marker").contents().unwrap();
+            $7(node).find(tags.join(",")).not("span.redactor-selection-marker").contents().unwrap();
           },
           replaceWithContents: function(node, removeInlineTags) {
             var self2 = this;
-            $6(node).replaceWith(function() {
+            $7(node).replaceWith(function() {
               if (removeInlineTags === true) self2.utils.removeInlineTags(this);
-              return $6(this).contents();
+              return $7(this).contents();
             });
-            return $6(node);
+            return $7(node);
           },
           replaceToTag: function(node, tag, removeInlineTags) {
             var replacement;
             var self2 = this;
-            $6(node).replaceWith(function() {
-              replacement = $6("<" + tag + " />").append($6(this).contents());
+            $7(node).replaceWith(function() {
+              replacement = $7("<" + tag + " />").append($7(this).contents());
               for (var i = 0; i < this.attributes.length; i++) {
                 replacement.attr(
                   this.attributes[i].name,
@@ -30727,7 +26498,7 @@
               if (!element) return false;
             }
             var offset2 = this.caret.getOffsetOfElement(element);
-            var text = $6.trim($6(element).text()).replace(/\n\r\n/g, "");
+            var text = $7.trim($7(element).text()).replace(/\n\r\n/g, "");
             return offset2 == text.length ? true : false;
           },
           isStartOfEditor: function() {
@@ -30737,8 +26508,8 @@
           isEndOfEditor: function() {
             var block = this.$editor[0];
             var offset2 = this.caret.getOffsetOfElement(block);
-            var text = $6.trim(
-              $6(block).html().replace(/(<([^>]+)>)/gi, "")
+            var text = $7.trim(
+              $7(block).html().replace(/(<([^>]+)>)/gi, "")
             );
             return offset2 == text.length ? true : false;
           },
@@ -30753,7 +26524,7 @@
           },
           // tag detection
           isTag: function(current, tag) {
-            var element = $6(current).closest(tag, this.$editor[0]);
+            var element = $7(current).closest(tag, this.$editor[0]);
             if (element.length == 1) {
               return element[0];
             }
@@ -30774,7 +26545,7 @@
             if (!el) {
               return false;
             }
-            if ($6(el).parents(".redactor-editor").length === 0 || $6(el).hasClass("redactor-editor")) {
+            if ($7(el).parents(".redactor-editor").length === 0 || $7(el).hasClass("redactor-editor")) {
               return false;
             }
             return el;
@@ -30792,11 +26563,11 @@
           isCurrentOrParent: function(tagName) {
             var parent = this.selection.getParent();
             var current = this.selection.getCurrent();
-            if ($6.isArray(tagName)) {
+            if ($7.isArray(tagName)) {
               var matched = 0;
-              $6.each(
+              $7.each(
                 tagName,
-                $6.proxy(function(i, s) {
+                $7.proxy(function(i, s) {
                   if (this.utils.isCurrentOrParentOne(current, parent, s)) {
                     matched++;
                   }
@@ -30838,7 +26609,7 @@
             return i >= 0 ? i : false;
           },
           disableBodyScroll: function() {
-            var $body = $6("html");
+            var $body = $7("html");
             var windowWidth = window.innerWidth;
             if (!windowWidth) {
               var documentElementRect = document.documentElement.getBoundingClientRect();
@@ -30850,7 +26621,7 @@
             if (isOverflowing) $body.css("padding-right", scrollbarWidth);
           },
           measureScrollbar: function() {
-            var $body = $6("body");
+            var $body = $7("body");
             var scrollDiv = document.createElement("div");
             scrollDiv.className = "redactor-scrollbar-measure";
             $body.append(scrollDiv);
@@ -30859,22 +26630,22 @@
             return scrollbarWidth;
           },
           enableBodyScroll: function() {
-            $6("html").css({ overflow: "", "padding-right": "" });
-            $6("body").remove("redactor-scrollbar-measure");
+            $7("html").css({ overflow: "", "padding-right": "" });
+            $7("body").remove("redactor-scrollbar-measure");
           }
         };
       }
     };
-    $6(window).on("load.tools.redactor", function() {
-      $6('[data-tools="redactor"]').redactor();
+    $7(window).on("load.tools.redactor", function() {
+      $7('[data-tools="redactor"]').redactor();
     });
     Redactor.prototype.init.prototype = Redactor.prototype;
-  })(import_jquery3.default);
+  })(import_jquery4.default);
 
   // app/assets/javascripts/comfy/vendor/redactor/filemanager.js
-  var import_jquery4 = __toESM(require_jquery());
+  var import_jquery5 = __toESM(require_jquery());
   if (!RedactorPlugins2) var RedactorPlugins2 = {};
-  (function($6) {
+  (function($7) {
     RedactorPlugins2.filemanager = function() {
       return {
         init: function() {
@@ -30886,50 +26657,50 @@
           this.modal.createTabber($modal);
           this.modal.addTab(1, "Upload", "active");
           this.modal.addTab(2, "Choose");
-          $6("#redactor-modal-file-upload-box").addClass(
+          $7("#redactor-modal-file-upload-box").addClass(
             "redactor-tab redactor-tab1"
           );
-          var $box = $6(
+          var $box = $7(
             '<div id="redactor-file-manager-box" style="overflow: auto; height: 300px;" class="redactor-tab redactor-tab2">'
           ).hide();
           $modal.append($box);
-          $6.ajax({
+          $7.ajax({
             dataType: "json",
             cache: false,
             url: this.opts.fileManagerJson,
-            success: $6.proxy(function(data) {
-              var ul = $6('<ul id="redactor-modal-list">');
-              $6.each(
+            success: $7.proxy(function(data) {
+              var ul = $7('<ul id="redactor-modal-list">');
+              $7.each(
                 data,
-                $6.proxy(function(key, val) {
-                  var a = $6(
+                $7.proxy(function(key, val) {
+                  var a = $7(
                     '<a href="#" title="' + val.title + '" rel="' + val.link + '" class="redactor-file-manager-link">' + val.title + ' <span style="font-size: 11px; color: #888;">' + val.name + '</span> <span style="position: absolute; right: 10px; font-size: 11px; color: #888;">(' + val.size + ")</span></a>"
                   );
-                  var li = $6("<li />");
-                  a.on("click", $6.proxy(this.filemanager.insert, this));
+                  var li = $7("<li />");
+                  a.on("click", $7.proxy(this.filemanager.insert, this));
                   li.append(a);
                   ul.append(li);
                 }, this)
               );
-              $6("#redactor-file-manager-box").append(ul);
+              $7("#redactor-file-manager-box").append(ul);
             }, this)
           });
         },
         insert: function(e) {
           e.preventDefault();
-          var $target = $6(e.target).closest(".redactor-file-manager-link");
+          var $target = $7(e.target).closest(".redactor-file-manager-link");
           this.file.insert(
             '<a href="' + $target.attr("rel") + '">' + $target.attr("title") + "</a>"
           );
         }
       };
     };
-  })(import_jquery4.default);
+  })(import_jquery5.default);
 
   // app/assets/javascripts/comfy/vendor/redactor/imagemanager.js
-  var import_jquery5 = __toESM(require_jquery());
+  var import_jquery6 = __toESM(require_jquery());
   if (!RedactorPlugins3) var RedactorPlugins3 = {};
-  (function($6) {
+  (function($7) {
     RedactorPlugins3.imagemanager = function() {
       return {
         init: function() {
@@ -30941,28 +26712,28 @@
           this.modal.createTabber($modal);
           this.modal.addTab(1, "Upload", "active");
           this.modal.addTab(2, "Choose");
-          $6("#redactor-modal-image-droparea").addClass(
+          $7("#redactor-modal-image-droparea").addClass(
             "redactor-tab redactor-tab1"
           );
-          var $box = $6(
+          var $box = $7(
             '<div id="redactor-image-manager-box" style="overflow: auto; height: 300px;" class="redactor-tab redactor-tab2">'
           ).hide();
           $modal.append($box);
-          $6.ajax({
+          $7.ajax({
             dataType: "json",
             cache: false,
             url: this.opts.imageManagerJson,
-            success: $6.proxy(function(data) {
-              $6.each(
+            success: $7.proxy(function(data) {
+              $7.each(
                 data,
-                $6.proxy(function(key, val) {
+                $7.proxy(function(key, val) {
                   var thumbtitle = "";
                   if (typeof val.title !== "undefined") thumbtitle = val.title;
-                  var img = $6(
+                  var img = $7(
                     '<img src="' + val.thumb + '" rel="' + val.image + '" title="' + thumbtitle + '" style="width: 100px; height: 75px; cursor: pointer;" />'
                   );
-                  $6("#redactor-image-manager-box").append(img);
-                  $6(img).click($6.proxy(this.imagemanager.insert, this));
+                  $7("#redactor-image-manager-box").append(img);
+                  $7(img).click($7.proxy(this.imagemanager.insert, this));
                 }, this)
               );
             }, this)
@@ -30970,60 +26741,60 @@
         },
         insert: function(e) {
           this.image.insert(
-            '<img src="' + $6(e.target).attr("rel") + '" alt="' + $6(e.target).attr("title") + '">'
+            '<img src="' + $7(e.target).attr("rel") + '" alt="' + $7(e.target).attr("title") + '">'
           );
-        }
-      };
-    };
-  })(import_jquery5.default);
-
-  // app/assets/javascripts/comfy/vendor/redactor/definedlinks.js
-  var import_jquery6 = __toESM(require_jquery());
-  if (!RedactorPlugins4) var RedactorPlugins4 = {};
-  (function($6) {
-    RedactorPlugins4.definedlinks = function() {
-      return {
-        init: function() {
-          if (!this.opts.definedLinks) return;
-          this.modal.addCallback("link", $6.proxy(this.definedlinks.load, this));
-        },
-        load: function() {
-          var $select = $6('<select id="redactor-defined-links" />');
-          $6("#redactor-modal-link-insert").prepend($select);
-          this.definedlinks.storage = {};
-          $6.getJSON(
-            this.opts.definedLinks,
-            $6.proxy(function(data) {
-              $6.each(
-                data,
-                $6.proxy(function(key, val) {
-                  this.definedlinks.storage[key] = val;
-                  $select.append($6("<option>").val(key).html(val.name));
-                }, this)
-              );
-              $select.on("change", $6.proxy(this.definedlinks.select, this));
-            }, this)
-          );
-        },
-        select: function(e) {
-          var key = $6(e.target).val();
-          var name2 = "", url = "";
-          if (key !== 0) {
-            name2 = this.definedlinks.storage[key].name;
-            url = this.definedlinks.storage[key].url;
-          }
-          $6("#redactor-link-url").val(url);
-          var $el = $6("#redactor-link-url-text");
-          if ($el.val() === "") $el.val(name2);
         }
       };
     };
   })(import_jquery6.default);
 
-  // app/assets/javascripts/comfy/vendor/redactor/table.js
+  // app/assets/javascripts/comfy/vendor/redactor/definedlinks.js
   var import_jquery7 = __toESM(require_jquery());
+  if (!RedactorPlugins4) var RedactorPlugins4 = {};
+  (function($7) {
+    RedactorPlugins4.definedlinks = function() {
+      return {
+        init: function() {
+          if (!this.opts.definedLinks) return;
+          this.modal.addCallback("link", $7.proxy(this.definedlinks.load, this));
+        },
+        load: function() {
+          var $select = $7('<select id="redactor-defined-links" />');
+          $7("#redactor-modal-link-insert").prepend($select);
+          this.definedlinks.storage = {};
+          $7.getJSON(
+            this.opts.definedLinks,
+            $7.proxy(function(data) {
+              $7.each(
+                data,
+                $7.proxy(function(key, val) {
+                  this.definedlinks.storage[key] = val;
+                  $select.append($7("<option>").val(key).html(val.name));
+                }, this)
+              );
+              $select.on("change", $7.proxy(this.definedlinks.select, this));
+            }, this)
+          );
+        },
+        select: function(e) {
+          var key = $7(e.target).val();
+          var name2 = "", url = "";
+          if (key !== 0) {
+            name2 = this.definedlinks.storage[key].name;
+            url = this.definedlinks.storage[key].url;
+          }
+          $7("#redactor-link-url").val(url);
+          var $el = $7("#redactor-link-url-text");
+          if ($el.val() === "") $el.val(name2);
+        }
+      };
+    };
+  })(import_jquery7.default);
+
+  // app/assets/javascripts/comfy/vendor/redactor/table.js
+  var import_jquery8 = __toESM(require_jquery());
   if (!RedactorPlugins5) var RedactorPlugins5 = {};
-  (function($6) {
+  (function($7) {
     RedactorPlugins5.table = function() {
       return {
         getTemplate: function() {
@@ -31088,20 +26859,20 @@
           button.on("click", this.table.insert);
           this.selection.save();
           this.modal.show();
-          $6("#redactor-table-rows").focus();
+          $7("#redactor-table-rows").focus();
         },
         insert: function() {
-          var rows = $6("#redactor-table-rows").val(), columns = $6("#redactor-table-columns").val(), $tableBox = $6("<div>"), tableId = Math.floor(Math.random() * 99999), $table = $6(
+          var rows = $7("#redactor-table-rows").val(), columns = $7("#redactor-table-columns").val(), $tableBox = $7("<div>"), tableId = Math.floor(Math.random() * 99999), $table = $7(
             '<table id="table' + tableId + '"><tbody></tbody></table>'
           ), i, $row, z, $column;
           for (i = 0; i < rows; i++) {
-            $row = $6("<tr>");
+            $row = $7("<tr>");
             for (z = 0; z < columns; z++) {
-              $column = $6("<td>" + this.opts.invisibleSpace + "</td>");
+              $column = $7("<td>" + this.opts.invisibleSpace + "</td>");
               if (i === 0 && z === 0) {
                 $column.append(this.selection.getMarker());
               }
-              $6($row).append($column);
+              $7($row).append($column);
             }
             $table.append($row);
           }
@@ -31113,8 +26884,8 @@
           this.buffer.set();
           var current = this.selection.getBlock() || this.selection.getCurrent();
           if (current && current.tagName != "BODY") {
-            if (current.tagName == "LI") current = $6(current).closest("ul, ol");
-            $6(current).after(html);
+            if (current.tagName == "LI") current = $7(current).closest("ul, ol");
+            $7(current).after(html);
           } else {
             this.insert.html(html);
           }
@@ -31133,7 +26904,7 @@
           this.core.setCallback("insertedTable", table);
         },
         getTable: function() {
-          var $table = $6(this.selection.getParent()).closest("table");
+          var $table = $7(this.selection.getParent()).closest("table");
           if (!this.utils.isRedactorParent($table)) return false;
           if ($table.size() === 0) return false;
           return $table;
@@ -31159,7 +26930,7 @@
         deleteRow: function() {
           var $table = this.table.getTable();
           if (!$table) return;
-          var $current = $6(this.selection.getCurrent());
+          var $current = $7(this.selection.getCurrent());
           this.buffer.set();
           var $current_tr = $current.closest("tr");
           var $focus_tr = $current_tr.prev().length ? $current_tr.prev() : $current_tr.next();
@@ -31174,12 +26945,12 @@
           var $table = this.table.getTable();
           if (!$table) return;
           this.buffer.set();
-          var $current = $6(this.selection.getCurrent());
+          var $current = $7(this.selection.getCurrent());
           var $current_td = $current.closest("td, th");
           var index2 = $current_td[0].cellIndex;
           $table.find("tr").each(
-            $6.proxy(function(i, elem) {
-              var $elem = $6(elem);
+            $7.proxy(function(i, elem) {
+              var $elem = $7(elem);
               var focusIndex = index2 - 1 < 0 ? index2 + 1 : index2 - 1;
               if (i === 0)
                 $elem.find("td, th").eq(focusIndex).prepend(this.selection.getMarker());
@@ -31196,13 +26967,13 @@
             this.table.deleteHead();
             return;
           }
-          var tr2 = $table.find("tr").first().clone();
-          tr2.find("td").replaceWith(
-            $6.proxy(function() {
-              return $6("<th>").html(this.opts.invisibleSpace);
+          var tr = $table.find("tr").first().clone();
+          tr.find("td").replaceWith(
+            $7.proxy(function() {
+              return $7("<th>").html(this.opts.invisibleSpace);
             }, this)
           );
-          $thead = $6("<thead></thead>").append(tr2);
+          $thead = $7("<thead></thead>").append(tr);
           $table.prepend($thead);
           this.code.sync();
         },
@@ -31231,13 +27002,13 @@
           var $table = this.table.getTable();
           if (!$table) return;
           this.buffer.set();
-          var $current = $6(this.selection.getCurrent());
+          var $current = $7(this.selection.getCurrent());
           var $current_tr = $current.closest("tr");
           var new_tr = $current_tr.clone();
           new_tr.find("th").replaceWith(function() {
-            var $td = $6("<td>");
+            var $td = $7("<td>");
             $td[0].attributes = this.attributes;
-            return $td.append($6(this).contents());
+            return $td.append($7(this).contents());
           });
           new_tr.find("td").html(this.opts.invisibleSpace);
           if (type == "after") {
@@ -31251,18 +27022,18 @@
           var $table = this.table.getTable();
           if (!$table) return;
           var index2 = 0;
-          var current = $6(this.selection.getCurrent());
+          var current = $7(this.selection.getCurrent());
           this.buffer.set();
           var $current_tr = current.closest("tr");
           var $current_td = current.closest("td, th");
           $current_tr.find("td, th").each(
-            $6.proxy(function(i, elem) {
-              if ($6(elem)[0] === $current_td[0]) index2 = i;
+            $7.proxy(function(i, elem) {
+              if ($7(elem)[0] === $current_td[0]) index2 = i;
             }, this)
           );
           $table.find("tr").each(
-            $6.proxy(function(i, elem) {
-              var $current = $6(elem).find("td, th").eq(index2);
+            $7.proxy(function(i, elem) {
+              var $current = $7(elem).find("td, th").eq(index2);
               var td = $current.clone();
               td.html(this.opts.invisibleSpace);
               if (type == "after") {
@@ -31276,12 +27047,12 @@
         }
       };
     };
-  })(import_jquery7.default);
+  })(import_jquery8.default);
 
   // app/assets/javascripts/comfy/vendor/redactor/video.js
-  var import_jquery8 = __toESM(require_jquery());
+  var import_jquery9 = __toESM(require_jquery());
   if (!RedactorPlugins6) var RedactorPlugins6 = {};
-  (function($6) {
+  (function($7) {
     RedactorPlugins6.video = function() {
       return {
         reUrlYoutube: /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/gi,
@@ -31305,10 +27076,10 @@
           button.on("click", this.video.insert);
           this.selection.save();
           this.modal.show();
-          $6("#redactor-insert-video-area").focus();
+          $7("#redactor-insert-video-area").focus();
         },
         insert: function() {
-          var data = $6("#redactor-insert-video-area").val();
+          var data = $7("#redactor-insert-video-area").val();
           if (!data.match(/<iframe|<video/gi)) {
             data = this.clean.stripTags(data);
             var iframeStart = '<iframe style="width: 500px; height: 281px;" src="', iframeEnd = '" frameborder="0" allowfullscreen></iframe>';
@@ -31327,7 +27098,7 @@
           this.selection.restore();
           this.modal.close();
           var current = this.selection.getBlock() || this.selection.getCurrent();
-          if (current) $6(current).after(data);
+          if (current) $7(current).after(data);
           else {
             this.insert.html(data);
           }
@@ -31335,7 +27106,7 @@
         }
       };
     };
-  })(import_jquery8.default);
+  })(import_jquery9.default);
 
   // app/assets/javascripts/comfy/admin/cms/base.js
   (() => {
@@ -31397,7 +27168,7 @@
   })();
 
   // app/assets/javascripts/comfy/admin/cms/codemirror.js
-  var import_jquery9 = __toESM(require_jquery());
+  var import_jquery10 = __toESM(require_jquery());
 
   // node_modules/@marijn/find-cluster-break/src/index.js
   var rangeFrom = [];
@@ -32929,7 +28700,7 @@
       var _a;
       let getter = this.value;
       let compare2 = this.facet.compareInput;
-      let id2 = this.id, idx = addresses[id2] >> 1, multi = this.type == 2;
+      let id = this.id, idx = addresses[id] >> 1, multi = this.type == 2;
       let depDoc = false, depSel = false, depAddrs = [];
       for (let dep of this.dependencies) {
         if (dep == "doc")
@@ -32944,8 +28715,8 @@
           state.values[idx] = getter(state);
           return 1;
         },
-        update(state, tr2) {
-          if (depDoc && tr2.docChanged || depSel && (tr2.docChanged || tr2.selection) || ensureAll(state, depAddrs)) {
+        update(state, tr) {
+          if (depDoc && tr.docChanged || depSel && (tr.docChanged || tr.selection) || ensureAll(state, depAddrs)) {
             let newVal = getter(state);
             if (multi ? !compareArray(newVal, state.values[idx], compare2) : !compare2(newVal, state.values[idx])) {
               state.values[idx] = newVal;
@@ -32955,7 +28726,7 @@
           return 0;
         },
         reconfigure: (state, oldState) => {
-          let newVal, oldAddr = oldState.config.address[id2];
+          let newVal, oldAddr = oldState.config.address[id];
           if (oldAddr != null) {
             let oldVal = getAddr(oldState, oldAddr);
             if (this.dependencies.every((dep) => {
@@ -33012,7 +28783,7 @@
         state.values[idx] = get(state);
         return 1;
       },
-      update(state, tr2) {
+      update(state, tr) {
         if (!ensureAll(state, dynamic))
           return 0;
         let value = get(state);
@@ -33040,8 +28811,8 @@
   }
   var initField = /* @__PURE__ */ Facet.define({ static: true });
   var StateField = class _StateField {
-    constructor(id2, createF, updateF, compareF, spec) {
-      this.id = id2;
+    constructor(id, createF, updateF, compareF, spec) {
+      this.id = id;
       this.createF = createF;
       this.updateF = updateF;
       this.compareF = compareF;
@@ -33071,9 +28842,9 @@
           state.values[idx] = this.create(state);
           return 1;
         },
-        update: (state, tr2) => {
+        update: (state, tr) => {
           let oldVal = state.values[idx];
-          let value = this.updateF(oldVal, tr2);
+          let value = this.updateF(oldVal, tr);
           if (this.compareF(oldVal, value))
             return 0;
           state.values[idx] = value;
@@ -33208,9 +28979,9 @@
         dynamicSlots.push((a) => field.slot(a));
       }
       let oldFacets = oldState === null || oldState === void 0 ? void 0 : oldState.config.facets;
-      for (let id2 in facets) {
-        let providers = facets[id2], facet = providers[0].facet;
-        let oldProviders = oldFacets && oldFacets[id2] || [];
+      for (let id in facets) {
+        let providers = facets[id], facet = providers[0].facet;
+        let oldProviders = oldFacets && oldFacets[id] || [];
         if (providers.every(
           (p) => p.type == 0
           /* Provider.Static */
@@ -33555,14 +29326,14 @@
       let seq = !!specs[i].sequential;
       s = mergeTransaction(s, resolveTransactionInner(state, specs[i], seq ? s.changes.newLength : state.doc.length), seq);
     }
-    let tr2 = Transaction.create(state, s.changes, s.selection, s.effects, s.annotations, s.scrollIntoView);
-    return extendTransaction(filter ? filterTransaction(tr2) : tr2);
+    let tr = Transaction.create(state, s.changes, s.selection, s.effects, s.annotations, s.scrollIntoView);
+    return extendTransaction(filter ? filterTransaction(tr) : tr);
   }
-  function filterTransaction(tr2) {
-    let state = tr2.startState;
+  function filterTransaction(tr) {
+    let state = tr.startState;
     let result = true;
     for (let filter of state.facet(changeFilter)) {
-      let value = filter(tr2);
+      let value = filter(tr);
       if (value === false) {
         result = false;
         break;
@@ -33573,35 +29344,35 @@
     if (result !== true) {
       let changes, back;
       if (result === false) {
-        back = tr2.changes.invertedDesc;
+        back = tr.changes.invertedDesc;
         changes = ChangeSet.empty(state.doc.length);
       } else {
-        let filtered = tr2.changes.filter(result);
+        let filtered = tr.changes.filter(result);
         changes = filtered.changes;
         back = filtered.filtered.mapDesc(filtered.changes).invertedDesc;
       }
-      tr2 = Transaction.create(state, changes, tr2.selection && tr2.selection.map(back), StateEffect.mapEffects(tr2.effects, back), tr2.annotations, tr2.scrollIntoView);
+      tr = Transaction.create(state, changes, tr.selection && tr.selection.map(back), StateEffect.mapEffects(tr.effects, back), tr.annotations, tr.scrollIntoView);
     }
     let filters = state.facet(transactionFilter);
     for (let i = filters.length - 1; i >= 0; i--) {
-      let filtered = filters[i](tr2);
+      let filtered = filters[i](tr);
       if (filtered instanceof Transaction)
-        tr2 = filtered;
+        tr = filtered;
       else if (Array.isArray(filtered) && filtered.length == 1 && filtered[0] instanceof Transaction)
-        tr2 = filtered[0];
+        tr = filtered[0];
       else
-        tr2 = resolveTransaction(state, asArray(filtered), false);
+        tr = resolveTransaction(state, asArray(filtered), false);
     }
-    return tr2;
+    return tr;
   }
-  function extendTransaction(tr2) {
-    let state = tr2.startState, extenders = state.facet(transactionExtender), spec = tr2;
+  function extendTransaction(tr) {
+    let state = tr.startState, extenders = state.facet(transactionExtender), spec = tr;
     for (let i = extenders.length - 1; i >= 0; i--) {
-      let extension = extenders[i](tr2);
+      let extension = extenders[i](tr);
       if (extension && Object.keys(extension).length)
-        spec = mergeTransaction(spec, resolveTransactionInner(state, extension, tr2.changes.newLength), true);
+        spec = mergeTransaction(spec, resolveTransactionInner(state, extension, tr.changes.newLength), true);
     }
-    return spec == tr2 ? tr2 : Transaction.create(state, tr2.changes, tr2.selection, spec.effects, spec.annotations, spec.scrollIntoView);
+    return spec == tr ? tr : Transaction.create(state, tr.changes, tr.selection, spec.effects, spec.annotations, spec.scrollIntoView);
   }
   var none = [];
   function asArray(value) {
@@ -33642,15 +29413,15 @@
     };
   }
   var EditorState = class _EditorState {
-    constructor(config, doc2, selection, values, computeSlot, tr2) {
+    constructor(config, doc2, selection, values, computeSlot, tr) {
       this.config = config;
       this.doc = doc2;
       this.selection = selection;
       this.values = values;
       this.status = config.statusTemplate.slice();
       this.computeSlot = computeSlot;
-      if (tr2)
-        tr2._state = this;
+      if (tr)
+        tr._state = this;
       for (let i = 0; i < this.config.dynamicSlots.length; i++)
         ensureAddr(this, i << 1);
       this.computeSlot = null;
@@ -33686,9 +29457,9 @@
     /**
     @internal
     */
-    applyTransaction(tr2) {
+    applyTransaction(tr) {
       let conf = this.config, { base: base2, compartments } = conf;
-      for (let effect of tr2.effects) {
+      for (let effect of tr.effects) {
         if (effect.is(Compartment.reconfigure)) {
           if (conf) {
             compartments = /* @__PURE__ */ new Map();
@@ -33710,10 +29481,10 @@
         let intermediateState = new _EditorState(conf, this.doc, this.selection, conf.dynamicSlots.map(() => null), (state, slot) => slot.reconfigure(state, this), null);
         startValues = intermediateState.values;
       } else {
-        startValues = tr2.startState.values.slice();
+        startValues = tr.startState.values.slice();
       }
-      let selection = tr2.startState.facet(allowMultipleSelections) ? tr2.newSelection : tr2.newSelection.asSingle();
-      new _EditorState(conf, tr2.newDoc, selection, startValues, (state, slot) => slot.update(state, tr2), tr2);
+      let selection = tr.startState.facet(allowMultipleSelections) ? tr.newSelection : tr.newSelection.asSingle();
+      new _EditorState(conf, tr.newDoc, selection, startValues, (state, slot) => slot.update(state, tr), tr);
     }
     /**
     Create a [transaction spec](https://codemirror.net/6/docs/ref/#state.TransactionSpec) that
@@ -33932,8 +29703,8 @@
      - Space (contains only whitespace)
      - Other (anything else)
     */
-    charCategorizer(at2) {
-      return makeCategorizer(this.languageDataAt("wordChars", at2).join(""));
+    charCategorizer(at) {
+      return makeCategorizer(this.languageDataAt("wordChars", at).join(""));
     }
     /**
     Find the word at the given position, meaning the range
@@ -33943,17 +29714,17 @@
     */
     wordAt(pos) {
       let { text, from, length } = this.doc.lineAt(pos);
-      let cat2 = this.charCategorizer(pos);
+      let cat = this.charCategorizer(pos);
       let start2 = pos - from, end = pos - from;
       while (start2 > 0) {
         let prev = findClusterBreak2(text, start2, false);
-        if (cat2(text.slice(prev, start2)) != CharCategory.Word)
+        if (cat(text.slice(prev, start2)) != CharCategory.Word)
           break;
         start2 = prev;
       }
       while (end < length) {
         let next = findClusterBreak2(text, end);
-        if (cat2(text.slice(end, next)) != CharCategory.Word)
+        if (cat(text.slice(end, next)) != CharCategory.Word)
           break;
         end = next;
       }
@@ -34028,15 +29799,15 @@
     // `from` pos when `end == false`, `to` when `end == true`.
     findIndex(pos, side, end, startAt = 0) {
       let arr = end ? this.to : this.from;
-      for (let lo = startAt, hi2 = arr.length; ; ) {
-        if (lo == hi2)
+      for (let lo = startAt, hi = arr.length; ; ) {
+        if (lo == hi)
           return lo;
-        let mid = lo + hi2 >> 1;
+        let mid = lo + hi >> 1;
         let diff = arr[mid] - pos || (end ? this.value[mid].endSide : this.value[mid].startSide) - side;
         if (mid == lo)
-          return diff >= 0 ? lo : hi2;
+          return diff >= 0 ? lo : hi;
         if (diff >= 0)
-          hi2 = mid;
+          hi = mid;
         else
           lo = mid + 1;
       }
@@ -34804,9 +30575,9 @@
     // :: () → string
     // Generate a new unique CSS class name.
     static newName() {
-      let id2 = top[COUNT] || 1;
-      top[COUNT] = id2 + 1;
-      return C + id2.toString(36);
+      let id = top[COUNT] || 1;
+      top[COUNT] = id + 1;
+      return C + id.toString(36);
     }
     // :: (union<Document, ShadowRoot>, union<[StyleModule], StyleModule>, ?{nonce: ?string})
     //
@@ -36378,12 +32149,12 @@
       mergeChildrenInto(this, from, to, source ? source.children.slice() : [], openStart, openEnd);
       return true;
     }
-    split(at2) {
+    split(at) {
       let end = new _LineView();
       end.breakAfter = this.breakAfter;
       if (this.length == 0)
         return end;
-      let { i, off: off2 } = this.childPos(at2);
+      let { i, off: off2 } = this.childPos(at);
       if (off2) {
         end.append(this.children[i].split(off2), 0);
         this.children[i].merge(off2, this.children[i].length, null, false, 0, 0);
@@ -36395,7 +32166,7 @@
         this.children[--i].destroy();
       this.children.length = i;
       this.markDirty();
-      this.length = at2;
+      this.length = at;
       return end;
     }
     transferDOM(other) {
@@ -36530,9 +32301,9 @@
     domAtPos(pos) {
       return pos == 0 ? DOMPos.before(this.dom) : DOMPos.after(this.dom, pos == this.length);
     }
-    split(at2) {
-      let len = this.length - at2;
-      this.length = at2;
+    split(at) {
+      let len = this.length - at;
+      this.length = at;
       let end = new _BlockWidgetView(this.widget, len, this.deco);
       end.breakAfter = this.breakAfter;
       return end;
@@ -37217,8 +32988,8 @@
   var nextPluginID = 0;
   var viewPlugin = /* @__PURE__ */ Facet.define();
   var ViewPlugin = class _ViewPlugin {
-    constructor(id2, create, domEventHandlers, domEventObservers, buildExtensions) {
-      this.id = id2;
+    constructor(id, create, domEventHandlers, domEventObservers, buildExtensions) {
+      this.id = id;
       this.create = create;
       this.domEventHandlers = domEventHandlers;
       this.domEventObservers = domEventObservers;
@@ -37410,8 +33181,8 @@
       this.flags = 0;
       this.startState = view.state;
       this.changes = ChangeSet.empty(this.startState.doc.length);
-      for (let tr2 of transactions)
-        this.changes = this.changes.compose(tr2.changes);
+      for (let tr of transactions)
+        this.changes = this.changes.compose(tr.changes);
       let changedRanges = [];
       this.changes.iterChangedRanges((fromA, toA, fromB, toB) => changedRanges.push(new ChangedRange(fromA, toA, fromB, toB)));
       this.changedRanges = changedRanges;
@@ -37460,7 +33231,7 @@
     Whether the selection was explicitly set in this update.
     */
     get selectionSet() {
-      return this.transactions.some((tr2) => tr2.selection);
+      return this.transactions.some((tr) => tr.selection);
     }
     /**
     @internal
@@ -37603,8 +33374,8 @@
     }
     updateEditContextFormatting(update2) {
       this.editContextFormatting = this.editContextFormatting.map(update2.changes);
-      for (let tr2 of update2.transactions)
-        for (let effect of tr2.effects)
+      for (let tr of update2.transactions)
+        for (let effect of tr.effects)
           if (effect.is(setEditContextFormatting)) {
             this.editContextFormatting = effect.value;
           }
@@ -38082,16 +33853,16 @@
       from = findClusterBreak2(line.text, linePos, false);
     else
       to = findClusterBreak2(line.text, linePos);
-    let cat2 = categorize(line.text.slice(from, to));
+    let cat = categorize(line.text.slice(from, to));
     while (from > 0) {
       let prev = findClusterBreak2(line.text, from, false);
-      if (categorize(line.text.slice(prev, from)) != cat2)
+      if (categorize(line.text.slice(prev, from)) != cat)
         break;
       from = prev;
     }
     while (to < line.length) {
       let next = findClusterBreak2(line.text, to);
-      if (categorize(line.text.slice(to, next)) != cat2)
+      if (categorize(line.text.slice(to, next)) != cat)
         break;
       to = next;
     }
@@ -38347,12 +34118,12 @@
   }
   function byGroup(view, pos, start2) {
     let categorize = view.state.charCategorizer(pos);
-    let cat2 = categorize(start2);
+    let cat = categorize(start2);
     return (next) => {
       let nextCat = categorize(next);
-      if (cat2 == CharCategory.Space)
-        cat2 = nextCat;
-      return cat2 == nextCat;
+      if (cat == CharCategory.Space)
+        cat = nextCat;
+      return cat == nextCat;
     };
   }
   function moveVertically(view, start2, forward, distance) {
@@ -38620,11 +34391,11 @@
     return true;
   }
   function applyDefaultInsert(view, change, newSel) {
-    let tr2, startState = view.state, sel = startState.selection.main;
+    let tr, startState = view.state, sel = startState.selection.main;
     if (change.from >= sel.from && change.to <= sel.to && change.to - change.from >= (sel.to - sel.from) / 3 && (!newSel || newSel.main.empty && newSel.main.from == change.from + change.insert.length) && view.inputState.composing < 0) {
       let before = sel.from < change.from ? startState.sliceDoc(sel.from, change.from) : "";
       let after = sel.to > change.to ? startState.sliceDoc(change.to, sel.to) : "";
-      tr2 = startState.replaceSelection(view.state.toText(before + change.insert.sliceString(0, void 0, view.state.lineBreak) + after));
+      tr = startState.replaceSelection(view.state.toText(before + change.insert.sliceString(0, void 0, view.state.lineBreak) + after));
     } else {
       let changes = startState.changes(change);
       let mainSel = newSel && newSel.main.to <= changes.newLength ? newSel.main : void 0;
@@ -38638,7 +34409,7 @@
           compositionRange = view.state.doc.lineAt(sel.head);
         }
         let offset2 = sel.to - change.to, size = sel.to - sel.from;
-        tr2 = startState.changeByRange((range) => {
+        tr = startState.changeByRange((range) => {
           if (range.from == sel.from && range.to == sel.to)
             return { changes, range: mainSel || range.map(changes) };
           let to = range.to - offset2, from = to - replaced.length;
@@ -38655,7 +34426,7 @@
           };
         });
       } else {
-        tr2 = {
+        tr = {
           changes,
           selection: mainSel && startState.selection.replaceRange(mainSel)
         };
@@ -38670,7 +34441,7 @@
         view.inputState.compositionFirstChange = false;
       }
     }
-    return startState.update(tr2, { userEvent, scrollIntoView: true });
+    return startState.update(tr, { userEvent, scrollIntoView: true });
   }
   function findDiff(a, b, preferredPos, preferredSide) {
     let minLen = Math.min(a.length, b.length);
@@ -39019,7 +34790,7 @@
       this.mustSelect = false;
     }
     update(update2) {
-      if (update2.transactions.some((tr2) => tr2.isUserEvent("input.type")))
+      if (update2.transactions.some((tr) => tr.isUserEvent("input.type")))
         this.destroy();
       else if (this.style.update(update2))
         setTimeout(() => this.select(this.lastEvent), 20);
@@ -39402,9 +35173,9 @@
     setTimeout(() => {
       let focus = view.hasFocus;
       if (focus != view.inputState.notifiedFocused) {
-        let tr2 = focusChangeTransaction(view.state, focus);
-        if (tr2)
-          view.dispatch(tr2);
+        let tr = focusChangeTransaction(view.state, focus);
+        if (tr)
+          view.dispatch(tr);
         else
           view.update([]);
       }
@@ -41633,7 +37404,7 @@
     }
     update(update2) {
       let reverted = this.pendingContextChange;
-      if (this.composing && (this.composing.drifted || update2.transactions.some((tr2) => !tr2.isUserEvent("input.type") && tr2.changes.touchesRange(this.from, this.to)))) {
+      if (this.composing && (this.composing.drifted || update2.transactions.some((tr) => !tr.isUserEvent("input.type") && tr.changes.touchesRange(this.from, this.to)))) {
         this.composing.drifted = true;
         this.composing.editorBase = update2.changes.mapPos(this.composing.editorBase);
       } else if (!this.applyEdits(update2) || !this.rangeIsValid(update2.state)) {
@@ -41787,7 +37558,7 @@
       if (config.parent)
         config.parent.appendChild(this.dom);
       let { dispatch } = config;
-      this.dispatchTransactions = config.dispatchTransactions || dispatch && ((trs) => trs.forEach((tr2) => dispatch(tr2, this))) || ((trs) => this.update(trs));
+      this.dispatchTransactions = config.dispatchTransactions || dispatch && ((trs) => trs.forEach((tr) => dispatch(tr, this))) || ((trs) => this.update(trs));
       this.dispatch = this.dispatch.bind(this);
       this._root = config.root || getRoot(config.parent) || document;
       this.viewState = new ViewState(config.state || EditorState.create(config));
@@ -41824,17 +37595,17 @@
         throw new Error("Calls to EditorView.update are not allowed while an update is in progress");
       let redrawn = false, attrsChanged = false, update2;
       let state = this.state;
-      for (let tr2 of transactions) {
-        if (tr2.startState != state)
+      for (let tr of transactions) {
+        if (tr.startState != state)
           throw new RangeError("Trying to update state with a transaction that doesn't start from the previous state.");
-        state = tr2.state;
+        state = tr.state;
       }
       if (this.destroyed) {
         this.viewState.state = state;
         return;
       }
       let focus = this.hasFocus, focusFlag = 0, dispatchFocus = null;
-      if (transactions.some((tr2) => tr2.annotation(isFocusChange))) {
+      if (transactions.some((tr) => tr.annotation(isFocusChange))) {
         this.inputState.notifiedFocused = focus;
         focusFlag = 1;
       } else if (focus != this.inputState.notifiedFocused) {
@@ -41859,14 +37630,14 @@
       let scrollTarget = this.viewState.scrollTarget;
       try {
         this.updateState = 2;
-        for (let tr2 of transactions) {
+        for (let tr of transactions) {
           if (scrollTarget)
-            scrollTarget = scrollTarget.map(tr2.changes);
-          if (tr2.scrollIntoView) {
-            let { main } = tr2.state.selection;
+            scrollTarget = scrollTarget.map(tr.changes);
+          if (tr.scrollIntoView) {
+            let { main } = tr.state.selection;
             scrollTarget = new ScrollTarget(main.empty ? main : EditorSelection.cursor(main.head, main.head > main.anchor ? -1 : 1));
           }
-          for (let e of tr2.effects)
+          for (let e of tr.effects)
             if (e.is(scrollIntoView))
               scrollTarget = e.value.clip(this.state);
         }
@@ -41881,7 +37652,7 @@
           this.mountStyles();
         attrsChanged = this.updateAttrs();
         this.showAnnouncements(transactions);
-        this.docView.updateSelection(redrawn, transactions.some((tr2) => tr2.isUserEvent("select.pointer")));
+        this.docView.updateSelection(redrawn, transactions.some((tr) => tr.isUserEvent("select.pointer")));
       } finally {
         this.updateState = 0;
       }
@@ -42131,8 +37902,8 @@
     }
     showAnnouncements(trs) {
       let first = true;
-      for (let tr2 of trs)
-        for (let effect of tr2.effects)
+      for (let tr of trs)
+        for (let effect of tr.effects)
           if (effect.is(_EditorView.announce)) {
             if (first)
               this.announceDOM.textContent = "";
@@ -42787,7 +38558,7 @@
           codeMirrorInstances.push(codemirror);
         }
         const tabsRoot = root.id === "form-fragments" ? root : root.querySelector("#form-fragments");
-        (0, import_jquery9.default)(tabsRoot).find('a[data-toggle="tab"]').on("shown.bs.tab", () => {
+        (0, import_jquery10.default)(tabsRoot).find('a[data-toggle="tab"]').on("shown.bs.tab", () => {
           for (const codemirror of codeMirrorInstances) {
             codemirror.refresh();
           }
@@ -42803,10 +38574,10 @@
   })();
 
   // app/assets/javascripts/comfy/admin/cms/diff.js
-  var import_jquery10 = __toESM(require_jquery());
+  var import_jquery11 = __toESM(require_jquery());
   (() => {
     window.CMS.diff = () => {
-      (0, import_jquery10.default)(".revision").prettyTextDiff({
+      (0, import_jquery11.default)(".revision").prettyTextDiff({
         cleanup: true,
         originalContainer: ".original",
         changedContainer: ".current",
@@ -42816,10 +38587,10 @@
   })();
 
   // app/assets/javascripts/comfy/admin/cms/file_link.js
-  var import_jquery13 = __toESM(require_jquery());
+  var import_jquery14 = __toESM(require_jquery());
 
   // node_modules/bootstrap/js/src/popover.js
-  var import_jquery12 = __toESM(require_jquery());
+  var import_jquery13 = __toESM(require_jquery());
 
   // node_modules/bootstrap/js/src/tools/sanitizer.js
   var uriAttrs = [
@@ -42914,7 +38685,7 @@
   }
 
   // node_modules/bootstrap/js/src/tooltip.js
-  var import_jquery11 = __toESM(require_jquery());
+  var import_jquery12 = __toESM(require_jquery());
 
   // node_modules/popper.js/dist/esm/popper.js
   var isBrowser = typeof window !== "undefined" && typeof document !== "undefined" && typeof navigator !== "undefined";
@@ -44433,15 +40204,15 @@
   var popper_default = Popper;
 
   // node_modules/bootstrap/js/src/tooltip.js
-  var NAME2 = "tooltip";
-  var VERSION2 = "4.3.1";
-  var DATA_KEY2 = "bs.tooltip";
-  var EVENT_KEY2 = `.${DATA_KEY2}`;
-  var JQUERY_NO_CONFLICT2 = import_jquery11.default.fn[NAME2];
+  var NAME3 = "tooltip";
+  var VERSION3 = "4.3.1";
+  var DATA_KEY3 = "bs.tooltip";
+  var EVENT_KEY3 = `.${DATA_KEY3}`;
+  var JQUERY_NO_CONFLICT3 = import_jquery12.default.fn[NAME3];
   var CLASS_PREFIX = "bs-tooltip";
   var BSCLS_PREFIX_REGEX = new RegExp(`(^|\\s)${CLASS_PREFIX}\\S+`, "g");
   var DISALLOWED_ATTRIBUTES = ["sanitize", "whiteList", "sanitizeFn"];
-  var DefaultType = {
+  var DefaultType2 = {
     animation: "boolean",
     template: "string",
     title: "(string|element|function)",
@@ -44465,7 +40236,7 @@
     BOTTOM: "bottom",
     LEFT: "left"
   };
-  var Default = {
+  var Default2 = {
     animation: true,
     template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>',
     trigger: "hover focus",
@@ -44486,23 +40257,23 @@
     SHOW: "show",
     OUT: "out"
   };
-  var Event3 = {
-    HIDE: `hide${EVENT_KEY2}`,
-    HIDDEN: `hidden${EVENT_KEY2}`,
-    SHOW: `show${EVENT_KEY2}`,
-    SHOWN: `shown${EVENT_KEY2}`,
-    INSERTED: `inserted${EVENT_KEY2}`,
-    CLICK: `click${EVENT_KEY2}`,
-    FOCUSIN: `focusin${EVENT_KEY2}`,
-    FOCUSOUT: `focusout${EVENT_KEY2}`,
-    MOUSEENTER: `mouseenter${EVENT_KEY2}`,
-    MOUSELEAVE: `mouseleave${EVENT_KEY2}`
+  var Event4 = {
+    HIDE: `hide${EVENT_KEY3}`,
+    HIDDEN: `hidden${EVENT_KEY3}`,
+    SHOW: `show${EVENT_KEY3}`,
+    SHOWN: `shown${EVENT_KEY3}`,
+    INSERTED: `inserted${EVENT_KEY3}`,
+    CLICK: `click${EVENT_KEY3}`,
+    FOCUSIN: `focusin${EVENT_KEY3}`,
+    FOCUSOUT: `focusout${EVENT_KEY3}`,
+    MOUSEENTER: `mouseenter${EVENT_KEY3}`,
+    MOUSELEAVE: `mouseleave${EVENT_KEY3}`
   };
-  var ClassName2 = {
+  var ClassName3 = {
     FADE: "fade",
     SHOW: "show"
   };
-  var Selector2 = {
+  var Selector3 = {
     TOOLTIP: ".tooltip",
     TOOLTIP_INNER: ".tooltip-inner",
     ARROW: ".arrow"
@@ -44530,25 +40301,25 @@
     }
     // Getters
     static get VERSION() {
-      return VERSION2;
+      return VERSION3;
     }
     static get Default() {
-      return Default;
+      return Default2;
     }
     static get NAME() {
-      return NAME2;
+      return NAME3;
     }
     static get DATA_KEY() {
-      return DATA_KEY2;
+      return DATA_KEY3;
     }
     static get Event() {
-      return Event3;
+      return Event4;
     }
     static get EVENT_KEY() {
-      return EVENT_KEY2;
+      return EVENT_KEY3;
     }
     static get DefaultType() {
-      return DefaultType;
+      return DefaultType2;
     }
     // Public
     enable() {
@@ -44566,13 +40337,13 @@
       }
       if (event) {
         const dataKey = this.constructor.DATA_KEY;
-        let context = (0, import_jquery11.default)(event.currentTarget).data(dataKey);
+        let context = (0, import_jquery12.default)(event.currentTarget).data(dataKey);
         if (!context) {
           context = new this.constructor(
             event.currentTarget,
             this._getDelegateConfig()
           );
-          (0, import_jquery11.default)(event.currentTarget).data(dataKey, context);
+          (0, import_jquery12.default)(event.currentTarget).data(dataKey, context);
         }
         context._activeTrigger.click = !context._activeTrigger.click;
         if (context._isWithActiveTrigger()) {
@@ -44581,7 +40352,7 @@
           context._leave(null, context);
         }
       } else {
-        if ((0, import_jquery11.default)(this.getTipElement()).hasClass(ClassName2.SHOW)) {
+        if ((0, import_jquery12.default)(this.getTipElement()).hasClass(ClassName3.SHOW)) {
           this._leave(null, this);
           return;
         }
@@ -44590,11 +40361,11 @@
     }
     dispose() {
       clearTimeout(this._timeout);
-      import_jquery11.default.removeData(this.element, this.constructor.DATA_KEY);
-      (0, import_jquery11.default)(this.element).off(this.constructor.EVENT_KEY);
-      (0, import_jquery11.default)(this.element).closest(".modal").off("hide.bs.modal");
+      import_jquery12.default.removeData(this.element, this.constructor.DATA_KEY);
+      (0, import_jquery12.default)(this.element).off(this.constructor.EVENT_KEY);
+      (0, import_jquery12.default)(this.element).closest(".modal").off("hide.bs.modal");
       if (this.tip) {
-        (0, import_jquery11.default)(this.tip).remove();
+        (0, import_jquery12.default)(this.tip).remove();
       }
       this._isEnabled = null;
       this._timeout = null;
@@ -44609,14 +40380,14 @@
       this.tip = null;
     }
     show() {
-      if ((0, import_jquery11.default)(this.element).css("display") === "none") {
+      if ((0, import_jquery12.default)(this.element).css("display") === "none") {
         throw new Error("Please use show on visible elements");
       }
-      const showEvent = import_jquery11.default.Event(this.constructor.Event.SHOW);
+      const showEvent = import_jquery12.default.Event(this.constructor.Event.SHOW);
       if (this.isWithContent() && this._isEnabled) {
-        (0, import_jquery11.default)(this.element).trigger(showEvent);
+        (0, import_jquery12.default)(this.element).trigger(showEvent);
         const shadowRoot = util_default.findShadowRoot(this.element);
-        const isInTheDom = import_jquery11.default.contains(
+        const isInTheDom = import_jquery12.default.contains(
           shadowRoot !== null ? shadowRoot : this.element.ownerDocument.documentElement,
           this.element
         );
@@ -44629,17 +40400,17 @@
         this.element.setAttribute("aria-describedby", tipId);
         this.setContent();
         if (this.config.animation) {
-          (0, import_jquery11.default)(tip).addClass(ClassName2.FADE);
+          (0, import_jquery12.default)(tip).addClass(ClassName3.FADE);
         }
         const placement = typeof this.config.placement === "function" ? this.config.placement.call(this, tip, this.element) : this.config.placement;
         const attachment = this._getAttachment(placement);
         this.addAttachmentClass(attachment);
         const container = this._getContainer();
-        (0, import_jquery11.default)(tip).data(this.constructor.DATA_KEY, this);
-        if (!import_jquery11.default.contains(this.element.ownerDocument.documentElement, this.tip)) {
-          (0, import_jquery11.default)(tip).appendTo(container);
+        (0, import_jquery12.default)(tip).data(this.constructor.DATA_KEY, this);
+        if (!import_jquery12.default.contains(this.element.ownerDocument.documentElement, this.tip)) {
+          (0, import_jquery12.default)(tip).appendTo(container);
         }
-        (0, import_jquery11.default)(this.element).trigger(this.constructor.Event.INSERTED);
+        (0, import_jquery12.default)(this.element).trigger(this.constructor.Event.INSERTED);
         this._popper = new popper_default(this.element, tip, {
           placement: attachment,
           modifiers: {
@@ -44648,7 +40419,7 @@
               behavior: this.config.fallbackPlacement
             },
             arrow: {
-              element: Selector2.ARROW
+              element: Selector3.ARROW
             },
             preventOverflow: {
               boundariesElement: this.config.boundary
@@ -44661,9 +40432,9 @@
           },
           onUpdate: (data) => this._handlePopperPlacementChange(data)
         });
-        (0, import_jquery11.default)(tip).addClass(ClassName2.SHOW);
+        (0, import_jquery12.default)(tip).addClass(ClassName3.SHOW);
         if ("ontouchstart" in document.documentElement) {
-          (0, import_jquery11.default)(document.body).children().on("mouseover", null, import_jquery11.default.noop);
+          (0, import_jquery12.default)(document.body).children().on("mouseover", null, import_jquery12.default.noop);
         }
         const complete = () => {
           if (this.config.animation) {
@@ -44671,14 +40442,14 @@
           }
           const prevHoverState = this._hoverState;
           this._hoverState = null;
-          (0, import_jquery11.default)(this.element).trigger(this.constructor.Event.SHOWN);
+          (0, import_jquery12.default)(this.element).trigger(this.constructor.Event.SHOWN);
           if (prevHoverState === HoverState.OUT) {
             this._leave(null, this);
           }
         };
-        if ((0, import_jquery11.default)(this.tip).hasClass(ClassName2.FADE)) {
+        if ((0, import_jquery12.default)(this.tip).hasClass(ClassName3.FADE)) {
           const transitionDuration = util_default.getTransitionDurationFromElement(this.tip);
-          (0, import_jquery11.default)(this.tip).one(util_default.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
+          (0, import_jquery12.default)(this.tip).one(util_default.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
         } else {
           complete();
         }
@@ -44686,14 +40457,14 @@
     }
     hide(callback) {
       const tip = this.getTipElement();
-      const hideEvent = import_jquery11.default.Event(this.constructor.Event.HIDE);
+      const hideEvent = import_jquery12.default.Event(this.constructor.Event.HIDE);
       const complete = () => {
         if (this._hoverState !== HoverState.SHOW && tip.parentNode) {
           tip.parentNode.removeChild(tip);
         }
         this._cleanTipClass();
         this.element.removeAttribute("aria-describedby");
-        (0, import_jquery11.default)(this.element).trigger(this.constructor.Event.HIDDEN);
+        (0, import_jquery12.default)(this.element).trigger(this.constructor.Event.HIDDEN);
         if (this._popper !== null) {
           this._popper.destroy();
         }
@@ -44701,20 +40472,20 @@
           callback();
         }
       };
-      (0, import_jquery11.default)(this.element).trigger(hideEvent);
+      (0, import_jquery12.default)(this.element).trigger(hideEvent);
       if (hideEvent.isDefaultPrevented()) {
         return;
       }
-      (0, import_jquery11.default)(tip).removeClass(ClassName2.SHOW);
+      (0, import_jquery12.default)(tip).removeClass(ClassName3.SHOW);
       if ("ontouchstart" in document.documentElement) {
-        (0, import_jquery11.default)(document.body).children().off("mouseover", null, import_jquery11.default.noop);
+        (0, import_jquery12.default)(document.body).children().off("mouseover", null, import_jquery12.default.noop);
       }
       this._activeTrigger[Trigger.CLICK] = false;
       this._activeTrigger[Trigger.FOCUS] = false;
       this._activeTrigger[Trigger.HOVER] = false;
-      if ((0, import_jquery11.default)(this.tip).hasClass(ClassName2.FADE)) {
+      if ((0, import_jquery12.default)(this.tip).hasClass(ClassName3.FADE)) {
         const transitionDuration = util_default.getTransitionDurationFromElement(tip);
-        (0, import_jquery11.default)(tip).one(util_default.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
+        (0, import_jquery12.default)(tip).one(util_default.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
       } else {
         complete();
       }
@@ -44730,25 +40501,25 @@
       return Boolean(this.getTitle());
     }
     addAttachmentClass(attachment) {
-      (0, import_jquery11.default)(this.getTipElement()).addClass(`${CLASS_PREFIX}-${attachment}`);
+      (0, import_jquery12.default)(this.getTipElement()).addClass(`${CLASS_PREFIX}-${attachment}`);
     }
     getTipElement() {
-      this.tip = this.tip || (0, import_jquery11.default)(this.config.template)[0];
+      this.tip = this.tip || (0, import_jquery12.default)(this.config.template)[0];
       return this.tip;
     }
     setContent() {
       const tip = this.getTipElement();
-      this.setElementContent((0, import_jquery11.default)(tip.querySelectorAll(Selector2.TOOLTIP_INNER)), this.getTitle());
-      (0, import_jquery11.default)(tip).removeClass(`${ClassName2.FADE} ${ClassName2.SHOW}`);
+      this.setElementContent((0, import_jquery12.default)(tip.querySelectorAll(Selector3.TOOLTIP_INNER)), this.getTitle());
+      (0, import_jquery12.default)(tip).removeClass(`${ClassName3.FADE} ${ClassName3.SHOW}`);
     }
     setElementContent($element, content) {
       if (typeof content === "object" && (content.nodeType || content.jquery)) {
         if (this.config.html) {
-          if (!(0, import_jquery11.default)(content).parent().is($element)) {
+          if (!(0, import_jquery12.default)(content).parent().is($element)) {
             $element.empty().append(content);
           }
         } else {
-          $element.text((0, import_jquery11.default)(content).text());
+          $element.text((0, import_jquery12.default)(content).text());
         }
         return;
       }
@@ -44789,9 +40560,9 @@
         return document.body;
       }
       if (util_default.isElement(this.config.container)) {
-        return (0, import_jquery11.default)(this.config.container);
+        return (0, import_jquery12.default)(this.config.container);
       }
-      return (0, import_jquery11.default)(document).find(this.config.container);
+      return (0, import_jquery12.default)(document).find(this.config.container);
     }
     _getAttachment(placement) {
       return AttachmentMap[placement.toUpperCase()];
@@ -44800,7 +40571,7 @@
       const triggers = this.config.trigger.split(" ");
       triggers.forEach((trigger) => {
         if (trigger === "click") {
-          (0, import_jquery11.default)(this.element).on(
+          (0, import_jquery12.default)(this.element).on(
             this.constructor.Event.CLICK,
             this.config.selector,
             (event) => this.toggle(event)
@@ -44808,7 +40579,7 @@
         } else if (trigger !== Trigger.MANUAL) {
           const eventIn = trigger === Trigger.HOVER ? this.constructor.Event.MOUSEENTER : this.constructor.Event.FOCUSIN;
           const eventOut = trigger === Trigger.HOVER ? this.constructor.Event.MOUSELEAVE : this.constructor.Event.FOCUSOUT;
-          (0, import_jquery11.default)(this.element).on(
+          (0, import_jquery12.default)(this.element).on(
             eventIn,
             this.config.selector,
             (event) => this._enter(event)
@@ -44819,7 +40590,7 @@
           );
         }
       });
-      (0, import_jquery11.default)(this.element).closest(".modal").on(
+      (0, import_jquery12.default)(this.element).closest(".modal").on(
         "hide.bs.modal",
         () => {
           if (this.element) {
@@ -44849,18 +40620,18 @@
     }
     _enter(event, context) {
       const dataKey = this.constructor.DATA_KEY;
-      context = context || (0, import_jquery11.default)(event.currentTarget).data(dataKey);
+      context = context || (0, import_jquery12.default)(event.currentTarget).data(dataKey);
       if (!context) {
         context = new this.constructor(
           event.currentTarget,
           this._getDelegateConfig()
         );
-        (0, import_jquery11.default)(event.currentTarget).data(dataKey, context);
+        (0, import_jquery12.default)(event.currentTarget).data(dataKey, context);
       }
       if (event) {
         context._activeTrigger[event.type === "focusin" ? Trigger.FOCUS : Trigger.HOVER] = true;
       }
-      if ((0, import_jquery11.default)(context.getTipElement()).hasClass(ClassName2.SHOW) || context._hoverState === HoverState.SHOW) {
+      if ((0, import_jquery12.default)(context.getTipElement()).hasClass(ClassName3.SHOW) || context._hoverState === HoverState.SHOW) {
         context._hoverState = HoverState.SHOW;
         return;
       }
@@ -44878,13 +40649,13 @@
     }
     _leave(event, context) {
       const dataKey = this.constructor.DATA_KEY;
-      context = context || (0, import_jquery11.default)(event.currentTarget).data(dataKey);
+      context = context || (0, import_jquery12.default)(event.currentTarget).data(dataKey);
       if (!context) {
         context = new this.constructor(
           event.currentTarget,
           this._getDelegateConfig()
         );
-        (0, import_jquery11.default)(event.currentTarget).data(dataKey, context);
+        (0, import_jquery12.default)(event.currentTarget).data(dataKey, context);
       }
       if (event) {
         context._activeTrigger[event.type === "focusout" ? Trigger.FOCUS : Trigger.HOVER] = false;
@@ -44913,7 +40684,7 @@
       return false;
     }
     _getConfig(config) {
-      const dataAttributes = (0, import_jquery11.default)(this.element).data();
+      const dataAttributes = (0, import_jquery12.default)(this.element).data();
       Object.keys(dataAttributes).forEach((dataAttr) => {
         if (DISALLOWED_ATTRIBUTES.indexOf(dataAttr) !== -1) {
           delete dataAttributes[dataAttr];
@@ -44937,7 +40708,7 @@
         config.content = config.content.toString();
       }
       util_default.typeCheckConfig(
-        NAME2,
+        NAME3,
         config,
         this.constructor.DefaultType
       );
@@ -44958,7 +40729,7 @@
       return config;
     }
     _cleanTipClass() {
-      const $tip = (0, import_jquery11.default)(this.getTipElement());
+      const $tip = (0, import_jquery12.default)(this.getTipElement());
       const tabClass = $tip.attr("class").match(BSCLS_PREFIX_REGEX);
       if (tabClass !== null && tabClass.length) {
         $tip.removeClass(tabClass.join(""));
@@ -44976,7 +40747,7 @@
       if (tip.getAttribute("x-placement") !== null) {
         return;
       }
-      (0, import_jquery11.default)(tip).removeClass(ClassName2.FADE);
+      (0, import_jquery12.default)(tip).removeClass(ClassName3.FADE);
       this.config.animation = false;
       this.hide();
       this.show();
@@ -44985,136 +40756,13 @@
     // Static
     static _jQueryInterface(config) {
       return this.each(function() {
-        let data = (0, import_jquery11.default)(this).data(DATA_KEY2);
+        let data = (0, import_jquery12.default)(this).data(DATA_KEY3);
         const _config = typeof config === "object" && config;
         if (!data && /dispose|hide/.test(config)) {
           return;
         }
         if (!data) {
           data = new _Tooltip(this, _config);
-          (0, import_jquery11.default)(this).data(DATA_KEY2, data);
-        }
-        if (typeof config === "string") {
-          if (typeof data[config] === "undefined") {
-            throw new TypeError(`No method named "${config}"`);
-          }
-          data[config]();
-        }
-      });
-    }
-  };
-  import_jquery11.default.fn[NAME2] = Tooltip._jQueryInterface;
-  import_jquery11.default.fn[NAME2].Constructor = Tooltip;
-  import_jquery11.default.fn[NAME2].noConflict = () => {
-    import_jquery11.default.fn[NAME2] = JQUERY_NO_CONFLICT2;
-    return Tooltip._jQueryInterface;
-  };
-  var tooltip_default = Tooltip;
-
-  // node_modules/bootstrap/js/src/popover.js
-  var NAME3 = "popover";
-  var VERSION3 = "4.3.1";
-  var DATA_KEY3 = "bs.popover";
-  var EVENT_KEY3 = `.${DATA_KEY3}`;
-  var JQUERY_NO_CONFLICT3 = import_jquery12.default.fn[NAME3];
-  var CLASS_PREFIX2 = "bs-popover";
-  var BSCLS_PREFIX_REGEX2 = new RegExp(`(^|\\s)${CLASS_PREFIX2}\\S+`, "g");
-  var Default2 = {
-    ...tooltip_default.Default,
-    placement: "right",
-    trigger: "click",
-    content: "",
-    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
-  };
-  var DefaultType2 = {
-    ...tooltip_default.DefaultType,
-    content: "(string|element|function)"
-  };
-  var ClassName3 = {
-    FADE: "fade",
-    SHOW: "show"
-  };
-  var Selector3 = {
-    TITLE: ".popover-header",
-    CONTENT: ".popover-body"
-  };
-  var Event4 = {
-    HIDE: `hide${EVENT_KEY3}`,
-    HIDDEN: `hidden${EVENT_KEY3}`,
-    SHOW: `show${EVENT_KEY3}`,
-    SHOWN: `shown${EVENT_KEY3}`,
-    INSERTED: `inserted${EVENT_KEY3}`,
-    CLICK: `click${EVENT_KEY3}`,
-    FOCUSIN: `focusin${EVENT_KEY3}`,
-    FOCUSOUT: `focusout${EVENT_KEY3}`,
-    MOUSEENTER: `mouseenter${EVENT_KEY3}`,
-    MOUSELEAVE: `mouseleave${EVENT_KEY3}`
-  };
-  var Popover = class _Popover extends tooltip_default {
-    // Getters
-    static get VERSION() {
-      return VERSION3;
-    }
-    static get Default() {
-      return Default2;
-    }
-    static get NAME() {
-      return NAME3;
-    }
-    static get DATA_KEY() {
-      return DATA_KEY3;
-    }
-    static get Event() {
-      return Event4;
-    }
-    static get EVENT_KEY() {
-      return EVENT_KEY3;
-    }
-    static get DefaultType() {
-      return DefaultType2;
-    }
-    // Overrides
-    isWithContent() {
-      return this.getTitle() || this._getContent();
-    }
-    addAttachmentClass(attachment) {
-      (0, import_jquery12.default)(this.getTipElement()).addClass(`${CLASS_PREFIX2}-${attachment}`);
-    }
-    getTipElement() {
-      this.tip = this.tip || (0, import_jquery12.default)(this.config.template)[0];
-      return this.tip;
-    }
-    setContent() {
-      const $tip = (0, import_jquery12.default)(this.getTipElement());
-      this.setElementContent($tip.find(Selector3.TITLE), this.getTitle());
-      let content = this._getContent();
-      if (typeof content === "function") {
-        content = content.call(this.element);
-      }
-      this.setElementContent($tip.find(Selector3.CONTENT), content);
-      $tip.removeClass(`${ClassName3.FADE} ${ClassName3.SHOW}`);
-    }
-    // Private
-    _getContent() {
-      return this.element.getAttribute("data-content") || this.config.content;
-    }
-    _cleanTipClass() {
-      const $tip = (0, import_jquery12.default)(this.getTipElement());
-      const tabClass = $tip.attr("class").match(BSCLS_PREFIX_REGEX2);
-      if (tabClass !== null && tabClass.length > 0) {
-        $tip.removeClass(tabClass.join(""));
-      }
-    }
-    // Static
-    static _jQueryInterface(config) {
-      return this.each(function() {
-        let data = (0, import_jquery12.default)(this).data(DATA_KEY3);
-        const _config = typeof config === "object" ? config : null;
-        if (!data && /dispose|hide/.test(config)) {
-          return;
-        }
-        if (!data) {
-          data = new _Popover(this, _config);
           (0, import_jquery12.default)(this).data(DATA_KEY3, data);
         }
         if (typeof config === "string") {
@@ -45126,10 +40774,133 @@
       });
     }
   };
-  import_jquery12.default.fn[NAME3] = Popover._jQueryInterface;
-  import_jquery12.default.fn[NAME3].Constructor = Popover;
+  import_jquery12.default.fn[NAME3] = Tooltip._jQueryInterface;
+  import_jquery12.default.fn[NAME3].Constructor = Tooltip;
   import_jquery12.default.fn[NAME3].noConflict = () => {
     import_jquery12.default.fn[NAME3] = JQUERY_NO_CONFLICT3;
+    return Tooltip._jQueryInterface;
+  };
+  var tooltip_default = Tooltip;
+
+  // node_modules/bootstrap/js/src/popover.js
+  var NAME4 = "popover";
+  var VERSION4 = "4.3.1";
+  var DATA_KEY4 = "bs.popover";
+  var EVENT_KEY4 = `.${DATA_KEY4}`;
+  var JQUERY_NO_CONFLICT4 = import_jquery13.default.fn[NAME4];
+  var CLASS_PREFIX2 = "bs-popover";
+  var BSCLS_PREFIX_REGEX2 = new RegExp(`(^|\\s)${CLASS_PREFIX2}\\S+`, "g");
+  var Default3 = {
+    ...tooltip_default.Default,
+    placement: "right",
+    trigger: "click",
+    content: "",
+    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+  };
+  var DefaultType3 = {
+    ...tooltip_default.DefaultType,
+    content: "(string|element|function)"
+  };
+  var ClassName4 = {
+    FADE: "fade",
+    SHOW: "show"
+  };
+  var Selector4 = {
+    TITLE: ".popover-header",
+    CONTENT: ".popover-body"
+  };
+  var Event5 = {
+    HIDE: `hide${EVENT_KEY4}`,
+    HIDDEN: `hidden${EVENT_KEY4}`,
+    SHOW: `show${EVENT_KEY4}`,
+    SHOWN: `shown${EVENT_KEY4}`,
+    INSERTED: `inserted${EVENT_KEY4}`,
+    CLICK: `click${EVENT_KEY4}`,
+    FOCUSIN: `focusin${EVENT_KEY4}`,
+    FOCUSOUT: `focusout${EVENT_KEY4}`,
+    MOUSEENTER: `mouseenter${EVENT_KEY4}`,
+    MOUSELEAVE: `mouseleave${EVENT_KEY4}`
+  };
+  var Popover = class _Popover extends tooltip_default {
+    // Getters
+    static get VERSION() {
+      return VERSION4;
+    }
+    static get Default() {
+      return Default3;
+    }
+    static get NAME() {
+      return NAME4;
+    }
+    static get DATA_KEY() {
+      return DATA_KEY4;
+    }
+    static get Event() {
+      return Event5;
+    }
+    static get EVENT_KEY() {
+      return EVENT_KEY4;
+    }
+    static get DefaultType() {
+      return DefaultType3;
+    }
+    // Overrides
+    isWithContent() {
+      return this.getTitle() || this._getContent();
+    }
+    addAttachmentClass(attachment) {
+      (0, import_jquery13.default)(this.getTipElement()).addClass(`${CLASS_PREFIX2}-${attachment}`);
+    }
+    getTipElement() {
+      this.tip = this.tip || (0, import_jquery13.default)(this.config.template)[0];
+      return this.tip;
+    }
+    setContent() {
+      const $tip = (0, import_jquery13.default)(this.getTipElement());
+      this.setElementContent($tip.find(Selector4.TITLE), this.getTitle());
+      let content = this._getContent();
+      if (typeof content === "function") {
+        content = content.call(this.element);
+      }
+      this.setElementContent($tip.find(Selector4.CONTENT), content);
+      $tip.removeClass(`${ClassName4.FADE} ${ClassName4.SHOW}`);
+    }
+    // Private
+    _getContent() {
+      return this.element.getAttribute("data-content") || this.config.content;
+    }
+    _cleanTipClass() {
+      const $tip = (0, import_jquery13.default)(this.getTipElement());
+      const tabClass = $tip.attr("class").match(BSCLS_PREFIX_REGEX2);
+      if (tabClass !== null && tabClass.length > 0) {
+        $tip.removeClass(tabClass.join(""));
+      }
+    }
+    // Static
+    static _jQueryInterface(config) {
+      return this.each(function() {
+        let data = (0, import_jquery13.default)(this).data(DATA_KEY4);
+        const _config = typeof config === "object" ? config : null;
+        if (!data && /dispose|hide/.test(config)) {
+          return;
+        }
+        if (!data) {
+          data = new _Popover(this, _config);
+          (0, import_jquery13.default)(this).data(DATA_KEY4, data);
+        }
+        if (typeof config === "string") {
+          if (typeof data[config] === "undefined") {
+            throw new TypeError(`No method named "${config}"`);
+          }
+          data[config]();
+        }
+      });
+    }
+  };
+  import_jquery13.default.fn[NAME4] = Popover._jQueryInterface;
+  import_jquery13.default.fn[NAME4].Constructor = Popover;
+  import_jquery13.default.fn[NAME4].noConflict = () => {
+    import_jquery13.default.fn[NAME4] = JQUERY_NO_CONFLICT4;
     return Popover._jQueryInterface;
   };
   var popover_default = Popover;
@@ -45187,7 +40958,7 @@
       }
       // We can't keep a reference to the Popover object, because Bootstrap re-creates it internally.
       getPopover() {
-        return (0, import_jquery13.default)(this.link).data(popover_default.DATA_KEY);
+        return (0, import_jquery14.default)(this.link).data(popover_default.DATA_KEY);
       }
     }
     window.CMS.fileLinks = (root = document) => {
@@ -45336,11 +41107,11 @@
             break;
         }
       }
-      fileListItem({ id: id2 }) {
-        return this.ui.container.querySelector(`#${id2}`);
+      fileListItem({ id }) {
+        return this.ui.container.querySelector(`#${id}`);
       }
-      static buildListItemHTML({ id: id2, name: name2 }) {
-        return `<li id='${id2}' class='row temp'>
+      static buildListItemHTML({ id, name: name2 }) {
+        return `<li id='${id}' class='row temp'>
         <div class='col-md-9 d-flex align-items-center'>
           <div class='progress'>
             <div class='progress-bar progress-bar-striped progress-bar-animated'>
@@ -45353,13 +41124,13 @@
         </div>
       </li>`;
       }
-      static defaultUploaderSettings(id2) {
+      static defaultUploaderSettings(id) {
         return {
           runtimes: "html5,browserplus,silverlight,flash,gears",
           dragdrop: true,
-          drop_element: `${id2}-drag-drop-target`,
-          browse_button: `${id2}-browse`,
-          container: id2,
+          drop_element: `${id}-drag-drop-target`,
+          browse_button: `${id}-browse`,
+          container: id,
           file_data_name: "file[file]"
         };
       }
@@ -45815,7 +41586,7 @@
     return Math.round(rect1.top) === Math.round(rect2.top) && Math.round(rect1.left) === Math.round(rect2.left) && Math.round(rect1.height) === Math.round(rect2.height) && Math.round(rect1.width) === Math.round(rect2.width);
   }
   var _throttleTimeout;
-  function throttle(callback, ms2) {
+  function throttle(callback, ms) {
     return function() {
       if (!_throttleTimeout) {
         var args = arguments, _this = this;
@@ -45826,7 +41597,7 @@
         }
         _throttleTimeout = setTimeout(function() {
           _throttleTimeout = void 0;
-        }, ms2);
+        }, ms);
       }
     };
   }
@@ -45840,11 +41611,11 @@
   }
   function clone(el) {
     var Polymer = window.Polymer;
-    var $6 = window.jQuery || window.Zepto;
+    var $7 = window.jQuery || window.Zepto;
     if (Polymer && Polymer.dom) {
       return Polymer.dom(el).cloneNode(true);
-    } else if ($6) {
-      return $6(el).clone(true)[0];
+    } else if ($7) {
+      return $7(el).clone(true)[0];
     } else {
       return el.cloneNode(true);
     }
@@ -47158,17 +42929,17 @@
      */
     sort: function sort(order, useAnimation) {
       var items = {}, rootEl2 = this.el;
-      this.toArray().forEach(function(id2, i) {
+      this.toArray().forEach(function(id, i) {
         var el = rootEl2.children[i];
         if (closest(el, this.options.draggable, rootEl2, false)) {
-          items[id2] = el;
+          items[id] = el;
         }
       }, this);
       useAnimation && this.captureAnimationState();
-      order.forEach(function(id2) {
-        if (items[id2]) {
-          rootEl2.removeChild(items[id2]);
-          rootEl2.appendChild(items[id2]);
+      order.forEach(function(id) {
+        if (items[id]) {
+          rootEl2.removeChild(items[id]);
+          rootEl2.appendChild(items[id]);
         }
       });
       useAnimation && this.animateAll();
@@ -47370,8 +43141,8 @@
   function _nextTick(fn) {
     return setTimeout(fn, 0);
   }
-  function _cancelNextTick(id2) {
-    return clearTimeout(id2);
+  function _cancelNextTick(id) {
+    return clearTimeout(id);
   }
   if (documentExists) {
     on(document, "touchmove", function(evt) {
@@ -50071,71 +45842,6 @@
   var esm_default = flatpickr;
 
   // app/assets/javascripts/comfy/admin/cms/timepicker.js
-  var import_cy = __toESM(require_cy());
-  var import_ka = __toESM(require_ka());
-  var import_sr = __toESM(require_sr());
-  var import_ar_dz = __toESM(require_ar_dz());
-  var import_gr = __toESM(require_gr());
-  var import_no = __toESM(require_no());
-  var import_da = __toESM(require_da());
-  var import_km = __toESM(require_km());
-  var import_sv = __toESM(require_sv());
-  var import_ar = __toESM(require_ar());
-  var import_he = __toESM(require_he());
-  var import_pa = __toESM(require_pa());
-  var import_de = __toESM(require_de());
-  var import_ko = __toESM(require_ko());
-  var import_th = __toESM(require_th());
-  var import_at = __toESM(require_at());
-  var import_hi = __toESM(require_hi());
-  var import_pl = __toESM(require_pl());
-  var import_kz = __toESM(require_kz());
-  var import_tr = __toESM(require_tr());
-  var import_az = __toESM(require_az());
-  var import_hr = __toESM(require_hr());
-  var import_pt = __toESM(require_pt());
-  var import_eo = __toESM(require_eo());
-  var import_lt = __toESM(require_lt());
-  var import_uk = __toESM(require_uk());
-  var import_be = __toESM(require_be());
-  var import_hu = __toESM(require_hu());
-  var import_ro = __toESM(require_ro());
-  var import_es = __toESM(require_es());
-  var import_lv = __toESM(require_lv());
-  var import_uz = __toESM(require_uz());
-  var import_bg = __toESM(require_bg());
-  var import_hy = __toESM(require_hy());
-  var import_ru = __toESM(require_ru());
-  var import_et = __toESM(require_et());
-  var import_mk = __toESM(require_mk());
-  var import_uz_latn = __toESM(require_uz_latn());
-  var import_bn = __toESM(require_bn());
-  var import_id = __toESM(require_id());
-  var import_si = __toESM(require_si());
-  var import_fa = __toESM(require_fa());
-  var import_mn = __toESM(require_mn());
-  var import_vn = __toESM(require_vn());
-  var import_bs = __toESM(require_bs());
-  var import_sk = __toESM(require_sk());
-  var import_fi = __toESM(require_fi());
-  var import_ms = __toESM(require_ms());
-  var import_zh_tw = __toESM(require_zh_tw());
-  var import_cat = __toESM(require_cat());
-  var import_is = __toESM(require_is());
-  var import_sl = __toESM(require_sl());
-  var import_fo = __toESM(require_fo());
-  var import_my = __toESM(require_my());
-  var import_zh = __toESM(require_zh());
-  var import_ckb = __toESM(require_ckb());
-  var import_it = __toESM(require_it());
-  var import_sq = __toESM(require_sq());
-  var import_fr = __toESM(require_fr());
-  var import_nl = __toESM(require_nl());
-  var import_cs = __toESM(require_cs());
-  var import_ja = __toESM(require_ja());
-  var import_sr_cyr = __toESM(require_sr_cyr());
-  var import_ga = __toESM(require_ga());
-  var import_nn = __toESM(require_nn());
   (() => {
     const flatpickrInstances = [];
     window.CMS.timepicker = {
@@ -50145,7 +45851,7 @@
         );
         const dates = root.querySelectorAll("input[type=text][data-cms-date]");
         if (datetimes.length === 0 && dates.length === 0) return;
-        const locale = "zh";
+        const locale = CMS.getLocale();
         for (const datetime of datetimes) {
           flatpickrInstances.push(
             esm_default(datetime, {
@@ -50174,7 +45880,7 @@
   })();
 
   // app/assets/javascripts/comfy/admin/cms/wysiwyg.js
-  var import_jquery14 = __toESM(require_jquery());
+  var import_jquery15 = __toESM(require_jquery());
   (() => {
     const buildRedactorOptions = () => {
       const fileUploadPath = document.querySelector(
@@ -50238,7 +45944,7 @@
         if (textareas.length === 0) return;
         const redactorOptions = buildRedactorOptions();
         for (const textarea of textareas) {
-          redactorInstances.push(new import_jquery14.default.Redactor(textarea, redactorOptions));
+          redactorInstances.push(new import_jquery15.default.Redactor(textarea, redactorOptions));
         }
       },
       dispose() {

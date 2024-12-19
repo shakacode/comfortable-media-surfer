@@ -2,6 +2,7 @@ import ujs from "@rails/ujs";
 ujs.start();
 
 import "bootstrap/js/src/tab";
+import "bootstrap/js/src/collapse";
 
 import "../../vendor/diff/diff_match_patch.min";
 import "../../vendor/diff/pretty_text_diff";
