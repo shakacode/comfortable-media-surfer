@@ -1,39 +1,24 @@
-//= require rails-ujs
-//= require jquery3
+import ujs from "@rails/ujs";
+ujs.start();
 
-//= require comfy/vendor/codemirror
-//= require comfy/vendor/codemirror/mode/css/css
-//= require comfy/vendor/codemirror/mode/htmlmixed/htmlmixed
-//= require comfy/vendor/codemirror/mode/javascript/javascript
-//= require comfy/vendor/codemirror/mode/markdown/markdown
-//= require comfy/vendor/codemirror/mode/xml/xml
-//= require comfy/vendor/codemirror/addon/edit/closetag
-//= require comfy/vendor/sortable.min
-//= require comfy/vendor/bootstrap.bundle.min
-//= require comfy/vendor/diff/diff_match_patch.min
-//= require comfy/vendor/diff/pretty_text_diff
-//= require comfy/vendor/fontawesome
-//= require comfy/vendor/redactor
-//= require comfy/vendor/redactor/filemanager
-//= require comfy/vendor/redactor/imagemanager
-//= require comfy/vendor/redactor/definedlinks
-//= require comfy/vendor/redactor/table
-//= require comfy/vendor/redactor/video
-//= require_directory ../../vendor/redactor/i18n/
-//= require comfy/vendor/flatpickr.min
-//= require_directory ../../vendor/flatpickr/i18n/
+import "bootstrap/js/src/tab";
+import "bootstrap/js/src/collapse";
 
-//= require comfy/admin/cms/base
-//= require comfy/admin/cms/categories
-//= require comfy/admin/cms/codemirror
-//= require comfy/admin/cms/diff
-//= require comfy/admin/cms/file_link
-//= require comfy/admin/cms/file_upload
-//= require comfy/admin/cms/files_modal
-//= require comfy/admin/cms/page_fragments
-//= require comfy/admin/cms/sortable_list
-//= require comfy/admin/cms/slugify
-//= require comfy/admin/cms/timepicker
-//= require comfy/admin/cms/wysiwyg
+import "../../vendor/diff/diff_match_patch.min";
+import "../../vendor/diff/pretty_text_diff";
+import "../../vendor/fontawesome";
 
-//= require comfy/admin/cms/custom
+import "./base";
+import "./categories";
+import "./codemirror";
+import "./diff";
+import "./file_link";
+import "./file_upload";
+import "./files_modal";
+import "./page_fragments";
+import "./sortable_list";
+import "./slugify";
+import "./timepicker";
+import "./wysiwyg";
+
+import "./custom";

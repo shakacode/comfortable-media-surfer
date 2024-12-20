@@ -1,2 +1,3 @@
 app/assets/javascripts/comfy/vendor/* linguist-vendored
 app/assets/stylesheets/comfy/vendor/* linguist-vendored
+app/assets/builds/* linguist-generated
