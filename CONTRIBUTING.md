@@ -21,9 +21,8 @@ Fork the project. Optionally, create a branch you want to work on.
 ### 3. Hack away
 
 - Create a few small pull requests instead of a humoungous one. I can merge small stuff faster.
-- When adding new code just make sure it follows the same slyle as the existing code.
+- When adding new code just make sure it follows the same style as the existing code.
 - Avoid adding 3rd party dependencies if you can.
-- If you make any changes to JS/CSS files, don't forget to build them (yarn build && yarn build:css) before committing.
 - Tests please, but nothing complicated. UnitTest / Fixtures all the way. Make sure all tests pass.
 - Run `bundle exec rubocop` and fix any issues raised.
 

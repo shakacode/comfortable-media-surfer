@@ -3,6 +3,18 @@
 $LOAD_PATH.unshift File.expand_path('lib', __dir__)
 require 'comfortable_media_surfer/version'
 
+module Assets
+  def self.compiled_assets
+    puts 'Compiling assets...'
+    if system('yarn build && yarn build:css')
+      Dir.glob(['app/assets/builds/**/*.js', 'app/assets/builds/**/*.css'])
+    else
+      puts 'Error: Failed to compile assets'
+      exit(-1)
+    end
+  end
+end
+
 Gem::Specification.new do |spec|
   spec.name          = 'comfortable_media_surfer'
   spec.version       = ComfortableMediaSurfer::VERSION
@@ -15,7 +27,7 @@ Gem::Specification.new do |spec|
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|doc)/})
-  end
+  end + Assets.compiled_assets
 
   spec.required_ruby_version = '>= 3.0.0'
   spec.metadata['rubygems_mfa_required'] = 'true'
