@@ -12,16 +12,16 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
-Changes since the last non-beta release.
+- [Remove sassc sprockets](https://github.com/shakacode/comfortable-media-surfer/pull/4)
 
-_Please add entries here for your pull requests that have not yet been released._
-
-## [3.0.1] - 2024-12-01
+## [3.1.0] - 2024-12-26
 
 ### Added
 
-- Added this CHANGELOG
-- Added badges to README for CI build, Test Coverage, Gem version, Gem downloads, and last release
+- Deprecated Rails 6.x support, since it is not being maintained as of October 2024
+- Added compatibility and support for Rails 8
+- Added documentation to README for converting from the older CMSs
+- Updated README links to the Surfer wiki
 
 ## [3.0.0] - 2024-11-30
 
