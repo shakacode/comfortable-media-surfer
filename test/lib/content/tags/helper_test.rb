@@ -30,7 +30,7 @@ class ContentTagsHelperTest < ActiveSupport::TestCase
       context: @page,
       params: ['method_name', 'param', { 'key' => 'val' }]
     )
-    assert_equal '<%= method_name("param",{"key"=>"val"}) %>', tag.content
+    assert_match(%r{<%= method_name\("param",{"key"\s*=>\s*"val"}\) %>}, tag.content)
   end
 
   def test_render
@@ -38,7 +38,7 @@ class ContentTagsHelperTest < ActiveSupport::TestCase
       context: @page,
       params: ['method_name', 'param', { 'key' => 'val' }]
     )
-    assert_equal '<%= method_name("param",{"key"=>"val"}) %>', tag.render
+    assert_match(%r{<%= method_name\("param",{"key"\s*=>\s*"val"}\) %>}, tag.render)
   end
 
   def test_render_with_whitelist

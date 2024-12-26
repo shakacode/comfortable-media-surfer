@@ -3,7 +3,7 @@ require:
   # - rubocop-minitest
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.2
   NewCops: enable
   Exclude:
     - bin/*
@@ -57,6 +57,9 @@ Style/Documentation:
   Enabled: false
 
 Style/DocumentDynamicEvalDefinition:
+  Enabled: false
+
+Style/HashSyntax:
   Enabled: false
 
 Style/IfUnlessModifier:
