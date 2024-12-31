@@ -12,6 +12,7 @@ group :development, :test do
   gem 'byebug',             '~> 11.1.0', platforms: %i[mri mingw x64_mingw]
   gem 'gem-release'
   gem 'image_processing',   '>= 1.12.0'
+  gem 'propshaft',          '~> 1.1.0'
   gem 'sqlite3',            '~> 1.6.7'
   # gem 'mysql2',             '~> 0.5'
   # gem 'pg',                 '~> 1.5.4'
@@ -31,6 +32,7 @@ group :test do
   gem 'minitest',                 '>= 5.23.0'
   gem 'minitest-reporters',       '>= 1.6.1'
   gem 'mocha',                    '>= 2.3.0', require: false
+  gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
   gem 'rubocop',                  '~> 1.63.0', require: false
   gem 'rubocop-minitest'

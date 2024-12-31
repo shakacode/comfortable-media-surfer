@@ -8,6 +8,8 @@ Fork the project. Optionally, create a branch you want to work on.
 
 ### 2. Get it running locally
 
+- Install NodeJS and yarn
+- Install JS dependencies with `yarn`
 - Install gem dependencies with `bundle install`
 - There's nothing to configure, by default database is SQLite so it will be
   created for you. Just run `bundle exec rake db:migrate`
@@ -19,7 +21,7 @@ Fork the project. Optionally, create a branch you want to work on.
 ### 3. Hack away
 
 - Create a few small pull requests instead of a humoungous one. I can merge small stuff faster.
-- When adding new code just make sure it follows the same slyle as the existing code.
+- When adding new code just make sure it follows the same style as the existing code.
 - Avoid adding 3rd party dependencies if you can.
 - Tests please, but nothing complicated. UnitTest / Fixtures all the way. Make sure all tests pass.
 - Run `bundle exec rubocop` and fix any issues raised.
