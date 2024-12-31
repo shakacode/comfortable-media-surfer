@@ -32,8 +32,8 @@ group :test do
   gem 'minitest',                 '>= 5.23.0'
   gem 'minitest-reporters',       '>= 1.6.1'
   gem 'mocha',                    '>= 2.3.0', require: false
-  gem 'puma'
   gem 'ostruct'
+  gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
   gem 'rubocop',                  '~> 1.63.0', require: false
   gem 'rubocop-minitest'
