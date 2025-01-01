@@ -9,28 +9,31 @@ Please follow the recommendations outlined at [keepachangelog.com](https://keepa
 For all changes prior to the inception of this project, see the [Release History](https://github.com/comfy/comfortable-mexican-sofa/releases) of ComfortableMexicanSofa.
 
 ## Versions
-
 ## [Unreleased]
 
-- [Remove sassc sprockets](https://github.com/shakacode/comfortable-media-surfer/pull/4)
-
-## [3.1.0] - 2024-12-26
+## [v3.1.0](https://github.com/shakacode/comfortable-media-surfer/compare/v3.0.0...v3.1.0) - 2024-12-31
 
 ### Added
 
-- Deprecated Rails 6.x support, since it is not being maintained as of October 2024
 - Added compatibility and support for Rails 8
-- Added documentation to README for converting from the older CMSs
-- Updated README links to the Surfer wiki
 
-## [3.0.0] - 2024-11-30
+### Removed
+
+- Removed sassc sprockets
+- Rails 6.x compatibility dropped, since it is not being maintained as of October 2024
+
+### Changed
+
+- Updated README links to point to the Surfer wiki
+
+## [v3.0.0](https://github.com/shakacode/comfortable-media-surfer/compare/v2.0.19...v3.0.0) - 2024-11-30
 
 First release of `comfortable_media_surfer`.  This new gem is a revival of [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) which had been dormant for nearly 5 years.
 
 ### Fixed
 
 - Fixed all broken tests to now pass on Rails 6.x and 7.x
-- Rubocop linting
+- Code syntax per Rubocop linting
 
 ### Added
 
@@ -41,8 +44,11 @@ First release of `comfortable_media_surfer`.  This new gem is a revival of [Comf
 - Added CMS tag for image, with tests
 - Added ability to write CMS snippets in Markdown, with tests
 
+### Removed
+
+- Rails 5 compatibility dropped, as it is EOL
+
 ### Changed
 
-- Rebranded ComfortableMexicanSofa as ComfortableMediaSurfer in to publish gem.  All database table names and schema remain unchanged
-- Rails 5 compatibility dropped, as it is EOL
+- Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
   
