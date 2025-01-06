@@ -1,7 +1,7 @@
 import Sortable from "sortablejs";
+import Rails from "@rails/ujs";
 
 (() => {
-  const Rails = window.Rails;
   const DATA_ID_ATTRIBUTE = "data-id";
 
   const sortableStore = {
