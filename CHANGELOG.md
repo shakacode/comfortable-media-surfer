@@ -11,7 +11,7 @@ For all changes prior to the inception of this project, see the [Release History
 ## Versions
 ## [Unreleased]
 
-## [v3.1.0] - 2024-12-31
+## [v3.1.0] - 2024-12-31 (gem yanked, pending resolution of [Issue 8])
 
 ### Added
 
@@ -53,6 +53,7 @@ First release of `comfortable_media_surfer`.  This new gem is a revival of [Comf
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
 [Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...master
+[Issue 8] https://github.com/shakacode/comfortable-media-surfer/issues/8
 [v3.1.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v2.0.19...v3.0.0
 
