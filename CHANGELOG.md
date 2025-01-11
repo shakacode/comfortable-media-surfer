@@ -11,7 +11,7 @@ For all changes prior to the inception of this project, see the [Release History
 ## Versions
 ## [Unreleased]
 
-## [v3.1.0] - 2024-12-31
+## [v3.1.0] - 2024-12-31 (gem yanked, pending resolution of [Issue 8](https://github.com/shakacode/comfortable-media-surfer/issues/8))
 
 ### Added
 

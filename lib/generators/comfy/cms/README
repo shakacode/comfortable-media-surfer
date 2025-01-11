@@ -18,11 +18,3 @@ Then go to http://your-rails-app/admin to start adding content.
 
 Default username and password are: user / pass
 Change these defaults in config/initializers/occams.rb
-
-----------------------------
-IF YOU ARE ON RAILS 6.x
-----------------------------
-and encounter errors referencing webpacker: 
-ensure that you have nvm installed, and then run
-- nvm install 13.7 && nvm use 13.7
-- rails webpacker:install

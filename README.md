@@ -86,6 +86,12 @@ UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Layout' WHERE record_t
 UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Snippet' WHERE record_type = 'Occams::Cms::Snippet';
 ```
 
+If you are using ActiveStorage
+
+```sql
+UPDATE active_storage_attachments SET record_type = 'Comfy::Cms::File' WHERE record_type = 'Occams::Cms::File';
+```
+
 ## Quick Start Guide
 
 After finishing installation you should be able to navigate to http://localhost:3000/admin
