@@ -9,6 +9,7 @@ Please follow the recommendations outlined at [keepachangelog.com](https://keepa
 For all changes prior to the inception of this project, see the [Release History](https://github.com/comfy/comfortable-mexican-sofa/releases) of ComfortableMexicanSofa.
 
 ## Versions
+
 ## [Unreleased]
 
 ## [v3.1.0] - 2024-12-31
@@ -16,6 +17,7 @@ For all changes prior to the inception of this project, see the [Release History
 ### Added
 
 - Added compatibility and support for Rails 8
+- Added compatibility and support for propshaft (sprockets is still supported) - installing the gem now requires NodeJS to be installed. In addition, the `comfy:compile_assets` task needs to be run after installing the gem.
 
 ### Removed
 
@@ -28,7 +30,7 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [v3.0.0] - 2024-11-30
 
-First release of `comfortable_media_surfer`.  This new gem is a revival of [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) which had been dormant for nearly 5 years.
+First release of `comfortable_media_surfer`. This new gem is a revival of [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) which had been dormant for nearly 5 years.
 
 ### Fixed
 
@@ -37,7 +39,7 @@ First release of `comfortable_media_surfer`.  This new gem is a revival of [Comf
 
 ### Added
 
-- Rails 7 compatibility, including many config and code changes.  See the [PR](https://github.com/shakacode/comfortable-media-surfer/pull/1/files) for full details
+- Rails 7 compatibility, including many config and code changes. See the [PR](https://github.com/shakacode/comfortable-media-surfer/pull/1/files) for full details
 - Added github actions workflows for CI build and test coverage
 - Added CMS tags for navigation: children, siblings, breadcrumbs, with tests
 - Added CMS tag for embedded audio, with tests
@@ -55,5 +57,3 @@ First release of `comfortable_media_surfer`.  This new gem is a revival of [Comf
 [Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...master
 [v3.1.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v2.0.19...v3.0.0
-
-  

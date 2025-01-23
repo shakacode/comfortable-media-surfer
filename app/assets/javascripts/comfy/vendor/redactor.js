@@ -13,6 +13,8 @@
 	fixes and tweaks annotated with "COMFY FIX"
 */
 
+import jQuery from 'jquery';
+
 (function($)
 {
 

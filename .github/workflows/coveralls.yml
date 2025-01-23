@@ -29,18 +29,23 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: yarn
-      - run: yarn install --frozen-lockfile
+          cache: npm
+      - run: npm ci
 
       - name: Install Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+
+      - name: Update surfer gem
+        run: bundle update comfortable_media_surfer
+
+      - name: Compile assets
+        run: bin/bundle exec rails comfy:compile_assets
 
       - name: Run tests, report coverage
         run: |
-          bin/bundle install --retry 3 --quiet
           bin/bundle exec rails db:drop
           bin/bundle exec rails db:create
           bin/bundle exec rails db:migrate
