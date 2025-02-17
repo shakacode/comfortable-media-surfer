@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "bundler"
+    directory: "/"   # The root directory where your Gemfile is located
+    schedule:
+      interval: "weekly"  # Options: "daily", "weekly", "monthly"
+    commit-message:
+      prefix: "fix"  # Prefix for the commit message (optional)
+    pull-request:
+      title: "Update dependencies for {{dependency}}"
