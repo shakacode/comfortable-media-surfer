@@ -13,10 +13,13 @@ Fork the project. Optionally, create a branch you want to work on.
 - Install gem dependencies with `bundle install`
 - There's nothing to configure, by default database is SQLite so it will be
   created for you. Just run `bundle exec rake db:migrate`
+- Prepare the environment by running `yarn build`, `yarn build:css`, and
+  `rake db:test:prepare`
 - Make sure that existing tests are passing by running `bundle exec rake test`
 - There are system tests that can be run with `bundle exec rake test:system`.
   You need to have `chromedriver` installed for that.
 - You should be able to start the app via `bin/rails s` and navigate to http://localhost:3000/admin
+  and log in with username 'user' and password 'pass'
 
 ### 3. Hack away
 
