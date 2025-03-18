@@ -196,7 +196,7 @@ module ComfortableMediaSurfer::Seeds::Page
                     filename: filename,
                     content_type: MimeMagic.by_magic(file_handler)
                 }
-      end
+              end
 
       # ensuring that old attachments get removed
       ids_destroy = []
