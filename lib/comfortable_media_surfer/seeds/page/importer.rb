@@ -186,20 +186,20 @@ module ComfortableMediaSurfer::Seeds::Page
     # ActiveStorage and a list of ids of old attachements to destroy
     def files_content(record, identifier, path, frag_content)
       # preparing attachments
-      files = if frag_content.nil?
-                []
-              else
-                frag_content.split("\n").collect do |filename|
-                  file_handler = File.open(File.join(path, filename))
-                  {
-                    io: file_handler,
-                    filename: filename,
-                    content_type: MimeMagic.by_magic(file_handler)
-                  }
-                end
-              end
+      if frag_content.nil?
+        files = []
+      else
+        files = frag_content.split("\n").collect do |filename|
+          file_handler = File.open(File.join(path, filename))
+          {
+            io: file_handler,
+            filename: filename,
+            content_type: MimeMagic.by_magic(file_handler)
+          }
+        end
+      end
 
-      # ensuring that old <attachme></attachme>nts get removed
+      # ensuring that old attachments get removed
       ids_destroy = []
       if (frag = record.fragments.find_by(identifier: identifier))
         ids_destroy = frag.attachments.pluck(:id)
