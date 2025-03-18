@@ -195,10 +195,11 @@ module ComfortableMediaSurfer::Seeds::Page
                     io: file_handler,
                     filename: filename,
                     content_type: MimeMagic.by_magic(file_handler)
-                }
+                  }
+                end
               end
 
-      # ensuring that old attachments get removed
+      # ensuring that old <attachme></attachme>nts get removed
       ids_destroy = []
       if (frag = record.fragments.find_by(identifier: identifier))
         ids_destroy = frag.attachments.pluck(:id)
