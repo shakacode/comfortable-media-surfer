@@ -15,37 +15,23 @@ module ComfortableMediaSurfer::Seeds::File
           .where('active_storage_blobs.filename' => filename).references(:blob).first ||
                site.files.new
 
-        # We need to track actual file and its attributes
-        fresh_file = false
-
         if File.exist?(attrs_path = File.join(path, "_#{filename}.yml")) && fresh_seed?(file, attrs_path)
-          fresh_file = true
-
           attrs = YAML.safe_load_file(attrs_path)
           category_ids = category_names_to_ids(file, attrs.delete('categories'))
           file.attributes = attrs.merge(
             category_ids: category_ids
           )
+          save(file, file_path)
         end
 
         if fresh_seed?(file, file_path)
-          fresh_file = true
-
-          file_handler = File.open(file_path)
-          file.file = {
-            io: file_handler,
-            filename: filename,
-            content_type: MimeMagic.by_magic(file_handler)
-          }
-        end
-
-        if fresh_file
-          if file.save
-            message = "[CMS SEEDS] Imported File \t #{file_path}"
-            ComfortableMediaSurfer.logger.info(message)
-          else
-            message = "[CMS SEEDS] Failed to import File \n#{file.errors.inspect}"
-            ComfortableMediaSurfer.logger.warn(message)
+          File.open(file_path) do |file_handler|
+            file.file = {
+              io: file_handler,
+              filename: filename,
+              content_type: MimeMagic.by_magic(file_handler)
+            }
+            save(file, file_path)
           end
         end
 
@@ -54,6 +40,16 @@ module ComfortableMediaSurfer::Seeds::File
 
       # cleaning up
       site.files.where('id NOT IN (?)', seed_ids).destroy_all
+    end
+
+  private
+
+    def save(file, path)
+      if file.save
+        ComfortableMediaSurfer.logger.info("[CMS SEEDS] Imported File \t #{path}")
+      else
+        ComfortableMediaSurfer.logger.warn("[CMS SEEDS] Failed to import File \n#{file.errors.inspect}")
+      end
     end
   end
 end
