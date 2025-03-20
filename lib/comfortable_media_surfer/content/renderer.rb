@@ -39,15 +39,15 @@ class ComfortableMediaSurfer::Content::Renderer
   # @param [Comfy::Cms::WithFragments, nil] context
   def initialize(context)
     @context = context
-    @depth   = 0
   end
 
   # This is how we render content out. Takes context (cms page) and content
   # nodes
   # @param [Array<String, ComfortableMediaSurfer::Content::Tag>]
   # @param [Boolean] allow_erb
-  def render(nodes, allow_erb = ComfortableMediaSurfer.config.allow_erb)
-    if (@depth += 1) > MAX_DEPTH
+  # @param [Integer] depth current tag nesting position
+  def render(nodes, allow_erb = ComfortableMediaSurfer.config.allow_erb, depth = 0)
+    if depth >= MAX_DEPTH
       raise Error, 'Deep tag nesting or recursive nesting detected'
     end
 
@@ -58,7 +58,7 @@ class ComfortableMediaSurfer::Content::Renderer
       else
         tokens  = tokenize(node.render)
         nodes   = nodes(tokens)
-        render(nodes, allow_erb || node.allow_erb?)
+        render(nodes, allow_erb || node.allow_erb?, depth.next)
       end
     end.flatten.join
   end
