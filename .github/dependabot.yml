@@ -1,10 +1,7 @@
 version: 2
 updates:
+  # Enable version updates for npm
   - package-ecosystem: "bundler"
-    directory: "/"   # The root directory where your Gemfile is located
+    directory: "/"  # The root directory where your Gemfile is located
     schedule:
-      interval: "monthly"  # Options: "daily", "weekly", "monthly"
-    commit-message:
-      prefix: "fix"  # Prefix for the commit message (optional)
-    pull-request:
-      title: "Update dependencies for {{dependency}}"
+      interval: "monthly" # Options: "daily", "weekly", "monthly"
