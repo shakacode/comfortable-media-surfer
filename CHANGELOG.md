@@ -22,7 +22,7 @@ For all changes prior to the inception of this project, see the [Release History
 
 - added migration for Markdown snippets
 
-## [v3.1.1] - 2025-05-08
+## [v3.1.1] - 2025-02-08
 
 ### Fixed
 
