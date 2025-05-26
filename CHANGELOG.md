@@ -12,6 +12,32 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed Expand/Collapse error in Admin/Pages.
+- Include sassc-rails to gemspec, since it is deprecated after rails 7.0.8
+- Update documentation to reflect recent changes
+
+### Added
+
+- added migration for Markdown snippets
+
+## [v3.1.1] - 2025-05-08
+
+### Fixed
+
+- Fixed scss: use scss imports, not css ones that cannot be resolved by the browser
+
+### Added
+
+- Added rake task to compile assets, corresponding post install message
+- Added import Rails from UJS
+- Added missing jQuery import
+
+### Removed
+
+- Removed yarn, as not needed
+
 ## [v3.1.0] - 2024-12-31 (gem yanked, pending resolution of [Issue 8](https://github.com/shakacode/comfortable-media-surfer/issues/8)
 
 ### Added
@@ -55,5 +81,6 @@ First release of `comfortable_media_surfer`. This new gem is a revival of [Comfo
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
 [Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...master
+[v3.1.1]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...v3.1.1
 [v3.1.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v2.0.19...v3.0.0

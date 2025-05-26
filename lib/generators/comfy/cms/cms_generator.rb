@@ -11,14 +11,16 @@ module Comfy
       source_root File.expand_path('../../../..', __dir__)
 
       def generate_migration
-        destination   = File.expand_path('db/migrate/01_create_cms.rb', destination_root)
-        migration_dir = File.dirname(destination)
-        destination   = self.class.migration_exists?(migration_dir, 'create_cms')
+        %w[01_create_cms 02_add_markdown_to_snippets].each do |migration|
+          destination   = File.expand_path("db/migrate/#{migration}.rb", destination_root)
+          migration_dir = File.dirname(destination)
+          destination   = self.class.migration_exists?(migration_dir, migration)
 
-        if destination
-          puts "\e[0m\e[31mFound existing cms_create.rb migration. Remove it if you want to regenerate.\e[0m"
-        else
-          migration_template 'db/migrate/01_create_cms.rb', 'db/migrate/create_cms.rb'
+          if destination
+            puts "\e[0m\e[31mFound existing #{migration}.rb migration. Remove it if you want to regenerate.\e[0m"
+          else
+            migration_template "db/migrate/#{migration}.rb", "db/migrate/#{migration[3..]}.rb"
+          end
         end
       end
 

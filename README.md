@@ -42,7 +42,8 @@ Then from the Rails project's root run:
 ```
     bundle install
     rails generate comfy:cms
-    rake db:migrate
+    rails db:migrate
+    rails comfy:compile_assets
 ```
 
 Now take a look inside your `config/routes.rb` file. You'll see where routes attach for the admin area and content serving. Make sure that content serving route appears as a very last item or it will make all other routes to be inaccessible.
@@ -84,6 +85,7 @@ UPDATE comfy_cms_fragments SET record_type = 'Comfy::Cms::Snippet' WHERE record_
 UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Page' WHERE record_type = 'Occams::Cms::Page';
 UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Layout' WHERE record_type = 'Occams::Cms::Layout';
 UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Snippet' WHERE record_type = 'Occams::Cms::Snippet';
+UPDATE active_storage_attachments SET record_type = 'Comfy::Cms::File' WHERE record_type = 'Occams::Cms::File';
 ```
 
 ## Quick Start Guide

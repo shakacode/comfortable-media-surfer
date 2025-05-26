@@ -30,7 +30,7 @@ class ComfortableMediaSurfer::Content::Tags::Audio < ComfortableMediaSurfer::Con
   end
 
   def content
-    format("#{@style}<audio controls class=\"audioplayer\" src=#{@path}></audio>")
+    "#{@style}<audio controls class=\"audioplayer\" src=#{@path}></audio>"
   end
 end
 

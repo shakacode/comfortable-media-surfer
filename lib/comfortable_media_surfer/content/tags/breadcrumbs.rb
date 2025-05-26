@@ -34,7 +34,7 @@ class ComfortableMediaSurfer::Content::Tags::Breadcrumbs < ComfortableMediaSurfe
   end
 
   def content
-    format("#{@style}#{@links}")
+    "#{@style}#{@links}"
   end
 end
 
