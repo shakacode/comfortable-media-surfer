@@ -8,7 +8,7 @@ gemspec
 gem 'rails', '~> 8.0'
 
 group :development, :test do
-  gem 'autoprefixer-rails', '~> 10.4.16.0'
+  gem 'autoprefixer-rails', '~> 10.4.21.0'
   gem 'byebug',             '~> 11.1.0', platforms: %i[mri mingw x64_mingw]
   gem 'gem-release'
   gem 'image_processing',   '>= 1.12.0'
