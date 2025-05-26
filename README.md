@@ -142,5 +142,5 @@ ComfortableMediaSurfer can run like any Rails application in development. It's a
 
 ---
 
-Copyright 2010-2019 Oleg Khabarov, 2024 ShakaCode LLC
+Copyright 2010-2019 Oleg Khabarov, 2024-2025 ShakaCode LLC
 Released under the [MIT license](LICENSE)
