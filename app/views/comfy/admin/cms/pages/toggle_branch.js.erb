@@ -1,13 +1,19 @@
 // TODO: Extract this so the server only renders the HTML.
-var li = $('li#comfy_cms_page_<%=@page.id%>');
-li.find('.item .toggle').first().toggleClass('open');
-
+var li = document.querySelector('li#comfy_cms_page_<%=@page.id%>');
+var toggle = li.querySelector('.item .toggle');
+toggle.classList.toggle('open');
 <% if session[:cms_page_tree].member?(@page.id.to_s) %>
-  if(!li.find('ul.children')[0]) {
-    li.append('<ul class="children sortable pl-md-3"><%= escape_javascript(render partial: "index_branch", collection: @page.children) %></ul>');
-    CMS.sortableList.dispose();
-    CMS.sortableList.init();
+  if(!li.querySelector('ul.children')) {
+  var childrenList = document.createElement('ul');
+  childrenList.className = 'children sortable pl-md-3';
+  childrenList.innerHTML = '<%= escape_javascript(render partial: "index_branch", collection: @page.children) %>';
+  li.appendChild(childrenList);
+  CMS.sortableList.dispose();
+  CMS.sortableList.init();
   }
 <% else %>
-  li.find('ul.children').remove();
+  var childrenList = li.querySelector('ul.children');
+  if (childrenList) {
+  childrenList.remove();
+  }
 <% end %>
