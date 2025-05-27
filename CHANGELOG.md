@@ -82,7 +82,7 @@ First release of `comfortable_media_surfer`. This new gem is a revival of [Comfo
 
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
-[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...master
+[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.2...master
 [v3.1.2]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.1...v3.1.2
 [v3.1.1]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...v3.1.1
 [v3.1.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.0.0...v3.1.0
