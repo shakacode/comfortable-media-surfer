@@ -79,6 +79,7 @@ ALTER TABLE occams_cms_revisions RENAME TO comfy_cms_revisions;
 ALTER TABLE occams_cms_sites RENAME TO comfy_cms_sites;
 ALTER TABLE occams_cms_snippets RENAME TO comfy_cms_snippets;
 ALTER TABLE occams_cms_translations RENAME TO comfy_cms_translations;
+UPDATE comfy_cms_categories SET categorized_type = 'Comfy::Cms::Page' WHERE categorized_type = 'Occams::Cms::Page';
 UPDATE comfy_cms_fragments SET record_type = 'Comfy::Cms::Page' WHERE record_type = 'Occams::Cms::Page';
 UPDATE comfy_cms_fragments SET record_type = 'Comfy::Cms::Layout' WHERE record_type = 'Occams::Cms::Layout';
 UPDATE comfy_cms_fragments SET record_type = 'Comfy::Cms::Snippet' WHERE record_type = 'Occams::Cms::Snippet';
