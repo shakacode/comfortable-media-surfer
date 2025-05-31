@@ -23,3 +23,4 @@ db/cms_fixtures/test-site/
 /node_modules
 /app/assets/builds/*
 !/app/assets/builds/.keep
+docs

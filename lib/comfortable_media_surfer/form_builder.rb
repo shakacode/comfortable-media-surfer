@@ -7,6 +7,7 @@ class ComfortableMediaSurfer::FormBuilder < ComfyBootstrapForm::FormBuilder
   # @param [ComfortableMediaSurfer::Content::Tag] tag
   # @param [Integer] index
   def fragment_field(tag, index)
+    helper_text = tag.options['helper_text']
     tag.form_field(object_name, @template, index) do |tag_input|
       name = "#{object_name}[fragments_attributes][#{index}][identifier]"
       identifer_input = @template.hidden_field_tag(name, tag.identifier, id: nil)
@@ -22,6 +23,10 @@ class ComfortableMediaSurfer::FormBuilder < ComfyBootstrapForm::FormBuilder
         concat identifer_input
         concat tag_name_input
         concat tag_input
+        # Render helper text if present
+        if helper_text.present?
+          concat @template.content_tag(:p, helper_text, class: 'text-muted')
+        end
       end
     end
   end
