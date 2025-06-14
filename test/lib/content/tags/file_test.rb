@@ -73,7 +73,7 @@ class ContentTagsFileTest < ActiveSupport::TestCase
       context: @page,
       params: [frag.identifier, { 'as' => 'image', 'resize' => '50x50' }]
     )
-    variant = frag.attachments.first.variant(combine_options: { 'resize' => '50x50' })
+    variant = frag.attachments.first.variant({ 'resize' => '50x50' })
     path    = rails_representation_path(variant, only_path: true)
     out     = "<img src='#{path}' alt='fragment.jpeg' title='fragment.jpeg'/>"
     assert_equal out, tag.content
