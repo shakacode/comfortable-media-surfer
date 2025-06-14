@@ -12,6 +12,42 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
+## [v3.1.3] - 2025-05-29
+
+### Fixed
+
+- Fixed file descriptor leak during seeds import
+- Fixed ‘Deep nesting of tags’ error for pages containing more than MAX_DEPTH tags
+- Fixed importing pages with the same slug but different parents
+
+## [v3.1.2] - 2025-05-26
+
+### Fixed
+
+- Fixed Expand/Collapse error in Admin/Pages.
+- Include sassc-rails to gemspec, since it is deprecated after rails 7.0.8
+- Update documentation to reflect recent changes
+
+### Added
+
+- added migration for Markdown snippets
+
+## [v3.1.1] - 2025-02-08
+
+### Fixed
+
+- Fixed scss: use scss imports, not css ones that cannot be resolved by the browser
+
+### Added
+
+- Added rake task to compile assets, corresponding post install message
+- Added import Rails from UJS
+- Added missing jQuery import
+
+### Removed
+
+- Removed yarn, as not needed
+
 ## [v3.1.0] - 2024-12-31 (gem yanked, pending resolution of [Issue 8](https://github.com/shakacode/comfortable-media-surfer/issues/8)
 
 ### Added
@@ -54,6 +90,9 @@ First release of `comfortable_media_surfer`. This new gem is a revival of [Comfo
 
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
-[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...master
+[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.3...master
+[v3.1.3]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.2...v3.1.3
+[v3.1.2]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.1...v3.1.2
+[v3.1.1]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...v3.1.1
 [v3.1.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v2.0.19...v3.0.0

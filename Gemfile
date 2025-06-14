@@ -8,8 +8,8 @@ gemspec
 gem 'rails', '~> 8.0'
 
 group :development, :test do
-  gem 'autoprefixer-rails', '~> 10.4.16.0'
-  gem 'byebug',             '~> 11.1.0', platforms: %i[mri mingw x64_mingw]
+  gem 'autoprefixer-rails', '~> 10.4.21.0'
+  gem 'byebug',             '~> 12.0.0', platforms: %i[mri mingw x64_mingw]
   gem 'gem-release'
   gem 'image_processing',   '>= 1.12.0'
   gem 'propshaft',          '~> 1.1.0'
@@ -24,7 +24,7 @@ group :development do
 end
 
 group :test do
-  gem 'brakeman',                 '~> 6.1.2'
+  gem 'brakeman',                 '~> 7.0.2'
   gem 'bundler-audit',            '~> 0.9.1'
   gem 'coveralls_reborn',         '~> 0.28.0', require: false
   gem 'cuprite',                  '>= 0.15'
@@ -35,7 +35,7 @@ group :test do
   gem 'ostruct'
   gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop',                  '~> 1.63.0', require: false
+  gem 'rubocop',                  '~> 1.75.7', require: false
   gem 'rubocop-minitest'
   gem 'rubocop-rails'
   gem 'simplecov', '~> 0.22.0', require: false

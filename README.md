@@ -42,7 +42,8 @@ Then from the Rails project's root run:
 ```
     bundle install
     rails generate comfy:cms
-    rake db:migrate
+    rails db:migrate
+    rails comfy:compile_assets
 ```
 
 Now take a look inside your `config/routes.rb` file. You'll see where routes attach for the admin area and content serving. Make sure that content serving route appears as a very last item or it will make all other routes to be inaccessible.
@@ -78,12 +79,15 @@ ALTER TABLE occams_cms_revisions RENAME TO comfy_cms_revisions;
 ALTER TABLE occams_cms_sites RENAME TO comfy_cms_sites;
 ALTER TABLE occams_cms_snippets RENAME TO comfy_cms_snippets;
 ALTER TABLE occams_cms_translations RENAME TO comfy_cms_translations;
+UPDATE comfy_cms_categories SET categorized_type = 'Comfy::Cms::Page' WHERE categorized_type = 'Occams::Cms::Page';
+UPDATE comfy_cms_categorizations SET categorized_type = 'Comfy::Cms::Page' WHERE categorized_type = 'Occams::Cms::Page';
 UPDATE comfy_cms_fragments SET record_type = 'Comfy::Cms::Page' WHERE record_type = 'Occams::Cms::Page';
 UPDATE comfy_cms_fragments SET record_type = 'Comfy::Cms::Layout' WHERE record_type = 'Occams::Cms::Layout';
 UPDATE comfy_cms_fragments SET record_type = 'Comfy::Cms::Snippet' WHERE record_type = 'Occams::Cms::Snippet';
 UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Page' WHERE record_type = 'Occams::Cms::Page';
 UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Layout' WHERE record_type = 'Occams::Cms::Layout';
 UPDATE comfy_cms_revisions SET record_type = 'Comfy::Cms::Snippet' WHERE record_type = 'Occams::Cms::Snippet';
+UPDATE active_storage_attachments SET record_type = 'Comfy::Cms::File' WHERE record_type = 'Occams::Cms::File';
 ```
 
 ## Quick Start Guide
@@ -140,5 +144,5 @@ ComfortableMediaSurfer can run like any Rails application in development. It's a
 
 ---
 
-Copyright 2010-2019 Oleg Khabarov, 2024 ShakaCode LLC
+Copyright 2010-2019 Oleg Khabarov, 2024-2025 ShakaCode LLC
 Released under the [MIT license](LICENSE)

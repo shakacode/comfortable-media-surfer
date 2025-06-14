@@ -93,4 +93,21 @@ class SeedsFilesTest < ActiveSupport::TestCase
   ensure
     FileUtils.rm_rf(host_path)
   end
+
+  def test_file_descriptor_leak
+    Comfy::Cms::File.delete_all
+    initial_file_descriptors = count_open_file_descriptors
+
+    ComfortableMediaSurfer::Seeds::File::Importer.new('sample-site', 'default-site').import!
+    final_file_descriptors = count_open_file_descriptors
+
+    assert_operator initial_file_descriptors, :>=, final_file_descriptors,
+                    "File descriptor leak detected: #{final_file_descriptors - initial_file_descriptors} file descriptors were not closed"
+  end
+
+private
+
+  def count_open_file_descriptors
+    `lsof -p #{Process.pid} | wc -l`.to_i
+  end
 end

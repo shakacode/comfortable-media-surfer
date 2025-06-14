@@ -8,12 +8,10 @@ Fork the project. Optionally, create a branch you want to work on.
 
 ### 2. Get it running locally
 
-- Install NodeJS and yarn
-- Install JS dependencies with `yarn`
 - Install gem dependencies with `bundle install`
 - There's nothing to configure, by default database is SQLite so it will be
   created for you. Just run `bundle exec rake db:migrate`
-- Prepare the environment by running `yarn build`, `yarn build:css`, and
+- Prepare the environment by running `rails comfy:compile_assets`, and
   `rake db:test:prepare`
 - Make sure that existing tests are passing by running `bundle exec rake test`
 - There are system tests that can be run with `bundle exec rake test:system`.

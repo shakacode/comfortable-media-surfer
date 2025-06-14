@@ -57,7 +57,7 @@ class ComfortableMediaSurfer::Content::Tags::Siblings < ComfortableMediaSurfer::
       end
       @links += '</div>'
     end
-    format("#{@style}#{@links}")
+    "#{@style}#{@links}"
   end
 end
 

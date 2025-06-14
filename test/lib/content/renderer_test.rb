@@ -275,4 +275,13 @@ class ContentRendererTest < ActiveSupport::TestCase
       render_string('{{cms:snippet default}}')
     end
   end
+
+  def test_render_with_more_than_max_depth_tags_but_without_stack_overflow
+    test_string =
+      Array.new(ComfortableMediaSurfer::Content::Renderer::MAX_DEPTH * 2) { '{{cms:text content}}' }.join(' ')
+    out = render_string(test_string)
+    expected =
+      Array.new(ComfortableMediaSurfer::Content::Renderer::MAX_DEPTH * 2) { 'content' }.join(' ')
+    assert_equal expected, out
+  end
 end

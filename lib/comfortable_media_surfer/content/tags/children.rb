@@ -43,7 +43,7 @@ class ComfortableMediaSurfer::Content::Tags::Children < ComfortableMediaSurfer::
       end
       @list += '</ul>'
     end
-    format("#{@style}#{@list}")
+    "#{@style}#{@list}"
   end
 end
 
