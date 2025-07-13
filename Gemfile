@@ -26,7 +26,7 @@ end
 group :test do
   gem 'brakeman',                 '~> 7.0.2'
   gem 'bundler-audit',            '~> 0.9.1'
-  gem 'coveralls_reborn',         '~> 0.28.0', require: false
+  gem 'coveralls_reborn',         '~> 0.29.0', require: false
   gem 'cuprite',                  '>= 0.15'
   gem 'equivalent-xml',           '~> 0.6.0'
   gem 'minitest',                 '>= 5.23.0'
@@ -35,7 +35,7 @@ group :test do
   gem 'ostruct'
   gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop',                  '~> 1.75.7', require: false
+  gem 'rubocop',                  '~> 1.77.0', require: false
   gem 'rubocop-minitest'
   gem 'rubocop-rails'
   gem 'simplecov', '~> 0.22.0', require: false
