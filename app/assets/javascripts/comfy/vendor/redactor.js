@@ -669,20 +669,6 @@ import jQuery from 'jquery';
 					var html = $.trim(this.$editor.html());
 					this.block.isEmpty = this.utils.isEmpty(html);
 
-					// FF focus
-					if (this.utils.browser('mozilla') && !this.focus.isFocused())
-					{
-						if (this.block.isEmpty)
-						{
-							var $first;
-							if (!this.opts.linebreaks)
-							{
-								$first = this.$editor.children().first();
-								this.caret.setEnd($first);
-							}
-						}
-					}
-
 					this.block.blocks = this.selection.getBlocks();
 
 					this.block.blocksSize = this.block.blocks.length;
@@ -1318,7 +1304,7 @@ import jQuery from 'jquery';
 				},
 				callEditor: function()
 				{
-					this.build.disableMozillaEditing();
+					this.build.disableEditing();
 					this.build.disableIeLinks();
 					this.build.setEvents();
 					this.build.setHelpers();
@@ -1539,10 +1525,8 @@ import jQuery from 'jquery';
 					}, this));
 
 				},
-				disableMozillaEditing: function()
+				disableEditing: function()
 				{
-					if (!this.utils.browser('mozilla')) return;
-
 					// FF fix
 					try {
 						document.execCommand('enableObjectResizing', false, false);
@@ -2109,11 +2093,7 @@ import jQuery from 'jquery';
 						html = html.replace(new RegExp(i, 'g'), s);
 					});
 
-					// remove last br in FF
-					if (this.utils.browser('mozilla'))
-					{
-						html = html.replace(/<br\s?\/?>$/gi, '');
-					}
+					html = html.replace(/<br\s?\/?>$/gi, '');
 
 					// remove br in|of li tags
 					html = html.replace(new RegExp('<br\\s?/?></li>', 'gi'), '</li>');
@@ -2435,11 +2415,7 @@ import jQuery from 'jquery';
 					// bullets
 					html = html.replace(/<p>•([\w\W]*?)<\/p>/gi, '<li>$1</li>');
 
-					// FF fix
-					if (this.utils.browser('mozilla'))
-					{
-						html = html.replace(/<br\s?\/?>$/gi, '');
-					}
+					html = html.replace(/<br\s?\/?>$/gi, '');
 
 					return html;
 				},
@@ -2651,7 +2627,7 @@ import jQuery from 'jquery';
 					html = html.replace(/\n\n/g, "\n");
 					html = html.replace(/\n/g, '<br />');
 
-					if (this.opts.paragraphize && typeof paragraphize == 'undefined' && !this.utils.browser('mozilla'))
+					if (this.opts.paragraphize && typeof paragraphize == 'undefined')
 					{
 						html = this.paragraphize.load(html);
 					}
@@ -4800,8 +4776,6 @@ import jQuery from 'jquery';
 						if (this.clean.singleLine) this.insert.execHtml(html);
 						else document.execCommand('insertHTML', false, html);
 
-						this.insert.htmlFixMozilla();
-
 					}
 
 					this.clean.normalizeLists();
@@ -4818,18 +4792,6 @@ import jQuery from 'jquery';
 					if (clean)
 					{
 						this.clean.clearUnverified();
-					}
-
-				},
-				htmlFixMozilla: function()
-				{
-					// FF inserts empty p when content was selected dblclick
-					if (!this.utils.browser('mozilla')) return;
-
-					var $next = $(this.selection.getBlock()).next();
-					if ($next.length > 0 && $next[0].tagName == 'P' && $next.html() === '')
-					{
-						$next.remove();
 					}
 
 				},
@@ -5035,7 +4997,7 @@ import jQuery from 'jquery';
 					}
 
 					// ie and ff exit from table
-					if (this.opts.enterKey && (this.utils.browser('msie') || this.utils.browser('mozilla')) && (key === this.keyCode.DOWN || key === this.keyCode.RIGHT))
+					if (this.opts.enterKey && (this.utils.browser('msie')) && (key === this.keyCode.DOWN || key === this.keyCode.RIGHT))
 					{
 						var isEndOfTable = false;
 						var $table = false;
@@ -5238,14 +5200,11 @@ import jQuery from 'jquery';
 							return;
 						}
 
-						// remove hr in FF
-						if (this.utils.browser('mozilla'))
-						{
-							var prev = this.selection.getPrev();
-							var prev2 = $(prev).prev()[0];
-							if (prev && prev.tagName === 'HR') $(prev).remove();
-							if (prev2 && prev2.tagName === 'HR') $(prev2).remove();
-						}
+						// remove hr
+						var prev = this.selection.getPrev();
+						var prev2 = $(prev).prev()[0];
+						if (prev && prev.tagName === 'HR') $(prev).remove();
+						if (prev2 && prev2.tagName === 'HR') $(prev2).remove();
 
 						this.keydown.removeInvisibleSpace();
 						this.keydown.removeEmptyListInTable(e);
@@ -5661,16 +5620,6 @@ import jQuery from 'jquery';
 
 					if (key === this.keyCode.DELETE || key === this.keyCode.BACKSPACE)
 					{
-						if (this.utils.browser('mozilla'))
-						{
-							var td = $(this.keydown.current).closest('td', this.$editor[0]);
-							if (td.size() !== 0 && td.text() !== '')
-							{
-								e.preventDefault();
-								return false;
-							}
-						}
-
 						// clear unverified
 						this.clean.clearUnverified();
 
@@ -5849,7 +5798,7 @@ import jQuery from 'jquery';
 					var node = this.$editor.find('#redactor-insert-line');
 					var next = $(node).next()[0];
 					var target = next;
-					if (this.utils.browser('mozilla') && next && next.innerHTML === '')
+					if (next && next.innerHTML === '')
 					{
 						target = $(next).next()[0];
 						$(next).remove();
@@ -6069,7 +6018,7 @@ import jQuery from 'jquery';
 					}
 					else
 					{
-						if (this.utils.browser('mozilla') && this.link.text === '')
+						if (this.link.text === '')
 						{
 							var $a = $('<a />').attr('href', link).text(text);
 							if (target !== '') $a.attr('target', target);
@@ -6105,10 +6054,6 @@ import jQuery from 'jquery';
 								document.execCommand('createLink', false, link);
 
 								$a = $(this.selection.getCurrent()).closest('a', this.$editor[0]);
-								if (this.utils.browser('mozilla'))
-								{
-									$a = $('a[_moz_dirty=""]');
-								}
 
 								if (target !== '') $a.attr('target', target);
 								$a.removeAttr('style').removeAttr('_moz_dirty');
@@ -6444,7 +6389,7 @@ import jQuery from 'jquery';
 						$children.find('br').remove();
 						$children.append(this.selection.getMarkerAsHtml());
 
-						if (this.opts.linebreaks && this.utils.browser('mozilla') && $children.size() == 2 && this.utils.isEmpty($children.eq(1).text()))
+						if (this.opts.linebreaks && $children.size() == 2 && this.utils.isEmpty($children.eq(1).text()))
 						{
 							$children.eq(1).remove();
 						}
@@ -7701,17 +7646,7 @@ import jQuery from 'jquery';
 				},
 				selectElement: function(node)
 				{
-					if (this.utils.browser('mozilla'))
-					{
-						node = node[0] || node;
-
-						var range = document.createRange();
-						range.selectNodeContents(node);
-					}
-					else
-					{
-						this.caret.set(node, 0, node, 1);
-					}
+					this.caret.set(node, 0, node, 1);
 				},
 				selectAll: function()
 				{
@@ -7777,10 +7712,7 @@ import jQuery from 'jquery';
 					var node1 = this.$editor.find('span#selection-marker-1');
 					var node2 = this.$editor.find('span#selection-marker-2');
 
-					if (this.utils.browser('mozilla'))
-					{
-						this.$editor.focus();
-					}
+					this.$editor.focus();
 
 					if (node1.length !== 0 && node2.length !== 0)
 					{
@@ -9497,7 +9429,6 @@ import jQuery from 'jquery';
 		            /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
 		            /(msie) ([\w.]+)/.exec( ua ) ||
 		            ua.indexOf("trident") >= 0 && /(rv)(?::| )([\w.]+)/.exec( ua ) ||
-		            ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
 		            [];
 
 					if (browser == 'safari') return (typeof match[3] != 'undefined') ? match[3] == 'safari' : false;

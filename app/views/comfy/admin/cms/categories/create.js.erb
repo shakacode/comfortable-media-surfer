@@ -1,7 +1,19 @@
-$('.categories-widget .editable .categories').append(
-  '<%= escape_javascript(render "show", category: @category) %>'
-);
-$('.categories-widget .read .categories').append(
-  '<%= escape_javascript(render "show", category: @category, read: true) %>'
-);
-$('.categories-widget .editable form#new-category input[name="category[label]"]').val('');
+(function() {
+  // Add to editable categories
+  const editableCategories = document.querySelector('.categories-widget .editable .categories');
+  if (editableCategories) {
+    editableCategories.insertAdjacentHTML('beforeend', '<%= escape_javascript(render "show", category: @category) %>');
+  }
+
+  // Add to read-only categories
+  const readCategories = document.querySelector('.categories-widget .read .categories');
+  if (readCategories) {
+    readCategories.insertAdjacentHTML('beforeend', '<%= escape_javascript(render "show", category: @category, read: true) %>');
+  }
+
+  // Clear the form input
+  const categoryInput = document.querySelector('.categories-widget .editable form#new-category input[name="category[label]"]');
+  if (categoryInput) {
+    categoryInput.value = '';
+  }
+})();
