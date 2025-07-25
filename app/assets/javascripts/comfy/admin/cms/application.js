@@ -15,6 +15,7 @@ import "./diff";
 import "./file_link";
 import "./file_upload";
 import "./files_modal";
+import "./modal";
 import "./page_fragments";
 import "./sortable_list";
 import "./slugify";
