@@ -35,7 +35,7 @@ group :test do
   gem 'ostruct'
   gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop',                  '~> 1.77.0', require: false
+  gem 'rubocop',                  '~> 1.79.1', require: false
   gem 'rubocop-minitest'
   gem 'rubocop-rails'
   gem 'simplecov', '~> 0.22.0', require: false
