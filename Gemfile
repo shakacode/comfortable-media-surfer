@@ -12,7 +12,7 @@ group :development, :test do
   gem 'byebug',             '~> 12.0.0', platforms: %i[mri mingw x64_mingw]
   gem 'gem-release'
   gem 'image_processing',   '>= 1.12.0'
-  gem 'propshaft',          '~> 1.2.1'
+  gem 'propshaft',          '~> 1.3.1'
   gem 'sqlite3',            '>= 2.1'
   # gem 'mysql2',             '~> 0.5'
   # gem 'pg',                 '~> 1.5.4'
