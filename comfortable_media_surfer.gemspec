@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'active_link_to',       '~> 1.0',   '>= 1.0.5'
   spec.add_dependency 'comfy_bootstrap_form', '~> 4.0',   '>= 4.0.0'
-  spec.add_dependency 'haml-rails',           '~> 2.1',   '>= 2.1.0'
+  spec.add_dependency 'haml-rails',           '>= 2.1', '< 4.0'
   spec.add_dependency 'image_processing',     '~> 1.2',   '>= 1.12.2'
   spec.add_dependency 'kaminari',             '~> 1.2',   '>= 1.2.2'
   spec.add_dependency 'kramdown',             '~> 2.4',   '>= 2.4.0'
