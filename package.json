@@ -14,6 +14,7 @@
     "jquery": "3.7.1",
     "plupload": "^2.3.9",
     "popper.js": "^1.16.1",
+    "rhino-editor": "^0.18.0",
     "sass": "^1.83.0",
     "sortablejs": "^1.15.6"
   },
