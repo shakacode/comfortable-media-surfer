@@ -58,8 +58,8 @@ class Comfy::Admin::Cms::FilesController < Comfy::Admin::Cms::BaseController
       @file.category_ids = ids
     end
 
-    # Automatically tagging upload if it's done through redactor
-    if params[:source] == 'redactor'
+    # Automatically tagging upload if it's done through redactor or rhino
+    if params[:source] == 'redactor' || params[:source] == 'rhino'
       category = categories_scope.find_or_create_by(label: 'wysiwyg')
       @file.category_ids = [category.id]
     end
@@ -74,6 +74,11 @@ class Comfy::Admin::Cms::FilesController < Comfy::Admin::Cms::BaseController
         filelink: url_for(@file.attachment),
         filename: @file.attachment.filename
       }
+    when 'rhino'
+      render json: {
+        filelink: url_for(@file.attachment),
+        filename: @file.attachment.filename
+      }
     else
       flash[:success] = I18n.t('comfy.admin.cms.files.created')
       redirect_to action: :edit, id: @file
@@ -82,7 +87,7 @@ class Comfy::Admin::Cms::FilesController < Comfy::Admin::Cms::BaseController
     case params[:source]
     when 'plupload'
       render body: @file.errors.full_messages.to_sentence, status: :unprocessable_entity
-    when 'redactor'
+    when 'redactor', 'rhino'
       render body: nil, status: :unprocessable_entity
     else
       flash.now[:danger] = I18n.t('comfy.admin.cms.files.creation_failure')
@@ -129,11 +134,20 @@ protected
   end
 
   def file_params
-    file = params[:file]
-    unless file.is_a?(Hash) || file.respond_to?(:to_unsafe_hash)
-      params[:file] = {}
-      params[:file][:file] = file
+    # Handle both Rhino/ActionText Direct Upload format (blob) and traditional format (file)
+    if params[:blob].present?
+      # Rhino Editor sends uploads as 'blob' when using data-direct-upload-url
+      { file: params[:blob] }
+    elsif params[:file].present?
+      # Traditional file upload format (Redactor, plupload, etc.)
+      file = params[:file]
+      unless file.is_a?(Hash) || file.respond_to?(:to_unsafe_hash)
+        params[:file] = {}
+        params[:file][:file] = file
+      end
+      params.fetch(:file, {}).permit!
+    else
+      {}
     end
-    params.fetch(:file, {}).permit!
   end
 end
