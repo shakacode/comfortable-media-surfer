@@ -1,0 +1,65 @@
+
+rhino-editor::part(link-dialog__container)
+	display: grid
+	grid-template-columns: 1fr
+	gap: .75rem
+	align-items: stretch
+	min-width: 320px
+	max-width: 640px
+
+rhino-editor::part(link-dialog__input)
+	width: 100%
+
+rhino-editor::part(link-dialog__buttons)
+	display: flex
+	justify-content: flex-end
+	gap: .5rem
+	margin-inline-start: 0
+
+rhino-editor::part(cms-defined-links)
+	margin-top: .5rem
+	padding-top: .5rem
+	border-top: 1px solid rgba(0, 0, 0, .06)
+	font-size: .82rem
+	width: 100%
+
+rhino-editor::part(cms-defined-links__label)
+	font-weight: 600
+	color: #212529
+	margin-bottom: .25rem
+
+rhino-editor::part(cms-defined-links__results)
+	list-style: none
+	margin: 0
+	padding: 0
+	max-height: 9.5rem
+	overflow-y: auto
+	border: 1px solid rgba(0, 0, 0, .08)
+	border-radius: .35rem
+	background: #fff
+
+rhino-editor::part(cms-defined-links__option),
+rhino-editor::part(cms-defined-links__status)
+	padding: .4rem .55rem
+
+rhino-editor::part(cms-defined-links__option)
+	cursor: pointer
+	display: flex
+	flex-direction: column
+	gap: .1rem
+
+rhino-editor::part(cms-defined-links__option:hover),
+rhino-editor::part(cms-defined-links__option)[aria-selected="true"]
+	background: rgba(33, 150, 243, .12)
+
+rhino-editor::part(cms-defined-links__option-name)
+	font-weight: 600
+	color: #1c1f23
+
+rhino-editor::part(cms-defined-links__option-url)
+	font-size: .7rem
+	color: #6c757d
+	word-break: break-all
+
+rhino-editor::part(cms-defined-links__status)
+	color: #6c757d

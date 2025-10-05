@@ -8,7 +8,14 @@
 class ComfortableMediaSurfer::Content::Tags::Wysiwyg < ComfortableMediaSurfer::Content::Tags::Fragment
   def form_field(object_name, view, index)
     name    = "#{object_name}[fragments_attributes][#{index}][content]"
-    options = { id: form_field_id, data: { 'cms-rich-text' => true } }
+    data_attributes = { 'cms-rich-text' => true }
+
+    if context.respond_to?(:site) && (site = context.site).present?
+      data_attributes['defined-links-url'] =
+        view.comfy_admin_cms_site_pages_path(site, source: 'rhino')
+    end
+
+    options = { id: form_field_id, data: data_attributes }
     input   = view.send(:text_area_tag, name, content, options)
     yield input
   end

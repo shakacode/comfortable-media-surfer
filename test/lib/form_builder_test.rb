@@ -273,13 +273,14 @@ class FormBuilderTest < ActionView::TestCase
   def test_fragment_field_for_wysiwyg
     tag = ComfortableMediaSurfer::Content::Tags::Wysiwyg.new(context: @page, params: ['test'])
     actual = @builder.fragment_field(tag, 123)
+    defined_links_url = comfy_admin_cms_site_pages_path(@page.site, source: 'rhino')
     expected = <<~HTML
       <div class="form-group row">
         <label class="renderable-true col-form-label col-sm-2 text-sm-right" for="fragment-test">Test</label>
         <div class="col-sm-10">
           <input autocomplete="off" name="page[fragments_attributes][123][identifier]" type="hidden" value="test"/>
           <input autocomplete="off" name="page[fragments_attributes][123][tag]" type="hidden" value="wysiwyg"/>
-          <textarea data-cms-rich-text="true" id="fragment-test" name="page[fragments_attributes][123][content]"></textarea>
+          <textarea data-cms-rich-text="true" data-defined-links-url="#{defined_links_url}" id="fragment-test" name="page[fragments_attributes][123][content]"></textarea>
         </div>
       </div>
     HTML

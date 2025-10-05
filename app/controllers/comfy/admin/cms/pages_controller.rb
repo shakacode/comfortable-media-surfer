@@ -15,7 +15,7 @@ class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
   def index
     return redirect_to action: :new if site_has_no_pages?
 
-    return index_for_redactor if params[:source] == 'redactor'
+  return index_for_redactor if %w[redactor rhino].include?(params[:source])
 
     @pages_by_parent = pages_grouped_by_parent
 
