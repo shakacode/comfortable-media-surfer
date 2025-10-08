@@ -12,6 +12,7 @@
     "esbuild": "^0.24.0",
     "flatpickr": "^4.6.13",
     "jquery": "3.7.1",
+    "js-beautify": "^1.15.4",
     "plupload": "^2.3.9",
     "popper.js": "^1.16.1",
     "rhino-editor": "^0.18.0",

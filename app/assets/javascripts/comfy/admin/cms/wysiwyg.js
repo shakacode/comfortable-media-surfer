@@ -1,4 +1,14 @@
 import "rhino-editor";
+import CodeMirror from "codemirror";
+import "codemirror/mode/xml/xml";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/css/css";
+import "codemirror/mode/htmlmixed/htmlmixed";
+import "codemirror/addon/edit/closetag";
+import "codemirror/addon/edit/closebrackets";
+import "codemirror/addon/edit/matchtags";
+import "codemirror/addon/selection/active-line";
+import { html as beautifyHtml } from "js-beautify";
 
 const DEBUG_DEFINED_LINKS = (() => {
   if (typeof window === "undefined") return false;
@@ -22,6 +32,19 @@ function debugDefinedLinks(...args) {
 }
 
 const DEFINED_LINKS_CACHE = new Map();
+let SOURCE_DIALOG_COUNTER = 0;
+
+const HTML_FORMAT_OPTIONS = Object.freeze({
+  indent_size: 2,
+  indent_char: " ",
+  indent_with_tabs: false,
+  indent_inner_html: true,
+  preserve_newlines: true,
+  max_preserve_newlines: 2,
+  wrap_line_length: 0,
+  extra_liners: [],
+  end_with_newline: true
+});
 
 class DefinedLinksPicker {
   constructor(adapter, url) {
@@ -538,6 +561,23 @@ class CmsWysiwygAdapter {
     this._definedLinksPicker = null;
     this._loggedMissingShadowRoot = false;
     this._loggedMissingDefinedLinksUrl = false;
+    this._sourceButton = null;
+    this._sourceDialog = null;
+    this._sourceTextarea = null;
+    this._sourceCancelButton = null;
+    this._sourceApplyButton = null;
+    this._sourceCloseButton = null;
+    this._sourceBackdrop = null;
+    this._lastFocusedElement = null;
+    this._sourceFocusables = [];
+    this._isSourceDialogOpen = false;
+    this._sourceDialogKey = ++SOURCE_DIALOG_COUNTER;
+    this._previousBodyOverflow = null;
+    this._sourceEditor = null;
+    this._boundSourceToggle = this._handleSourceToggle.bind(this);
+    this._boundSourceApply = this._handleSourceApply.bind(this);
+    this._boundSourceCancel = this._handleSourceCancel.bind(this);
+    this._boundSourceKeydown = this._handleSourceKeydown.bind(this);
   }
 
   /**
@@ -572,6 +612,7 @@ class CmsWysiwygAdapter {
       this._setupEventListeners();
       this._setupFormSubmitHandler();
       this._decorateLinkDialog();
+      this._setupSourceToggle();
     });
   }
 
@@ -652,6 +693,7 @@ class CmsWysiwygAdapter {
     }
 
     this._definedLinksPicker.observe(shadowRoot);
+    this._setupSourceToggle();
   }
 
   /**
@@ -736,8 +778,403 @@ class CmsWysiwygAdapter {
       this._definedLinksPicker.destroy();
       this._definedLinksPicker = null;
     }
+    this._destroySourceDialog();
     this.editor = null;
     this.rhinoElement = null;
+  }
+
+  _setupSourceToggle() {
+    if (!this.rhinoElement) return;
+
+    if (!this._sourceButton) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "toolbar__button rhino-toolbar-button cms-source-toggle";
+      button.setAttribute("slot", "toolbar-end");
+      button.setAttribute(
+        "part",
+        "toolbar__button toolbar__button--source cms-source-toggle"
+      );
+      button.setAttribute("aria-pressed", "false");
+      button.setAttribute("title", "HTML");
+      button.setAttribute("aria-label", "Edit HTML source");
+      button.innerHTML = `
+        <span class="cms-source-toggle__icon" aria-hidden="true">&lt;/&gt;</span>
+        <span class="cms-source-toggle__label">HTML</span>
+      `;
+      button.addEventListener("click", this._boundSourceToggle);
+      this._sourceButton = button;
+    }
+
+    if (this._sourceButton && !this._sourceButton.isConnected) {
+      this.rhinoElement.appendChild(this._sourceButton);
+    }
+
+    if (!this._sourceDialog) {
+      this._buildSourceDialog();
+    }
+  }
+
+  _ensureSourceEditor() {
+    if (!this._sourceTextarea || this._sourceEditor) return;
+
+    this._sourceEditor = CodeMirror.fromTextArea(this._sourceTextarea, {
+      mode: "htmlmixed",
+      lineNumbers: true,
+      lineWrapping: true,
+      indentUnit: 2,
+      tabSize: 2,
+      indentWithTabs: false,
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      matchTags: { bothTags: true },
+      styleActiveLine: true,
+      viewportMargin: Infinity,
+      extraKeys: {
+        Tab: (cm) => cm.execCommand("insertSoftTab"),
+        "Shift-Tab": (cm) => cm.execCommand("indentLess"),
+        "Ctrl-Enter": () => this._handleSourceApply(),
+        "Cmd-Enter": () => this._handleSourceApply(),
+        "Ctrl-S": () => this._handleSourceApply(),
+        "Cmd-S": () => this._handleSourceApply(),
+        Esc: () => this._closeSourceDialog()
+      }
+    });
+
+    const wrapper = this._sourceEditor.getWrapperElement();
+    if (wrapper) {
+      wrapper.classList.add("cms-source-dialog__codemirror");
+      wrapper.setAttribute("role", "textbox");
+      wrapper.setAttribute("aria-label", "Raw HTML content");
+      wrapper.setAttribute("aria-multiline", "true");
+      wrapper.setAttribute("tabindex", "0");
+    }
+
+    this._sourceEditor.on("keydown", (cm, event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key?.toLowerCase() === "enter") {
+        event.preventDefault();
+        this._handleSourceApply(event);
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        this._closeSourceDialog();
+      }
+    });
+
+    requestAnimationFrame(() => {
+      this._sourceEditor?.refresh();
+    });
+  }
+
+  _focusSourceEditor({ toDocumentEnd = true } = {}) {
+    if (this._sourceEditor) {
+      const doc = this._sourceEditor.getDoc();
+      if (toDocumentEnd) {
+        const lastLine = doc.lastLine();
+        const lastCh = doc.getLine(lastLine).length;
+        doc.setCursor({ line: lastLine, ch: lastCh });
+      }
+      this._sourceEditor.focus();
+      return;
+    }
+
+    if (this._sourceTextarea) {
+      const length = this._sourceTextarea.value.length;
+      this._sourceTextarea.focus();
+      this._sourceTextarea.setSelectionRange(length, length);
+    }
+  }
+
+  _getSourceContent() {
+    if (this._sourceEditor) {
+      return this._sourceEditor.getValue();
+    }
+    return this._sourceTextarea?.value ?? "";
+  }
+
+  _formatHtml(html) {
+    const raw = typeof html === "string" ? html : "";
+    if (!raw.trim()) {
+      return raw;
+    }
+
+    try {
+      return beautifyHtml(raw, HTML_FORMAT_OPTIONS);
+    } catch (error) {
+      console.error("CMS HTML formatting failed", error);
+      return raw;
+    }
+  }
+
+  _buildSourceDialog() {
+    const dialogId = `cms-source-dialog-${this._sourceDialogKey}`;
+    const titleId = `${dialogId}-title`;
+
+    const dialog = document.createElement("div");
+    dialog.className = "cms-source-dialog";
+    dialog.hidden = true;
+    dialog.setAttribute("aria-hidden", "true");
+    dialog.setAttribute("aria-modal", "true");
+    dialog.setAttribute("role", "dialog");
+    dialog.setAttribute("aria-labelledby", titleId);
+
+    const backdrop = document.createElement("div");
+    backdrop.className = "cms-source-dialog__backdrop";
+    backdrop.addEventListener("click", this._boundSourceCancel);
+
+    const surface = document.createElement("div");
+    surface.className = "cms-source-dialog__surface";
+    surface.setAttribute("role", "document");
+
+    const header = document.createElement("header");
+    header.className = "cms-source-dialog__header";
+
+    const title = document.createElement("h2");
+    title.className = "cms-source-dialog__title";
+    title.id = titleId;
+    title.textContent = "HTML source";
+
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "cms-source-dialog__close";
+    closeButton.setAttribute("aria-label", "Close HTML source editor");
+    closeButton.innerHTML = "×";
+    closeButton.addEventListener("click", this._boundSourceCancel);
+
+    header.append(title, closeButton);
+
+    const body = document.createElement("div");
+    body.className = "cms-source-dialog__body";
+
+    const textarea = document.createElement("textarea");
+    textarea.className = "cms-source-dialog__textarea";
+    textarea.spellcheck = false;
+    textarea.setAttribute("aria-label", "Raw HTML content");
+
+    body.appendChild(textarea);
+
+    const footer = document.createElement("footer");
+    footer.className = "cms-source-dialog__footer";
+
+    const cancelButton = document.createElement("button");
+    cancelButton.type = "button";
+    cancelButton.className = "cms-source-dialog__button cms-source-dialog__button--cancel";
+    cancelButton.textContent = "Cancel";
+    cancelButton.addEventListener("click", this._boundSourceCancel);
+
+    const applyButton = document.createElement("button");
+    applyButton.type = "button";
+    applyButton.className = "cms-source-dialog__button cms-source-dialog__button--apply";
+    applyButton.textContent = "Apply";
+    applyButton.addEventListener("click", this._boundSourceApply);
+
+    footer.append(cancelButton, applyButton);
+
+    surface.append(header, body, footer);
+    dialog.append(backdrop, surface);
+    dialog.addEventListener("keydown", this._boundSourceKeydown);
+
+    (document.body || document.documentElement).appendChild(dialog);
+
+    this._sourceDialog = dialog;
+    this._sourceTextarea = textarea;
+    this._sourceApplyButton = applyButton;
+    this._sourceCancelButton = cancelButton;
+    this._sourceCloseButton = closeButton;
+    this._sourceBackdrop = backdrop;
+  }
+
+  _handleSourceToggle() {
+    if (this._isSourceDialogOpen) {
+      this._closeSourceDialog();
+    } else {
+      this._openSourceDialog();
+    }
+  }
+
+  _openSourceDialog() {
+    if (!this._sourceDialog || !this._sourceTextarea) {
+      this._buildSourceDialog();
+    }
+    if (!this._sourceDialog || !this._sourceTextarea) return;
+
+    this._ensureSourceEditor();
+
+    const currentHtml = this.getHtml();
+    const formattedHtml = this._formatHtml(currentHtml);
+    const htmlForEditor = formattedHtml || currentHtml;
+    if (this._sourceEditor) {
+      const doc = this._sourceEditor.getDoc();
+      const cursor = doc.getCursor();
+      doc.setValue(htmlForEditor);
+      const lastLine = doc.lastLine();
+      const lastCh = doc.getLine(lastLine).length;
+      doc.setCursor(cursor && typeof cursor.line === "number" ? cursor : { line: lastLine, ch: lastCh });
+      this._sourceEditor.refresh();
+    } else {
+      this._sourceTextarea.value = htmlForEditor;
+    }
+
+    this._sourceDialog.hidden = false;
+    this._sourceDialog.setAttribute("aria-hidden", "false");
+    this._sourceDialog.classList.add("is-open");
+    this._isSourceDialogOpen = true;
+    this._updateSourceButtonState(true);
+
+    if (document?.body) {
+      this._previousBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+    }
+
+    const editorWrapper = this._sourceEditor?.getWrapperElement();
+    this._sourceFocusables = [
+      editorWrapper,
+      this._sourceCancelButton,
+      this._sourceApplyButton,
+      this._sourceCloseButton
+    ].filter((element) => element instanceof HTMLElement);
+
+    this._lastFocusedElement = document.activeElement;
+    requestAnimationFrame(() => {
+      this._focusSourceEditor();
+    });
+  }
+
+  _closeSourceDialog({ restoreFocus = true } = {}) {
+    if (!this._sourceDialog) return;
+    this._sourceDialog.hidden = true;
+    this._sourceDialog.setAttribute("aria-hidden", "true");
+    this._sourceDialog.classList.remove("is-open");
+    this._isSourceDialogOpen = false;
+    this._updateSourceButtonState(false);
+    this._sourceFocusables = [];
+
+    if (document?.body && this._previousBodyOverflow !== null) {
+      document.body.style.overflow = this._previousBodyOverflow;
+      this._previousBodyOverflow = null;
+    }
+
+    if (restoreFocus && this._lastFocusedElement instanceof HTMLElement) {
+      requestAnimationFrame(() => {
+        this._lastFocusedElement?.focus?.();
+      });
+    }
+  }
+
+  _handleSourceApply(event) {
+    event?.preventDefault?.();
+    const rawHtml = this._getSourceContent();
+    const nextHtml = this._formatHtml(rawHtml);
+    this.setHtml(nextHtml);
+    this.focus();
+    this._closeSourceDialog();
+  }
+
+  _handleSourceCancel(event) {
+    event?.preventDefault?.();
+    this._closeSourceDialog();
+  }
+
+  _handleSourceKeydown(event) {
+    if (!this._isSourceDialogOpen) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      this._closeSourceDialog();
+      return;
+    }
+
+    if ((event.metaKey || event.ctrlKey) && event.key?.toLowerCase() === "enter") {
+      event.preventDefault();
+      this._handleSourceApply(event);
+      return;
+    }
+
+    if (event.key === "Tab" && this._sourceFocusables.length) {
+      const focusables = this._sourceFocusables.filter(
+        (element) =>
+          element instanceof HTMLElement && !element.hasAttribute("disabled")
+      );
+      if (!focusables.length) return;
+      const activeElement = document.activeElement;
+      let currentIndex = focusables.indexOf(activeElement);
+      if (currentIndex === -1) {
+        currentIndex = event.shiftKey ? 0 : focusables.length - 1;
+      }
+      let nextIndex = currentIndex;
+      if (event.shiftKey) {
+        nextIndex = currentIndex <= 0 ? focusables.length - 1 : currentIndex - 1;
+      } else {
+        nextIndex = currentIndex >= focusables.length - 1 ? 0 : currentIndex + 1;
+      }
+      event.preventDefault();
+      const nextElement = focusables[nextIndex];
+      if (this._sourceEditor && nextElement === this._sourceEditor.getWrapperElement()) {
+        this._focusSourceEditor({ toDocumentEnd: false });
+      } else {
+        nextElement?.focus?.();
+      }
+    }
+  }
+
+  _updateSourceButtonState(isOpen) {
+    if (!this._sourceButton) return;
+    this._sourceButton.setAttribute("aria-pressed", isOpen ? "true" : "false");
+    this._sourceButton.classList.toggle("is-active", Boolean(isOpen));
+    this._sourceButton.classList.toggle(
+      "toolbar__button--active",
+      Boolean(isOpen)
+    );
+  }
+
+  _destroySourceDialog() {
+    if (this._sourceButton) {
+      this._sourceButton.removeEventListener("click", this._boundSourceToggle);
+      if (this._sourceButton.isConnected) {
+        this._sourceButton.remove();
+      }
+      this._sourceButton = null;
+    }
+
+    if (this._isSourceDialogOpen) {
+      this._closeSourceDialog({ restoreFocus: false });
+    } else if (document?.body && this._previousBodyOverflow !== null) {
+      document.body.style.overflow = this._previousBodyOverflow;
+      this._previousBodyOverflow = null;
+    }
+
+    if (!this._sourceDialog) return;
+
+    this._sourceDialog.removeEventListener("keydown", this._boundSourceKeydown);
+    if (this._sourceBackdrop) {
+      this._sourceBackdrop.removeEventListener("click", this._boundSourceCancel);
+    }
+    if (this._sourceCancelButton) {
+      this._sourceCancelButton.removeEventListener("click", this._boundSourceCancel);
+    }
+    if (this._sourceApplyButton) {
+      this._sourceApplyButton.removeEventListener("click", this._boundSourceApply);
+    }
+    if (this._sourceCloseButton) {
+      this._sourceCloseButton.removeEventListener("click", this._boundSourceCancel);
+    }
+
+    if (this._sourceEditor) {
+      this._sourceEditor.toTextArea();
+      this._sourceEditor = null;
+    }
+
+    if (this._sourceDialog.isConnected) {
+      this._sourceDialog.remove();
+    }
+
+    this._sourceDialog = null;
+    this._sourceTextarea = null;
+    this._sourceCancelButton = null;
+    this._sourceApplyButton = null;
+    this._sourceCloseButton = null;
+    this._sourceBackdrop = null;
+    this._sourceFocusables = [];
+    this._isSourceDialogOpen = false;
+    this._lastFocusedElement = null;
   }
 }
 
