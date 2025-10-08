@@ -12,6 +12,7 @@ import { html as beautifyHtml } from "js-beautify";
 import TableOfContents from "@tiptap/extension-table-of-contents";
 import CmsTableOfContentsNode from "./extensions/table_of_contents";
 import IframeExtension from "./extensions/iframe";
+import ResizableImage from "./extensions/resizable_image";
 
 const DEBUG_DEFINED_LINKS = (() => {
   if (typeof window === "undefined") return false;
@@ -585,6 +586,13 @@ class CmsWysiwygAdapter {
   	this._lastRenderedTocItems = "[]";
     this._tocToggleButton = null;
     this._boundTocToggle = this._handleTocToggle.bind(this);
+    this._imageResizeControls = null;
+    this._imageResetButton = null;
+    this._imageAspectRatioButton = null;
+    this._boundImageReset = this._handleImageReset.bind(this);
+    this._boundImageAspectRatioToggle = this._handleImageAspectRatioToggle.bind(this);
+    this._boundRhinoUpdate = this._handleRhinoUpdate.bind(this);
+    this._isReplacingAttachments = false;
   }
 
   /**
@@ -593,6 +601,7 @@ class CmsWysiwygAdapter {
   mount() {
     // Create rhino-editor element
     this.rhinoElement = document.createElement("rhino-editor");
+  	this.rhinoElement.addEventListener("rhino-update", this._boundRhinoUpdate);
 
     const tableOfContentsExtension = TableOfContents.configure({
       onUpdate: (items = []) => {
@@ -600,10 +609,17 @@ class CmsWysiwygAdapter {
       }
     });
 
+    // Configure Rhino to exclude default Image extension, then add our resizable version
+    // We need to set this BEFORE the editor initializes
+    this.rhinoElement.starterKitOptions = {
+      image: false  // Disable default image extension
+    };
+
     this.rhinoElement.addExtensions(
       IframeExtension,
       tableOfContentsExtension,
-      CmsTableOfContentsNode
+      CmsTableOfContentsNode,
+      ResizableImage
     );
 
     // Configure for native ActiveStorage Direct Upload
@@ -633,6 +649,8 @@ class CmsWysiwygAdapter {
       this._decorateLinkDialog();
       this._setupSourceToggle();
       this._setupTocToggle();
+      this._setupImageResizeControls();
+  		this._replaceAttachmentFiguresWithImages();
       const existingToc = this._findTocNode();
       if (existingToc?.node?.attrs?.items) {
         const itemsAttr = existingToc.node.attrs.items;
@@ -800,6 +818,113 @@ class CmsWysiwygAdapter {
   }
 
   /**
+   * Set up image resize controls in toolbar
+   */
+  _setupImageResizeControls() {
+    if (!this.rhinoElement) return;
+
+    // Create reset button
+    if (!this._imageResetButton) {
+      const resetButton = document.createElement("button");
+      resetButton.type = "button";
+      resetButton.className = "toolbar__button rhino-toolbar-button cms-image-reset";
+      resetButton.setAttribute("slot", "toolbar-end");
+      resetButton.setAttribute("part", "toolbar__button toolbar__button--image-reset cms-image-reset");
+      resetButton.setAttribute("title", "Reset image to original size");
+      resetButton.setAttribute("aria-label", "Reset image to original size");
+      resetButton.style.display = "none"; // Hidden by default
+      resetButton.innerHTML = `
+        <span class="cms-image-reset__icon" aria-hidden="true">↻</span>
+        <span class="cms-image-reset__label">Reset</span>
+      `;
+      resetButton.addEventListener("click", this._boundImageReset);
+      this._imageResetButton = resetButton;
+    }
+
+    // Create aspect ratio toggle button
+    if (!this._imageAspectRatioButton) {
+      const aspectButton = document.createElement("button");
+      aspectButton.type = "button";
+      aspectButton.className = "toolbar__button rhino-toolbar-button cms-image-aspect-ratio";
+      aspectButton.setAttribute("slot", "toolbar-end");
+      aspectButton.setAttribute("part", "toolbar__button toolbar__button--image-aspect-ratio cms-image-aspect-ratio");
+      aspectButton.setAttribute("aria-pressed", "true"); // Default: locked
+      aspectButton.setAttribute("title", "Toggle aspect ratio lock");
+      aspectButton.setAttribute("aria-label", "Toggle aspect ratio lock");
+      aspectButton.style.display = "none"; // Hidden by default
+      aspectButton.innerHTML = `
+        <span class="cms-image-aspect-ratio__icon" aria-hidden="true">🔒</span>
+        <span class="cms-image-aspect-ratio__label">Lock</span>
+      `;
+      aspectButton.addEventListener("click", this._boundImageAspectRatioToggle);
+      this._imageAspectRatioButton = aspectButton;
+    }
+
+    // Append buttons to toolbar
+    if (this._imageResetButton && !this._imageResetButton.isConnected) {
+      this.rhinoElement.appendChild(this._imageResetButton);
+    }
+    if (this._imageAspectRatioButton && !this._imageAspectRatioButton.isConnected) {
+      this.rhinoElement.appendChild(this._imageAspectRatioButton);
+    }
+
+    // Listen for selection changes to show/hide controls
+    this.editor.on('selectionUpdate', () => {
+      this._updateImageResizeControlsVisibility();
+    });
+  }
+
+  /**
+   * Update visibility of image resize controls based on selection
+   */
+  _updateImageResizeControlsVisibility() {
+    if (!this.editor || !this._imageResetButton || !this._imageAspectRatioButton) return;
+
+    const { selection } = this.editor.state;
+    const node = this.editor.state.doc.nodeAt(selection.from);
+    const isImageSelected = node && node.type.name === 'image';
+
+    // Show/hide buttons based on selection
+    this._imageResetButton.style.display = isImageSelected ? '' : 'none';
+    this._imageAspectRatioButton.style.display = isImageSelected ? '' : 'none';
+
+    // Update aspect ratio button state
+    if (isImageSelected && node.attrs.aspectRatioLocked !== undefined) {
+      const isLocked = node.attrs.aspectRatioLocked !== false;
+      this._imageAspectRatioButton.setAttribute('aria-pressed', isLocked ? 'true' : 'false');
+      this._imageAspectRatioButton.classList.toggle('is-active', isLocked);
+
+      const icon = this._imageAspectRatioButton.querySelector('.cms-image-aspect-ratio__icon');
+      const label = this._imageAspectRatioButton.querySelector('.cms-image-aspect-ratio__label');
+      if (icon) icon.textContent = isLocked ? '🔒' : '🔓';
+      if (label) label.textContent = isLocked ? 'Lock' : 'Unlock';
+    }
+  }
+
+  /**
+   * Handle reset button click
+   */
+  _handleImageReset(event) {
+    event?.preventDefault?.();
+    if (!this.editor) return;
+
+    this.editor.commands.resetImageSize();
+    this.editor.commands.focus();
+  }
+
+  /**
+   * Handle aspect ratio toggle button click
+   */
+  _handleImageAspectRatioToggle(event) {
+    event?.preventDefault?.();
+    if (!this.editor) return;
+
+    this.editor.commands.toggleImageAspectRatio();
+    this._updateImageResizeControlsVisibility();
+    this.editor.commands.focus();
+  }
+
+  /**
    * Destroy the editor instance
    */
   destroy() {
@@ -807,6 +932,7 @@ class CmsWysiwygAdapter {
       this.editor.destroy();
     }
     if (this.rhinoElement) {
+      this.rhinoElement.removeEventListener("rhino-update", this._boundRhinoUpdate);
       this.rhinoElement.remove();
     }
     if (this.textarea) {
@@ -821,11 +947,98 @@ class CmsWysiwygAdapter {
       this._tocToggleButton.remove();
       this._tocToggleButton = null;
     }
+    if (this._imageResetButton) {
+      this._imageResetButton.removeEventListener("click", this._boundImageReset);
+      this._imageResetButton.remove();
+      this._imageResetButton = null;
+    }
+    if (this._imageAspectRatioButton) {
+      this._imageAspectRatioButton.removeEventListener("click", this._boundImageAspectRatioToggle);
+      this._imageAspectRatioButton.remove();
+      this._imageAspectRatioButton = null;
+    }
     this._destroySourceDialog();
     this.editor = null;
     this.rhinoElement = null;
     this._tocItems = [];
     this._lastRenderedTocItems = "[]";
+  }
+
+  _handleRhinoUpdate() {
+    this._replaceAttachmentFiguresWithImages();
+  }
+
+  _parseDimension(value) {
+    if (value == null || value === "") return null;
+    const numeric = Number.parseInt(value, 10);
+    return Number.isFinite(numeric) ? numeric : null;
+  }
+
+  _replaceAttachmentFiguresWithImages() {
+    if (this._isReplacingAttachments) return;
+    if (!this.editor) return;
+
+    const { state, schema, view } = this.editor;
+    if (!schema?.nodes?.image) return;
+
+    const attachmentTypes = new Set(["attachment-figure", "previewable-attachment-figure"]);
+    let tr = state.tr;
+    let modified = false;
+
+    this._isReplacingAttachments = true;
+
+    try {
+      state.doc.descendants((node, pos) => {
+        if (!attachmentTypes.has(node.type.name)) {
+          return;
+        }
+
+        const contentType = node.attrs?.contentType || "";
+        const isImageType = typeof contentType === "string" && contentType.startsWith("image/");
+
+        const candidateSources = [node.attrs?.url, node.attrs?.src].filter((value) => typeof value === "string");
+        const resolvedSrc = candidateSources.find((value) => {
+          if (!value) return false;
+          const trimmed = value.trim();
+          if (!trimmed) return false;
+          if (trimmed.startsWith("blob:")) return false;
+          return true;
+        });
+
+        if (!resolvedSrc) {
+          return;
+        }
+
+        if (!isImageType && !node.attrs?.previewable) {
+          return;
+        }
+
+        const width = this._parseDimension(node.attrs?.width);
+        const height = this._parseDimension(node.attrs?.height);
+
+        const imageNode = schema.nodes.image.create({
+          src: resolvedSrc,
+          alt: node.attrs?.alt || "",
+          width,
+          height,
+          originalWidth: width,
+          originalHeight: height,
+          aspectRatioLocked: true,
+        });
+
+        tr = tr.replaceWith(pos, pos + node.nodeSize, imageNode);
+        modified = true;
+
+        return false;
+      });
+
+      if (modified) {
+        tr.setMeta("addToHistory", false);
+        view.dispatch(tr);
+      }
+    } finally {
+      this._isReplacingAttachments = false;
+    }
   }
 
   _setupSourceToggle() {
