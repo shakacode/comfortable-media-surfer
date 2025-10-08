@@ -9,6 +9,7 @@ import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/matchtags";
 import "codemirror/addon/selection/active-line";
 import { html as beautifyHtml } from "js-beautify";
+import IframeExtension from "./extensions/iframe";
 
 const DEBUG_DEFINED_LINKS = (() => {
   if (typeof window === "undefined") return false;
@@ -586,6 +587,8 @@ class CmsWysiwygAdapter {
   mount() {
     // Create rhino-editor element
     this.rhinoElement = document.createElement("rhino-editor");
+
+    this.rhinoElement.addExtensions(IframeExtension);
 
     // Configure for native ActiveStorage Direct Upload
     this.rhinoElement.setAttribute('data-blob-url-template',
