@@ -87,6 +87,101 @@ rhino-editor::part(cms-defined-links__status)
 .cms-source-toggle.is-active
 	color: #1c1f23
 
+.cms-toc-toggle
+	display: inline-flex
+	align-items: center
+	gap: .4rem
+	font-size: .75rem
+	font-weight: 600
+	text-transform: uppercase
+	letter-spacing: .04em
+	padding-inline: .6rem
+	padding-block: .35rem
+	border-radius: .35rem
+	transition: background-color .15s ease, color .15s ease
+
+.cms-toc-toggle__icon
+	font-size: .8rem
+	line-height: 1
+
+.cms-toc-toggle:hover,
+.cms-toc-toggle:focus
+	background: rgba(33, 150, 243, .12)
+	color: #0d47a1
+
+.cms-toc-toggle.is-active
+	color: #0d47a1
+	background: rgba(33, 150, 243, .18)
+
+.cms-toc-toggle[data-empty]
+	opacity: .8
+
+.cms-toc-block
+	border: 1px dashed rgba(33, 150, 243, .45)
+	background: rgba(33, 150, 243, .08)
+	border-radius: .6rem
+	padding: 1rem
+	margin: 1.25rem 0
+	font-size: .95rem
+	color: #1c1f23
+
+.cms-toc-block__title
+	margin: 0 0 .75rem
+	font-size: .95rem
+	font-weight: 600
+	color: #0d47a1
+
+.cms-toc-block__list
+	list-style: none
+	margin: 0
+	padding-left: 0
+	display: flex
+	flex-direction: column
+	gap: .2rem
+
+.cms-toc-block__list--depth-1
+	gap: .35rem
+
+.cms-toc-block__list--depth-2
+	margin-left: 1.25rem
+	padding-left: .25rem
+	gap: .25rem
+
+.cms-toc-block__item
+	margin: 0
+
+.cms-toc-block__item--level-1 > .cms-toc-block__link
+	font-weight: 600
+
+.cms-toc-block__link
+	display: inline-flex
+	align-items: baseline
+	gap: .35rem
+	padding: .2rem .35rem
+	border-radius: .35rem
+	color: #0d47a1
+	text-decoration: none
+	transition: background-color .12s ease, color .12s ease
+
+.cms-toc-block__link:hover,
+.cms-toc-block__link:focus
+	background: rgba(13, 71, 161, .12)
+	color: #0d47a1
+	text-decoration: underline
+
+.cms-toc-block__item.is-active > .cms-toc-block__link
+	background: rgba(13, 71, 161, .18)
+	color: #0d47a1
+
+.cms-toc-block__item.is-scrolled > .cms-toc-block__link
+	opacity: .75
+
+.cms-toc-block__empty
+	margin: 0
+	font-size: .9rem
+	color: #546e7a
+
+
 .cms-source-dialog
 	position: fixed
 	inset: 0

@@ -9,6 +9,8 @@ import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/matchtags";
 import "codemirror/addon/selection/active-line";
 import { html as beautifyHtml } from "js-beautify";
+import TableOfContents from "@tiptap/extension-table-of-contents";
+import CmsTableOfContentsNode from "./extensions/table_of_contents";
 import IframeExtension from "./extensions/iframe";
 
 const DEBUG_DEFINED_LINKS = (() => {
@@ -579,6 +581,10 @@ class CmsWysiwygAdapter {
     this._boundSourceApply = this._handleSourceApply.bind(this);
     this._boundSourceCancel = this._handleSourceCancel.bind(this);
     this._boundSourceKeydown = this._handleSourceKeydown.bind(this);
+  	this._tocItems = [];
+  	this._lastRenderedTocItems = "[]";
+    this._tocToggleButton = null;
+    this._boundTocToggle = this._handleTocToggle.bind(this);
   }
 
   /**
@@ -588,7 +594,17 @@ class CmsWysiwygAdapter {
     // Create rhino-editor element
     this.rhinoElement = document.createElement("rhino-editor");
 
-    this.rhinoElement.addExtensions(IframeExtension);
+    const tableOfContentsExtension = TableOfContents.configure({
+      onUpdate: (items = []) => {
+        this._handleTocUpdate(items);
+      }
+    });
+
+    this.rhinoElement.addExtensions(
+      IframeExtension,
+      tableOfContentsExtension,
+      CmsTableOfContentsNode
+    );
 
     // Configure for native ActiveStorage Direct Upload
     this.rhinoElement.setAttribute('data-blob-url-template',
@@ -616,6 +632,25 @@ class CmsWysiwygAdapter {
       this._setupFormSubmitHandler();
       this._decorateLinkDialog();
       this._setupSourceToggle();
+      this._setupTocToggle();
+      const existingToc = this._findTocNode();
+      if (existingToc?.node?.attrs?.items) {
+        const itemsAttr = existingToc.node.attrs.items;
+        this._lastRenderedTocItems = itemsAttr;
+        try {
+          const parsed = JSON.parse(itemsAttr);
+          this._tocItems = Array.isArray(parsed) ? parsed : [];
+        } catch (_error) {
+          this._tocItems = [];
+        }
+      } else {
+        this._tocItems = [];
+        this._lastRenderedTocItems = "[]";
+      }
+      this._updateTocButtonState();
+      if (this.editor?.commands?.updateTableOfContents) {
+        this.editor.commands.updateTableOfContents();
+      }
     });
   }
 
@@ -781,9 +816,16 @@ class CmsWysiwygAdapter {
       this._definedLinksPicker.destroy();
       this._definedLinksPicker = null;
     }
+    if (this._tocToggleButton) {
+      this._tocToggleButton.removeEventListener("click", this._boundTocToggle);
+      this._tocToggleButton.remove();
+      this._tocToggleButton = null;
+    }
     this._destroySourceDialog();
     this.editor = null;
     this.rhinoElement = null;
+    this._tocItems = [];
+    this._lastRenderedTocItems = "[]";
   }
 
   _setupSourceToggle() {
@@ -802,7 +844,6 @@ class CmsWysiwygAdapter {
       button.setAttribute("title", "HTML");
       button.setAttribute("aria-label", "Edit HTML source");
       button.innerHTML = `
-        <span class="cms-source-toggle__icon" aria-hidden="true">&lt;/&gt;</span>
         <span class="cms-source-toggle__label">HTML</span>
       `;
       button.addEventListener("click", this._boundSourceToggle);
@@ -816,6 +857,184 @@ class CmsWysiwygAdapter {
     if (!this._sourceDialog) {
       this._buildSourceDialog();
     }
+  }
+
+  _setupTocToggle() {
+    if (!this.rhinoElement) return;
+
+    if (!this._tocToggleButton) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "toolbar__button rhino-toolbar-button cms-toc-toggle";
+      button.setAttribute("slot", "toolbar-end");
+      button.setAttribute(
+        "part",
+        "toolbar__button toolbar__button--toc cms-toc-toggle"
+      );
+      button.setAttribute("aria-pressed", "false");
+      button.setAttribute("title", "Toggle table of contents");
+      button.setAttribute("aria-label", "Toggle table of contents");
+      button.innerHTML = `
+        <span class="cms-toc-toggle__icon" aria-hidden="true">☰</span>
+        <span class="cms-toc-toggle__label">ToC</span>
+      `;
+      button.addEventListener("click", this._boundTocToggle);
+      this._tocToggleButton = button;
+    }
+
+    if (this._tocToggleButton && !this._tocToggleButton.isConnected) {
+      this.rhinoElement.appendChild(this._tocToggleButton);
+    }
+
+    this._updateTocButtonState();
+  }
+
+  _handleTocToggle(event) {
+    event?.preventDefault?.();
+    if (!this.editor) return;
+
+    const existing = this._findTocNode();
+    if (existing) {
+      this.editor.chain().focus().deleteRange({
+        from: existing.pos,
+        to: existing.pos + existing.node.nodeSize
+      }).run();
+      this._updateTocButtonState();
+      return;
+    }
+
+    const tocType = this.editor.schema?.nodes?.cmsTableOfContents;
+    if (!tocType) return;
+
+    const attrs = {
+      items: this._lastRenderedTocItems || "[]"
+    };
+
+    const { tr } = this.editor.state;
+    tr.insert(0, tocType.create(attrs));
+    tr.setMeta("toc", true);
+    this.editor.view.dispatch(tr);
+
+    if (typeof this.editor.commands.updateTableOfContents === "function") {
+      this.editor.commands.updateTableOfContents();
+    }
+
+    this._updateTocButtonState();
+  }
+
+  _updateTocButtonState() {
+    if (!this._tocToggleButton) return;
+
+    const hasNode = this._hasTocNode();
+    this._tocToggleButton.setAttribute("aria-pressed", hasNode ? "true" : "false");
+    this._tocToggleButton.classList.toggle("is-active", hasNode);
+
+    const hasHeadings = Array.isArray(this._tocItems) && this._tocItems.length > 0;
+    this._tocToggleButton.toggleAttribute("data-empty", !hasHeadings);
+    this._tocToggleButton.disabled = false;
+    this._tocToggleButton.setAttribute("aria-disabled", "false");
+
+    if (!hasHeadings && !hasNode) {
+      this._tocToggleButton.setAttribute(
+        "title",
+        "Add headings to generate a table of contents"
+      );
+    } else {
+      this._tocToggleButton.setAttribute("title", hasNode ? "Remove table of contents" : "Insert table of contents");
+    }
+
+    const label = this._tocToggleButton.getAttribute("title") || "Toggle table of contents";
+    this._tocToggleButton.setAttribute("aria-label", label);
+  }
+
+  _hasTocNode() {
+    return Boolean(this._findTocNode());
+  }
+
+  _findTocNode() {
+    if (!this.editor) return null;
+    const tocType = this.editor.schema?.nodes?.cmsTableOfContents;
+    if (!tocType) return null;
+
+    let result = null;
+    this.editor.state.doc.descendants((node, pos) => {
+      if (result) return false;
+      if (node.type === tocType) {
+        result = { node, pos };
+        return false;
+      }
+      return true;
+    });
+    return result;
+  }
+
+  _handleTocUpdate(rawItems = []) {
+    const normalized = this._normalizeTocItems(rawItems);
+    this._tocItems = normalized;
+    const serialized = JSON.stringify(normalized);
+
+    if (serialized !== this._lastRenderedTocItems) {
+      this._lastRenderedTocItems = serialized;
+      this._syncTocNode(serialized);
+    }
+
+    this._updateTocButtonState();
+  }
+
+  _normalizeTocItems(rawItems) {
+    if (!Array.isArray(rawItems)) return [];
+
+    const roots = [];
+    const stack = [];
+
+    rawItems.forEach((raw) => {
+      if (!raw || typeof raw !== "object") return;
+
+      const hierarchicalLevel = Number.isInteger(raw.level) ? raw.level : 1;
+      const actualLevel = Number.isInteger(raw.originalLevel)
+        ? raw.originalLevel
+        : hierarchicalLevel;
+      const depth = Math.max(1, hierarchicalLevel);
+      const item = {
+        id: typeof raw.id === "string" && raw.id.length ? raw.id : null,
+        text: (raw.textContent || "").trim() || "Untitled section",
+        level: Math.max(1, actualLevel || 1),
+        depth,
+        isActive: Boolean(raw.isActive),
+        isScrolled: Boolean(raw.isScrolledOver || raw.isScrolled),
+        children: []
+      };
+
+      while (stack.length && stack[stack.length - 1].depth >= depth) {
+        stack.pop();
+      }
+
+      if (stack.length === 0) {
+        roots.push(item);
+      } else {
+        stack[stack.length - 1].children.push(item);
+      }
+
+      stack.push(item);
+    });
+
+    return roots;
+  }
+
+  _syncTocNode(serializedItems = "[]") {
+    if (!this.editor) return;
+
+    const tocEntry = this._findTocNode();
+    if (!tocEntry) return;
+
+    const { node, pos } = tocEntry;
+    if (node.attrs?.items === serializedItems) return;
+
+    const attrs = { ...node.attrs, items: serializedItems };
+    const tr = this.editor.state.tr.setNodeMarkup(pos, undefined, attrs);
+    tr.setMeta("toc", true);
+    tr.setMeta("addToHistory", false);
+    this.editor.view.dispatch(tr);
   }
 
   _ensureSourceEditor() {
