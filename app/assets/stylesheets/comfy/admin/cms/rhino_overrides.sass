@@ -63,3 +63,198 @@ rhino-editor::part(cms-defined-links__option-url)
 
 rhino-editor::part(cms-defined-links__status)
 	color: #6c757d
+
+.cms-source-toggle
+	display: inline-flex
+	align-items: center
+	gap: .35rem
+	font-size: .75rem
+	font-weight: 600
+	text-transform: uppercase
+	letter-spacing: .04em
+	padding-inline: .6rem
+	padding-block: .35rem
+	border-radius: .35rem
+	transition: background-color .15s ease, color .15s ease
+
+.cms-source-toggle__icon
+	font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+	font-size: .75rem
+	line-height: 1
+
+.cms-source-toggle.is-active
+	color: #1c1f23
+
+.cms-source-dialog
+	position: fixed
+	inset: 0
+	z-index: 1050
+	display: flex
+	align-items: center
+	justify-content: center
+	padding: 2rem
+	transition: opacity .18s ease
+
+.cms-source-dialog:not(.is-open)
+	opacity: 0
+	pointer-events: none
+
+.cms-source-dialog.is-open
+	opacity: 1
+
+.cms-source-dialog__backdrop
+	position: absolute
+	inset: 0
+	background: rgba(0, 0, 0, .45)
+
+.cms-source-dialog__surface
+	position: relative
+	z-index: 1
+	display: flex
+	flex-direction: column
+	width: min(920px, 95vw)
+	max-height: 90vh
+	background: #fff
+	border-radius: .5rem
+	box-shadow: 0 20px 45px rgba(0, 0, 0, .22)
+	overflow-y: auto
+
+.cms-source-dialog__header
+	display: flex
+	align-items: center
+	justify-content: space-between
+	gap: 1rem
+	padding: 1rem 1.25rem
+	border-bottom: 1px solid rgba(0, 0, 0, .08)
+
+.cms-source-dialog__title
+	margin: 0
+	font-size: 1rem
+	font-weight: 600
+	color: #1c1f23
+
+.cms-source-dialog__close
+	border: none
+	background: none
+	font-size: 1.5rem
+	line-height: 1
+	cursor: pointer
+	color: #6c757d
+	padding: .25rem .5rem
+	border-radius: .35rem
+	transition: background-color .15s ease, color .15s ease
+
+.cms-source-dialog__close:hover,
+.cms-source-dialog__close:focus
+	background: rgba(33, 150, 243, .12)
+	color: #2196f3
+
+.cms-source-dialog__close:focus
+	outline: 2px solid rgba(33, 150, 243, .35)
+	outline-offset: 2px
+
+.cms-source-dialog__body
+	padding: 1rem 1.25rem
+	flex: 1 1 auto
+	display: flex
+	position: relative
+
+.cms-source-dialog__textarea
+	width: 100%
+	min-height: 18rem
+	font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+	font-size: .875rem
+	line-height: 1.4
+	padding: .75rem
+	border-radius: .4rem
+	border: 1px solid rgba(0, 0, 0, .12)
+	color: #1c1f23
+	outline: none
+	resize: vertical
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .06)
+
+.cms-source-dialog__textarea:focus
+	border-color: #2196f3
+	box-shadow: 0 0 0 3px rgba(33, 150, 243, .2)
+
+.cms-source-dialog__codemirror
+	flex: 1 1 auto
+	width: 100%
+	min-height: 18rem
+	border: 1px solid rgba(0, 0, 0, .12)
+	border-radius: .4rem
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .06)
+	background: #fff
+	overflow: hidden
+
+.cms-source-dialog__codemirror .CodeMirror
+	height: 100%
+	font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+	font-size: .875rem
+	line-height: 1.45
+	color: #1c1f23
+	background: transparent
+
+.cms-source-dialog__codemirror .CodeMirror-scroll
+	margin: 0 !important
+	padding: .75rem
+
+.cms-source-dialog__codemirror .CodeMirror-gutters
+	background: #f8f9fa
+	border-right: 1px solid rgba(0, 0, 0, .08)
+
+.cms-source-dialog__codemirror .CodeMirror-activeline-background
+	background: rgba(33, 150, 243, .08)
+
+.cms-source-dialog__codemirror .CodeMirror-matchingtag
+	background: rgba(33, 150, 243, .12)
+	color: inherit
+
+.cms-source-dialog__footer
+	display: flex
+	justify-content: flex-end
+	gap: .75rem
+	padding: 1rem 1.25rem
+	border-top: 1px solid rgba(0, 0, 0, .08)
+
+.cms-source-dialog__button
+	border-radius: .35rem
+	font-weight: 600
+	padding: .55rem 1.25rem
+	border: 1px solid transparent
+	cursor: pointer
+	font-size: .9rem
+	transition: background-color .15s ease, color .15s ease, border-color .15s ease
+
+.cms-source-dialog__button:focus
+	outline: 2px solid rgba(33, 150, 243, .3)
+	outline-offset: 2px
+
+.cms-source-dialog__button--cancel
+	background: #f8f9fa
+	border-color: rgba(0, 0, 0, .08)
+	color: #495057
+
+.cms-source-dialog__button--cancel:hover,
+.cms-source-dialog__button--cancel:focus
+	background: #e9ecef
+	border-color: rgba(0, 0, 0, .14)
+
+.cms-source-dialog__button--apply
+	background: #2196f3
+	border-color: #2196f3
+	color: #fff
+
+.cms-source-dialog__button--apply:hover,
+.cms-source-dialog__button--apply:focus
+	background: #1b82d6
+	border-color: #1b82d6
+
+@media (max-width: 640px)
+	.cms-source-dialog
+		padding: 1rem
+	.cms-source-dialog__surface
+		width: 95vw
+		border-radius: .35rem
+	.cms-source-dialog__textarea
+		min-height: 12rem
