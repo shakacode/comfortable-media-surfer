@@ -12,6 +12,13 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
+### Added
+
+- Added an HTML source editor toggle to the Rhino toolbar, complete with CodeMirror-powered syntax highlighting for easier raw markup edits.
+- HTML source dialog now auto-formats markup for readable indentation whenever it's opened or applied.
+- Preserved `<iframe>` embeds by wiring a custom TipTap extension so existing videos and maps survive round-trips through the editor.
+- Added editor-side styling that constrains embedded iframes to the content width and caps their height with internal scrolling.
+
 ## [v3.1.3] - 2025-05-29
 
 ### Fixed

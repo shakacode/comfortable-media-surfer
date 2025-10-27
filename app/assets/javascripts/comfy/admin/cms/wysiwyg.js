@@ -9,6 +9,14 @@ import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/matchtags";
 import "codemirror/addon/selection/active-line";
 import { html as beautifyHtml } from "js-beautify";
+import TableOfContents from "@tiptap/extension-table-of-contents";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
+import CmsTableOfContentsNode from "./extensions/table_of_contents";
+import IframeExtension from "./extensions/iframe";
+import ResizableImage from "./extensions/resizable_image";
 
 const DEBUG_DEFINED_LINKS = (() => {
   if (typeof window === "undefined") return false;
@@ -45,6 +53,58 @@ const HTML_FORMAT_OPTIONS = Object.freeze({
   extra_liners: [],
   end_with_newline: true
 });
+
+const TABLE_INSERT_DEFAULTS = Object.freeze({
+  rows: 3,
+  cols: 3,
+  withHeaderRow: true
+});
+
+const TABLE_ACTIONS = [
+  { key: "delete-table", label: "Delete table", command: "deleteTable" },
+  { key: "add-column-before", label: "Add column before", command: "addColumnBefore" },
+  { key: "add-column-after", label: "Add column after", command: "addColumnAfter" },
+  { key: "delete-column", label: "Delete column", command: "deleteColumn" },
+  { key: "add-row-before", label: "Add row before", command: "addRowBefore" },
+  { key: "add-row-after", label: "Add row after", command: "addRowAfter" },
+  { key: "delete-row", label: "Delete row", command: "deleteRow" },
+  { key: "merge-cells", label: "Merge cells", command: "mergeCells" },
+  { key: "split-cell", label: "Split cell", command: "splitCell" },
+  { key: "merge-or-split", label: "Merge or split", command: "mergeOrSplit" },
+  { key: "toggle-header-row", label: "Toggle header row", command: "toggleHeaderRow" },
+  { key: "toggle-header-column", label: "Toggle header column", command: "toggleHeaderColumn" },
+  { key: "toggle-header-cell", label: "Toggle header cell", command: "toggleHeaderCell" }
+];
+
+const TABLE_ACTION_LOOKUP = new Map(
+  TABLE_ACTIONS.map((action) => [action.key, action])
+);
+
+function invokeChainCommand(chain, commandName, args = []) {
+  if (!chain || typeof chain[commandName] !== "function") return null;
+  const normalizedArgs = Array.isArray(args)
+    ? args
+    : args === undefined
+    ? []
+    : [args];
+  return chain[commandName](...normalizedArgs);
+}
+
+function runEditorCommand(editor, commandName, args) {
+  if (!editor || typeof editor.chain !== "function") return false;
+  const chain = editor.chain().focus();
+  const result = invokeChainCommand(chain, commandName, args);
+  if (!result || typeof result.run !== "function") return false;
+  return result.run();
+}
+
+function canRunEditorCommand(editor, commandName, args) {
+  if (!editor || typeof editor.can !== "function") return false;
+  const chain = editor.can().chain().focus();
+  const result = invokeChainCommand(chain, commandName, args);
+  if (!result || typeof result.run !== "function") return false;
+  return result.run();
+}
 
 class DefinedLinksPicker {
   constructor(adapter, url) {
@@ -578,6 +638,25 @@ class CmsWysiwygAdapter {
     this._boundSourceApply = this._handleSourceApply.bind(this);
     this._boundSourceCancel = this._handleSourceCancel.bind(this);
     this._boundSourceKeydown = this._handleSourceKeydown.bind(this);
+  	this._tocItems = [];
+  	this._lastRenderedTocItems = "[]";
+    this._tocToggleButton = null;
+    this._boundTocToggle = this._handleTocToggle.bind(this);
+    this._imageResizeControls = null;
+    this._imageResetButton = null;
+    this._imageAspectRatioButton = null;
+    this._boundImageReset = this._handleImageReset.bind(this);
+    this._boundImageAspectRatioToggle = this._handleImageAspectRatioToggle.bind(this);
+    this._boundRhinoUpdate = this._handleRhinoUpdate.bind(this);
+    this._isReplacingAttachments = false;
+    this._tableInsertButton = null;
+    this._tableMenu = null;
+    this._tableActionButtons = new Map();
+    this._tableSelectionUnsubscribe = null;
+    this._tableTransactionUnsubscribe = null;
+    this._boundTableInsert = this._handleTableInsert.bind(this);
+    this._boundTableMenuClick = this._handleTableMenuClick.bind(this);
+    this._boundTableUpdate = () => this._updateTableControls();
   }
 
   /**
@@ -586,6 +665,35 @@ class CmsWysiwygAdapter {
   mount() {
     // Create rhino-editor element
     this.rhinoElement = document.createElement("rhino-editor");
+  	this.rhinoElement.addEventListener("rhino-update", this._boundRhinoUpdate);
+
+    const tableOfContentsExtension = TableOfContents.configure({
+      onUpdate: (items = []) => {
+        this._handleTocUpdate(items);
+      }
+    });
+
+    const tableExtension = Table.configure({
+      resizable: true,
+      allowTableNodeSelection: true
+    });
+
+    // Configure Rhino to exclude default Image extension, then add our resizable version
+    // We need to set this BEFORE the editor initializes
+    this.rhinoElement.starterKitOptions = {
+      image: false  // Disable default image extension
+    };
+
+    this.rhinoElement.addExtensions(
+      IframeExtension,
+      tableOfContentsExtension,
+      CmsTableOfContentsNode,
+      ResizableImage,
+      tableExtension,
+      TableRow,
+      TableHeader,
+      TableCell
+    );
 
     // Configure for native ActiveStorage Direct Upload
     this.rhinoElement.setAttribute('data-blob-url-template',
@@ -613,6 +721,28 @@ class CmsWysiwygAdapter {
       this._setupFormSubmitHandler();
       this._decorateLinkDialog();
       this._setupSourceToggle();
+      this._setupTocToggle();
+      this._setupImageResizeControls();
+    this._setupTableControls();
+  		this._replaceAttachmentFiguresWithImages();
+      const existingToc = this._findTocNode();
+      if (existingToc?.node?.attrs?.items) {
+        const itemsAttr = existingToc.node.attrs.items;
+        this._lastRenderedTocItems = itemsAttr;
+        try {
+          const parsed = JSON.parse(itemsAttr);
+          this._tocItems = Array.isArray(parsed) ? parsed : [];
+        } catch (_error) {
+          this._tocItems = [];
+        }
+      } else {
+        this._tocItems = [];
+        this._lastRenderedTocItems = "[]";
+      }
+      this._updateTocButtonState();
+      if (this.editor?.commands?.updateTableOfContents) {
+        this.editor.commands.updateTableOfContents();
+      }
     });
   }
 
@@ -762,6 +892,260 @@ class CmsWysiwygAdapter {
   }
 
   /**
+   * Set up image resize controls in toolbar
+   */
+  _setupImageResizeControls() {
+    if (!this.rhinoElement) return;
+
+    // Create reset button
+    if (!this._imageResetButton) {
+      const resetButton = document.createElement("button");
+      resetButton.type = "button";
+      resetButton.className = "toolbar__button rhino-toolbar-button cms-image-reset";
+      resetButton.setAttribute("slot", "toolbar-end");
+      resetButton.setAttribute("part", "toolbar__button toolbar__button--image-reset cms-image-reset");
+      resetButton.setAttribute("title", "Reset image to original size");
+      resetButton.setAttribute("aria-label", "Reset image to original size");
+      resetButton.style.display = "none"; // Hidden by default
+      resetButton.innerHTML = `
+        <span class="cms-image-reset__icon" aria-hidden="true">↻</span>
+        <span class="cms-image-reset__label">Reset</span>
+      `;
+      resetButton.addEventListener("click", this._boundImageReset);
+      this._imageResetButton = resetButton;
+    }
+
+    // Create aspect ratio toggle button
+    if (!this._imageAspectRatioButton) {
+      const aspectButton = document.createElement("button");
+      aspectButton.type = "button";
+      aspectButton.className = "toolbar__button rhino-toolbar-button cms-image-aspect-ratio";
+      aspectButton.setAttribute("slot", "toolbar-end");
+      aspectButton.setAttribute("part", "toolbar__button toolbar__button--image-aspect-ratio cms-image-aspect-ratio");
+      aspectButton.setAttribute("aria-pressed", "true"); // Default: locked
+      aspectButton.setAttribute("title", "Toggle aspect ratio lock");
+      aspectButton.setAttribute("aria-label", "Toggle aspect ratio lock");
+      aspectButton.style.display = "none"; // Hidden by default
+      aspectButton.innerHTML = `
+        <span class="cms-image-aspect-ratio__icon" aria-hidden="true">🔒</span>
+        <span class="cms-image-aspect-ratio__label">Lock</span>
+      `;
+      aspectButton.addEventListener("click", this._boundImageAspectRatioToggle);
+      this._imageAspectRatioButton = aspectButton;
+    }
+
+    // Append buttons to toolbar
+    if (this._imageResetButton && !this._imageResetButton.isConnected) {
+      this.rhinoElement.appendChild(this._imageResetButton);
+    }
+    if (this._imageAspectRatioButton && !this._imageAspectRatioButton.isConnected) {
+      this.rhinoElement.appendChild(this._imageAspectRatioButton);
+    }
+
+    // Listen for selection changes to show/hide controls
+    this.editor.on('selectionUpdate', () => {
+      this._updateImageResizeControlsVisibility();
+    });
+  }
+
+  /**
+   * Update visibility of image resize controls based on selection
+   */
+  _updateImageResizeControlsVisibility() {
+    if (!this.editor || !this._imageResetButton || !this._imageAspectRatioButton) return;
+
+    const { selection } = this.editor.state;
+    const node = this.editor.state.doc.nodeAt(selection.from);
+    const isImageSelected = node && node.type.name === 'image';
+
+    // Show/hide buttons based on selection
+    this._imageResetButton.style.display = isImageSelected ? '' : 'none';
+    this._imageAspectRatioButton.style.display = isImageSelected ? '' : 'none';
+
+    // Update aspect ratio button state
+    if (isImageSelected && node.attrs.aspectRatioLocked !== undefined) {
+      const isLocked = node.attrs.aspectRatioLocked !== false;
+      this._imageAspectRatioButton.setAttribute('aria-pressed', isLocked ? 'true' : 'false');
+      this._imageAspectRatioButton.classList.toggle('is-active', isLocked);
+
+      const icon = this._imageAspectRatioButton.querySelector('.cms-image-aspect-ratio__icon');
+      const label = this._imageAspectRatioButton.querySelector('.cms-image-aspect-ratio__label');
+      if (icon) icon.textContent = isLocked ? '🔒' : '🔓';
+      if (label) label.textContent = isLocked ? 'Lock' : 'Unlock';
+    }
+  }
+
+  /**
+   * Handle reset button click
+   */
+  _handleImageReset(event) {
+    event?.preventDefault?.();
+    if (!this.editor) return;
+
+    this.editor.commands.resetImageSize();
+    this.editor.commands.focus();
+  }
+
+  /**
+   * Handle aspect ratio toggle button click
+   */
+  _handleImageAspectRatioToggle(event) {
+    event?.preventDefault?.();
+    if (!this.editor) return;
+
+    this.editor.commands.toggleImageAspectRatio();
+    this._updateImageResizeControlsVisibility();
+    this.editor.commands.focus();
+  }
+
+  _setupTableControls() {
+    if (!this.rhinoElement || !this.editor) return;
+
+    if (!this._tableInsertButton) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "toolbar__button rhino-toolbar-button cms-table-insert";
+      button.setAttribute("slot", "toolbar-end");
+      button.setAttribute(
+        "part",
+        "toolbar__button toolbar__button--table cms-table-insert"
+      );
+      button.setAttribute("title", "Insert table");
+      button.setAttribute("aria-label", "Insert table");
+      button.setAttribute("aria-disabled", "true");
+      const label = document.createElement("span");
+      label.className = "cms-table-insert__label";
+      label.textContent = "Table";
+      button.appendChild(label);
+      button.addEventListener("click", this._boundTableInsert);
+      this._tableInsertButton = button;
+    }
+
+    if (!this._tableMenu) {
+  const menu = document.createElement("role-toolbar");
+  menu.className = "toolbar cms-table-toolbar";
+  menu.setAttribute("role", "toolbar");
+  menu.setAttribute("part", "toolbar cms-table-toolbar");
+  menu.setAttribute("slot", "toolbar-end");
+  menu.setAttribute("aria-label", "Table tools");
+      menu.hidden = true;
+      menu.setAttribute("aria-hidden", "true");
+      menu.addEventListener("click", this._boundTableMenuClick);
+
+      this._tableActionButtons.clear();
+      for (const action of TABLE_ACTIONS) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "toolbar__button rhino-toolbar-button cms-table-toolbar__button";
+        button.dataset.tableAction = action.key;
+        button.textContent = action.label;
+        button.setAttribute("title", action.label);
+        button.setAttribute("aria-label", action.label);
+        button.setAttribute("data-role", "toolbar-item");
+        button.disabled = true;
+        button.setAttribute("aria-disabled", "true");
+        menu.appendChild(button);
+        this._tableActionButtons.set(action.key, button);
+      }
+
+      this._tableMenu = menu;
+    }
+
+    if (this._tableInsertButton && !this._tableInsertButton.isConnected) {
+      this.rhinoElement.appendChild(this._tableInsertButton);
+    }
+
+    if (this._tableMenu && !this._tableMenu.isConnected) {
+      this.rhinoElement.appendChild(this._tableMenu);
+    }
+
+    if (!this._tableSelectionUnsubscribe && this.editor.on) {
+      this._tableSelectionUnsubscribe = this.editor.on(
+        "selectionUpdate",
+        this._boundTableUpdate
+      );
+    }
+
+    if (!this._tableTransactionUnsubscribe && this.editor.on) {
+      this._tableTransactionUnsubscribe = this.editor.on(
+        "transaction",
+        this._boundTableUpdate
+      );
+    }
+
+    this._updateTableControls();
+  }
+
+  _updateTableControls() {
+    const editor = this.editor;
+    const canInsert = canRunEditorCommand(editor, "insertTable", TABLE_INSERT_DEFAULTS);
+
+    if (this._tableInsertButton) {
+      this._tableInsertButton.disabled = !canInsert;
+      this._tableInsertButton.setAttribute(
+        "aria-disabled",
+        canInsert ? "false" : "true"
+      );
+    }
+
+    if (!this._tableMenu) return;
+
+    const isInTable = Boolean(
+      editor && typeof editor.isActive === "function" && editor.isActive("table")
+    );
+
+    this._tableMenu.hidden = !isInTable;
+    this._tableMenu.setAttribute("aria-hidden", isInTable ? "false" : "true");
+
+    if (!isInTable) {
+      for (const button of this._tableActionButtons.values()) {
+        if (!button) continue;
+        button.disabled = true;
+        button.setAttribute("aria-disabled", "true");
+      }
+      return;
+    }
+
+    for (const [key, button] of this._tableActionButtons) {
+      if (!button) continue;
+      const action = TABLE_ACTION_LOOKUP.get(key);
+      if (!action) continue;
+      const canRun = canRunEditorCommand(editor, action.command, action.args);
+      button.disabled = !canRun;
+      button.setAttribute("aria-disabled", canRun ? "false" : "true");
+    }
+  }
+
+  _handleTableInsert(event) {
+    event?.preventDefault?.();
+    const didInsert = runEditorCommand(
+      this.editor,
+      "insertTable",
+      TABLE_INSERT_DEFAULTS
+    );
+    if (didInsert) {
+      this._updateTableControls();
+    }
+  }
+
+  _handleTableMenuClick(event) {
+    const target = event.target instanceof Element
+      ? event.target.closest("[data-table-action]")
+      : null;
+    if (!target) return;
+    if (target.hasAttribute("disabled")) return;
+    event.preventDefault();
+
+    const action = TABLE_ACTION_LOOKUP.get(target.dataset.tableAction || "");
+    if (!action) return;
+
+    const didRun = runEditorCommand(this.editor, action.command, action.args);
+    if (didRun) {
+      this._updateTableControls();
+    }
+  }
+
+  /**
    * Destroy the editor instance
    */
   destroy() {
@@ -769,6 +1153,7 @@ class CmsWysiwygAdapter {
       this.editor.destroy();
     }
     if (this.rhinoElement) {
+      this.rhinoElement.removeEventListener("rhino-update", this._boundRhinoUpdate);
       this.rhinoElement.remove();
     }
     if (this.textarea) {
@@ -778,9 +1163,122 @@ class CmsWysiwygAdapter {
       this._definedLinksPicker.destroy();
       this._definedLinksPicker = null;
     }
+    if (this._tocToggleButton) {
+      this._tocToggleButton.removeEventListener("click", this._boundTocToggle);
+      this._tocToggleButton.remove();
+      this._tocToggleButton = null;
+    }
+    if (this._imageResetButton) {
+      this._imageResetButton.removeEventListener("click", this._boundImageReset);
+      this._imageResetButton.remove();
+      this._imageResetButton = null;
+    }
+    if (this._imageAspectRatioButton) {
+      this._imageAspectRatioButton.removeEventListener("click", this._boundImageAspectRatioToggle);
+      this._imageAspectRatioButton.remove();
+      this._imageAspectRatioButton = null;
+    }
+    if (this._tableSelectionUnsubscribe) {
+      this._tableSelectionUnsubscribe();
+      this._tableSelectionUnsubscribe = null;
+    }
+    if (this._tableTransactionUnsubscribe) {
+      this._tableTransactionUnsubscribe();
+      this._tableTransactionUnsubscribe = null;
+    }
+    if (this._tableInsertButton) {
+      this._tableInsertButton.removeEventListener("click", this._boundTableInsert);
+      this._tableInsertButton.remove();
+      this._tableInsertButton = null;
+    }
+    if (this._tableMenu) {
+      this._tableMenu.removeEventListener("click", this._boundTableMenuClick);
+      this._tableMenu.remove();
+      this._tableMenu = null;
+    }
+    this._tableActionButtons.clear();
     this._destroySourceDialog();
     this.editor = null;
     this.rhinoElement = null;
+    this._tocItems = [];
+    this._lastRenderedTocItems = "[]";
+  }
+
+  _handleRhinoUpdate() {
+    this._replaceAttachmentFiguresWithImages();
+  }
+
+  _parseDimension(value) {
+    if (value == null || value === "") return null;
+    const numeric = Number.parseInt(value, 10);
+    return Number.isFinite(numeric) ? numeric : null;
+  }
+
+  _replaceAttachmentFiguresWithImages() {
+    if (this._isReplacingAttachments) return;
+    if (!this.editor) return;
+
+    const { state, schema, view } = this.editor;
+    if (!schema?.nodes?.image) return;
+
+    const attachmentTypes = new Set(["attachment-figure", "previewable-attachment-figure"]);
+    let tr = state.tr;
+    let modified = false;
+
+    this._isReplacingAttachments = true;
+
+    try {
+      state.doc.descendants((node, pos) => {
+        if (!attachmentTypes.has(node.type.name)) {
+          return;
+        }
+
+        const contentType = node.attrs?.contentType || "";
+        const isImageType = typeof contentType === "string" && contentType.startsWith("image/");
+
+        const candidateSources = [node.attrs?.url, node.attrs?.src].filter((value) => typeof value === "string");
+        const resolvedSrc = candidateSources.find((value) => {
+          if (!value) return false;
+          const trimmed = value.trim();
+          if (!trimmed) return false;
+          if (trimmed.startsWith("blob:")) return false;
+          return true;
+        });
+
+        if (!resolvedSrc) {
+          return;
+        }
+
+        if (!isImageType && !node.attrs?.previewable) {
+          return;
+        }
+
+        const width = this._parseDimension(node.attrs?.width);
+        const height = this._parseDimension(node.attrs?.height);
+
+        const imageNode = schema.nodes.image.create({
+          src: resolvedSrc,
+          alt: node.attrs?.alt || "",
+          width,
+          height,
+          originalWidth: width,
+          originalHeight: height,
+          aspectRatioLocked: true,
+        });
+
+        tr = tr.replaceWith(pos, pos + node.nodeSize, imageNode);
+        modified = true;
+
+        return false;
+      });
+
+      if (modified) {
+        tr.setMeta("addToHistory", false);
+        view.dispatch(tr);
+      }
+    } finally {
+      this._isReplacingAttachments = false;
+    }
   }
 
   _setupSourceToggle() {
@@ -799,7 +1297,6 @@ class CmsWysiwygAdapter {
       button.setAttribute("title", "HTML");
       button.setAttribute("aria-label", "Edit HTML source");
       button.innerHTML = `
-        <span class="cms-source-toggle__icon" aria-hidden="true">&lt;/&gt;</span>
         <span class="cms-source-toggle__label">HTML</span>
       `;
       button.addEventListener("click", this._boundSourceToggle);
@@ -813,6 +1310,184 @@ class CmsWysiwygAdapter {
     if (!this._sourceDialog) {
       this._buildSourceDialog();
     }
+  }
+
+  _setupTocToggle() {
+    if (!this.rhinoElement) return;
+
+    if (!this._tocToggleButton) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "toolbar__button rhino-toolbar-button cms-toc-toggle";
+      button.setAttribute("slot", "toolbar-end");
+      button.setAttribute(
+        "part",
+        "toolbar__button toolbar__button--toc cms-toc-toggle"
+      );
+      button.setAttribute("aria-pressed", "false");
+      button.setAttribute("title", "Toggle table of contents");
+      button.setAttribute("aria-label", "Toggle table of contents");
+      button.innerHTML = `
+        <span class="cms-toc-toggle__icon" aria-hidden="true">☰</span>
+        <span class="cms-toc-toggle__label">ToC</span>
+      `;
+      button.addEventListener("click", this._boundTocToggle);
+      this._tocToggleButton = button;
+    }
+
+    if (this._tocToggleButton && !this._tocToggleButton.isConnected) {
+      this.rhinoElement.appendChild(this._tocToggleButton);
+    }
+
+    this._updateTocButtonState();
+  }
+
+  _handleTocToggle(event) {
+    event?.preventDefault?.();
+    if (!this.editor) return;
+
+    const existing = this._findTocNode();
+    if (existing) {
+      this.editor.chain().focus().deleteRange({
+        from: existing.pos,
+        to: existing.pos + existing.node.nodeSize
+      }).run();
+      this._updateTocButtonState();
+      return;
+    }
+
+    const tocType = this.editor.schema?.nodes?.cmsTableOfContents;
+    if (!tocType) return;
+
+    const attrs = {
+      items: this._lastRenderedTocItems || "[]"
+    };
+
+    const { tr } = this.editor.state;
+    tr.insert(0, tocType.create(attrs));
+    tr.setMeta("toc", true);
+    this.editor.view.dispatch(tr);
+
+    if (typeof this.editor.commands.updateTableOfContents === "function") {
+      this.editor.commands.updateTableOfContents();
+    }
+
+    this._updateTocButtonState();
+  }
+
+  _updateTocButtonState() {
+    if (!this._tocToggleButton) return;
+
+    const hasNode = this._hasTocNode();
+    this._tocToggleButton.setAttribute("aria-pressed", hasNode ? "true" : "false");
+    this._tocToggleButton.classList.toggle("is-active", hasNode);
+
+    const hasHeadings = Array.isArray(this._tocItems) && this._tocItems.length > 0;
+    this._tocToggleButton.toggleAttribute("data-empty", !hasHeadings);
+    this._tocToggleButton.disabled = false;
+    this._tocToggleButton.setAttribute("aria-disabled", "false");
+
+    if (!hasHeadings && !hasNode) {
+      this._tocToggleButton.setAttribute(
+        "title",
+        "Add headings to generate a table of contents"
+      );
+    } else {
+      this._tocToggleButton.setAttribute("title", hasNode ? "Remove table of contents" : "Insert table of contents");
+    }
+
+    const label = this._tocToggleButton.getAttribute("title") || "Toggle table of contents";
+    this._tocToggleButton.setAttribute("aria-label", label);
+  }
+
+  _hasTocNode() {
+    return Boolean(this._findTocNode());
+  }
+
+  _findTocNode() {
+    if (!this.editor) return null;
+    const tocType = this.editor.schema?.nodes?.cmsTableOfContents;
+    if (!tocType) return null;
+
+    let result = null;
+    this.editor.state.doc.descendants((node, pos) => {
+      if (result) return false;
+      if (node.type === tocType) {
+        result = { node, pos };
+        return false;
+      }
+      return true;
+    });
+    return result;
+  }
+
+  _handleTocUpdate(rawItems = []) {
+    const normalized = this._normalizeTocItems(rawItems);
+    this._tocItems = normalized;
+    const serialized = JSON.stringify(normalized);
+
+    if (serialized !== this._lastRenderedTocItems) {
+      this._lastRenderedTocItems = serialized;
+      this._syncTocNode(serialized);
+    }
+
+    this._updateTocButtonState();
+  }
+
+  _normalizeTocItems(rawItems) {
+    if (!Array.isArray(rawItems)) return [];
+
+    const roots = [];
+    const stack = [];
+
+    rawItems.forEach((raw) => {
+      if (!raw || typeof raw !== "object") return;
+
+      const hierarchicalLevel = Number.isInteger(raw.level) ? raw.level : 1;
+      const actualLevel = Number.isInteger(raw.originalLevel)
+        ? raw.originalLevel
+        : hierarchicalLevel;
+      const depth = Math.max(1, hierarchicalLevel);
+      const item = {
+        id: typeof raw.id === "string" && raw.id.length ? raw.id : null,
+        text: (raw.textContent || "").trim() || "Untitled section",
+        level: Math.max(1, actualLevel || 1),
+        depth,
+        isActive: Boolean(raw.isActive),
+        isScrolled: Boolean(raw.isScrolledOver || raw.isScrolled),
+        children: []
+      };
+
+      while (stack.length && stack[stack.length - 1].depth >= depth) {
+        stack.pop();
+      }
+
+      if (stack.length === 0) {
+        roots.push(item);
+      } else {
+        stack[stack.length - 1].children.push(item);
+      }
+
+      stack.push(item);
+    });
+
+    return roots;
+  }
+
+  _syncTocNode(serializedItems = "[]") {
+    if (!this.editor) return;
+
+    const tocEntry = this._findTocNode();
+    if (!tocEntry) return;
+
+    const { node, pos } = tocEntry;
+    if (node.attrs?.items === serializedItems) return;
+
+    const attrs = { ...node.attrs, items: serializedItems };
+    const tr = this.editor.state.tr.setNodeMarkup(pos, undefined, attrs);
+    tr.setMeta("toc", true);
+    tr.setMeta("addToHistory", false);
+    this.editor.view.dispatch(tr);
   }
 
   _ensureSourceEditor() {
