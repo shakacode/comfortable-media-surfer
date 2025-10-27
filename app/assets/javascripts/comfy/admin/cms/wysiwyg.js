@@ -10,6 +10,10 @@ import "codemirror/addon/edit/matchtags";
 import "codemirror/addon/selection/active-line";
 import { html as beautifyHtml } from "js-beautify";
 import TableOfContents from "@tiptap/extension-table-of-contents";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
 import CmsTableOfContentsNode from "./extensions/table_of_contents";
 import IframeExtension from "./extensions/iframe";
 import ResizableImage from "./extensions/resizable_image";
@@ -49,6 +53,58 @@ const HTML_FORMAT_OPTIONS = Object.freeze({
   extra_liners: [],
   end_with_newline: true
 });
+
+const TABLE_INSERT_DEFAULTS = Object.freeze({
+  rows: 3,
+  cols: 3,
+  withHeaderRow: true
+});
+
+const TABLE_ACTIONS = [
+  { key: "delete-table", label: "Delete table", command: "deleteTable" },
+  { key: "add-column-before", label: "Add column before", command: "addColumnBefore" },
+  { key: "add-column-after", label: "Add column after", command: "addColumnAfter" },
+  { key: "delete-column", label: "Delete column", command: "deleteColumn" },
+  { key: "add-row-before", label: "Add row before", command: "addRowBefore" },
+  { key: "add-row-after", label: "Add row after", command: "addRowAfter" },
+  { key: "delete-row", label: "Delete row", command: "deleteRow" },
+  { key: "merge-cells", label: "Merge cells", command: "mergeCells" },
+  { key: "split-cell", label: "Split cell", command: "splitCell" },
+  { key: "merge-or-split", label: "Merge or split", command: "mergeOrSplit" },
+  { key: "toggle-header-row", label: "Toggle header row", command: "toggleHeaderRow" },
+  { key: "toggle-header-column", label: "Toggle header column", command: "toggleHeaderColumn" },
+  { key: "toggle-header-cell", label: "Toggle header cell", command: "toggleHeaderCell" }
+];
+
+const TABLE_ACTION_LOOKUP = new Map(
+  TABLE_ACTIONS.map((action) => [action.key, action])
+);
+
+function invokeChainCommand(chain, commandName, args = []) {
+  if (!chain || typeof chain[commandName] !== "function") return null;
+  const normalizedArgs = Array.isArray(args)
+    ? args
+    : args === undefined
+    ? []
+    : [args];
+  return chain[commandName](...normalizedArgs);
+}
+
+function runEditorCommand(editor, commandName, args) {
+  if (!editor || typeof editor.chain !== "function") return false;
+  const chain = editor.chain().focus();
+  const result = invokeChainCommand(chain, commandName, args);
+  if (!result || typeof result.run !== "function") return false;
+  return result.run();
+}
+
+function canRunEditorCommand(editor, commandName, args) {
+  if (!editor || typeof editor.can !== "function") return false;
+  const chain = editor.can().chain().focus();
+  const result = invokeChainCommand(chain, commandName, args);
+  if (!result || typeof result.run !== "function") return false;
+  return result.run();
+}
 
 class DefinedLinksPicker {
   constructor(adapter, url) {
@@ -593,6 +649,14 @@ class CmsWysiwygAdapter {
     this._boundImageAspectRatioToggle = this._handleImageAspectRatioToggle.bind(this);
     this._boundRhinoUpdate = this._handleRhinoUpdate.bind(this);
     this._isReplacingAttachments = false;
+    this._tableInsertButton = null;
+    this._tableMenu = null;
+    this._tableActionButtons = new Map();
+    this._tableSelectionUnsubscribe = null;
+    this._tableTransactionUnsubscribe = null;
+    this._boundTableInsert = this._handleTableInsert.bind(this);
+    this._boundTableMenuClick = this._handleTableMenuClick.bind(this);
+    this._boundTableUpdate = () => this._updateTableControls();
   }
 
   /**
@@ -609,6 +673,11 @@ class CmsWysiwygAdapter {
       }
     });
 
+    const tableExtension = Table.configure({
+      resizable: true,
+      allowTableNodeSelection: true
+    });
+
     // Configure Rhino to exclude default Image extension, then add our resizable version
     // We need to set this BEFORE the editor initializes
     this.rhinoElement.starterKitOptions = {
@@ -619,7 +688,11 @@ class CmsWysiwygAdapter {
       IframeExtension,
       tableOfContentsExtension,
       CmsTableOfContentsNode,
-      ResizableImage
+      ResizableImage,
+      tableExtension,
+      TableRow,
+      TableHeader,
+      TableCell
     );
 
     // Configure for native ActiveStorage Direct Upload
@@ -650,6 +723,7 @@ class CmsWysiwygAdapter {
       this._setupSourceToggle();
       this._setupTocToggle();
       this._setupImageResizeControls();
+    this._setupTableControls();
   		this._replaceAttachmentFiguresWithImages();
       const existingToc = this._findTocNode();
       if (existingToc?.node?.attrs?.items) {
@@ -924,6 +998,153 @@ class CmsWysiwygAdapter {
     this.editor.commands.focus();
   }
 
+  _setupTableControls() {
+    if (!this.rhinoElement || !this.editor) return;
+
+    if (!this._tableInsertButton) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "toolbar__button rhino-toolbar-button cms-table-insert";
+      button.setAttribute("slot", "toolbar-end");
+      button.setAttribute(
+        "part",
+        "toolbar__button toolbar__button--table cms-table-insert"
+      );
+      button.setAttribute("title", "Insert table");
+      button.setAttribute("aria-label", "Insert table");
+      button.setAttribute("aria-disabled", "true");
+      const label = document.createElement("span");
+      label.className = "cms-table-insert__label";
+      label.textContent = "Table";
+      button.appendChild(label);
+      button.addEventListener("click", this._boundTableInsert);
+      this._tableInsertButton = button;
+    }
+
+    if (!this._tableMenu) {
+  const menu = document.createElement("role-toolbar");
+  menu.className = "toolbar cms-table-toolbar";
+  menu.setAttribute("role", "toolbar");
+  menu.setAttribute("part", "toolbar cms-table-toolbar");
+  menu.setAttribute("slot", "toolbar-end");
+  menu.setAttribute("aria-label", "Table tools");
+      menu.hidden = true;
+      menu.setAttribute("aria-hidden", "true");
+      menu.addEventListener("click", this._boundTableMenuClick);
+
+      this._tableActionButtons.clear();
+      for (const action of TABLE_ACTIONS) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "toolbar__button rhino-toolbar-button cms-table-toolbar__button";
+        button.dataset.tableAction = action.key;
+        button.textContent = action.label;
+        button.setAttribute("title", action.label);
+        button.setAttribute("aria-label", action.label);
+        button.setAttribute("data-role", "toolbar-item");
+        button.disabled = true;
+        button.setAttribute("aria-disabled", "true");
+        menu.appendChild(button);
+        this._tableActionButtons.set(action.key, button);
+      }
+
+      this._tableMenu = menu;
+    }
+
+    if (this._tableInsertButton && !this._tableInsertButton.isConnected) {
+      this.rhinoElement.appendChild(this._tableInsertButton);
+    }
+
+    if (this._tableMenu && !this._tableMenu.isConnected) {
+      this.rhinoElement.appendChild(this._tableMenu);
+    }
+
+    if (!this._tableSelectionUnsubscribe && this.editor.on) {
+      this._tableSelectionUnsubscribe = this.editor.on(
+        "selectionUpdate",
+        this._boundTableUpdate
+      );
+    }
+
+    if (!this._tableTransactionUnsubscribe && this.editor.on) {
+      this._tableTransactionUnsubscribe = this.editor.on(
+        "transaction",
+        this._boundTableUpdate
+      );
+    }
+
+    this._updateTableControls();
+  }
+
+  _updateTableControls() {
+    const editor = this.editor;
+    const canInsert = canRunEditorCommand(editor, "insertTable", TABLE_INSERT_DEFAULTS);
+
+    if (this._tableInsertButton) {
+      this._tableInsertButton.disabled = !canInsert;
+      this._tableInsertButton.setAttribute(
+        "aria-disabled",
+        canInsert ? "false" : "true"
+      );
+    }
+
+    if (!this._tableMenu) return;
+
+    const isInTable = Boolean(
+      editor && typeof editor.isActive === "function" && editor.isActive("table")
+    );
+
+    this._tableMenu.hidden = !isInTable;
+    this._tableMenu.setAttribute("aria-hidden", isInTable ? "false" : "true");
+
+    if (!isInTable) {
+      for (const button of this._tableActionButtons.values()) {
+        if (!button) continue;
+        button.disabled = true;
+        button.setAttribute("aria-disabled", "true");
+      }
+      return;
+    }
+
+    for (const [key, button] of this._tableActionButtons) {
+      if (!button) continue;
+      const action = TABLE_ACTION_LOOKUP.get(key);
+      if (!action) continue;
+      const canRun = canRunEditorCommand(editor, action.command, action.args);
+      button.disabled = !canRun;
+      button.setAttribute("aria-disabled", canRun ? "false" : "true");
+    }
+  }
+
+  _handleTableInsert(event) {
+    event?.preventDefault?.();
+    const didInsert = runEditorCommand(
+      this.editor,
+      "insertTable",
+      TABLE_INSERT_DEFAULTS
+    );
+    if (didInsert) {
+      this._updateTableControls();
+    }
+  }
+
+  _handleTableMenuClick(event) {
+    const target = event.target instanceof Element
+      ? event.target.closest("[data-table-action]")
+      : null;
+    if (!target) return;
+    if (target.hasAttribute("disabled")) return;
+    event.preventDefault();
+
+    const action = TABLE_ACTION_LOOKUP.get(target.dataset.tableAction || "");
+    if (!action) return;
+
+    const didRun = runEditorCommand(this.editor, action.command, action.args);
+    if (didRun) {
+      this._updateTableControls();
+    }
+  }
+
   /**
    * Destroy the editor instance
    */
@@ -957,6 +1178,25 @@ class CmsWysiwygAdapter {
       this._imageAspectRatioButton.remove();
       this._imageAspectRatioButton = null;
     }
+    if (this._tableSelectionUnsubscribe) {
+      this._tableSelectionUnsubscribe();
+      this._tableSelectionUnsubscribe = null;
+    }
+    if (this._tableTransactionUnsubscribe) {
+      this._tableTransactionUnsubscribe();
+      this._tableTransactionUnsubscribe = null;
+    }
+    if (this._tableInsertButton) {
+      this._tableInsertButton.removeEventListener("click", this._boundTableInsert);
+      this._tableInsertButton.remove();
+      this._tableInsertButton = null;
+    }
+    if (this._tableMenu) {
+      this._tableMenu.removeEventListener("click", this._boundTableMenuClick);
+      this._tableMenu.remove();
+      this._tableMenu = null;
+    }
+    this._tableActionButtons.clear();
     this._destroySourceDialog();
     this.editor = null;
     this.rhinoElement = null;
