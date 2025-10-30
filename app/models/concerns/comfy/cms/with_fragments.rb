@@ -9,11 +9,13 @@ module Comfy::Cms::WithFragments
     belongs_to :layout,
                class_name: 'Comfy::Cms::Layout'
 
-    has_many :fragments,
-             class_name: 'Comfy::Cms::Fragment',
-             as: :record,
-             autosave: true,
-             dependent: :destroy
+  # inverse_of keeps fragment.record association cached and avoids redundant lookups during render
+  has_many :fragments,
+       class_name: 'Comfy::Cms::Fragment',
+       as: :record,
+       inverse_of: :record,
+       autosave: true,
+       dependent: :destroy
 
     before_save :clear_content_cache
 

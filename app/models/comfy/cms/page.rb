@@ -17,8 +17,10 @@ class Comfy::Cms::Page < ActiveRecord::Base
              class_name: 'Comfy::Cms::Page',
              optional: true
 
+  # inverse_of lets translation.page reuse the in-memory association without extra queries
   has_many :translations,
-           dependent: :destroy
+           dependent: :destroy,
+           inverse_of: :page
 
   # -- Callbacks ---------------------------------------------------------------
   before_validation :assigns_label,

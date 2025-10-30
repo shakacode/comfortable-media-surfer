@@ -10,7 +10,8 @@ class Comfy::Cms::Translation < ActiveRecord::Base
   delegate :site, to: :page
 
   # -- Relationships -----------------------------------------------------------
-  belongs_to :page
+  # inverse_of keeps translation.page from triggering additional SELECTs when hydrated via page
+  belongs_to :page, inverse_of: :translations
 
   # -- Callbacks ---------------------------------------------------------------
   before_validation :assign_layout

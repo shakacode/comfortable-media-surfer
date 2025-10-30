@@ -74,11 +74,7 @@ protected
   # Getting page and setting content_cache and fragments data if we need to
   # serve translation data
   def find_cms_page_by_full_path(full_path)
-    @cms_page = if Rails.env == 'development'
-                  @cms_site.pages.find_by!(full_path: full_path)
-                else
-                  @cms_site.pages.published.find_by!(full_path: full_path)
-                end
+    @cms_page = cms_page_scope.find_by!(full_path: full_path)
 
     @cms_page.translate!
     @cms_layout = @cms_page.layout
@@ -86,5 +82,15 @@ protected
     @cms_page
   rescue ActiveRecord::RecordNotFound
     nil
+  end
+
+  # We eager-load all associations touched by layout/fragment rendering to
+  # avoid N+1 query warnings while keeping cache usage predictable.
+  def cms_page_scope
+  scope = @cms_site.pages
+           .includes(:layout, :translations, :site)
+           .preload(fragments: { attachments_attachments: :blob }) # ActiveStorage join
+
+    Rails.env.development? ? scope : scope.published
   end
 end
