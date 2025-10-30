@@ -15,13 +15,13 @@ class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
   def index
     return redirect_to action: :new if site_has_no_pages?
 
-  return index_for_redactor if %w[redactor rhino].include?(params[:source])
+    return index_for_redactor if %w[redactor rhino].include?(params[:source])
 
     @pages_by_parent = pages_grouped_by_parent
 
     @pages =
       if params[:categories].present?
-        @site.pages.includes(:categories).for_category(params[:categories]).order(:label)
+        site_pages_scope.includes(:categories).for_category(params[:categories]).order(:label)
       else
         [@site.pages.root].compact
       end
@@ -91,21 +91,26 @@ class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
 protected
 
   def index_for_redactor
+    pages = site_pages_scope.order(:position).load
+    pages_by_parent = pages.group_by(&:parent_id)
+
     tree_walker = ->(page, list, offset) do
       return unless page.present?
 
       label = "#{'. . ' * offset}#{page.label}"
       list << { name: label, url: page.url(relative: true) }
-      page.children.each do |child_page|
+      (pages_by_parent[page.id] || []).each do |child_page|
         tree_walker.call(child_page, list, offset + 1)
       end
       list
     end
 
+    root_page = pages_by_parent[nil]&.first || @site.pages.root
+
     page_select_options = [{
       name: I18n.t('comfy.admin.cms.pages.form.choose_link'),
       url: false
-    }] + tree_walker.call(@site.pages.root, [], 0)
+    }] + tree_walker.call(root_page, [], 0)
 
     render json: page_select_options
   end
@@ -115,7 +120,11 @@ protected
   end
 
   def pages_grouped_by_parent
-    @site.pages.order(:position).includes(:categories).group_by(&:parent_id)
+    site_pages_scope.order(:position).includes(:categories).group_by(&:parent_id)
+  end
+
+  def site_pages_scope
+    @site.pages.includes(:site)
   end
 
   def check_for_layouts
