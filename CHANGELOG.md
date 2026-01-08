@@ -12,6 +12,17 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
+## [v3.1.4] - 2025-07-14
+
+### Fixed
+
+- removed obsolete JQuery reference
+
+### Changed
+
+- updated gem versions
+- update README for migration from Occams
+
 ## [v3.1.3] - 2025-05-29
 
 ### Fixed
@@ -90,7 +101,8 @@ First release of `comfortable_media_surfer`. This new gem is a revival of [Comfo
 
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
-[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.3...master
+[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.4...master
+[v3.1.4]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.3...v3.1.4
 [v3.1.3]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.2...v3.1.3
 [v3.1.2]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.1...v3.1.2
 [v3.1.1]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.0...v3.1.1
