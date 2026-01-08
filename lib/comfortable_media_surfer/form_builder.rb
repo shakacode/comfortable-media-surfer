@@ -31,11 +31,11 @@ class ComfortableMediaSurfer::FormBuilder < ComfyBootstrapForm::FormBuilder
   #   = form.form_actions do
   #     = form.submit
   #
-  def form_actions(&block)
+  def form_actions(&)
     content_tag(:div, class: 'form-actions row bg-light') do
       content_tag(:div, class: 'col-lg-8 offset-lg-2') do
         content_tag(:div, class: 'form-group row mb-0') do
-          content_tag(:div, class: 'col-sm-10 offset-sm-2', &block)
+          content_tag(:div, class: 'col-sm-10 offset-sm-2', &)
         end
       end
     end

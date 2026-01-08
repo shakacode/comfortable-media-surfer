@@ -9,7 +9,7 @@ class Comfy::Admin::Cms::SitesController < Comfy::Admin::Cms::BaseController
   before_action :authorize
 
   def index
-    return redirect_to action: :new if ::Comfy::Cms::Site.count.zero?
+    return redirect_to action: :new if ::Comfy::Cms::Site.none?
 
     @site   = ::Comfy::Cms::Site.find_by_id(session[:site_id])
     @sites  = ::Comfy::Cms::Site.all

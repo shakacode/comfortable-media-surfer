@@ -150,7 +150,7 @@ class Comfy::Admin::Cms::FilesControllerTest < ActionDispatch::IntegrationTest
         source: 'plupload',
         file: {}
       }
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
     end
   end
 
@@ -184,7 +184,7 @@ class Comfy::Admin::Cms::FilesControllerTest < ActionDispatch::IntegrationTest
         source: 'redactor',
         file: {}
       }
-      assert_response :unprocessable_entity
+      assert_response :unprocessable_content
     end
   end
 

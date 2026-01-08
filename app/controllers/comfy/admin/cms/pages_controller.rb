@@ -2,6 +2,7 @@
 
 class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
   include ::Comfy::ReorderAction
+
   self.reorder_action_resource = ::Comfy::Cms::Page
 
   before_action :check_for_layouts, only: %i[new edit]
@@ -111,7 +112,7 @@ protected
   end
 
   def site_has_no_pages?
-    @site.pages.count.zero?
+    @site.pages.none?
   end
 
   def pages_grouped_by_parent
@@ -119,7 +120,7 @@ protected
   end
 
   def check_for_layouts
-    return unless @site.layouts.count.zero?
+    return unless @site.layouts.none?
 
     flash[:danger] = I18n.t('comfy.admin.cms.pages.layout_not_found')
     redirect_to new_comfy_admin_cms_site_layout_path(@site)

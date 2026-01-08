@@ -16,16 +16,19 @@ group :development, :test do
 end
 
 group :test do
-  gem 'brakeman',                 '~> 6.1.2'
+  gem 'brakeman',                 '~> 7.1.0'
   gem 'bundler-audit',            '~> 0.9.1'
-  gem 'coveralls_reborn',         '~> 0.28.0', require: false
+  gem 'coveralls_reborn',         '~> 0.29.0', require: false
   gem 'cuprite',                  '>= 0.15'
+  gem 'diffy'
   gem 'equivalent-xml',           '~> 0.6.0'
-  gem 'minitest',                 '>= 5.23.0'
+  gem 'minitest',                 '< 6.0.0'
   gem 'minitest-reporters',       '>= 1.6.1'
   gem 'mocha',                    '>= 2.3.0', require: false
+  gem 'ostruct'
+  gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop',                  '~> 1.63.0', require: false
+  gem 'rubocop',                  '~> 1.81.1', require: false
   gem 'rubocop-minitest'
   gem 'rubocop-rails'
   gem 'simplecov', '~> 0.22.0', require: false

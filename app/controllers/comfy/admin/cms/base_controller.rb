@@ -2,7 +2,7 @@
 
 class Comfy::Admin::Cms::BaseController < Comfy::Admin::BaseController
   before_action :load_admin_site,
-                :set_locale,
+                :set_locale?,
                 :load_seeds,
                 except: :jump
 
@@ -33,7 +33,7 @@ protected
     end
   end
 
-  def set_locale
+  def set_locale?
     I18n.locale = ComfortableMediaSurfer.config.admin_locale || @site&.locale
     true
   end

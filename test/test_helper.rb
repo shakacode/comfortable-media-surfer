@@ -36,6 +36,9 @@ if Gem::Version.new(Rails.version) >= Gem::Version.new('7.1.0')
   $VERBOSE = false
 end
 
+# To handle formbuilder incompatibilies with >= Rails 8.1
+RAILS_EDGE = Gem::Version.new(Rails.version) >= Gem::Version.new('8.1.0')
+
 reporter_options = { color: true, slow_count: 4 }
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_options)]
 Rails.backtrace_cleaner.remove_silencers!

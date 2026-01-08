@@ -36,7 +36,7 @@ class Comfy::Cms::Page < ActiveRecord::Base
             presence: true,
             uniqueness: { scope: :parent_id },
             unless: ->(p) {
-              p.site && (p.site.pages.count.zero? || p.site.pages.root == self)
+              p.site && (p.site.pages.none? || p.site.pages.root == self)
             }
   validate :validate_target_page
   validate :validate_format_of_unescaped_slug
@@ -113,7 +113,7 @@ protected
   def assign_parent
     return unless site
 
-    self.parent ||= site.pages.root unless self == site.pages.root || site.pages.count.zero?
+    self.parent ||= site.pages.root unless self == site.pages.root || site.pages.none?
   end
 
   def assign_full_path
