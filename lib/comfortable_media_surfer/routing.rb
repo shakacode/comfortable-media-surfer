@@ -8,8 +8,14 @@ module ComfortableMediaSurfer::Routing
           namespace :cms, as: :admin_cms, path: path, except: :show do
             get '/', to: 'base#jump'
 
+            # concern :with_revisions do |options|
+            #   resources :revisions, options.merge(only: %i[index show]) do
+            #     patch :revert, on: :member
+            #   end
+            # end
+
             concern :with_revisions do |options|
-              resources :revisions, options.merge(only: %i[index show]) do
+              resources :revisions, **options, only: %i[index show] do
                 patch :revert, on: :member
               end
             end

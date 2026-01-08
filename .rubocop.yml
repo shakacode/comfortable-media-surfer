@@ -5,6 +5,7 @@ require:
 AllCops:
   TargetRubyVersion: 3.2
   NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - bin/*
     - db/schema.rb
@@ -47,6 +48,9 @@ Metrics/PerceivedComplexity:
 
 # -- Naming --------------------------------------------------------------------
 Naming/MethodParameterName:
+  Enabled: false
+
+Naming/PredicateMethod:
   Enabled: false
 
 # -- Style ---------------------------------------------------------------------

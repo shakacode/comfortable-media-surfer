@@ -33,7 +33,7 @@ class Comfy::Cms::Site < ActiveRecord::Base
   # -- Class Methods -----------------------------------------------------------
   # returning the Comfy::Cms::Site instance based on host and path
   def self.find_site(host, path = nil)
-    return Comfy::Cms::Site.first if Comfy::Cms::Site.count == 1
+    return Comfy::Cms::Site.first if Comfy::Cms::Site.one?
 
     cms_site = nil
 

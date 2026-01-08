@@ -2,6 +2,7 @@
 
 class Comfy::Admin::Cms::SnippetsController < Comfy::Admin::Cms::BaseController
   include ::Comfy::ReorderAction
+
   self.reorder_action_resource = ::Comfy::Cms::Snippet
 
   before_action :build_snippet, only: %i[new create]
@@ -9,7 +10,7 @@ class Comfy::Admin::Cms::SnippetsController < Comfy::Admin::Cms::BaseController
   before_action :authorize
 
   def index
-    return redirect_to action: :new if @site.snippets.count.zero?
+    return redirect_to action: :new if @site.snippets.none?
 
     @snippets = @site.snippets.includes(:categories).for_category(params[:categories]).order(:position)
   end

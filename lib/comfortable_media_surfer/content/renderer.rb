@@ -60,7 +60,7 @@ class ComfortableMediaSurfer::Content::Renderer
         nodes   = nodes(tokens)
         render(nodes, allow_erb || node.allow_erb?, depth.next)
       end
-    end.flatten.join
+    end.join
   end
 
   def sanitize_erb(string, allow_erb)
@@ -106,7 +106,7 @@ class ComfortableMediaSurfer::Content::Renderer
 
         # This handles {{cms:end}} tag. Stopping collecting block nodes.
         when 'end'
-          if nodes.count == 1
+          if nodes.one?
             raise SyntaxError, 'closing unopened block'
           end
 

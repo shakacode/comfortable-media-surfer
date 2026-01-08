@@ -13,10 +13,12 @@ jobs:
           - "3.2"
           - "3.3"
           - "3.4"
+          - "4.0"
         rails-version:
           - "7.1"
           - "7.2"
           - "8.0"
+          - "8.1"
         continue-on-error: [true]
     name: ${{ format('Tests (Ruby {0}, Rails {1})', matrix.ruby-version, matrix.rails-version) }}
     runs-on: ubuntu-latest

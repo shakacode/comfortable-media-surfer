@@ -16,14 +16,14 @@ desc("Releases the gem package using the given version.
 task :create_release, %i[gem_version dry_run] do |_t, args|
   args_hash = args.to_hash
 
-  is_dry_run = Release.object_to_boolean(args_hash[:dry_run])
+  is_dry_run = Release.object_to_boolean?(args_hash[:dry_run])
   gem_version = args_hash.fetch(:gem_version, '').strip
   gem_root = Release.gem_root
 
   Release.update_the_local_project
   Release.ensure_there_is_nothing_to_commit
   Release.sh_in_dir(gem_root,
-                    "gem bump --no-commit #{gem_version == '' ? '' : %(--version #{gem_version})}")
+                    "gem bump --no-commit #{%(--version #{gem_version}) unless gem_version == ''}")
   Release.sh_in_dir(gem_root, 'bundle install')
   Release.sh_in_dir(gem_root, "git commit -am 'Bump version to #{gem_version}'")
   Release.sh_in_dir(gem_root, 'git push')
@@ -34,6 +34,7 @@ end
 
 module Release
   extend FileUtils
+
   class << self
     def gem_root
       File.expand_path('..', __dir__)
@@ -57,7 +58,7 @@ module Release
       raise(error)
     end
 
-    def object_to_boolean(value)
+    def object_to_boolean?(value)
       [true, 'true', 'yes', 1, '1', 't'].include?(value.instance_of?(String) ? value.downcase : value)
     end
 

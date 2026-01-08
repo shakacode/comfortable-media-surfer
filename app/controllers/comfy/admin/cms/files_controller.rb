@@ -2,6 +2,7 @@
 
 class Comfy::Admin::Cms::FilesController < Comfy::Admin::Cms::BaseController
   include ::Comfy::ReorderAction
+
   self.reorder_action_resource = ::Comfy::Cms::File
 
   include ActionView::Helpers::NumberHelper
@@ -81,9 +82,9 @@ class Comfy::Admin::Cms::FilesController < Comfy::Admin::Cms::BaseController
   rescue ActiveRecord::RecordInvalid
     case params[:source]
     when 'plupload'
-      render body: @file.errors.full_messages.to_sentence, status: :unprocessable_entity
+      render body: @file.errors.full_messages.to_sentence, status: :unprocessable_content
     when 'redactor'
-      render body: nil, status: :unprocessable_entity
+      render body: nil, status: :unprocessable_content
     else
       flash.now[:danger] = I18n.t('comfy.admin.cms.files.creation_failure')
       render action: :new

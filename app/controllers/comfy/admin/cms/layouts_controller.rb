@@ -2,6 +2,7 @@
 
 class Comfy::Admin::Cms::LayoutsController < Comfy::Admin::Cms::BaseController
   include ::Comfy::ReorderAction
+
   self.reorder_action_resource = ::Comfy::Cms::Layout
 
   before_action :build_layout,  only: %i[new create]
@@ -9,7 +10,7 @@ class Comfy::Admin::Cms::LayoutsController < Comfy::Admin::Cms::BaseController
   before_action :authorize
 
   def index
-    return redirect_to action: :new if @site.layouts.count.zero?
+    return redirect_to action: :new if @site.layouts.none?
 
     @layouts = @site.layouts.roots.order(:position)
   end
