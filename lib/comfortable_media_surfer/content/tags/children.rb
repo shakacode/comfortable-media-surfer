@@ -25,7 +25,7 @@ class ComfortableMediaSurfer::Content::Tags::Children < ComfortableMediaSurfer::
     @style  = ''
     @style  = "<style>#children {#{@locals['style']}}</style>\n" if @locals['style']
     @exclude = []
-    @exclude = @locals['exclude'].split(',') if @locals['exclude']
+    @exclude = @locals['exclude'].split(',').map(&:strip) if @locals['exclude']
     @list = ''
     # ActiveRecord_Associations_CollectionProxy
     @page_children = context.children.order(:position).to_ary
