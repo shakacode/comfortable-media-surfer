@@ -36,7 +36,7 @@ class Comfy::Cms::Page < ActiveRecord::Base
             presence: true,
             uniqueness: { scope: :parent_id },
             unless: ->(p) {
-              p.site && (p.site.pages.none? || p.site.pages.root == self)
+              p.site && (!p.site.pages.exists? || p.site.pages.root == self)
             }
   validate :validate_target_page
   validate :validate_format_of_unescaped_slug

@@ -224,6 +224,34 @@ class Comfy::Admin::Cms::PagesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_creation_root_page
+    # Make sure there are no pages to start with
+    @site.pages.clear
+
+    assert_difference 'Comfy::Cms::Page.count' do
+      assert_difference 'Comfy::Cms::Fragment.count', 2 do
+        r :post, comfy_admin_cms_site_pages_path(site_id: @site), params: {
+          page: {
+            label: 'Home Page',
+            layout_id: @layout.id,
+            fragments_attributes: [
+              { identifier: 'default_page_text',
+                content: 'content content' },
+              { identifier: 'default_field_text',
+                content: 'title content' }
+            ]
+          },
+          commit: 'Create Page'
+        }
+        assert_response :redirect
+        page = Comfy::Cms::Page.last
+        assert_equal @site, page.site
+        assert_redirected_to action: :edit, id: page
+        assert_equal 'Page created, siblings, and parent updated', flash[:success]
+      end
+    end
+  end
+
   def test_creation_with_files
     assert_difference 'Comfy::Cms::Page.count' do
       assert_difference 'Comfy::Cms::Fragment.count', 3 do
