@@ -30,6 +30,40 @@ rhino-editor::part(cms-defined-links__label)
 	color: #212529
 	margin-bottom: .25rem
 
+rhino-editor::part(cms-file-upload)
+	display: flex
+	gap: .5rem
+	margin-bottom: .5rem
+	padding: .5rem
+	background: rgba(33, 150, 243, .06)
+	border: 1px dashed rgba(33, 150, 243, .3)
+	border-radius: .35rem
+
+rhino-editor::part(cms-file-upload__button)
+	font-size: .75rem
+	font-weight: 600
+	padding: .4rem .7rem
+	border-radius: .3rem
+	background: #2196f3
+	color: #fff
+	border: none
+	cursor: pointer
+	transition: background-color .15s ease
+
+rhino-editor::part(cms-file-upload__button:hover)
+	background: #1976d2
+
+rhino-editor::part(cms-file-upload__button:disabled)
+	opacity: .6
+	cursor: not-allowed
+
+rhino-editor::part(cms-file-upload__status)
+	flex: 1
+	display: flex
+	align-items: center
+	font-size: .75rem
+	color: #546e7a
+
 rhino-editor::part(cms-defined-links__results)
 	list-style: none
 	margin: 0
@@ -47,8 +81,29 @@ rhino-editor::part(cms-defined-links__status)
 rhino-editor::part(cms-defined-links__option)
 	cursor: pointer
 	display: flex
+	align-items: center
+	gap: .5rem
+
+rhino-editor::part(cms-defined-links__option-icon)
+	flex-shrink: 0
+	width: 1.5rem
+	height: 1.5rem
+	display: flex
+	align-items: center
+	justify-content: center
+	font-size: 1rem
+
+rhino-editor::part(cms-defined-links__option-details)
+	flex: 1
+	display: flex
 	flex-direction: column
 	gap: .1rem
+	min-width: 0
+
+rhino-editor::part(cms-defined-links__option-size)
+	font-size: .65rem
+	color: #9ca3af
+	font-style: italic
 
 rhino-editor::part(cms-defined-links__option:hover),
 rhino-editor::part(cms-defined-links__option)[aria-selected="true"]

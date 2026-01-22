@@ -15,6 +15,21 @@ class Comfy::Admin::Cms::FilesController < Comfy::Admin::Cms::BaseController
 
     case params[:source]
 
+    # Integration with Rhino Editor - file picker
+    when 'rhino'
+      file_scope = files_scope.limit(100).order(:label)
+      file_hashes = file_scope.collect do |file|
+        {
+          id: file.id,
+          name: file.label,
+          url: url_for(file.attachment),
+          content_type: file.attachment.content_type,
+          size: number_to_human_size(file.attachment.byte_size)
+        }
+      end
+
+      render json: file_hashes
+
     # Integration with Redactor 1.0 Wysiwyg
     when 'redactor'
       file_scope  = files_scope.limit(100).order(:position)

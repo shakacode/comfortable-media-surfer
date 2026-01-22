@@ -13,6 +13,10 @@ class ComfortableMediaSurfer::Content::Tags::Wysiwyg < ComfortableMediaSurfer::C
     if context.respond_to?(:site) && (site = context.site).present?
       data_attributes['defined-links-url'] =
         view.comfy_admin_cms_site_pages_path(site, source: 'rhino')
+      data_attributes['defined-files-url'] =
+        view.comfy_admin_cms_site_files_path(site, source: 'rhino')
+      data_attributes['file-upload-url'] =
+        view.comfy_admin_cms_site_files_path(site, source: 'rhino')
     end
 
     options = { id: form_field_id, data: data_attributes }

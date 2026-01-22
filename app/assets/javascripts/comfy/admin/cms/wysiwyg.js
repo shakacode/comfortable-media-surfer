@@ -255,14 +255,14 @@ class DefinedLinksPicker {
 
       const label = document.createElement("div");
       label.className = "cms-defined-links__label";
-      label.textContent = "Link to a CMS page";
+      label.textContent = "Link to CMS page or file";
   label.setAttribute("part", "cms-defined-links__label");
 
       this.list = document.createElement("ul");
       this.list.className = "cms-defined-links__results";
       this.list.setAttribute("role", "listbox");
       this.list.id = "cms-defined-links-results";
-      this.list.setAttribute("aria-label", "CMS pages suggestions");
+      this.list.setAttribute("aria-label", "CMS pages and files suggestions");
   this.list.setAttribute("part", "cms-defined-links__results");
       this.list.addEventListener("mousedown", this.handleListMouseDown);
       this.list.addEventListener("click", this.handleListClick);
@@ -289,7 +289,7 @@ class DefinedLinksPicker {
       this.originalPlaceholder ?? input.getAttribute("placeholder") ?? "";
     input.setAttribute(
       "placeholder",
-      `Enter URL or search CMS pages`
+      `Enter URL or search CMS pages/files`
     );
     input.setAttribute("aria-controls", "cms-defined-links-results");
     input.addEventListener("input", this.handleInput);
@@ -482,7 +482,7 @@ class DefinedLinksPicker {
     if (this.fetchError) {
       debugDefinedLinks("Rendering fetch error state");
       this.list.appendChild(
-        this.createStatusItem("Unable to load CMS pages")
+        this.createStatusItem("Unable to load CMS resources")
       );
       return;
     }
@@ -490,10 +490,10 @@ class DefinedLinksPicker {
     if (!this.links.length) {
       if (this.isFetching) {
         debugDefinedLinks("Awaiting fetch results");
-        this.list.appendChild(this.createStatusItem("Loading pages…"));
+        this.list.appendChild(this.createStatusItem("Loading…"));
       } else {
-        debugDefinedLinks("No pages available after fetch");
-        this.list.appendChild(this.createStatusItem("No pages available"));
+        debugDefinedLinks("No resources available after fetch");
+        this.list.appendChild(this.createStatusItem("No resources available"));
       }
       return;
     }
@@ -509,8 +509,8 @@ class DefinedLinksPicker {
     this.visibleOptions = matches;
     if (matches.length === 0) {
       const message = query
-        ? "No matching pages"
-        : "No pages available";
+        ? "No matches"
+        : "No resources available";
       debugDefinedLinks("No matches for query", { query });
       this.list.appendChild(this.createStatusItem(message));
       this.highlightedIndex = -1;
@@ -524,6 +524,16 @@ class DefinedLinksPicker {
       item.dataset.definedLinkIndex = String(index);
       item.setAttribute("part", "cms-defined-links__option");
 
+      // Add icon for type (page vs file)
+      const icon = document.createElement("span");
+      icon.className = "cms-defined-links__option-icon";
+      icon.textContent = this.getIcon(option);
+      icon.setAttribute("part", "cms-defined-links__option-icon");
+
+      const details = document.createElement("div");
+      details.className = "cms-defined-links__option-details";
+      details.setAttribute("part", "cms-defined-links__option-details");
+
       const name = document.createElement("span");
       name.className = "cms-defined-links__option-name";
       name.textContent = option.name;
@@ -534,7 +544,18 @@ class DefinedLinksPicker {
       url.textContent = option.url;
       url.setAttribute("part", "cms-defined-links__option-url");
 
-      item.append(name, url);
+      details.append(name, url);
+      
+      // Add file size if available
+      if (option.size) {
+        const size = document.createElement("span");
+        size.className = "cms-defined-links__option-size";
+        size.textContent = option.size;
+        size.setAttribute("part", "cms-defined-links__option-size");
+        details.appendChild(size);
+      }
+
+      item.append(icon, details);
       this.list.appendChild(item);
     });
 
@@ -543,6 +564,22 @@ class DefinedLinksPicker {
     }
     debugDefinedLinks("Rendered options", { count: matches.length });
     this.renderHighlight();
+  }
+
+  getIcon(option) {
+    // If it has a content_type, it's a file
+    if (option.content_type) {
+      const contentType = option.content_type;
+      if (contentType.startsWith('image/')) return '🖼️';
+      if (contentType.startsWith('video/')) return '🎥';
+      if (contentType.startsWith('audio/')) return '🎵';
+      if (contentType.includes('pdf')) return '📄';
+      if (contentType.includes('zip') || contentType.includes('archive')) return '📦';
+      if (contentType.includes('text')) return '📝';
+      return '📎';
+    }
+    // Otherwise it's a page
+    return '📄';
   }
 
   applyOption(option) {
@@ -604,6 +641,290 @@ class DefinedLinksPicker {
     this.list = null;
     this.shadowRoot = null;
     this.visibleOptions = [];
+  }
+}
+
+// DefinedFilesPicker class - fetches and merges both pages and files, plus handles uploads
+class DefinedFilesPicker {
+  constructor(adapter, pagesUrl, filesUrl, uploadUrl) {
+    this.adapter = adapter;
+    this.pagesUrl = pagesUrl;
+    this.filesUrl = filesUrl;
+    this.uploadUrl = uploadUrl;
+    this.linksPickerDelegate = null;
+    this.uploadContainer = null;
+    this.fileInput = null;
+    this.uploadButton = null;
+    this.uploadStatus = null;
+    this.isUploading = false;
+    
+    this.handleFileSelect = this.handleFileSelect.bind(this);
+    this.handleUploadClick = this.handleUploadClick.bind(this);
+  }
+
+  observe(shadowRoot) {
+    if (!shadowRoot) return;
+    
+    // Combine both URLs into a unified list
+    const combinedUrl = this._createCombinedUrl();
+    
+    if (!this.linksPickerDelegate) {
+      this.linksPickerDelegate = new DefinedLinksPicker(this.adapter, combinedUrl);
+      // Override fetchLinks to fetch from both sources
+      this.linksPickerDelegate.fetchLinks = async () => {
+        await this._fetchCombinedLinks();
+      };
+      
+      // After container is created, inject upload UI
+      const originalSync = this.linksPickerDelegate.sync.bind(this.linksPickerDelegate);
+      this.linksPickerDelegate.sync = () => {
+        originalSync();
+        this._injectUploadUI();
+      };
+    }
+    
+    this.linksPickerDelegate.observe(shadowRoot);
+  }
+
+  _injectUploadUI() {
+    if (!this.uploadUrl) return;
+    if (this.uploadContainer) return; // Already injected
+    if (!this.linksPickerDelegate.container) return;
+
+    debugDefinedLinks("Injecting file upload UI");
+
+    this.uploadContainer = document.createElement("div");
+    this.uploadContainer.className = "cms-file-upload";
+    this.uploadContainer.setAttribute("part", "cms-file-upload");
+
+    this.fileInput = document.createElement("input");
+    this.fileInput.type = "file";
+    this.fileInput.style.display = "none";
+    this.fileInput.addEventListener("change", this.handleFileSelect);
+
+    this.uploadButton = document.createElement("button");
+    this.uploadButton.type = "button";
+    this.uploadButton.className = "cms-file-upload__button";
+    this.uploadButton.setAttribute("part", "cms-file-upload__button");
+    this.uploadButton.textContent = "Upload New File";
+    this.uploadButton.addEventListener("click", this.handleUploadClick);
+
+    this.uploadStatus = document.createElement("span");
+    this.uploadStatus.className = "cms-file-upload__status";
+    this.uploadStatus.setAttribute("part", "cms-file-upload__status");
+    this.uploadStatus.textContent = "Choose a file to link";
+
+    this.uploadContainer.append(this.uploadButton, this.uploadStatus, this.fileInput);
+    
+    // Insert before the list
+    const list = this.linksPickerDelegate.list;
+    if (list && list.parentNode) {
+      list.parentNode.insertBefore(this.uploadContainer, list);
+    }
+  }
+
+  handleUploadClick() {
+    if (this.isUploading) return;
+    this.fileInput.click();
+  }
+
+  async handleFileSelect(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    debugDefinedLinks("File selected for upload", { filename: file.name, size: file.size });
+
+    this.isUploading = true;
+    this.uploadButton.disabled = true;
+    this.uploadStatus.textContent = `Uploading ${file.name}...`;
+
+    try {
+      const formData = new FormData();
+      formData.append("file[file]", file);
+      formData.append("source", "rhino");
+
+      const response = await fetch(this.uploadUrl, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "Accept": "application/json"
+        },
+        credentials: "same-origin"
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      debugDefinedLinks("File upload successful", data);
+
+      const fileUrl = data.filelink;
+      const fileName = data.filename || file.name;
+
+      this.uploadStatus.textContent = `✓ Uploaded: ${fileName}`;
+
+      // Auto-apply the link
+      this._applyUploadedFile(fileUrl, fileName);
+
+      // Clear the file input
+      this.fileInput.value = "";
+
+      // Invalidate cache to refresh file list
+      const cacheKey = `combined:${this.pagesUrl}:${this.filesUrl}`;
+      DEFINED_LINKS_CACHE.delete(cacheKey);
+      
+      // Refresh the file list
+      if (this.linksPickerDelegate) {
+        await this._fetchCombinedLinks();
+      }
+
+    } catch (error) {
+      console.error("File upload failed", error);
+      this.uploadStatus.textContent = `✗ Upload failed: ${error.message}`;
+    } finally {
+      this.isUploading = false;
+      this.uploadButton.disabled = false;
+      
+      // Reset status after 3 seconds
+      setTimeout(() => {
+        if (this.uploadStatus) {
+          this.uploadStatus.textContent = "Choose a file to link";
+        }
+      }, 3000);
+    }
+  }
+
+  _applyUploadedFile(url, name) {
+    if (!url) return;
+    
+    debugDefinedLinks("Auto-applying uploaded file link", { url, name });
+
+    const editor = this.adapter.editor;
+
+    if (editor) {
+      const { selection } = editor.state;
+      
+      // If no text is selected, insert the filename as link text
+      if (selection.empty) {
+        const from = selection.anchor;
+        editor.commands.insertContent(name);
+        const to = editor.state.selection.anchor;
+        editor.commands.setTextSelection({ from, to });
+      }
+
+      // Apply the link
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
+    }
+
+    // Close the link dialog
+    if (this.adapter.rhinoElement?.closeLinkDialog) {
+      this.adapter.rhinoElement.closeLinkDialog();
+    }
+
+    this.adapter._syncToTextarea?.();
+  }
+
+  _createCombinedUrl() {
+    // We'll use a placeholder URL since we're overriding fetchLinks anyway
+    return this.pagesUrl || this.filesUrl || '';
+  }
+
+  async _fetchCombinedLinks() {
+    const delegate = this.linksPickerDelegate;
+    if (!delegate) return;
+
+    const cacheKey = `combined:${this.pagesUrl}:${this.filesUrl}`;
+    
+    if (DEFINED_LINKS_CACHE.has(cacheKey)) {
+      delegate.links = DEFINED_LINKS_CACHE.get(cacheKey);
+      delegate.fetchError = null;
+      debugDefinedLinks("Using cached combined links", {
+        count: delegate.links.length,
+      });
+      delegate.updateList(delegate.input?.value || "");
+      return;
+    }
+
+    delegate.isFetching = true;
+    delegate.fetchError = null;
+    delegate.updateList(delegate.input?.value || "");
+    debugDefinedLinks("Fetching combined pages and files");
+
+    try {
+      const fetchPromises = [];
+      
+      if (this.pagesUrl) {
+        fetchPromises.push(
+          fetch(this.pagesUrl, {
+            headers: { Accept: "application/json" },
+            credentials: "same-origin",
+          })
+        );
+      }
+      
+      if (this.filesUrl) {
+        fetchPromises.push(
+          fetch(this.filesUrl, {
+            headers: { Accept: "application/json" },
+            credentials: "same-origin",
+          })
+        );
+      }
+
+      const responses = await Promise.all(fetchPromises);
+      
+      const dataPromises = responses.map(async (response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json();
+      });
+
+      const allData = await Promise.all(dataPromises);
+      
+      // Combine and filter
+      const combinedLinks = allData
+        .flat()
+        .filter((item) => item && item.url);
+
+      delegate.links = combinedLinks;
+      DEFINED_LINKS_CACHE.set(cacheKey, combinedLinks);
+      debugDefinedLinks("Fetched combined links", { count: combinedLinks.length });
+    } catch (error) {
+      console.error("CMS combined links fetch failed", error);
+      debugDefinedLinks("Error fetching combined links", error);
+      delegate.fetchError = error;
+    } finally {
+      delegate.isFetching = false;
+      delegate.updateList(delegate.input?.value || "");
+    }
+  }
+
+  destroy() {
+    if (this.fileInput) {
+      this.fileInput.removeEventListener("change", this.handleFileSelect);
+      this.fileInput = null;
+    }
+    if (this.uploadButton) {
+      this.uploadButton.removeEventListener("click", this.handleUploadClick);
+      this.uploadButton = null;
+    }
+    if (this.uploadContainer) {
+      this.uploadContainer.remove();
+      this.uploadContainer = null;
+    }
+    if (this.linksPickerDelegate) {
+      this.linksPickerDelegate.destroy();
+      this.linksPickerDelegate = null;
+    }
+    this.uploadStatus = null;
   }
 }
 
@@ -785,10 +1106,12 @@ class CmsWysiwygAdapter {
     }
 
     const definedLinksUrl = this.textarea.dataset.definedLinksUrl;
+    const definedFilesUrl = this.textarea.dataset.definedFilesUrl;
+    const fileUploadUrl = this.textarea.dataset.fileUploadUrl;
 
-    if (!definedLinksUrl) {
+    if (!definedLinksUrl && !definedFilesUrl) {
       if (!this._loggedMissingDefinedLinksUrl) {
-        debugDefinedLinks("Textarea missing defined-links URL; picker disabled");
+        debugDefinedLinks("Textarea missing defined-links/files URLs; picker disabled");
         this._loggedMissingDefinedLinksUrl = true;
       }
       if (this._definedLinksPicker) {
@@ -799,27 +1122,41 @@ class CmsWysiwygAdapter {
     }
 
     if (this._loggedMissingDefinedLinksUrl) {
-      debugDefinedLinks("Defined-links URL discovered", { definedLinksUrl });
+      debugDefinedLinks("Defined-links/files URL discovered", { definedLinksUrl, definedFilesUrl });
       this._loggedMissingDefinedLinksUrl = false;
     }
 
-    if (!this._definedLinksPicker || this._definedLinksPicker.url !== definedLinksUrl) {
-      debugDefinedLinks("Preparing defined-links picker", { definedLinksUrl });
-    } else {
-      debugDefinedLinks("Defined-links picker already matches URL", { definedLinksUrl });
-    }
+    // Use combined picker if we have both pages and files URLs
+    const pickerKey = `${definedLinksUrl || ''}:${definedFilesUrl || ''}`;
+    const currentPickerKey = this._definedLinksPicker?._pickerKey;
 
-    if (!this._definedLinksPicker) {
-      this._definedLinksPicker = new DefinedLinksPicker(
-        this,
-        definedLinksUrl
-      );
-    } else if (this._definedLinksPicker.url !== definedLinksUrl) {
-      this._definedLinksPicker.destroy();
-      this._definedLinksPicker = new DefinedLinksPicker(
-        this,
-        definedLinksUrl
-      );
+    if (!this._definedLinksPicker || currentPickerKey !== pickerKey) {
+      debugDefinedLinks("Preparing unified picker", { definedLinksUrl, definedFilesUrl });
+      
+      if (this._definedLinksPicker) {
+        this._definedLinksPicker.destroy();
+      }
+
+      if (definedLinksUrl && definedFilesUrl) {
+        // Use combined picker for both pages and files
+        this._definedLinksPicker = new DefinedFilesPicker(
+          this,
+          definedLinksUrl,
+          definedFilesUrl,
+          fileUploadUrl
+        );
+        this._definedLinksPicker._pickerKey = pickerKey;
+      } else {
+        // Fallback to single picker if only one URL is available
+        const url = definedLinksUrl || definedFilesUrl;
+        this._definedLinksPicker = new DefinedLinksPicker(
+          this,
+          url
+        );
+        this._definedLinksPicker._pickerKey = pickerKey;
+      }
+    } else {
+      debugDefinedLinks("Unified picker already configured", { pickerKey });
     }
 
     this._definedLinksPicker.observe(shadowRoot);

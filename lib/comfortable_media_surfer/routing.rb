@@ -36,7 +36,11 @@ module ComfortableMediaSurfer::Routing
                 end
               end
 
-              resources :files, concerns: [:with_reorder]
+              resources :files, concerns: [:with_reorder] do
+                collection do
+                  get :defined_links
+                end
+              end
 
               resources :layouts do
                 concerns :with_reorder
