@@ -24,7 +24,7 @@ group :development do
 end
 
 group :test do
-  gem 'brakeman',                 '~> 7.1.0'
+  gem 'brakeman',                 '~> 8.0.1'
   gem 'bundler-audit',            '~> 0.9.1'
   gem 'coveralls_reborn',         '~> 0.29.0', require: false
   gem 'cuprite',                  '>= 0.15'
