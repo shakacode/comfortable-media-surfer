@@ -20,7 +20,7 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## Fixed
 
-- bug in creating root homepage from [PR](https://github.com/shakacode/comfortable-media-surfer/pull/45)
+- Strip possible spaces around exclude page slugs, from [PR](https://github.com/shakacode/comfortable-media-surfer/pull/42)
 
 ## Changed
 
