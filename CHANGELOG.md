@@ -12,17 +12,27 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
+## [v3.1.6] - 2026-02-19
+
+### Added
+
+- Claude code workflow
+
+### Fixed
+
+- problem creating root/home page from [P5 45](https://github.com/shakacode/comfortable-media-surfer/pull/45)
+
 ## [v3.1.5] - 2026-01-08
 
-## Added
+### Added
 
 - Rails 8.1 compatibility
 
-## Fixed
+### Fixed
 
-- Strip possible spaces around exclude page slugs, from [PR](https://github.com/shakacode/comfortable-media-surfer/pull/42)
+- Strip possible spaces around exclude page slugs, from [PR 42](https://github.com/shakacode/comfortable-media-surfer/pull/42)
 
-## Changed
+### Changed
 
 - gem updates for propshaft, brakeman, rubocop, haml-rails
 
@@ -115,7 +125,8 @@ First release of `comfortable_media_surfer`. This new gem is a revival of [Comfo
 
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
-[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.5...master
+[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.6...master
+[v3.1.6]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.5...v3.1.6
 [v3.1.5]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.4...v3.1.5
 [v3.1.4]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.3...v3.1.4
 [v3.1.3]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.2...v3.1.3
