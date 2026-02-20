@@ -171,6 +171,25 @@ class Comfy::Admin::Cms::PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "select[data-url='/admin/sites/#{@site.id}/pages/#{@page.id}/form_fragments']"
   end
 
+  def test_get_edit_page_with_date
+    @layout.update_column(:content, '{{cms:textarea content}}{{cms:datetime expires_on, strftime: "%B %d, %Y" }}')
+    @page.update(fragments_attributes: [
+      { identifier: 'expires_on',
+        tag: 'datetime',
+        datetime: comfy_cms_fragments(:datetime).datetime },
+      { identifier: 'content',
+        tag: 'textarea',
+        content: 'demo content' }
+    ])
+
+    r :get, edit_comfy_admin_cms_site_page_path(site_id: @site, id: @page)
+    assert_response :success
+    assert assigns(:page)
+    assert_template :edit
+    assert_select "form[action='/admin/sites/#{@site.id}/pages/#{@page.id}']"
+    assert_select "select[data-url='/admin/sites/#{@site.id}/pages/#{@page.id}/form_fragments']"
+  end
+
   def test_get_edit_failure
     r :get, edit_comfy_admin_cms_site_page_path(site_id: @site, id: 'not_found')
     assert_response :redirect
