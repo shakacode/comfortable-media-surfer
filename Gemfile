@@ -9,7 +9,7 @@ gem 'rails', '~> 8.1.0'
 
 group :development, :test do
   gem 'autoprefixer-rails', '~> 10.4.21.0'
-  gem 'byebug',             '~> 12.0.0', platforms: %i[mri mingw x64_mingw]
+  gem 'byebug',             '~> 13.0.0', platforms: %i[mri mingw x64_mingw]
   gem 'gem-release'
   gem 'image_processing',   '>= 1.12.0'
   gem 'propshaft',          '~> 1.3.1'
