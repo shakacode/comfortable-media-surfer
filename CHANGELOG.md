@@ -12,6 +12,16 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
+## [v3.1.7] - 2026-02-20
+
+### Fixed
+
+- Fix wrong number of arguments for `to_s` in date tags from [PR 58](https://github.com/shakacode/comfortable-media-surfer/pull/58)
+
+### Changed
+
+- Update rubocop requirement from ~> 1.81.1 to ~> 1.84.0
+
 ## [v3.1.6] - 2026-02-19
 
 ### Added
@@ -125,7 +135,8 @@ First release of `comfortable_media_surfer`. This new gem is a revival of [Comfo
 
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
-[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.6...master
+[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.7...master
+[v3.1.7]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.6...v3.1.7
 [v3.1.6]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.5...v3.1.6
 [v3.1.5]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.4...v3.1.5
 [v3.1.4]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.3...v3.1.4
