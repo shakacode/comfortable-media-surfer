@@ -19,7 +19,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'listen',       '~> 3.9.0'
+  gem 'listen',       '~> 3.10.0'
   gem 'web-console',  '~> 4.2'
 end
 
