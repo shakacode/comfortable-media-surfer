@@ -30,7 +30,7 @@ group :test do
   gem 'cuprite',                  '>= 0.15'
   gem 'diffy'
   gem 'equivalent-xml',           '~> 0.6.0'
-  gem 'minitest',                 '< 6.0.0'
+  gem 'minitest',                 '< 7.0.0'
   gem 'minitest-reporters',       '>= 1.6.1'
   gem 'mocha',                    '>= 2.3.0', require: false
   gem 'ostruct'
