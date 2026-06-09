@@ -20,9 +20,8 @@ class Comfy::Cms::ContentController < Comfy::Cms::BaseController
       respond_to do |format|
         format.html { render_page }
         format.json do
-          @cms_page.content = render_to_string(
-            inline: @cms_page.content_cache,
-            layout: false
+          @cms_page.content = decorate_links(
+            render_to_string(inline: @cms_page.content_cache, layout: false)
           )
           json_page = @cms_page.as_json(ComfortableMediaSurfer.config.page_to_json_options)
           render json: json_page
@@ -34,10 +33,35 @@ class Comfy::Cms::ContentController < Comfy::Cms::BaseController
 protected
 
   def render_page(status = :ok)
+    return render_raw_page(status) unless mime_type == 'text/html'
+
+    rendered = render_to_string(inline: @cms_page.content_cache, layout: false)
+    render  html: decorate_links(rendered).html_safe,
+            layout: app_layout,
+            status: status,
+            content_type: mime_type
+  end
+
+  # Non-HTML pages (rss, xml, plain text, etc.) are served verbatim — parsing
+  # them as HTML to decorate links would corrupt them.
+  def render_raw_page(status)
     render  inline: @cms_page.content_cache,
             layout: app_layout,
             status: status,
             content_type: mime_type
+  end
+
+  # Decorate anchor tags in the final, ERB-evaluated page HTML: external links
+  # get nofollow/blank, quote-CTA links get tracking params. Runs here (post-ERB,
+  # per request) rather than at cache time because content_cache holds unevaluated
+  # ERB; decorating it earlier would corrupt partials/components/helpers.
+  def decorate_links(html)
+    ComfortableMediaSurfer::Content::LinkDecorator.new(
+      html,
+      site_host: @cms_site&.hostname,
+      current_path: @cms_page&.full_path,
+      cta_class: ComfortableMediaSurfer.config.cta_link_class
+    ).call
   end
 
   # it's possible to control mimetype of a page by creating a `mime_type` field

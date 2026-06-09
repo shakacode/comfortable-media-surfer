@@ -23,6 +23,21 @@ class Comfy::Cms::ContentControllerTest < ActionDispatch::IntegrationTest
     assert_equal :en, I18n.locale
   end
 
+  def test_show_decorates_links
+    @page.update!(fragments_attributes: [
+      { identifier: 'content', tag: 'textarea',
+        content: '<a href="https://external.test">Ext</a>' \
+                 '<a href="/quote" class="view-carriers-show-btn-cta">Get A Free Quote</a>' }
+    ])
+
+    get comfy_cms_render_page_path(cms_path: '')
+
+    assert_response :success
+    assert_match 'target="_blank"', response.body
+    assert_match 'rel="noopener nofollow"', response.body
+    assert_match 'so=', response.body
+  end
+
   def test_show_default_html
     get comfy_cms_render_page_path(cms_path: ''), headers: { 'Accept' => '*/*' }
     assert_response :success

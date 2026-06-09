@@ -84,6 +84,11 @@ class ComfortableMediaSurfer::Configuration
   # For example: include fragments into json data with `config.page_to_json_options = { include: [:fragments] }`
   attr_accessor :page_to_json_options
 
+  # CSS class marking quote-CTA links that should get `so` tracking params
+  # appended during content rendering. Set to nil to disable CTA tracking
+  # (external-link nofollow/blank decoration still runs regardless).
+  attr_accessor :cta_link_class
+
   # Configuration defaults
   def initialize
     @cms_title              = 'ComfortableMediaSurfer CMS Engine'
@@ -134,5 +139,6 @@ class ComfortableMediaSurfer::Configuration
     @reveal_cms_partials  = false
     @public_cms_path      = nil
     @page_to_json_options = { methods: [:content], except: [:content_cache] }
+    @cta_link_class       = 'view-carriers-show-btn-cta'
   end
 end
