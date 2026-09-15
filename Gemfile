@@ -37,7 +37,7 @@ group :test do
   gem 'parallel_tests', '~> 5.7', require: false
   gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop',                  '~> 1.87.0', require: false
+  gem 'rubocop',                  '~> 1.91.0', require: false
   gem 'rubocop-minitest'
   gem 'rubocop-rails'
   gem 'simplecov', '~> 0.22.0', require: false
