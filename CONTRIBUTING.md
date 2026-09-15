@@ -13,7 +13,11 @@ Fork the project. Optionally, create a branch you want to work on.
   created for you. Just run `bundle exec rake db:migrate`
 - Prepare the environment by running `rails comfy:compile_assets`, and
   `rake db:test:prepare`
-- Make sure that existing tests are passing by running `bundle exec rake test`
+- Make sure that existing tests are passing by running `bundle exec rake test`.
+  This uses six isolated workers by default, merges their coverage, and records
+  per-file runtimes in `tmp/parallel_runtime_test.log` for future balancing.
+  Set `PARALLEL_WORKERS` to tune the worker count, or run
+  `bundle exec rake test:serial` for a serial coverage run.
 - There are system tests that can be run with `bundle exec rake test:system`.
   You need to have `chromedriver` installed for that.
 - You should be able to start the app via `bin/rails s` and navigate to http://localhost:3000/admin

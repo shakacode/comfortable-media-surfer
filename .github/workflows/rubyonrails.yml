@@ -54,7 +54,7 @@ jobs:
           bin/bundle exec rails db:drop
           bin/bundle exec rails db:create
           bin/bundle exec rails db:migrate
-          bin/bundle exec rails test:db
+          bin/bundle exec rake test
 
       - name: Lint the code
         run: bin/bundle exec rubocop --parallel

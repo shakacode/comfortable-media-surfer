@@ -2,21 +2,30 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-require 'simplecov'
-
 unless ENV['SKIP_COV']
-  require 'coveralls'
-  Coveralls.wear!('rails')
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-end
+  require 'simplecov'
 
-SimpleCov.command_name 'Unit Tests'
-SimpleCov.start 'rails' do
-  add_filter 'lib/tasks'
-  add_filter 'lib/generators'
-  add_filter 'lib/comfortable_media_surfer/engine'
-  add_filter 'lib/comfortable_media_surfer/routing' # TODO: add comprehensive tests for routes
-  add_filter 'lib/comfortable_media_surfer/version'
+  SimpleCov.coverage_dir File.expand_path('../coverage', __dir__)
+
+  if ENV['PARALLEL_COVERAGE']
+    worker = ENV['TEST_ENV_NUMBER'].to_s
+    worker = '1' if worker.empty?
+    SimpleCov.command_name "Parallel Tests #{worker}"
+    SimpleCov.formatter(Class.new { def format(_result); end })
+  else
+    require 'coveralls'
+    Coveralls.wear!('rails')
+    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+    SimpleCov.command_name 'Unit Tests'
+  end
+
+  SimpleCov.start 'rails' do
+    add_filter 'lib/tasks'
+    add_filter 'lib/generators'
+    add_filter 'lib/comfortable_media_surfer/engine'
+    add_filter 'lib/comfortable_media_surfer/routing' # TODO: add comprehensive tests for routes
+    add_filter 'lib/comfortable_media_surfer/version'
+  end
 end
 
 require_relative '../config/environment'
@@ -24,6 +33,7 @@ require 'rails/test_help'
 require 'rails/generators'
 require 'minitest/reporters'
 require 'minitest/unit'
+require 'parallel_tests/test/runtime_logger' if ENV['RECORD_RUNTIME']
 require 'mocha/minitest'
 require 'capybara/cuprite'
 
@@ -39,7 +49,7 @@ end
 # To handle formbuilder incompatibilies with >= Rails 8.1
 RAILS_EDGE = Gem::Version.new(Rails.version) >= Gem::Version.new('8.1.0')
 
-reporter_options = { color: true, slow_count: 4 }
+reporter_options = { color: !ENV.key?('NO_COLOR'), slow_count: 4 }
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_options)]
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -212,7 +222,7 @@ class Rails::Generators::TestCase
   setup :prepare_destination,
         :prepare_files
 
-  destination File.expand_path('../tmp', File.dirname(__FILE__))
+  destination File.expand_path("../tmp/generators#{ENV.fetch('TEST_ENV_NUMBER', nil)}", File.dirname(__FILE__))
 
   def prepare_files
     config_path = File.join(destination_root, 'config')

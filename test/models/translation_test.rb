@@ -2,7 +2,7 @@
 
 require_relative '../test_helper'
 
-class CmsPageTest < ActiveSupport::TestCase
+class CmsTranslationTest < ActiveSupport::TestCase
   setup do
     @site         = comfy_cms_sites(:default)
     @page         = comfy_cms_pages(:default)

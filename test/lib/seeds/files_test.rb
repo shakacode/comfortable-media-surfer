@@ -108,6 +108,6 @@ class SeedsFilesTest < ActiveSupport::TestCase
 private
 
   def count_open_file_descriptors
-    `lsof -p #{Process.pid} | wc -l`.to_i
+    `lsof -p #{Process.pid} 2>/dev/null | wc -l`.to_i
   end
 end
