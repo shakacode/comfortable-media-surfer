@@ -20,9 +20,9 @@ class Comfy::Cms::Layout < ActiveRecord::Base
 
   # -- Validations -------------------------------------------------------------
   validates :site_id,
-            presence:   true
+            presence: true
   validates :label,
-            presence:   true
+            presence: true
   validates :identifier,
             presence: true,
             uniqueness: { scope: :site_id },

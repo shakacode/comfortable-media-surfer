@@ -63,16 +63,21 @@ module ComfortableMediaSurfer::Seeds::Page
 
         new_frag_identifiers, fragments_attributes =
           construct_fragments_attributes(fragments_hash, page, path)
-        page.fragments_attributes = fragments_attributes
+        page_saved = begin
+          page.fragments_attributes = fragments_attributes
+          page.save
+        ensure
+          close_fragment_files(fragments_attributes)
+        end
 
-        if page.save
+        if page_saved
           message = "[CMS SEEDS] Imported Page \t #{page.full_path}"
           ComfortableMediaSurfer.logger.info(message)
 
           # defering target page linking
           if target_page.present?
             self.target_pages ||= {}
-            self.target_pages[page.id] = target_page
+            target_pages[page.id] = target_page
           end
 
           # cleaning up old fragments
@@ -127,9 +132,14 @@ module ComfortableMediaSurfer::Seeds::Page
 
         new_frag_identifiers, fragments_attributes =
           construct_fragments_attributes(fragments_hash, translation, path)
-        translation.fragments_attributes = fragments_attributes
+        translation_saved = begin
+          translation.fragments_attributes = fragments_attributes
+          translation.save
+        ensure
+          close_fragment_files(fragments_attributes)
+        end
 
-        if translation.save
+        if translation_saved
           message = "[CMS SEEDS] Imported Translation \t #{locale}"
           ComfortableMediaSurfer.logger.info(message)
 
@@ -186,13 +196,15 @@ module ComfortableMediaSurfer::Seeds::Page
     # ActiveStorage and a list of ids of old attachements to destroy
     def files_content(record, identifier, path, frag_content)
       # preparing attachments
-      files = frag_content.split("\n").collect do |filename|
-        file_handler = File.open(File.join(path, filename))
-        {
+      files = []
+      frag_content.split("\n").each do |filename|
+        file_handler = File.new(File.join(path, filename), 'rb')
+        attachment = {
           io: file_handler,
-          filename: filename,
-          content_type: MimeMagic.by_magic(file_handler)
+          filename: filename
         }
+        files << attachment
+        attachment[:content_type] = MimeMagic.by_magic(file_handler)
       end
 
       # ensuring that old attachments get removed
@@ -202,12 +214,28 @@ module ComfortableMediaSurfer::Seeds::Page
       end
 
       [files, ids_destroy]
+    rescue StandardError
+      close_files(files)
+      raise
+    end
+
+    def close_fragment_files(fragment_attributes)
+      fragment_attributes.each do |attributes|
+        close_files(attributes[:files])
+      end
+    end
+
+    def close_files(files)
+      Array(files).each do |file|
+        io = file[:io]
+        io.close unless io.closed?
+      end
     end
 
     def link_target_pages
-      return unless self.target_pages.present?
+      return unless target_pages.present?
 
-      self.target_pages.each do |page_id, target|
+      target_pages.each do |page_id, target|
         if (target = site.pages.find_by(full_path: target))
           @site.pages.find(page_id).update_column(:target_page_id, target.id)
         end

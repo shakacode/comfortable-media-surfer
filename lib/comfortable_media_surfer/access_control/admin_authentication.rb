@@ -7,8 +7,8 @@ module ComfortableMediaSurfer::AccessControl
     #   ComfortableMediaSurfer::AccessControl::AdminAuthentication.username = 'myname'
     #   ComfortableMediaSurfer::AccessControl::AdminAuthentication.password = 'mypassword'
 
-    mattr_accessor  :username,
-                    :password
+    mattr_accessor :username,
+                   :password
 
     # Simple http_auth. When implementing some other form of authentication
     # this method should return +true+ if everything is great, or redirect user

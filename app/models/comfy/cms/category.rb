@@ -13,7 +13,7 @@ class Comfy::Cms::Category < ActiveRecord::Base
             presence: true,
             uniqueness: { scope: %i[categorized_type site_id] }
   validates :categorized_type,
-            presence:   true
+            presence: true
 
   # -- Scopes ---------------------------------------------------------------
   scope :of_type, ->(type) {

@@ -17,8 +17,8 @@ class Comfy::Admin::Cms::Revisions::BaseController < Comfy::Admin::Cms::BaseCont
   end
 
   def show
-    @current_content    = @record.revision_fields.each_with_object({}) { |f, c| c[f] = @record.send(f) }
-    @versioned_content  = @record.revision_fields.each_with_object({}) { |f, c| c[f] = @revision.data[f] }
+    @current_content    = @record.revision_fields.to_h { |field| [field, @record.send(field)] }
+    @versioned_content  = @record.revision_fields.to_h { |field| [field, @revision.data[field]] }
 
     render 'comfy/admin/cms/revisions/show'
   end

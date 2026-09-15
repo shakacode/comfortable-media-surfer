@@ -118,18 +118,18 @@ protected
 
   def assign_full_path
     self.full_path =
-      if self.parent
-        [CGI.escape(self.parent.full_path).gsub('%2F', '/'), slug].join('/').squeeze('/')
+      if parent
+        [CGI.escape(parent.full_path).gsub('%2F', '/'), slug].join('/').squeeze('/')
       else
         '/'
       end
   end
 
   def assign_position
-    return unless self.parent
+    return unless parent
     return if position.to_i.positive?
 
-    max = self.parent.children.maximum(:position)
+    max = parent.children.maximum(:position)
     self.position = max ? max + 1 : 0
   end
 

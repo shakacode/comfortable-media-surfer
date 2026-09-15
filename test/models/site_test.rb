@@ -134,10 +134,10 @@ class CmsSiteTest < ActiveSupport::TestCase
 
     assert_nil            Comfy::Cms::Site.find_site('test2.host', '/english/some/path')
 
-    assert_equal site_c,  Comfy::Cms::Site.find_site('test2.host', '/fr')
-    assert_equal site_c,  Comfy::Cms::Site.find_site('test2.host', '/fr?a=b')
-    assert_equal site_c,  Comfy::Cms::Site.find_site('test2.host', '/fr/some/path')
-    assert_equal site_c,  Comfy::Cms::Site.find_site('test2.host', '/fr/some/path?a=b')
+    assert_equal site_c, Comfy::Cms::Site.find_site('test2.host', '/fr')
+    assert_equal site_c, Comfy::Cms::Site.find_site('test2.host', '/fr?a=b')
+    assert_equal site_c, Comfy::Cms::Site.find_site('test2.host', '/fr/some/path')
+    assert_equal site_c, Comfy::Cms::Site.find_site('test2.host', '/fr/some/path?a=b')
   end
 
   def test_find_site_with_public_cms_path
@@ -155,10 +155,10 @@ class CmsSiteTest < ActiveSupport::TestCase
 
     assert_nil            Comfy::Cms::Site.find_site('test2.host', '/custom/english/some/path')
 
-    assert_equal site_b,  Comfy::Cms::Site.find_site('test2.host', '/custom/fr')
-    assert_equal site_b,  Comfy::Cms::Site.find_site('test2.host', '/custom/fr?a=b')
-    assert_equal site_b,  Comfy::Cms::Site.find_site('test2.host', '/custom/fr/some/path')
-    assert_equal site_b,  Comfy::Cms::Site.find_site('test2.host', '/custom/fr/some/path?a=b')
+    assert_equal site_b, Comfy::Cms::Site.find_site('test2.host', '/custom/fr')
+    assert_equal site_b, Comfy::Cms::Site.find_site('test2.host', '/custom/fr?a=b')
+    assert_equal site_b, Comfy::Cms::Site.find_site('test2.host', '/custom/fr/some/path')
+    assert_equal site_b, Comfy::Cms::Site.find_site('test2.host', '/custom/fr/some/path?a=b')
   end
 
   def test_find_site_with_site_alias

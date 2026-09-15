@@ -77,7 +77,7 @@ module Comfy::Cms::WithFragments
   # duplicate tags on the layout. That's wierd (but still works).
   def fragment_nodes
     nodes
-      .select { |n| n.is_a?(ComfortableMediaSurfer::Content::Tags::Fragment) }
+      .grep(ComfortableMediaSurfer::Content::Tags::Fragment)
       .uniq(&:identifier)
   end
 

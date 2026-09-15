@@ -86,8 +86,8 @@ protected
 
   def clean_path
     self.path ||= ''
-    self.path.squeeze!('/')
-    self.path.gsub!(%r{/$}, '')
-    self.path = nil if self.path.blank?
+    path.squeeze!('/')
+    path.gsub!(%r{/$}, '')
+    self.path = nil if path.blank?
   end
 end

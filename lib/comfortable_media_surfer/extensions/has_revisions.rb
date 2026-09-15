@@ -32,8 +32,8 @@ module ComfortableMediaSurfer::Extensions::HasRevisions
 
       if (respond_to?(:fragments_attributes_changed) && fragments_attributes_changed) ||
          !!changed.intersect?(revision_fields)
-        self.revision_data = revision_fields.each_with_object({}) do |field, c|
-          c[field] = send("#{field}_was")
+        self.revision_data = revision_fields.to_h do |field|
+          [field, send("#{field}_was")]
         end
       end
     end

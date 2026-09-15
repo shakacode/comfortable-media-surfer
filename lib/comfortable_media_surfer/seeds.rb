@@ -46,9 +46,7 @@ module ComfortableMediaSurfer::Seeds
       text = ::File.read(file_path)
       tokens = text.split(%r{^\[(.*?)\]\r?\n})
       tokens.shift # first item should be blank
-      tokens.in_groups_of(2).each_with_object({}) do |pair, h|
-        h[pair[0]] = pair[1]
-      end
+      tokens.in_groups_of(2).to_h
     end
 
     def fresh_seed?(object, file_path)

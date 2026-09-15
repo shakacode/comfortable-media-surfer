@@ -2,12 +2,12 @@
 
 class Comfy::Admin::Cms::Revisions::TranslationController < Comfy::Admin::Cms::Revisions::BaseController
   def show
-    @current_content = @record.fragments.each_with_object({}) do |b, c|
-      c[b.identifier] = b.content
+    @current_content = @record.fragments.to_h do |fragment|
+      [fragment.identifier, fragment.content]
     end
-    @versioned_content = @record.fragments.each_with_object({}) do |b, c|
-      d = @revision.data['fragments_attributes'].detect { |r| r[:identifier] == b.identifier }
-      c[b.identifier] = d.try(:[], :content)
+    @versioned_content = @record.fragments.to_h do |fragment|
+      data = @revision.data['fragments_attributes'].detect { |item| item[:identifier] == fragment.identifier }
+      [fragment.identifier, data.try(:[], :content)]
     end
 
     render 'comfy/admin/cms/revisions/show'
