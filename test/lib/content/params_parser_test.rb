@@ -190,7 +190,7 @@ class ContentParamsParserTest < ActiveSupport::TestCase
   end
 
   def test_params_with_erb_injection
-    string = '"a#{:a}", key: "va#{:l}ue"' # rubocop:disable Lint/InterpolationCheck
+    string = %("a\#{:a}", key: "va\#{:l}ue")
     assert_equal ["a\#{:a}", { 'key' => "va\#{:l}ue" }], PARSER.new(string).params
   end
 end

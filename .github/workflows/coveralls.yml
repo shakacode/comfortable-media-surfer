@@ -11,9 +11,9 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-          - "3.3"
+          - "3.4"
         rails-version:
-          - "7.1"
+          - "8.1"
         continue-on-error: [true]
     name: ${{ format('Coverage (Ruby {0}, Rails {1})', matrix.ruby-version, matrix.rails-version) }}
     runs-on: ubuntu-latest
