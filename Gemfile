@@ -11,7 +11,7 @@ group :development, :test do
   gem 'autoprefixer-rails', '~> 10.4.21.0'
   gem 'byebug',             '~> 13.0.0', platforms: %i[mri mingw x64_mingw]
   gem 'gem-release'
-  gem 'image_processing',   '>= 1.12.0'
+  gem 'image_processing',   '>= 1.12.2'
   gem 'propshaft',          '~> 1.3.1'
   gem 'sqlite3',            '>= 2.1'
   # gem 'mysql2',             '~> 0.5'
@@ -24,7 +24,7 @@ group :development do
 end
 
 group :test do
-  gem 'brakeman',                 '~> 7.1.0'
+  gem 'brakeman'
   gem 'bundler-audit',            '~> 0.9.1'
   gem 'coveralls_reborn',         '~> 0.29.0', require: false
   gem 'cuprite',                  '>= 0.15'
@@ -37,7 +37,7 @@ group :test do
   gem 'parallel_tests', '~> 5.7', require: false
   gem 'puma'
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop',                  '~> 1.87.0', require: false
+  gem 'rubocop',                  require: false
   gem 'rubocop-minitest'
   gem 'rubocop-rails'
   gem 'simplecov', '~> 0.22.0', require: false
