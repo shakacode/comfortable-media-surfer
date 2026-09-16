@@ -10,13 +10,12 @@ class FilesFrontendTest < ApplicationSystemTestCase
   end
 
   def test_site_file_drag_and_drop
-    skip
-    # Dragging from iframe isn't supported by the chromedriver. This is not
-    # possible to test at the moment.
-    # See: https://github.com/SeleniumHQ/selenium/issues/810"
+    skip 'Dragging from an iframe is not supported by the browser driver'
   end
 
   def test_page_file_drag_and_drop
+    skip 'Dragging the page file link does not update the text field'
+
     @layout.update_column(:content, <<~TEXT)
       {{ cms:files attachments, render: false }}
       {{ cms:text content }}
@@ -37,8 +36,6 @@ class FilesFrontendTest < ApplicationSystemTestCase
     text_field = find_field(name: 'page[fragments_attributes][1][content]')
     find_link('image.jpg').drag_to(text_field)
 
-    skip
-    # Figure out why dragging doesn't really happen.
     assert_equal '{{ cms:page_file_link attachments, filename: "image.jpg", as: image }}', text_field.value
   end
 end

@@ -3,8 +3,8 @@
 require_relative '../test_helper'
 
 class ConfigurationTest < ActiveSupport::TestCase
-  def test_configuration_presence
-    assert config = ComfortableMediaSurfer.configuration
+  def test_configuration_defaults
+    config = ComfortableMediaSurfer::Configuration.new
     assert_equal 'ComfortableMediaSurfer CMS Engine', config.cms_title
     assert_equal 'ApplicationController', config.admin_base_controller
     assert_equal 'ApplicationController', config.public_base_controller
@@ -23,6 +23,8 @@ class ConfigurationTest < ActiveSupport::TestCase
     assert_nil config.allowed_partials
     assert_nil config.allowed_templates
     assert_nil config.hostname_aliases
+    assert_equal false, config.reveal_cms_partials
+    assert_nil config.public_cms_path
     assert_equal ({ methods: [:content], except: [:content_cache] }), config.page_to_json_options
   end
 

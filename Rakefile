@@ -130,14 +130,15 @@ module_function
 
   def run_parallel
     workers = ENV.fetch('PARALLEL_WORKERS', '6')
+    skip_coverage = ENV.fetch('SKIP_COV', nil)
     FileUtils.rm_rf('coverage')
     FileUtils.mkdir_p('tmp')
     Rake::Task['parallel:prepare'].invoke(workers)
 
     env = {
-      'PARALLEL_COVERAGE' => 'true',
+      'PARALLEL_COVERAGE' => skip_coverage ? nil : 'true',
       'RECORD_RUNTIME' => 'true',
-      'SKIP_COV' => nil,
+      'SKIP_COV' => skip_coverage,
       'NO_COLOR' => '1',
       'TMPDIR' => ENV.fetch('COMFY_TEST_TMPDIR', '/tmp')
     }
@@ -159,7 +160,7 @@ module_function
     puts color(summary(stdout), :green)
     puts color(format('Completed in %.1f seconds', elapsed), :cyan)
 
-    report_coverage
+    report_coverage unless skip_coverage
   end
 
   def report_coverage

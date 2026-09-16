@@ -49,6 +49,11 @@ end
 # To handle formbuilder incompatibilies with >= Rails 8.1
 RAILS_EDGE = Gem::Version.new(Rails.version) >= Gem::Version.new('8.1.0')
 
+worker_number = ENV.fetch('TEST_ENV_NUMBER', nil)
+TEST_SEEDS_PATH = Rails.root.join("tmp/cms_seeds#{worker_number}").to_s.freeze
+FileUtils.rm_rf(TEST_SEEDS_PATH)
+FileUtils.cp_r(Rails.root.join('db/cms_seeds'), TEST_SEEDS_PATH, preserve: true)
+
 reporter_options = { color: !ENV.key?('NO_COLOR'), slow_count: 4 }
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_options)]
 Rails.backtrace_cleaner.remove_silencers!
@@ -72,7 +77,7 @@ class ActiveSupport::TestCase
       config.public_authorization = 'ComfortableMediaSurfer::AccessControl::PublicAuthorization'
       config.admin_route_redirect = ''
       config.enable_seeds         = false
-      config.seeds_path           = File.expand_path('db/cms_seeds', Rails.root)
+      config.seeds_path           = TEST_SEEDS_PATH
       config.revisions_limit      = 25
       config.locales              = {
         'en' => 'English',
@@ -105,28 +110,6 @@ class ActiveSupport::TestCase
     assert unmatched.blank?, "#{record.class} has errors on '#{unmatched.join(', ')}'"
     unmatched = fields.flatten - record.errors.attribute_names
     assert unmatched.blank?, "#{record.class} doesn't have errors on '#{unmatched.join(', ')}'"
-  end
-
-  # Example usage:
-  #   assert_exception_raised                                 do ... end
-  #   assert_exception_raised ActiveRecord::RecordInvalid     do ... end
-  #   assert_exception_raised Plugin::Error, 'error_message'  do ... end
-  def assert_exception_raised(exception_class = nil, error_message = nil)
-    exception_raised = nil
-    yield
-  rescue StandardError => e
-    e
-  ensure
-    if exception_raised
-      if exception_class
-        assert_equal exception_class, exception_raised.class, exception_raised.to_s
-      else
-        assert true
-      end
-      assert_equal error_message, exception_raised.to_s if error_message
-    else
-      flunk 'Exception was not raised'
-    end
   end
 
   def assert_no_select(selector, value = nil)
@@ -255,26 +238,20 @@ end
 # In order to run system tests ensure that chrome-driver is installed.
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   Capybara.register_driver(:better_cuprite) do |app|
+    headless = !ENV['HEADLESS'].in?(%w[n 0 no false])
     Capybara::Cuprite::Driver.new(
       app,
       window_size: [1200, 800],
-      # See additional options for Dockerized environment in the respective section of this article
       browser_options: {},
-      # Increase Chrome startup wait time (required for stable CI builds)
       process_timeout: 10,
-      # Enable debugging capabilities
-      inspector: true,
-      # Allow running Chrome in a headful mode by setting HEADLESS env
-      # var to a falsey value
-      headless: !ENV['HEADLESS'].in?(%w[n 0 no false])
+      inspector: !headless,
+      headless: headless
     )
   end
 
-  # Configure Capybara to use :better_cuprite driver by default
-  Capybara.default_driver = Capybara.javascript_driver = :better_cuprite
   Capybara.enable_aria_label = true
 
-  driven_by :cuprite, using: :chromium, screen_size: [1400, 1400]
+  driven_by :better_cuprite
 
   # Visiting path and passing in BasicAuth credentials at the same time
   # I have no idea how to set headers here.

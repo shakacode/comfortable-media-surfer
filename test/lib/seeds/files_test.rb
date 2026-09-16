@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../test_helper'
+require 'open3'
 
 class SeedsFilesTest < ActiveSupport::TestCase
   setup do
@@ -108,6 +109,12 @@ class SeedsFilesTest < ActiveSupport::TestCase
 private
 
   def count_open_file_descriptors
-    `lsof -p #{Process.pid} 2>/dev/null | wc -l`.to_i
+    descriptor_path = "/proc/#{Process.pid}/fd"
+    return Dir.children(descriptor_path).size if Dir.exist?(descriptor_path)
+
+    output, errors, status = Open3.capture3('lsof', '-p', Process.pid.to_s)
+    raise "Unable to count file descriptors: #{errors}" unless status.success?
+
+    output.lines.size
   end
 end
