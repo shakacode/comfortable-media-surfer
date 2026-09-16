@@ -6,11 +6,11 @@
 
 # ComfortableMediaSurfer
 
-ComfortableMediaSurfer is a powerful Ruby 7.0+ CMS (Content Management System) Engine, picking up where [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) left off.
+ComfortableMediaSurfer is a powerful Ruby 7.2+ CMS (Content Management System) Engine, picking up where [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) left off.
 
 ## Features
 
-- Simple drop-in integration with Rails 7.0+ apps with minimal configuration
+- Simple drop-in integration with Rails 7.2+ apps with minimal configuration
 * The CMS keeps clear from the rest of your application
 * Powerful page templating capability using [Content Tags](https://github.com/shakacode/comfortable-media-surfer/wiki/Docs:-Content-Tags)
 * [Multiple Sites](https://github.com/shakacode/comfortable-media-surfer/wiki/Docs:-Sites) from a single installation
@@ -27,7 +27,7 @@ ComfortableMediaSurfer is a powerful Ruby 7.0+ CMS (Content Management System) E
 
 ## Compatibility
 
-On Ruby 3.x, Rails 7.x +
+On Ruby 3.2+, 4.x, Rails 7.2+, 8.x
 
 ## Installation
 
