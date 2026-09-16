@@ -1,5 +1,5 @@
 [![Rails CI](https://github.com/shakacode/comfortable-media-surfer/actions/workflows/rubyonrails.yml/badge.svg)](https://github.com/shakacode/comfortable-media-surfer/actions/workflows/rubyonrails.yml)
-[![Coverage Status](https://coveralls.io/repos/github/shakacode/comfortable-media-surfer/badge.svg?branch=HEAD)](https://coveralls.io/github/shakacode/comfortable-media-surfer?branch=HEAD)
+[![Coverage Status](https://coveralls.io/repos/github/shakacode/comfortable-media-surfer/badge.svg?branch=master)](https://coveralls.io/github/shakacode/comfortable-media-surfer?branch=master)
 [![Gem Version](https://img.shields.io/gem/v/comfortable_media_surfer.svg?style=flat)](http://rubygems.org/gems/comfortable_media_surfer)
 [![Gem Downloads](https://img.shields.io/gem/dt/comfortable_media_surfer.svg?style=flat)](http://rubygems.org/gems/comfortable_media_surfer)
 [![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/shakacode/comfortable-media-surfer?label=last%20release&color=seagreen)](https://github.com/shakacode/comfortable-media-surfer/releases)
