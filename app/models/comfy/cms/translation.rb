@@ -27,8 +27,13 @@ class Comfy::Cms::Translation < ActiveRecord::Base
             uniqueness: { scope: :page_id }
 
   validate :validate_locale
+  validate :layout_belongs_to_site
 
 private
+
+  def layout_belongs_to_site
+    errors.add(:layout_id, :invalid) if page && layout && page.site_id != layout.site_id
+  end
 
   def validate_locale
     return unless page

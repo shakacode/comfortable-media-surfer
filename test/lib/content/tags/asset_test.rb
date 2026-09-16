@@ -29,9 +29,10 @@ class ContentTagsAssetTest < ActiveSupport::TestCase
 
   def test_init_without_identifier
     message = 'Missing layout identifier for asset tag'
-    assert_raises ComfortableMediaSurfer::Content::Tag::Error, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Tag::Error do
       ComfortableMediaSurfer::Content::Tags::Asset.new(context: @page)
     end
+    assert_equal message, error.message
   end
 
   def test_layout

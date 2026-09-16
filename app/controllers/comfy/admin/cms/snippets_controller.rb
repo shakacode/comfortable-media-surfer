@@ -61,6 +61,6 @@ protected
   end
 
   def snippet_params
-    params.fetch(:snippet, {}).permit!
+    params.fetch(:snippet, {}).permit(:label, :identifier, :markdown, :content, category_ids: [])
   end
 end

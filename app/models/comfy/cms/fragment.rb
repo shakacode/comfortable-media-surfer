@@ -20,6 +20,7 @@ class Comfy::Cms::Fragment < ActiveRecord::Base
   validates :identifier,
             presence: true,
             uniqueness: { scope: :record }
+  validate :record_is_immutable, on: :update
 
   # -- Instance Methods --------------------------------------------------------
 
@@ -37,6 +38,12 @@ class Comfy::Cms::Fragment < ActiveRecord::Base
   end
 
 protected
+
+  def record_is_immutable
+    return unless will_save_change_to_record_id? || will_save_change_to_record_type?
+
+    errors.add(:record, :invalid)
+  end
 
   def remove_attachments
     return unless @file_ids_destroy.present?

@@ -1,4 +1,7 @@
+import jQuery from "jquery";
 import ujs from "@rails/ujs";
+
+window.jQuery = window.$ = jQuery;
 ujs.start();
 
 import "bootstrap/js/src/tab";

@@ -33,6 +33,6 @@ protected
   end
 
   def category_params
-    params.fetch(:category, {}).permit!
+    params.fetch(:category, {}).permit(:label, :categorized_type)
   end
 end

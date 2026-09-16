@@ -94,6 +94,19 @@ class Comfy::Admin::Cms::LayoutsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'New {{cms:page:content}}', layout.content
   end
 
+  def test_update_does_not_reassign_site
+    layout = comfy_cms_layouts(:default)
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+
+    r :put, comfy_admin_cms_site_layout_path(site_id: @site, id: layout), params: { layout: {
+      label: 'Updated Layout',
+      site_id: foreign_site.id
+    } }
+
+    assert_response :redirect
+    assert_equal @site, layout.reload.site
+  end
+
   def test_update_failure
     layout = comfy_cms_layouts(:default)
     r :put, comfy_admin_cms_site_layout_path(site_id: @site, id: layout), params: { layout: {
@@ -113,6 +126,17 @@ class Comfy::Admin::Cms::LayoutsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to action: :index
       assert_equal 'Layout deleted', flash[:success]
     end
+  end
+
+  def test_reorder_does_not_update_layout_from_another_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign')
+    foreign_layout.update_column(:position, 10)
+
+    r :put, reorder_comfy_admin_cms_site_layouts_path(site_id: @site), params: { order: [foreign_layout.id] }
+
+    assert_response :success
+    assert_equal 10, foreign_layout.reload.position
   end
 
   def test_reorder

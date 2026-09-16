@@ -364,6 +364,29 @@ class Comfy::Admin::Cms::PagesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_update_does_not_reassign_site_or_fragment_owner
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign')
+    foreign_page = foreign_site.pages.create!(label: 'Foreign', layout: foreign_layout)
+    fragment = comfy_cms_fragments(:default)
+
+    r :put, comfy_admin_cms_site_page_path(site_id: @site, id: @page), params: { page: {
+      label: 'Updated Label',
+      site_id: foreign_site.id,
+      fragments_attributes: [{
+        identifier: fragment.identifier,
+        content: 'Updated Content',
+        record_id: foreign_page.id,
+        record_type: 'Comfy::Cms::Page'
+      }]
+    } }
+
+    assert_response :redirect
+    assert_equal @site, @page.reload.site
+    assert_equal @page, fragment.reload.record
+    assert_equal 'Updated Content', fragment.content
+  end
+
   def test_update_failure
     r :put, comfy_admin_cms_site_page_path(site_id: @site, id: @page), params: { page: {
       label: ''
@@ -515,6 +538,19 @@ class Comfy::Admin::Cms::PagesControllerTest < ActionDispatch::IntegrationTest
     r :get, toggle_branch_comfy_admin_cms_site_page_path(site_id: @site, id: @page), xhr: true, params: { format: :js }
     assert_response :success
     assert_equal [@page.id.to_s], session[:cms_page_tree]
+  end
+
+  def test_reorder_does_not_update_page_from_another_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign')
+    foreign_page = foreign_site.pages.create!(label: 'Foreign', layout: foreign_layout)
+    foreign_page.update_columns(position: 10, content_cache: 'protected content')
+
+    r :put, reorder_comfy_admin_cms_site_pages_path(site_id: @site), params: { order: [foreign_page.id] }
+
+    assert_response :success
+    assert_equal 10, foreign_page.reload.position
+    assert_equal 'protected content', foreign_page.content_cache
   end
 
   def test_reorder

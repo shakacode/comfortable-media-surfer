@@ -21,6 +21,15 @@ class CmsLayoutTest < ActiveSupport::TestCase
     assert_has_errors_on layout, :label, :identifier
   end
 
+  def test_parent_must_belong_to_same_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign')
+    @layout.parent = foreign_layout
+
+    assert @layout.invalid?
+    assert_has_errors_on @layout, :parent_id
+  end
+
   def test_content_tokens
     layout = Comfy::Cms::Layout.new(content: 'a {{cms:text content}} b')
     expected = [

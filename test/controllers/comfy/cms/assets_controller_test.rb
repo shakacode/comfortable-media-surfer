@@ -33,6 +33,27 @@ class Comfy::Cms::AssetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @layout.css, response.body
   end
 
+  def test_render_css_rejects_site_from_another_hostname
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign', css: 'foreign css')
+
+    error = assert_raises ActionController::RoutingError do
+      get comfy_cms_render_css_path(site_id: foreign_site, identifier: foreign_layout.identifier)
+    end
+    assert_equal 'Site Not Found', error.message
+  end
+
+  def test_render_css_accepts_site_from_matching_hostname
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign', css: 'foreign css')
+    host! foreign_site.hostname
+
+    get comfy_cms_render_css_path(site_id: foreign_site, identifier: foreign_layout.identifier)
+
+    assert_response :success
+    assert_equal 'foreign css', response.body
+  end
+
   def test_render_css_not_found
     get comfy_cms_render_css_path(site_id: @site, identifier: 'invalid')
     assert_response 404

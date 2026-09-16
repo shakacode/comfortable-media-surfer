@@ -9,12 +9,11 @@ module Comfy::ReorderAction
 
   def reorder
     resource_class = self.class.reorder_action_resource
+    site_resources = resource_class.where(site_id: @site.id)
     (params.permit(order: [])[:order] || []).each_with_index do |id, index|
-      resource_class.where(id: id).update_all(position: index)
+      site_resources.where(id: id).update_all(position: index)
     end
-    if resource_class == ::Comfy::Cms::Page
-      Comfy::Cms::Page.all.each(&:save!)
-    end
+    @site.pages.each(&:save!) if resource_class == ::Comfy::Cms::Page
     head :ok
   end
 end

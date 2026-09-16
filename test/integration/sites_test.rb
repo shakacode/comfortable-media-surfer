@@ -27,6 +27,18 @@ class SitesIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal 'www.example.com', assigns(:cms_site).hostname
   end
 
+  def test_public_page_ignores_query_site_id
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign', content: 'foreign content')
+    foreign_site.pages.create!(label: 'Foreign', layout: foreign_layout, is_published: true)
+
+    get '/', params: { site_id: foreign_site.id }
+
+    assert_response :success
+    assert_equal comfy_cms_sites(:default), assigns(:cms_site)
+    refute_includes response.body, 'foreign content'
+  end
+
   def test_get_public_page_with_sites_with_different_paths
     Comfy::Cms::Site.delete_all
     site_a = Comfy::Cms::Site.create!(identifier: 'site-a', hostname: 'www.example.com', path: '')

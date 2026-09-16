@@ -41,7 +41,7 @@ import plupload from "plupload";
 
     destroy() {
       this.uploader.destroy();
-      for (const cleanupFn of this.cleanupFns) {
+      for (const cleanupFn of this.cleanupFns.splice(0)) {
         cleanupFn();
       }
     }
@@ -75,9 +75,13 @@ import plupload from "plupload";
       this.addCleanup(() => {
         document.removeEventListener("dragenter", onDragEnter);
       });
+      const onDragEnd = () => {
+        this.ui.dropElement.classList.remove(DROP_TARGET_ACTIVE_CLASS);
+      };
       for (const eventName of ["drop", "dragleave"]) {
-        this.ui.dropElement.addEventListener(eventName, () => {
-          this.ui.dropElement.classList.remove(DROP_TARGET_ACTIVE_CLASS);
+        this.ui.dropElement.addEventListener(eventName, onDragEnd);
+        this.addCleanup(() => {
+          this.ui.dropElement.removeEventListener(eventName, onDragEnd);
         });
       }
     }
@@ -131,11 +135,9 @@ import plupload from "plupload";
     }
 
     addFile(file) {
-      this.ui.list.insertAdjacentHTML(
-        "afterbegin",
-        FileUpload.buildListItemHTML(file)
-      );
-      this.fileListItem(file)
+      const listItem = FileUpload.buildListItem(file);
+      this.ui.list.prepend(listItem);
+      listItem
         .querySelector(".cms-uploader-file-delete")
         .addEventListener("click", (evt) => {
           evt.preventDefault();
@@ -158,7 +160,7 @@ import plupload from "plupload";
         case plupload.FAILED:
           progressBar.style.width = "100%";
           progressBar.classList.add("progress-bar-danger");
-          progressBar.querySelector("span").innerHTML = file.error_message;
+          progressBar.querySelector("span").textContent = file.error_message;
           break;
       }
     }
@@ -167,19 +169,22 @@ import plupload from "plupload";
       return this.ui.container.querySelector(`#${id}`);
     }
 
-    static buildListItemHTML({ id, name }) {
-      return `<li id='${id}' class='row temp'>
-        <div class='col-md-9 d-flex align-items-center'>
-          <div class='progress'>
-            <div class='progress-bar progress-bar-striped progress-bar-animated'>
-              <span>${name}</span>
-            </div>
+    static buildListItem({ id, name }) {
+      const listItem = document.createElement("li");
+      listItem.id = id;
+      listItem.className = "row temp";
+      listItem.innerHTML = `<div class='col-md-9 d-flex align-items-center'>
+        <div class='progress'>
+          <div class='progress-bar progress-bar-striped progress-bar-animated'>
+            <span></span>
           </div>
         </div>
-        <div class='col-md-3 d-flex align-items-center justify-content-md-end'>
-          <a class='btn btn-sm btn-danger float-right cms-uploader-file-delete' href='#'>Delete</a>
-        </div>
-      </li>`;
+      </div>
+      <div class='col-md-3 d-flex align-items-center justify-content-md-end'>
+        <a class='btn btn-sm btn-danger float-right cms-uploader-file-delete' href='#'>Delete</a>
+      </div>`;
+      listItem.querySelector("span").textContent = name;
+      return listItem;
     }
 
     static defaultUploaderSettings(id) {
@@ -194,12 +199,15 @@ import plupload from "plupload";
     }
   }
 
-  const uploaders = [];
+  const uploaders = new Map();
   window.CMS.fileUpload = {
     init(root = document) {
-      const el = root.querySelector("#cms-uploader");
-      if (el === null) return;
-      uploaders.push(
+      const el = root.matches?.("#cms-uploader")
+        ? root
+        : root.querySelector("#cms-uploader");
+      if (el === null || uploaders.has(el)) return;
+      uploaders.set(
+        el,
         new FileUpload(el, {
           url: el.dataset.cmsUploaderUrl,
           multipart_params: {
@@ -210,11 +218,12 @@ import plupload from "plupload";
         })
       );
     },
-    dispose() {
-      for (const uploader of uploader) {
-        uploader.dispose();
+    dispose(root = null) {
+      for (const [el, uploader] of uploaders) {
+        if (root !== null && el !== root && !root.contains(el)) continue;
+        uploader.destroy();
+        uploaders.delete(el);
       }
-      uploaders.length = 0;
     },
   };
 })();

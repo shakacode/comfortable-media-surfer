@@ -41,9 +41,10 @@ class ContentTagsFileLinkTest < ActiveSupport::TestCase
 
   def test_init_without_identifier
     message = 'Missing identifier for file link tag'
-    assert_raises ComfortableMediaSurfer::Content::Tag::Error, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Tag::Error do
       ComfortableMediaSurfer::Content::Tags::FileLink.new(context: @page)
     end
+    assert_equal message, error.message
   end
 
   def test_file

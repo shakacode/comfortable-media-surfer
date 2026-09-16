@@ -22,6 +22,15 @@ class CmsTranslationTest < ActiveSupport::TestCase
     assert_has_errors_on translation, :page, :layout, :locale, :label
   end
 
+  def test_layout_must_belong_to_same_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign')
+    @translation.layout = foreign_layout
+
+    assert @translation.invalid?
+    assert_has_errors_on @translation, :layout_id
+  end
+
   def test_validation_on_locale_uniqueness
     translation = @page.translations.new(
       label: 'Test',

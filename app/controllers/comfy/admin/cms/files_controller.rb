@@ -135,6 +135,6 @@ protected
       params[:file] = {}
       params[:file][:file] = file
     end
-    params.fetch(:file, {}).permit!
+    params.fetch(:file, {}).permit(:label, :description, :file, category_ids: [])
   end
 end

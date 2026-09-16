@@ -37,6 +37,7 @@
     CMS.codemirror.dispose();
     CMS.wysiwyg.dispose();
     CMS.files.dispose();
+    CMS.fileLinks.dispose();
     CMS.fileUpload.dispose();
     CMS.sortableList.dispose();
     CMS.timepicker.dispose();

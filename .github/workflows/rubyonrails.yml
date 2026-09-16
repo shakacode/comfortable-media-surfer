@@ -19,10 +19,8 @@ jobs:
           - "7.2"
           - "8.0"
           - "8.1"
-        continue-on-error: [true]
     name: ${{ format('Tests (Ruby {0}, Rails {1})', matrix.ruby-version, matrix.rails-version) }}
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.continue-on-error }}
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.rails-version }}.gemfile
       RAILS_ENV: test
@@ -63,3 +61,35 @@ jobs:
         run: |
           bin/bundle exec brakeman -q -w3
           bin/bundle exec bundler-audit --update --gemfile-lock gemfiles/${{ matrix.rails-version }}.gemfile.lock
+
+  system_tests:
+    name: System tests (Ruby 4.0, Rails 8.1)
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/8.1.gemfile
+      RAILS_ENV: test
+      SKIP_COV: true
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+      - run: npm ci
+
+      - name: Install Ruby 4.0
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0"
+          bundler-cache: true
+
+      - name: Compile assets
+        run: npm run build && npm run build:css
+
+      - name: Prepare database
+        run: bin/bundle exec rails db:prepare
+
+      - name: Run system tests
+        run: bin/bundle exec rake test:system

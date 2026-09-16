@@ -224,6 +224,24 @@ class Comfy::Admin::Cms::FilesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'image.jpg', @file.attachment.filename.to_s
   end
 
+  def test_update_does_not_reassign_site_or_foreign_categories
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_category = foreign_site.categories.create!(
+      label: 'Foreign',
+      categorized_type: 'Comfy::Cms::File'
+    )
+
+    r :put, comfy_admin_cms_site_file_path(site_id: @site, id: @file), params: { file: {
+      label: 'Updated File',
+      site_id: foreign_site.id,
+      category_ids: [foreign_category.id]
+    } }
+
+    assert_response :redirect
+    assert_equal @site, @file.reload.site
+    refute_includes @file.categories, foreign_category
+  end
+
   def test_update_failure
     r :put, comfy_admin_cms_site_file_path(site_id: @site, id: @file), params: { file: {
       label: ''
@@ -251,6 +269,17 @@ class Comfy::Admin::Cms::FilesControllerTest < ActionDispatch::IntegrationTest
       r :delete, comfy_admin_cms_site_file_path(site_id: @site, id: @file), xhr: true
       assert_response :success
     end
+  end
+
+  def test_reorder_does_not_update_file_from_another_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_file = foreign_site.files.create!(file: fixture_file_upload('document.pdf', 'application/pdf'))
+    foreign_file.update_column(:position, 10)
+
+    r :put, reorder_comfy_admin_cms_site_files_path(site_id: @site), params: { order: [foreign_file.id] }
+
+    assert_response :success
+    assert_equal 10, foreign_file.reload.position
   end
 
   def test_reorder

@@ -64,6 +64,6 @@ protected
   end
 
   def layout_params
-    params.fetch(:layout, {}).permit!
+    params.fetch(:layout, {}).permit(:label, :identifier, :parent_id, :app_layout, :content, :css, :js)
   end
 end

@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
+  FRAGMENT_PARAMS = [
+    :identifier, :tag, :content, :datetime, :boolean, :files,
+    { files: [], file_ids_destroy: [] }
+  ].freeze
+
   include ::Comfy::ReorderAction
 
   self.reorder_action_resource = ::Comfy::Cms::Page
@@ -10,7 +15,7 @@ class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
   before_action :load_page,         only: %i[edit update destroy]
 
   before_action :authorize
-
+  before_action :assign_page_params, only: :update
   before_action :preview_page, only: %i[create update]
 
   def index
@@ -134,10 +139,13 @@ protected
 
   def load_page
     @page = @site.pages.find(params[:id])
-    @page.attributes = page_params
   rescue ActiveRecord::RecordNotFound
     flash[:danger] = I18n.t('comfy.admin.cms.pages.not_found')
     redirect_to action: :index
+  end
+
+  def assign_page_params
+    @page.assign_attributes(page_params)
   end
 
   def preview_page
@@ -159,6 +167,9 @@ protected
   end
 
   def page_params
-    params.fetch(:page, {}).permit!
+    params.fetch(:page, {}).permit(
+      :label, :slug, :parent_id, :layout_id, :target_page_id, :is_published,
+      category_ids: [], fragments_attributes: FRAGMENT_PARAMS
+    )
   end
 end

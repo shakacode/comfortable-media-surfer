@@ -79,6 +79,30 @@ class Comfy::Admin::Cms::TranslationsControllerTest < ActionDispatch::Integratio
     assert_equal 'Updated Translation', @translation.label
   end
 
+  def test_update_does_not_reassign_page_or_fragment_owner
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign')
+    foreign_page = foreign_site.pages.create!(label: 'Foreign', layout: foreign_layout)
+    fragment = comfy_cms_fragments(:translation)
+
+    path = comfy_admin_cms_site_page_translation_path(@site, @page, @translation)
+    r :put, path, params: { translation: {
+      label: 'Updated Translation',
+      page_id: foreign_page.id,
+      fragments_attributes: [{
+        identifier: fragment.identifier,
+        content: 'Updated Content',
+        record_id: foreign_page.id,
+        record_type: 'Comfy::Cms::Page'
+      }]
+    } }
+
+    assert_response :redirect
+    assert_equal @page, @translation.reload.page
+    assert_equal @translation, fragment.reload.record
+    assert_equal 'Updated Content', fragment.content
+  end
+
   def test_update_failure
     path = comfy_admin_cms_site_page_translation_path(@site, @page, @translation)
     r :put, path, params: { translation: {

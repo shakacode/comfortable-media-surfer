@@ -40,6 +40,7 @@ class Comfy::Cms::Page < ActiveRecord::Base
             }
   validate :validate_target_page
   validate :validate_format_of_unescaped_slug
+  validate :associations_belong_to_site
 
   # -- Scopes ------------------------------------------------------------------
   scope :published, -> { where(is_published: true) }
@@ -105,6 +106,14 @@ class Comfy::Cms::Page < ActiveRecord::Base
   end
 
 protected
+
+  def associations_belong_to_site
+    return unless site
+
+    errors.add(:parent_id, :invalid) if parent && site_id != parent.site_id
+    errors.add(:layout_id, :invalid) if layout && site_id != layout.site_id
+    errors.add(:target_page_id, :invalid) if target_page && site_id != target_page.site_id
+  end
 
   def assigns_label
     self.label = label.blank? ? slug.try(:titleize) : label

@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
 class Comfy::Admin::Cms::TranslationsController < Comfy::Admin::Cms::BaseController
+  FRAGMENT_PARAMS = [
+    :identifier, :tag, :content, :datetime, :boolean, :files,
+    { files: [], file_ids_destroy: [] }
+  ].freeze
+
   helper_method :translation_select_options
 
   before_action :load_page
   before_action :build_translation,   only: %i[new create]
   before_action :load_translation,    only: %i[edit update destroy]
   before_action :authorize
+  before_action :assign_translation_params, only: :update
   before_action :preview_translation, only: %i[create update]
 
   def new
@@ -27,7 +33,7 @@ class Comfy::Admin::Cms::TranslationsController < Comfy::Admin::Cms::BaseControl
   end
 
   def update
-    @translation.update!(translation_params)
+    @translation.save!
     flash[:success] = I18n.t('comfy.admin.cms.translations.updated')
     redirect_to action: :edit, id: @translation
   rescue ActiveRecord::RecordInvalid
@@ -74,14 +80,20 @@ private
 
   def load_translation
     @translation = @page.translations.find(params[:id])
-    @translation.attributes = translation_params
   rescue ActiveRecord::RecordNotFound
     flash[:danger] = I18n.t('comfy.admin.cms.translations.not_found')
     redirect_to edit_comfy_admin_cms_site_page_path(@site, @page)
   end
 
+  def assign_translation_params
+    @translation.assign_attributes(translation_params)
+  end
+
   def translation_params
-    params.fetch(:translation, {}).permit!
+    params.fetch(:translation, {}).permit(
+      :locale, :label, :layout_id, :is_published,
+      fragments_attributes: FRAGMENT_PARAMS
+    )
   end
 
   def preview_translation

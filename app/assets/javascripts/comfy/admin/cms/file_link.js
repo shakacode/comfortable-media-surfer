@@ -8,8 +8,8 @@ import Popover from "bootstrap/js/src/popover";
     constructor(link) {
       this.link = link;
       this.isImage = !!link.dataset.cmsFileThumbUrl;
-
-      link.addEventListener("dragstart", (evt) => {
+      this.cleanupFns = [];
+      this.on("dragstart", (evt) => {
         evt.dataTransfer.setData(
           "text/plain",
           this.link.dataset.cmsFileLinkTag
@@ -25,13 +25,27 @@ import Popover from "bootstrap/js/src/popover";
           html: true,
         });
 
-        link.addEventListener("dragstart", (evt) => {
+        this.on("dragstart", (evt) => {
           evt.dataTransfer.setDragImage(this.buildFileThumbnail(), 4, 2);
-          this.getPopover().hide();
+          this.getPopover()?.hide();
         });
 
         this.workAroundFirefoxPopoverGlitch();
       }
+    }
+
+    destroy() {
+      for (const cleanupFn of this.cleanupFns.splice(0)) {
+        cleanupFn();
+      }
+      this.getPopover()?.dispose();
+    }
+
+    on(eventName, handler) {
+      this.link.addEventListener(eventName, handler);
+      this.cleanupFns.push(() => {
+        this.link.removeEventListener(eventName, handler);
+      });
     }
 
     buildFileThumbnail() {
@@ -47,14 +61,14 @@ import Popover from "bootstrap/js/src/popover";
     // https://bugzilla.mozilla.org/show_bug.cgi?id=505521
     workAroundFirefoxPopoverGlitch() {
       if (!isFirefox) return;
-      this.link.addEventListener("dragstart", () => {
-        this.getPopover().disable();
+      this.on("dragstart", () => {
+        this.getPopover()?.disable();
       });
-      this.link.addEventListener("dragend", () => {
+      this.on("dragend", () => {
         setTimeout(() => {
           const popover = this.getPopover();
-          popover.enable();
-          popover.hide();
+          popover?.enable();
+          popover?.hide();
         }, 300);
       });
     }
@@ -65,9 +79,18 @@ import Popover from "bootstrap/js/src/popover";
     }
   }
 
-  window.CMS.fileLinks = (root = document) => {
+  const fileLinks = new Map();
+  const initFileLinks = (root = document) => {
     for (const link of root.querySelectorAll("[data-cms-file-link-tag]")) {
-      new FileLink(link);
+      if (!fileLinks.has(link)) fileLinks.set(link, new FileLink(link));
     }
   };
+  initFileLinks.dispose = (root = null) => {
+    for (const [link, fileLink] of fileLinks) {
+      if (root !== null && link !== root && !root.contains(link)) continue;
+      fileLink.destroy();
+      fileLinks.delete(link);
+    }
+  };
+  window.CMS.fileLinks = initFileLinks;
 })();

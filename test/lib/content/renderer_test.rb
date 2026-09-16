@@ -202,27 +202,30 @@ class ContentRendererTest < ActiveSupport::TestCase
     string = 'a {{cms:test_block}} b'
     tokens = @template.tokenize(string)
     message = 'unclosed block detected'
-    assert_raises ComfortableMediaSurfer::Content::Renderer::SyntaxError, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Renderer::SyntaxError do
       @template.nodes(tokens)
     end
+    assert_equal message, error.message
   end
 
   def test_nodes_with_closed_tag
     string = 'a {{cms:end}} b'
     tokens = @template.tokenize(string)
     message = 'closing unopened block'
-    assert_raises ComfortableMediaSurfer::Content::Renderer::SyntaxError, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Renderer::SyntaxError do
       @template.nodes(tokens)
     end
+    assert_equal message, error.message
   end
 
   def test_nodes_with_invalid_tag
     string = 'a {{cms:invalid}} b'
     tokens = @template.tokenize(string)
     message = 'Unrecognized tag: {{cms:invalid}}'
-    assert_raises ComfortableMediaSurfer::Content::Renderer::SyntaxError, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Renderer::SyntaxError do
       @template.nodes(tokens)
     end
+    assert_equal message, error.message
   end
 
   def test_sanitize_erb
@@ -271,9 +274,10 @@ class ContentRendererTest < ActiveSupport::TestCase
     # making self-referencing content loop here
     comfy_cms_snippets(:default).update_column(:content, 'a {{cms:snippet default}} b')
     message = 'Deep tag nesting or recursive nesting detected'
-    assert_raises ComfortableMediaSurfer::Content::Renderer::Error, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Renderer::Error do
       render_string('{{cms:snippet default}}')
     end
+    assert_equal message, error.message
   end
 
   def test_render_with_more_than_max_depth_tags_but_without_stack_overflow

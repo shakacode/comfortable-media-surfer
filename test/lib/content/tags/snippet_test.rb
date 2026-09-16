@@ -15,9 +15,10 @@ class ContentTagsSnippetTest < ActiveSupport::TestCase
 
   def test_init_without_identifier
     message = 'Missing identifier for snippet tag'
-    assert_raises ComfortableMediaSurfer::Content::Tag::Error, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Tag::Error do
       ComfortableMediaSurfer::Content::Tags::Snippet.new(context: @page)
     end
+    assert_equal message, error.message
   end
 
   def test_snippet_new_record

@@ -114,6 +114,18 @@ class Comfy::Admin::Cms::SnippetsControllerTest < ActionDispatch::IntegrationTes
     assert_equal 'New Content', @snippet.content
   end
 
+  def test_update_does_not_reassign_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+
+    r :put, comfy_admin_cms_site_snippet_path(site_id: @site, id: @snippet), params: { snippet: {
+      label: 'Updated Snippet',
+      site_id: foreign_site.id
+    } }
+
+    assert_response :redirect
+    assert_equal @site, @snippet.reload.site
+  end
+
   def test_update_failure
     r :put, comfy_admin_cms_site_snippet_path(site_id: @site, id: @snippet), params: { snippet: {
       identifier: ''
@@ -132,6 +144,17 @@ class Comfy::Admin::Cms::SnippetsControllerTest < ActionDispatch::IntegrationTes
       assert_redirected_to action: :index
       assert_equal 'Snippet deleted', flash[:success]
     end
+  end
+
+  def test_reorder_does_not_update_snippet_from_another_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_snippet = foreign_site.snippets.create!(identifier: 'foreign')
+    foreign_snippet.update_column(:position, 10)
+
+    r :put, reorder_comfy_admin_cms_site_snippets_path(site_id: @site), params: { order: [foreign_snippet.id] }
+
+    assert_response :success
+    assert_equal 10, foreign_snippet.reload.position
   end
 
   def test_reorder

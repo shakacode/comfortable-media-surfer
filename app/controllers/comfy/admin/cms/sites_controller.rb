@@ -63,6 +63,6 @@ protected
   end
 
   def site_params
-    params.fetch(:site, {}).permit!
+    params.fetch(:site, {}).permit(:label, :identifier, :hostname, :path, :locale)
   end
 end

@@ -32,7 +32,7 @@ module Comfy::Cms::WithCategories
   def sync_categories
     return unless category_ids.is_a?(Array)
 
-    scope = Comfy::Cms::Category.of_type(self.class.to_s)
+    scope = Comfy::Cms::Category.where(site_id: site_id).of_type(self.class.to_s)
     existing_ids = scope.pluck(:id)
 
     ids_to_add = category_ids.map(&:to_i)

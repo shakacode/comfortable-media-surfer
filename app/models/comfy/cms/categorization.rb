@@ -11,4 +11,13 @@ class Comfy::Cms::Categorization < ActiveRecord::Base
   # -- Validations -------------------------------------------------------------
   validates :category_id,
             uniqueness: { scope: %i[categorized_type categorized_id] }
+  validate :category_belongs_to_site
+
+private
+
+  def category_belongs_to_site
+    return unless category && categorized.respond_to?(:site_id)
+
+    errors.add(:category_id, :invalid) if category.site_id != categorized.site_id
+  end
 end

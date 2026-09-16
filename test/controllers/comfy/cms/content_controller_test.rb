@@ -138,9 +138,10 @@ class Comfy::Cms::ContentControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_show_not_found
-    assert_raises ActionController::RoutingError, 'Page Not Found at: "doesnotexist"' do
+    error = assert_raises ActionController::RoutingError do
       get comfy_cms_render_page_path(cms_path: 'doesnotexist')
     end
+    assert_equal 'Page Not Found at: "doesnotexist"', error.message
   end
 
   def test_show_not_found_with_custom404
@@ -166,9 +167,10 @@ class Comfy::Cms::ContentControllerTest < ActionDispatch::IntegrationTest
   def test_show_with_no_site
     Comfy::Cms::Site.destroy_all
 
-    assert_raises ActionController::RoutingError, 'Site Not Found' do
+    error = assert_raises ActionController::RoutingError do
       get comfy_cms_render_page_path(cms_path: '')
     end
+    assert_equal 'Site Not Found', error.message
   end
 
   def test_show_with_no_layout
@@ -199,9 +201,10 @@ class Comfy::Cms::ContentControllerTest < ActionDispatch::IntegrationTest
   def test_show_unpublished
     @page.update_columns(is_published: false)
 
-    assert_raises ActionController::RoutingError, 'Page Not Found at: "unpublished"' do
+    error = assert_raises ActionController::RoutingError do
       get comfy_cms_render_page_path(cms_path: 'unpublished')
     end
+    assert_equal 'Page Not Found at: "unpublished"', error.message
   end
 
   def test_show_with_erb_disabled
@@ -254,18 +257,20 @@ class Comfy::Cms::ContentControllerTest < ActionDispatch::IntegrationTest
 
   def test_show_with_translation_not_found
     I18n.locale = :ja
-    assert_raises ActionController::RoutingError, 'Page Not Found at: ""' do
+    error = assert_raises ActionController::RoutingError do
       get comfy_cms_render_page_path(cms_path: '')
     end
+    assert_equal 'Page Not Found at: ""', error.message
   end
 
   def test_show_with_translation_unpublished
     @translation.update_column(:is_published, false)
     I18n.locale = @translation.locale
 
-    assert_raises ActionController::RoutingError, 'Page Not Found at: ""' do
+    error = assert_raises ActionController::RoutingError do
       get comfy_cms_render_page_path(cms_path: '')
     end
+    assert_equal 'Page Not Found at: ""', error.message
   end
 
   def test_with_translation_with_snippet

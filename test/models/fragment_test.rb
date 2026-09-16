@@ -41,6 +41,15 @@ class CmsFragmentTest < ActiveSupport::TestCase
     assert_has_errors_on frag, :identifier, :record
   end
 
+  def test_record_is_immutable
+    fragment = comfy_cms_fragments(:default)
+    fragment.record = comfy_cms_pages(:child)
+
+    refute fragment.save
+    assert_has_errors_on fragment, :record
+    assert_equal @page, fragment.reload.record
+  end
+
   def test_content_serialization
     fragment = Comfy::Cms::Fragment.new
 

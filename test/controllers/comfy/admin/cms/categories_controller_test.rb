@@ -52,6 +52,18 @@ class Comfy::Admin::Cms::CategoriesControllerTest < ActionDispatch::IntegrationT
     assert_equal 'Updated Label', category.label
   end
 
+  def test_update_does_not_reassign_site
+    category = comfy_cms_categories(:default)
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+
+    r :put, comfy_admin_cms_site_category_path(site_id: @site, id: category), xhr: true, params: {
+      category: { label: 'Updated Label', site_id: foreign_site.id }
+    }
+
+    assert_response :success
+    assert_equal @site, category.reload.site
+  end
+
   def test_update_failure
     category = comfy_cms_categories(:default)
     r :put, comfy_admin_cms_site_category_path(site_id: @site, id: category), xhr: true, params: { category: {

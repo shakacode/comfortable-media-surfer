@@ -49,6 +49,16 @@ class CmsPageTest < ActiveSupport::TestCase
     assert_has_errors_on @page, :parent_id
   end
 
+  def test_associations_must_belong_to_same_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_layout = foreign_site.layouts.create!(identifier: 'foreign')
+    foreign_page = foreign_site.pages.create!(label: 'Foreign', layout: foreign_layout)
+    @page.assign_attributes(parent: foreign_page, layout: foreign_layout, target_page: foreign_page)
+
+    assert @page.invalid?
+    assert_has_errors_on @page, :parent_id, :layout_id, :target_page_id
+  end
+
   def test_validation_of_target_page
     page = comfy_cms_pages(:child)
     page.target_page = @page

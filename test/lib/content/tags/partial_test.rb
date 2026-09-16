@@ -23,12 +23,13 @@ class ContentTagsPartialTest < ActiveSupport::TestCase
 
   def test_init_without_path
     message = 'Missing path for partial tag'
-    assert_raises ComfortableMediaSurfer::Content::Tag::Error, message do
+    error = assert_raises ComfortableMediaSurfer::Content::Tag::Error do
       ComfortableMediaSurfer::Content::Tags::Partial.new(
         context: @page,
         params: [{ 'key' => 'val' }]
       )
     end
+    assert_equal message, error.message
   end
 
   def test_content

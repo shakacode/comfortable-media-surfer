@@ -19,6 +19,18 @@ class CmsCategorizationTest < ActiveSupport::TestCase
     assert_has_errors_on category, :category, :categorized
   end
 
+  def test_category_must_belong_to_same_site
+    foreign_site = Comfy::Cms::Site.create!(identifier: 'foreign', hostname: 'foreign.example.com')
+    foreign_category = foreign_site.categories.create!(
+      label: 'Foreign',
+      categorized_type: 'Comfy::Cms::Page'
+    )
+    categorization = foreign_category.categorizations.new(categorized: comfy_cms_pages(:default))
+
+    assert categorization.invalid?
+    assert_has_errors_on categorization, :category_id
+  end
+
   def test_creation
     assert_difference 'Comfy::Cms::Categorization.count' do
       @category.categorizations.create!(
