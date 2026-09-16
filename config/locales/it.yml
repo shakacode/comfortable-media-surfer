@@ -120,6 +120,8 @@ it:
           creation_failure: Impossibile creare la pagina
           updated: Pagina modificata
           update_failure: Impossibile modificare la pagina
+          children_published: Pagine figlie pubblicate
+          children_unpublished: Pubblicazione delle pagine figlie annullata
           deleted: Pagina eliminata
           not_found: Pagina non trovata
           layout_not_found: Nessun layout trovato. Creane uno per favore.
@@ -137,6 +139,10 @@ it:
             title: Nuova Pagina
           edit:
             title: Modifica Pagina
+            publish_children: Pubblica pagine figlie
+            publish_children_confirmation: Pubblicare tutte le pagine figlie?
+            unpublish_children: Annulla pubblicazione delle pagine figlie
+            unpublish_children_confirmation: Annullare la pubblicazione di tutte le pagine figlie?
           form:
             select_target_page: Nessun reindirizzamento
             preview: Anteprima

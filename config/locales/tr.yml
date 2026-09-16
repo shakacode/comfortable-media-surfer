@@ -120,6 +120,8 @@ tr:
           creation_failure: Sayfa oluşturulamadı
           updated: Sayfa güncellendi
           update_failure: Sayfa güncellenemedi
+          children_published: Alt sayfalar yayımlandı
+          children_unpublished: Alt sayfalar yayından kaldırıldı
           deleted: Sayfa silindi
           not_found: Sayfa bulunamadı
           layout_not_found: Şablon bulunamadı. Lütfen oluşturun.
@@ -137,6 +139,10 @@ tr:
             title: Yeni Sayfa
           edit:
             title: Sayfa Düzenleniyor
+            publish_children: Alt sayfaları yayımla
+            publish_children_confirmation: Tüm alt sayfalar yayımlansın mı?
+            unpublish_children: Alt sayfaları yayından kaldır
+            unpublish_children_confirmation: Tüm alt sayfalar yayından kaldırılsın mı?
           form:
             select_target_page: Yönlendirme Yok
             preview: Önizle

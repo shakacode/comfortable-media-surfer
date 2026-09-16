@@ -120,6 +120,8 @@ ru:
           creation_failure: Не удалось создать страницу
           updated: Страница обновлена
           update_failure: Не удалось обновить страницу
+          children_published: Дочерние страницы опубликованы
+          children_unpublished: Дочерние страницы сняты с публикации
           deleted: Страница удалена
           not_found: Страница не найдена
           layout_not_found: Шаблоны не найдены. Пожалуйста, создайте хотя бы один шаблон.
@@ -137,6 +139,10 @@ ru:
             title: Новая страница
           edit:
             title: Редактирование страницы
+            publish_children: Опубликовать дочерние страницы
+            publish_children_confirmation: Опубликовать все дочерние страницы?
+            unpublish_children: Снять дочерние страницы с публикации
+            unpublish_children_confirmation: Снять с публикации все дочерние страницы?
           form:
             select_target_page: Без редиректа
             preview: Предпросмотр

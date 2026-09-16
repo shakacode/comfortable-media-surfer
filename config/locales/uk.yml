@@ -120,6 +120,8 @@ uk:
           creation_failure: Не вийшло створити сторінку
           updated: Сторінку оновлено
           update_failure: Не вийшло оновити сторінку
+          children_published: Дочірні сторінки опубліковано
+          children_unpublished: Дочірні сторінки знято з публікації
           deleted: Сторінка видалена
           not_found: Сторінку не знайдено
           layout_not_found: Жодного шаблону не знайдено
@@ -137,6 +139,10 @@ uk:
             title: Нова сторінка
           edit:
             title: Редагування сторінки
+            publish_children: Опублікувати дочірні сторінки
+            publish_children_confirmation: Опублікувати всі дочірні сторінки?
+            unpublish_children: Зняти дочірні сторінки з публікації
+            unpublish_children_confirmation: Зняти з публікації всі дочірні сторінки?
           form:
             select_target_page: Без редіректу
             preview: Передперегляд

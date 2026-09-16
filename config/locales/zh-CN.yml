@@ -120,6 +120,8 @@ zh-CN:
           creation_failure: 页面创建失败
           updated: 页面更新成功
           update_failure: 页面更新失败
+          children_published: 子页面已发布
+          children_unpublished: 子页面已取消发布
           deleted: 页面删除成功
           not_found: 页面不存在
           layout_not_found: 没有布局，请先创建一个布局。
@@ -137,6 +139,10 @@ zh-CN:
             title: 新页面
           edit:
             title: 编辑页面
+            publish_children: 发布子页面
+            publish_children_confirmation: 发布所有子页面？
+            unpublish_children: 取消发布子页面
+            unpublish_children_confirmation: 取消发布所有子页面？
           form:
             select_target_page: 没有跳转
             preview: 预览

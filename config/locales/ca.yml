@@ -120,6 +120,8 @@ ca:
           creation_failure: La pàgina no s'ha pogut crear
           updated: S'ha actualitzat la pàgina
           update_failure: La pàgina no s'ha pogut actualitzar
+          children_published: S'han publicat les pàgines filles
+          children_unpublished: S'ha anul·lat la publicació de les pàgines filles
           deleted: S'ha esborrat la pàgina
           not_found: La pàgina no s'ha pogut esborrar
           layout_not_found: No s'ha trobat cap disseny. Creeu-ne un primer.
@@ -137,6 +139,10 @@ ca:
             title: Nova pàgina
           edit:
             title: Editant pàgina
+            publish_children: Publica les pàgines filles
+            publish_children_confirmation: Voleu publicar totes les pàgines filles?
+            unpublish_children: Anul·la la publicació de les pàgines filles
+            unpublish_children_confirmation: Voleu anul·lar la publicació de totes les pàgines filles?
           form:
             select_target_page: No redirigir
             preview: Vista prèvia

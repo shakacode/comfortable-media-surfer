@@ -169,6 +169,8 @@ class Comfy::Admin::Cms::PagesControllerTest < ActionDispatch::IntegrationTest
     assert_template :edit
     assert_select "form[action='/admin/sites/#{@site.id}/pages/#{@page.id}']"
     assert_select "select[data-url='/admin/sites/#{@site.id}/pages/#{@page.id}/form_fragments']"
+    assert_select "a[href='#{publish_children_comfy_admin_cms_site_page_path(@site, @page)}']", 'Publish children'
+    assert_select "a[href='#{unpublish_children_comfy_admin_cms_site_page_path(@site, @page)}']", 'Unpublish children'
   end
 
   def test_get_edit_page_with_date
@@ -538,6 +540,48 @@ class Comfy::Admin::Cms::PagesControllerTest < ActionDispatch::IntegrationTest
     r :get, toggle_branch_comfy_admin_cms_site_page_path(site_id: @site, id: @page), xhr: true, params: { format: :js }
     assert_response :success
     assert_equal [@page.id.to_s], session[:cms_page_tree]
+  end
+
+  def test_publish_children
+    child = comfy_cms_pages(:child)
+    child.update_column(:is_published, false)
+    grandchild = @site.pages.create!(
+      parent: child,
+      layout: @layout,
+      label: 'Grandchild',
+      slug: 'grandchild',
+      is_published: false
+    )
+    @page.update_column(:is_published, false)
+
+    r :patch, publish_children_comfy_admin_cms_site_page_path(@site, @page)
+
+    assert_response :redirect
+    assert_redirected_to edit_comfy_admin_cms_site_page_path(@site, @page)
+    assert_equal 'Child pages published', flash[:success]
+    refute @page.reload.is_published?
+    assert child.reload.is_published?
+    assert grandchild.reload.is_published?
+  end
+
+  def test_unpublish_children
+    child = comfy_cms_pages(:child)
+    grandchild = @site.pages.create!(
+      parent: child,
+      layout: @layout,
+      label: 'Grandchild',
+      slug: 'grandchild',
+      is_published: true
+    )
+
+    r :patch, unpublish_children_comfy_admin_cms_site_page_path(@site, @page)
+
+    assert_response :redirect
+    assert_redirected_to edit_comfy_admin_cms_site_page_path(@site, @page)
+    assert_equal 'Child pages unpublished', flash[:success]
+    assert @page.reload.is_published?
+    refute child.reload.is_published?
+    refute grandchild.reload.is_published?
   end
 
   def test_reorder_does_not_update_page_from_another_site

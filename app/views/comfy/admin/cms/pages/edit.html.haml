@@ -3,8 +3,12 @@
   = render "comfy/admin/cms/revisions/sidebar", record: @page, link: link
   = render "comfy/admin/cms/translations/sidebar"
 
-.page-header
+.page-header.d-flex.justify-content-between.align-items-center
   %h2= t('.title')
+  - if @page.children.exists?
+    .btn-group.btn-group-sm
+      = link_to t('.publish_children', default: 'Publish children'), publish_children_comfy_admin_cms_site_page_path(@site, @page), method: :patch, data: {confirm: t('.publish_children_confirmation', default: 'Publish all child pages?')}, class: 'btn btn-success'
+      = link_to t('.unpublish_children', default: 'Unpublish children'), unpublish_children_comfy_admin_cms_site_page_path(@site, @page), method: :patch, data: {confirm: t('.unpublish_children_confirmation', default: 'Unpublish all child pages?')}, class: 'btn btn-outline-secondary'
 
 = comfy_form_with model: @page, scope: :page, url: {action: :update}, html: {multipart: true} do |form|
   = render form

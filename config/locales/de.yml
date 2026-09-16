@@ -120,6 +120,8 @@ de:
           creation_failure: Fehler beim Erstellen der Seite!
           updated: Seite aktualisiert
           update_failure: Fehler beim Aktualisieren der Seite!
+          children_published: Untergeordnete Seiten veröffentlicht
+          children_unpublished: Veröffentlichung untergeordneter Seiten aufgehoben
           deleted: Seite gelöscht
           not_found: Seite nicht gefunden
           layout_not_found: Bisher wurde keine Vorlage angelegt!
@@ -137,6 +139,10 @@ de:
             title: Seite erstellen
           edit:
             title: Seite bearbeiten
+            publish_children: Untergeordnete Seiten veröffentlichen
+            publish_children_confirmation: Alle untergeordneten Seiten veröffentlichen?
+            unpublish_children: Veröffentlichung untergeordneter Seiten aufheben
+            unpublish_children_confirmation: Veröffentlichung aller untergeordneten Seiten aufheben?
           form:
             select_target_page: Keine Weiterleitung
             preview: Vorschau

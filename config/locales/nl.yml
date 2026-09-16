@@ -120,6 +120,8 @@ nl:
           creation_failure: Pagina aanmaken mislukt
           updated: Pagina bijgewerkt
           update_failure: Pagina bijwerken mislukt
+          children_published: Onderliggende pagina's gepubliceerd
+          children_unpublished: Publicatie van onderliggende pagina's ingetrokken
           deleted: Pagina verwijderd
           not_found: Pagina niet gevonden
           layout_not_found: Geen Lay-outs gevonden. Maak er a.u.b. een aan.
@@ -137,6 +139,10 @@ nl:
             title: Nieuwe Pagina
           edit:
             title: Pagina Bewerken
+            publish_children: Onderliggende pagina's publiceren
+            publish_children_confirmation: Alle onderliggende pagina's publiceren?
+            unpublish_children: Publicatie van onderliggende pagina's intrekken
+            unpublish_children_confirmation: Publicatie van alle onderliggende pagina's intrekken?
           form:
             select_target_page: Geen Omleiding
             preview: Preview

@@ -120,6 +120,8 @@ nb:
           creation_failure: Klarte ikke å opprette side
           updated: Side oppdatert
           update_failure: Klarte ikke å endre side
+          children_published: Undersider publisert
+          children_unpublished: Undersider avpublisert
           deleted: Side fjernet
           not_found: Fant ikke side
           layout_not_found: Ingen layouter eksisterer. Vennligst opprett en.
@@ -137,6 +139,10 @@ nb:
             title: Ny side
           edit:
             title: Endrer side
+            publish_children: Publiser undersider
+            publish_children_confirmation: Vil du publisere alle undersider?
+            unpublish_children: Avpubliser undersider
+            unpublish_children_confirmation: Vil du avpublisere alle undersider?
           form:
             select_target_page: Ingen videresending
             preview: Forhåndsvisning

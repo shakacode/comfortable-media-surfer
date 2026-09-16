@@ -120,6 +120,8 @@ fi:
           creation_failure: Sivua ei voitu luoda
           updated: Sivu on päivitetty
           update_failure: Sivua ei voitu päivittää
+          children_published: Alisivut julkaistu
+          children_unpublished: Alisivut poistettu julkaisusta
           deleted: Sivu on poistettu
           not_found: Sivua ei löydy
           layout_not_found: Yhtään ulkoasua ei löydy. Ole hyvä ja luo sellainen.
@@ -137,6 +139,10 @@ fi:
             title: Uusi sivu
           edit:
             title: Sivun muokkaus
+            publish_children: Julkaise alisivut
+            publish_children_confirmation: Julkaistaanko kaikki alisivut?
+            unpublish_children: Poista alisivut julkaisusta
+            unpublish_children_confirmation: Poistetaanko kaikki alisivut julkaisusta?
           form:
             select_target_page: Ei uudelleenohjausta
             preview: Esikatselu

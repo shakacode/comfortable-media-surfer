@@ -120,6 +120,8 @@ es:
           creation_failure: La página no ha podido ser creada
           updated: Página actualizada
           update_failure: La página no ha podido ser actualizada
+          children_published: Páginas hijas publicadas
+          children_unpublished: Páginas hijas despublicadas
           deleted: Página eliminada
           not_found: Página no encontrada
           layout_not_found: No se ha encontrado una plantilla. Cree una primero.
@@ -137,6 +139,10 @@ es:
             title: Nueva Página
           edit:
             title: Editando Página
+            publish_children: Publicar páginas hijas
+            publish_children_confirmation: ¿Publicar todas las páginas hijas?
+            unpublish_children: Despublicar páginas hijas
+            unpublish_children_confirmation: ¿Despublicar todas las páginas hijas?
           form:
             select_target_page: No Redirigir
             preview: Vista Previa

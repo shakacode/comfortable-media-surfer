@@ -13,6 +13,23 @@ class PagesFrontendTest < ApplicationSystemTestCase
     assert_equal 'test-page', find_field('Slug').value
   end
 
+  def test_publish_and_unpublish_children
+    child = comfy_cms_pages(:child)
+    visit_p edit_comfy_admin_cms_site_page_path(@site, comfy_cms_pages(:default))
+
+    accept_confirm('Unpublish all child pages?') do
+      click_link 'Unpublish children'
+    end
+    assert_text 'Child pages unpublished'
+    refute child.reload.is_published?
+
+    accept_confirm('Publish all child pages?') do
+      click_link 'Publish children'
+    end
+    assert_text 'Child pages published'
+    assert child.reload.is_published?
+  end
+
   def test_change_to_invalid_fragment_and_back
     valid_layout = comfy_cms_layouts(:default)
     valid_layout.update_column(:content, '{{ cms:text content }}')

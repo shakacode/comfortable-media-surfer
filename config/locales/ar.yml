@@ -120,6 +120,8 @@ ar:
           creation_failure: فشل في إنشاء الصفحة
           updated: تحديث الصفحة
           update_failure: فشل في تحديث الصفحة
+          children_published: تم نشر الصفحات الفرعية
+          children_unpublished: تم إلغاء نشر الصفحات الفرعية
           deleted: تم حذف الصفحة
           not_found: الصفحة غير موجودة
           layout_not_found: لم يتم العثور على تخطيطات يرجى إنشاء واحد.
@@ -137,6 +139,10 @@ ar:
             title: صفحة جديدة
           edit:
             title: تعديل
+            publish_children: نشر الصفحات الفرعية
+            publish_children_confirmation: هل تريد نشر جميع الصفحات الفرعية؟
+            unpublish_children: إلغاء نشر الصفحات الفرعية
+            unpublish_children_confirmation: هل تريد إلغاء نشر جميع الصفحات الفرعية؟
           form:
             select_target_page: لا إعادة توجيه
             preview: معاينة

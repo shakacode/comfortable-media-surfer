@@ -120,6 +120,8 @@ pl:
           creation_failure: Błąd przy tworzeniu strony
           updated: Strona została uaktualniona
           update_failure: Błąd przy uaktualnianiu strony
+          children_published: Opublikowano podstrony
+          children_unpublished: Cofnięto publikację podstron
           deleted: Strona została usunięta
           not_found: Nie znaleziono strony
           layout_not_found: Brakuje szablonu. Proszę utworzyć
@@ -137,6 +139,10 @@ pl:
             title: Nowa strona
           edit:
             title: Edytuj stronę
+            publish_children: Opublikuj podstrony
+            publish_children_confirmation: Opublikować wszystkie podstrony?
+            unpublish_children: Cofnij publikację podstron
+            unpublish_children_confirmation: Cofnąć publikację wszystkich podstron?
           form:
             select_target_page: Bez przekierowania
             preview: Podgląd

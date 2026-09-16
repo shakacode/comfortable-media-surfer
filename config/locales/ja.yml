@@ -120,6 +120,8 @@ ja:
           creation_failure: ページの作成に失敗しました
           updated: ページが更新されました
           update_failure: ページの更新に失敗しました
+          children_published: 子ページを公開しました
+          children_unpublished: 子ページを非公開にしました
           deleted: ページが削除されました
           not_found: ページが見つかりません
           layout_not_found: レイアウトが見つかりません。 レイアウトを作成してください。
@@ -137,6 +139,10 @@ ja:
             title: 新規ページ
           edit:
             title: ページを編集
+            publish_children: 子ページを公開
+            publish_children_confirmation: すべての子ページを公開しますか？
+            unpublish_children: 子ページを非公開にする
+            unpublish_children_confirmation: すべての子ページを非公開にしますか？
           form:
             select_target_page: リダイレクトなし
             preview: プレビュー

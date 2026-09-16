@@ -120,6 +120,8 @@ pt-BR:
           creation_failure: Não foi possível criar página.
           updated: Página atualizada com sucesso.
           update_failure: Não foi possível atualizar página.
+          children_published: Páginas filhas publicadas.
+          children_unpublished: Páginas filhas despublicadas.
           deleted: Página excluída com sucesso.
           not_found: Página não encontrada.
           layout_not_found: "Nenhum leiaute foi encontrado. Por favor, crie um."
@@ -137,6 +139,10 @@ pt-BR:
             title: Nova Página
           edit:
             title: Editando Página
+            publish_children: Publicar Páginas Filhas
+            publish_children_confirmation: Publicar todas as páginas filhas?
+            unpublish_children: Despublicar Páginas Filhas
+            unpublish_children_confirmation: Despublicar todas as páginas filhas?
           form:
             select_target_page: Não Redirecionar
             preview: Pré-visualização

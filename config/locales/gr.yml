@@ -120,6 +120,8 @@ gr:
           creation_failure: Αποτυχία δημιουργίας σελίδας
           updated: Η σελίδα ενημερώθηκε
           update_failure: Αποτυχία ενημέρωσης σελίδας
+          children_published: Οι υποσελίδες δημοσιεύτηκαν
+          children_unpublished: Οι υποσελίδες αποσύρθηκαν από τη δημοσίευση
           deleted: Η σελίδα διαγράφηκε
           not_found: Η σελίδα δεν βρέθηκε
           layout_not_found: Η διάταξη δεν βρέθηκε. Προσπαθήστε να δημιουργήσετε μία.
@@ -137,6 +139,10 @@ gr:
             title: Νέα Σελίδα
           edit:
             title: Επεξεργασία Σελίδας
+            publish_children: Δημοσίευση υποσελίδων
+            publish_children_confirmation: Να δημοσιευτούν όλες οι υποσελίδες;
+            unpublish_children: Απόσυρση υποσελίδων από τη δημοσίευση
+            unpublish_children_confirmation: Να αποσυρθούν όλες οι υποσελίδες από τη δημοσίευση;
           form:
             select_target_page: Καμία Ανακατεύθυνση
             preview: Προεπισκόπηση

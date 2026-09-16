@@ -12,7 +12,7 @@ class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
 
   before_action :check_for_layouts, only: %i[new edit]
   before_action :build_page,        only: %i[new create]
-  before_action :load_page,         only: %i[edit update destroy]
+  before_action :load_page,         only: %i[edit update destroy publish_children unpublish_children]
 
   before_action :authorize
   before_action :assign_page_params, only: :update
@@ -94,7 +94,25 @@ class Comfy::Admin::Cms::PagesController < Comfy::Admin::Cms::BaseController
     render nothing: true
   end
 
+  def publish_children
+    update_children_publication(true, :children_published)
+  end
+
+  def unpublish_children
+    update_children_publication(false, :children_unpublished)
+  end
+
 protected
+
+  def update_children_publication(is_published, message)
+    descendant_ids = @page.descendants.map(&:id)
+    @site.pages
+      .where(id: descendant_ids)
+      .update_all(is_published: is_published, updated_at: Time.current)
+    default = is_published ? 'Child pages published' : 'Child pages unpublished'
+    flash[:success] = I18n.t("comfy.admin.cms.pages.#{message}", default: default)
+    redirect_to action: :edit, id: @page
+  end
 
   def index_for_redactor
     tree_walker = ->(page, list, offset) do

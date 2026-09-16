@@ -120,6 +120,8 @@ sk:
           creation_failure: Nepodarilo sa vytvoriť stránku
           updated: Stránka upravená
           update_failure: Nepodarilo sa upraviť stránku
+          children_published: Podstránky boli publikované
+          children_unpublished: Publikovanie podstránok bolo zrušené
           deleted: Stránka odstránená
           not_found: Stránka nenájdená
           layout_not_found: "Neboli nájdené žiadne rozloženia, vytvorte prosím nejaké."
@@ -137,6 +139,10 @@ sk:
             title: Nová stránka
           edit:
             title: Úprava stránky
+            publish_children: Publikovať podstránky
+            publish_children_confirmation: Publikovať všetky podstránky?
+            unpublish_children: Zrušiť publikovanie podstránok
+            unpublish_children_confirmation: Zrušiť publikovanie všetkých podstránok?
           form:
             select_target_page: Bez presmerovania
             preview: Náhľad

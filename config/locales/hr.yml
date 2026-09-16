@@ -120,6 +120,8 @@ hr:
           creation_failure: Kreiranje stranice nije uspjelo
           updated: Stranica ažurirana
           update_failure: Ažuriranje nije uspjelo
+          children_published: Podređene stranice objavljene
+          children_unpublished: Podređene stranice povučene iz objave
           deleted: Stranica izbrisana
           not_found: Stranica nije pronađena
           layout_not_found: Nema aktivnih predložaka. Molimo vas prvo kreirajte predložak.
@@ -137,6 +139,10 @@ hr:
             title: Nova stranica
           edit:
             title: Uređivanje stranice
+            publish_children: Objavi podređene stranice
+            publish_children_confirmation: Objaviti sve podređene stranice?
+            unpublish_children: Povuci podređene stranice iz objave
+            unpublish_children_confirmation: Povući sve podređene stranice iz objave?
           form:
             select_target_page: Nema redirekcije
             preview: Pregled

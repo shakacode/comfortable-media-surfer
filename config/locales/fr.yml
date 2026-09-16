@@ -120,6 +120,8 @@ fr:
           creation_failure: Échec de la création de la page
           updated: Page modifiée
           update_failure: Échec de la modification de la page
+          children_published: Pages enfants publiées
+          children_unpublished: Pages enfants dépubliées
           deleted: Page supprimée
           not_found: Page introuvable
           layout_not_found: Aucune mise en page disponible. Créez-en une nouvelle.
@@ -137,6 +139,10 @@ fr:
             title: Nouvelle page
           edit:
             title: Modification de la page
+            publish_children: Publier les pages enfants
+            publish_children_confirmation: Publier toutes les pages enfants ?
+            unpublish_children: Dépublier les pages enfants
+            unpublish_children_confirmation: Dépublier toutes les pages enfants ?
           form:
             select_target_page: Pas de redirection
             preview: Prévisualiser

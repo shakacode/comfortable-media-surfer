@@ -120,6 +120,8 @@ zh-TW:
           creation_failure: 頁面創建失敗
           updated: 頁面更新成功
           update_failure: 頁面更新失敗
+          children_published: 子頁面已發佈
+          children_unpublished: 子頁面已取消發佈
           deleted: 頁面刪除成功
           not_found: 頁面不存在
           layout_not_found: 沒有佈局，請先創建一個佈局。
@@ -137,6 +139,10 @@ zh-TW:
             title: 新頁面
           edit:
             title: 編輯頁面
+            publish_children: 發佈子頁面
+            publish_children_confirmation: 發佈所有子頁面？
+            unpublish_children: 取消發佈子頁面
+            unpublish_children_confirmation: 取消發佈所有子頁面？
           form:
             select_target_page: 沒有跳轉
             preview: 預覽

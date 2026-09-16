@@ -120,6 +120,8 @@ sv:
           creation_failure: Misslyckades att skapa sida
           updated: Sida uppdaterad
           update_failure: Uppdateringen av sidan misslyckades
+          children_published: Undersidor publicerade
+          children_unpublished: Undersidor avpublicerade
           deleted: Sidan borttagen
           not_found: Sida kunde inte hittas
           layout_not_found: Kunde inte hitta layout. Vänligen skapa en.
@@ -137,6 +139,10 @@ sv:
             title: Ny sida
           edit:
             title: Ändra sida
+            publish_children: Publicera undersidor
+            publish_children_confirmation: Publicera alla undersidor?
+            unpublish_children: Avpublicera undersidor
+            unpublish_children_confirmation: Avpublicera alla undersidor?
           form:
             select_target_page: Ingen vidarebefodring
             preview: Förhandsgranska

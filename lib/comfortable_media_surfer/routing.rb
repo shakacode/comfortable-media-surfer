@@ -35,6 +35,8 @@ module ComfortableMediaSurfer::Routing
                 concerns :with_revisions, controller: 'revisions/page'
 
                 get :toggle_branch, on: :member
+                patch :publish_children, on: :member
+                patch :unpublish_children, on: :member
 
                 resources :translations, except: [:index] do
                   concerns :with_form_fragments

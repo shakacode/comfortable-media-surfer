@@ -120,6 +120,8 @@ da:
           creation_failure: Oprettelse af side mislykkedes
           updated: Side opdateret
           update_failure: Opdatering af side mislykkedes
+          children_published: Undersider udgivet
+          children_unpublished: Undersider trukket tilbage
           deleted: Side slettet
           not_found: Side findes ikke
           layout_not_found: Ingen layouts findes. Opret venligst et layout.
@@ -137,6 +139,10 @@ da:
             title: Ny side
           edit:
             title: Rediger side
+            publish_children: Udgiv undersider
+            publish_children_confirmation: Udgiv alle undersider?
+            unpublish_children: Træk undersider tilbage
+            unpublish_children_confirmation: Træk alle undersider tilbage?
           form:
             select_target_page: Ingen viderestilling
             preview: Preview
