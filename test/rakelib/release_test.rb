@@ -202,6 +202,26 @@ class ReleaseTest < Minitest::Test
     assert_includes command.first, '--prerelease'
   end
 
+  def test_failed_preflight_build_restores_the_original_version_file
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.7', changelog: '')
+      original_contents = File.read(File.join(root, 'lib/comfortable_media_surfer/version.rb'))
+      runner = ->(*command, chdir:) do
+        raise ComfortableMediaSurferRelease::ReleaseError, "build failed in #{chdir}" if command.first == 'gem'
+
+        ''
+      end
+
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          ComfortableMediaSurferRelease.bump_and_validate!(root:, version: '3.1.8')
+        end
+      end
+
+      assert_equal original_contents, File.read(File.join(root, 'lib/comfortable_media_surfer/version.rb'))
+    end
+  end
+
   def test_rubygems_recovery_is_idempotent_when_version_is_already_published
     Dir.mktmpdir do |root|
       write_release_files(root, version: '3.1.8', changelog: '')

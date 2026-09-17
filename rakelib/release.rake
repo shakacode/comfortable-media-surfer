@@ -342,12 +342,18 @@ module_function
     updated = contents.sub(%r{(VERSION\s*=\s*['"])[^'"]+(['"])}, "\\1#{version}\\2")
     raise ReleaseError, "Unable to update the gem version in #{path}." if updated == contents
 
-    File.write(path, updated, encoding: 'UTF-8')
-    actual = current_version(root)
-    raise ReleaseError, "Expected gem bump to produce #{version}, but found #{actual}." unless actual == version
+    begin
+      File.write(path, updated, encoding: 'UTF-8')
+      actual = current_version(root)
+      raise ReleaseError, "Expected gem bump to produce #{version}, but found #{actual}." unless actual == version
 
-    run!('gem', 'build', 'comfortable_media_surfer.gemspec', chdir: root)
-    FileUtils.rm_f(File.join(root, "comfortable_media_surfer-#{version}.gem"))
+      run!('gem', 'build', 'comfortable_media_surfer.gemspec', chdir: root)
+    rescue ReleaseError
+      File.write(path, contents, encoding: 'UTF-8')
+      raise
+    ensure
+      FileUtils.rm_f(File.join(root, "comfortable_media_surfer-#{version}.gem"))
+    end
   end
 
   def rubygems_versions(root:)
