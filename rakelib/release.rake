@@ -103,8 +103,12 @@ module_function
     end
   end
 
-  def validate_version_policy!(target:, tagged_versions:, changelog_section: nil)
+  def validate_version_policy!(target:, tagged_versions:, changelog_section: nil, current: nil)
     validate_requested_version!(target)
+    if current && Gem::Version.new(target) < Gem::Version.new(current)
+      raise ReleaseError, "Requested version #{target} must not be older than checked-in version #{current}."
+    end
+
     latest = tagged_versions.max_by { |version| Gem::Version.new(version) }
     if latest && Gem::Version.new(target) <= Gem::Version.new(latest)
       raise ReleaseError, "Requested version #{target} must be greater than latest tagged version #{latest}."
@@ -188,7 +192,14 @@ module_function
   end
 
   def repository_slug(root)
-    github_repo_slug(run!('git', 'remote', 'get-url', 'origin', chdir: root))
+    fetch_repo = github_repo_slug(run!('git', 'remote', 'get-url', 'origin', chdir: root))
+    push_repo = github_repo_slug(run!('git', 'remote', 'get-url', '--push', 'origin', chdir: root))
+    unless fetch_repo == push_repo
+      raise ReleaseError,
+            "Origin fetch repository #{fetch_repo} does not match push repository #{push_repo}; refusing to release."
+    end
+
+    fetch_repo
   end
 
   def verify_clean_worktree!(root)
@@ -340,8 +351,14 @@ module_function
   def bump_and_validate!(root:, version:)
     path = File.join(root, 'lib', 'comfortable_media_surfer', 'version.rb')
     contents = read_required_file(path)
-    updated = contents.sub(%r{(VERSION\s*=\s*['"])[^'"]+(['"])}, "\\1#{version}\\2")
-    raise ReleaseError, "Unable to update the gem version in #{path}." if updated == contents
+    version_match = contents.match(%r{VERSION\s*=\s*['"]([^'"]+)['"]})
+    raise ReleaseError, "Unable to update the gem version in #{path}." unless version_match
+
+    updated = if version_match[1] == version
+                contents
+              else
+                contents.sub(%r{(VERSION\s*=\s*['"])[^'"]+(['"])}, "\\1#{version}\\2")
+              end
 
     begin
       File.write(path, updated, encoding: 'UTF-8')
@@ -564,7 +581,8 @@ module_function
       validate_version_policy!(
         target: version,
         tagged_versions: tagged_versions(release_root, fetch: false),
-        changelog_section: notes
+        changelog_section: notes,
+        current: current_version(release_root)
       )
 
       unless dry_run

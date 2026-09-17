@@ -66,6 +66,18 @@ class ReleaseTest < Minitest::Test
     assert_match(%r{must be greater than latest tagged version 3\.1\.7}, error.message)
   end
 
+  def test_rejects_a_target_older_than_the_checked_in_version
+    error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      ComfortableMediaSurferRelease.validate_version_policy!(
+        target: '3.1.8',
+        current: '3.2.0',
+        tagged_versions: %w[3.1.7]
+      )
+    end
+
+    assert_match(%r{must not be older than checked-in version 3\.2\.0}, error.message)
+  end
+
   def test_rejects_a_patch_version_for_changelog_features
     error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
       ComfortableMediaSurferRelease.validate_version_policy!(
@@ -202,6 +214,36 @@ class ReleaseTest < Minitest::Test
     end
   end
 
+  def test_repository_slug_requires_matching_fetch_and_push_repositories
+    matching_runner = ->(*command, chdir:) do
+      assert_equal '/release', chdir
+      if command.include?('--push')
+        "git@github.com:shakacode/comfortable-media-surfer.git\n"
+      else
+        "https://github.com/shakacode/comfortable-media-surfer.git\n"
+      end
+    end
+    ComfortableMediaSurferRelease.stub(:run!, matching_runner) do
+      assert_equal 'shakacode/comfortable-media-surfer',
+                   ComfortableMediaSurferRelease.repository_slug('/release')
+    end
+
+    mismatched_runner = ->(*command, chdir:) do
+      assert_equal '/release', chdir
+      if command.include?('--push')
+        "git@github.com:other/project.git\n"
+      else
+        "git@github.com:shakacode/comfortable-media-surfer.git\n"
+      end
+    end
+    error = ComfortableMediaSurferRelease.stub(:run!, mismatched_runner) do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.repository_slug('/release')
+      end
+    end
+    assert_match(%r{fetch repository .* does not match push repository}, error.message)
+  end
+
   def test_new_prerelease_command_marks_the_github_release_as_a_prerelease
     command = ComfortableMediaSurferRelease.github_release_command(
       tag: 'v3.2.0.rc.0',
@@ -269,6 +311,24 @@ class ReleaseTest < Minitest::Test
       end
 
       assert_equal original_contents, File.read(File.join(root, 'lib/comfortable_media_surfer/version.rb'))
+    end
+  end
+
+  def test_preflight_build_accepts_an_already_correct_version_file
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.8', changelog: '')
+      built = false
+      runner = ->(*command, chdir:) do
+        built = command.first == 'gem' && chdir == root
+        ''
+      end
+
+      ComfortableMediaSurferRelease.stub(:run!, runner) do
+        ComfortableMediaSurferRelease.bump_and_validate!(root:, version: '3.1.8')
+      end
+
+      assert built
+      assert_equal '3.1.8', ComfortableMediaSurferRelease.current_version(root)
     end
   end
 
