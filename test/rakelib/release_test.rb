@@ -158,6 +158,31 @@ class ReleaseTest < Minitest::Test
     assert ComfortableMediaSurferRelease.validate_ci_runs!(runs:)
   end
 
+  def test_workflow_runs_parses_the_complete_json_document
+    output = <<~JSON
+      [
+        {"name":"Rails CI","status":"completed","conclusion":"success","created_at":"2026-09-16T02:00:00Z"},
+        {"name":"Coveralls","status":"completed","conclusion":"success","created_at":"2026-09-16T02:00:00Z"}
+      ]
+    JSON
+    command = nil
+    runner = ->(*args, chdir:) do
+      command = [args, chdir]
+      output
+    end
+
+    runs = ComfortableMediaSurferRelease.stub(:repository_slug, 'shakacode/comfortable-media-surfer') do
+      ComfortableMediaSurferRelease.stub(:run!, runner) do
+        ComfortableMediaSurferRelease.workflow_runs(root: '/release', commit_sha: 'abc123')
+      end
+    end
+
+    workflow_names = runs.map { |run| run.fetch('name') }
+    assert_equal ['Rails CI', 'Coveralls'], workflow_names
+    assert_includes command.first, '[.workflow_runs[] | {name,status,conclusion,created_at}]'
+    refute_includes command.first, '--paginate'
+  end
+
   def test_github_repo_slug_accepts_supported_github_remotes
     assert_equal 'shakacode/comfortable-media-surfer',
                  ComfortableMediaSurferRelease.github_repo_slug('git@github.com:shakacode/comfortable-media-surfer.git')
@@ -298,16 +323,28 @@ class ReleaseTest < Minitest::Test
       command = nil
       runner = ->(*args, chdir:) do
         command = [args, chdir] if args.first == 'bundle'
-        ''
+        true
       end
 
-      ComfortableMediaSurferRelease.stub(:run!, runner) do
+      ComfortableMediaSurferRelease.stub(:run_interactive!, runner) do
         ComfortableMediaSurferRelease.stub(:rubygems_versions, []) do
           ComfortableMediaSurferRelease.publish_to_rubygems!(root:, version: '3.1.8')
         end
       end
 
       assert_equal [%w[bundle exec gem release], root], command
+    end
+  end
+
+  def test_live_github_release_sync_fails_when_release_notes_are_missing
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.8', changelog: '')
+
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.sync_github_release!(root:, version: '3.1.8')
+      end
+
+      assert_match(%r{cannot sync the GitHub release}, error.message)
     end
   end
 
@@ -590,6 +627,30 @@ class ReleaseTest < Minitest::Test
 
       assert_empty run_git(checkout, 'status', '--porcelain').strip
       assert File.directory?(origin)
+    end
+  end
+
+  def test_successful_tag_recovery_is_not_failed_by_worktree_cleanup_errors
+    Dir.mktmpdir do |sandbox|
+      _origin, _seed, checkout = create_git_release_fixture(sandbox)
+      original_run = ComfortableMediaSurferRelease.method(:run!)
+      runner = ->(*command, chdir:) do
+        if command.first(4) == %w[git worktree remove --force]
+          raise ComfortableMediaSurferRelease::ReleaseError, 'simulated tag cleanup failure'
+        end
+
+        original_run.call(*command, chdir:)
+      end
+
+      result = nil
+      _output, warnings = capture_io do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          result = ComfortableMediaSurferRelease.with_tag_checkout(root: checkout, version: '3.1.7') { :success }
+        end
+      end
+
+      assert_equal :success, result
+      assert_match(%r{simulated tag cleanup failure}, warnings)
     end
   end
 

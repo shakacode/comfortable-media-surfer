@@ -31,6 +31,14 @@ module_function
     raise ReleaseError, "Command not found: #{e.message}"
   end
 
+  def run_interactive!(*command, chdir:)
+    return true if system(*command, chdir:)
+
+    raise ReleaseError, "Command failed: #{Shellwords.join(command)}"
+  rescue Errno::ENOENT => e
+    raise ReleaseError, "Command not found: #{e.message}"
+  end
+
   def truthy?(value)
     %w[1 true yes t].include?(value.to_s.downcase)
   end
@@ -233,13 +241,14 @@ module_function
   def workflow_runs(root:, commit_sha:)
     repo = repository_slug(root)
     endpoint = "repos/#{repo}/actions/runs?head_sha=#{commit_sha}&event=push&per_page=100"
-    output = run!('gh', 'api', endpoint, '--paginate', '--jq',
-                  '.workflow_runs[] | {name,status,conclusion,created_at}', chdir: root)
-    output.lines.filter_map do |line|
-      JSON.parse(line)
-    rescue JSON::ParserError => e
-      raise ReleaseError, "Unable to parse GitHub workflow data: #{e.message}"
-    end
+    output = run!('gh', 'api', endpoint, '--jq',
+                  '[.workflow_runs[] | {name,status,conclusion,created_at}]', chdir: root)
+    runs = JSON.parse(output)
+    raise ReleaseError, 'GitHub workflow response was not an array.' unless runs.is_a?(Array)
+
+    runs
+  rescue JSON::ParserError => e
+    raise ReleaseError, "Unable to parse GitHub workflow data: #{e.message}"
   end
 
   def validate_release_ci!(root:, override:, dry_run:)
@@ -282,17 +291,7 @@ module_function
         run!('git', 'branch', '--set-upstream-to', "origin/#{DEFAULT_BRANCH}", branch, chdir: directory)
         yield(directory)
       ensure
-        begin
-          run!('git', 'worktree', 'remove', '--force', directory, chdir: root) if File.exist?(directory)
-        rescue ReleaseError => e
-          warn "⚠️ #{e.message}"
-          FileUtils.rm_rf(directory)
-          begin
-            run!('git', 'worktree', 'prune', chdir: root)
-          rescue ReleaseError => prune_error
-            warn "⚠️ #{prune_error.message}"
-          end
-        end
+        remove_worktree_safely!(root:, directory:)
         begin
           run!('git', 'branch', '-D', branch, chdir: root)
         rescue ReleaseError => e
@@ -312,20 +311,22 @@ module_function
         verify_release_tag_at_head!(root: directory, version:)
         yield(directory)
       ensure
-        original_error = $ERROR_INFO
-        begin
-          run!('git', 'worktree', 'remove', '--force', directory, chdir: root) if File.exist?(directory)
-        rescue ReleaseError => e
-          warn "⚠️ #{e.message}"
-          FileUtils.rm_rf(directory)
-          begin
-            run!('git', 'worktree', 'prune', chdir: root)
-          rescue ReleaseError => prune_error
-            warn "⚠️ #{prune_error.message}"
-          end
-          raise e unless original_error
-        end
+        remove_worktree_safely!(root:, directory:)
       end
+    end
+  end
+
+  def remove_worktree_safely!(root:, directory:)
+    return unless File.exist?(directory)
+
+    run!('git', 'worktree', 'remove', '--force', directory, chdir: root)
+  rescue ReleaseError => e
+    warn "⚠️ #{e.message}"
+    FileUtils.rm_rf(directory)
+    begin
+      run!('git', 'worktree', 'prune', chdir: root)
+    rescue ReleaseError => prune_error
+      warn "⚠️ #{prune_error.message}"
     end
   end
 
@@ -390,7 +391,7 @@ module_function
     end
 
     puts 'Use the OTP for RubyGems when prompted.'
-    run!('bundle', 'exec', 'gem', 'release', chdir: root)
+    run_interactive!('bundle', 'exec', 'gem', 'release', chdir: root)
     :published
   end
 
@@ -521,7 +522,10 @@ module_function
   def sync_github_release!(root:, version:, dry_run: false)
     notes = changelog_section(root:, version:)
     unless notes
-      warn "⚠️ No CHANGELOG.md section found for v#{version}; skipping the GitHub release."
+      message = "No CHANGELOG.md section found for v#{version}; cannot sync the GitHub release."
+      raise ReleaseError, message unless dry_run
+
+      warn "⚠️ DRY RUN: #{message}"
       return false
     end
 
