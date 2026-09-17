@@ -259,7 +259,13 @@ module_function
   def prepare_live_checkout!(root)
     verify_release_branch!(root)
     run!('git', 'fetch', 'origin', DEFAULT_BRANCH, '--tags', chdir: root)
-    run!('git', 'pull', '--rebase', 'origin', DEFAULT_BRANCH, chdir: root)
+    local_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
+    remote_head = run!('git', 'rev-parse', "origin/#{DEFAULT_BRANCH}", chdir: root).strip
+    unless local_head == remote_head
+      raise ReleaseError,
+            "Local #{DEFAULT_BRANCH} must exactly match origin/#{DEFAULT_BRANCH} before releasing. " \
+            'Push, reset, or reconcile the branch first.'
+    end
     verify_clean_worktree!(root)
   end
 
@@ -276,27 +282,22 @@ module_function
         run!('git', 'branch', '--set-upstream-to', "origin/#{DEFAULT_BRANCH}", branch, chdir: directory)
         yield(directory)
       ensure
-        cleanup_errors = []
         begin
           run!('git', 'worktree', 'remove', '--force', directory, chdir: root) if File.exist?(directory)
         rescue ReleaseError => e
-          cleanup_errors << e
           warn "⚠️ #{e.message}"
           FileUtils.rm_rf(directory)
           begin
             run!('git', 'worktree', 'prune', chdir: root)
           rescue ReleaseError => prune_error
-            cleanup_errors << prune_error
             warn "⚠️ #{prune_error.message}"
           end
         end
         begin
           run!('git', 'branch', '-D', branch, chdir: root)
         rescue ReleaseError => e
-          cleanup_errors << e
           warn "⚠️ #{e.message}"
         end
-        raise cleanup_errors.first if cleanup_errors.any? && !$ERROR_INFO
       end
     end
   end
@@ -358,8 +359,12 @@ module_function
 
   def rubygems_versions(root:)
     output = run!('gem', 'list', '--remote', '--exact', 'comfortable_media_surfer', '--all', '--prerelease', chdir: root)
-    versions = output.match(%r{^comfortable_media_surfer \((?<versions>[^)]+)\)})
-    versions ? versions[:versions].split(',').map(&:strip) : []
+    versions = output.match(%r{^\s*comfortable_media_surfer \((?<versions>[^)]+)\)\s*$})
+    unless versions
+      raise ReleaseError, 'RubyGems response did not include comfortable_media_surfer versions; refusing to publish.'
+    end
+
+    versions[:versions].split(',').map(&:strip)
   end
 
   def publish_to_rubygems!(root:, version:, dry_run: false, allow_existing: false)

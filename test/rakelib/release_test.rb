@@ -189,7 +189,7 @@ class ReleaseTest < Minitest::Test
   end
 
   def test_rubygems_version_parser_handles_all_remote_versions
-    output = 'comfortable_media_surfer (3.2.0.rc.0, 3.1.8, 3.1.7)'
+    output = "warning: using fallback source\n  comfortable_media_surfer (3.2.0.rc.0, 3.1.8, 3.1.7)\n"
     command = nil
     runner = ->(*args, chdir:) do
       command = [args, chdir]
@@ -200,6 +200,18 @@ class ReleaseTest < Minitest::Test
       assert_equal %w[3.2.0.rc.0 3.1.8 3.1.7], ComfortableMediaSurferRelease.rubygems_versions(root: '/tmp')
     end
     assert_includes command.first, '--prerelease'
+  end
+
+  def test_rubygems_version_parser_rejects_an_unrecognized_response
+    runner = ->(*, chdir:) { "warning: service response changed for #{chdir}\n" }
+
+    error = ComfortableMediaSurferRelease.stub(:run!, runner) do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.rubygems_versions(root: '/tmp')
+      end
+    end
+
+    assert_match(%r{did not include comfortable_media_surfer versions}, error.message)
   end
 
   def test_failed_preflight_build_restores_the_original_version_file
@@ -505,6 +517,46 @@ class ReleaseTest < Minitest::Test
       assert_equal '3.1.7', ComfortableMediaSurferRelease.current_version(checkout)
       assert_empty run_git(checkout, 'branch', '--list', 'release-dry-run-*').strip
       assert_empty run_git(checkout, 'status', '--porcelain').strip
+    end
+  end
+
+  def test_live_release_rejects_a_local_master_that_does_not_match_origin
+    Dir.mktmpdir do |sandbox|
+      _origin, _seed, checkout = create_git_release_fixture(sandbox)
+      File.write(File.join(checkout, 'local-only.txt'), "local only\n")
+      run_git(checkout, 'add', 'local-only.txt')
+      run_git(checkout, '-c', 'user.name=Release Test', '-c', 'user.email=release@example.com',
+              'commit', '-m', 'Local-only commit')
+
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.prepare_live_checkout!(checkout)
+      end
+
+      assert_match(%r{must exactly match origin/master}, error.message)
+    end
+  end
+
+  def test_successful_dry_run_is_not_failed_by_worktree_cleanup_errors
+    Dir.mktmpdir do |sandbox|
+      _origin, _seed, checkout = create_git_release_fixture(sandbox)
+      original_run = ComfortableMediaSurferRelease.method(:run!)
+      runner = ->(*command, chdir:) do
+        if command.first(4) == %w[git worktree remove --force]
+          raise ComfortableMediaSurferRelease::ReleaseError, 'simulated cleanup failure'
+        end
+
+        original_run.call(*command, chdir:)
+      end
+
+      result = nil
+      _output, warnings = capture_io do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          result = ComfortableMediaSurferRelease.with_release_checkout(root: checkout, dry_run: true) { :success }
+        end
+      end
+
+      assert_equal :success, result
+      assert_match(%r{simulated cleanup failure}, warnings)
     end
   end
 

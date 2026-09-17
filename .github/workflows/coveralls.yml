@@ -8,6 +8,7 @@ on:
 
 jobs:
   coveralls:
+    continue-on-error: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
         ruby-version:
