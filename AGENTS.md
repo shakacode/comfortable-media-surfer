@@ -5,7 +5,7 @@ This repository is a Ruby on Rails engine. `master` is the default branch.
 ## Setup
 
 For the human-facing development setup, including the development database and
-browser-driver prerequisite, follow `CONTRIBUTING.md`. The GitHub Actions
+browser prerequisite, follow `CONTRIBUTING.md`. The GitHub Actions
 matrix uses Node dependencies and the Rails 7.2, 8.0, and 8.1 Gemfiles. Before
 running a command with a target Gemfile, install that selected bundle:
 
@@ -23,6 +23,7 @@ uses:
 ```bash
 npm ci
 BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle install
+BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle update comfortable_media_surfer
 BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails comfy:compile_assets
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:drop
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:create
