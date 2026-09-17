@@ -244,6 +244,26 @@ class ReleaseTest < Minitest::Test
     assert_match(%r{fetch repository .* does not match push repository}, error.message)
   end
 
+  def test_repository_slug_rejects_multiple_push_destinations
+    runner = ->(*command, chdir:) do
+      assert_equal '/release', chdir
+      if command.include?('--push')
+        "git@github.com:shakacode/comfortable-media-surfer.git\n" \
+          "git@github.com:backup/comfortable-media-surfer.git\n"
+      else
+        "git@github.com:shakacode/comfortable-media-surfer.git\n"
+      end
+    end
+
+    error = ComfortableMediaSurferRelease.stub(:run!, runner) do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.repository_slug('/release')
+      end
+    end
+
+    assert_match(%r{exactly one push URL}, error.message)
+  end
+
   def test_new_prerelease_command_marks_the_github_release_as_a_prerelease
     command = ComfortableMediaSurferRelease.github_release_command(
       tag: 'v3.2.0.rc.0',
@@ -440,6 +460,26 @@ class ReleaseTest < Minitest::Test
       end
     end
 
+    assert_includes commands, [%w[git push --atomic origin master v3.2.0], '/release']
+  end
+
+  def test_release_tags_existing_head_when_version_is_already_checked_in
+    commands = []
+    runner = ->(*command, chdir:) do
+      commands << [command, chdir]
+      return 'release-head' if command == %w[git rev-parse HEAD]
+
+      ''
+    end
+
+    ComfortableMediaSurferRelease.stub(:run!, runner) do
+      ComfortableMediaSurferRelease.stub(:publish_to_rubygems!, :published) do
+        ComfortableMediaSurferRelease.publish_release!(root: '/release', version: '3.2.0')
+      end
+    end
+
+    refute(commands.any? { |command, _root| command.first(2) == %w[git commit] })
+    assert_includes commands, [['git', 'tag', '-a', 'v3.2.0', '-m', 'Release v3.2.0'], '/release']
     assert_includes commands, [%w[git push --atomic origin master v3.2.0], '/release']
   end
 

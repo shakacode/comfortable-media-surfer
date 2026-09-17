@@ -193,7 +193,12 @@ module_function
 
   def repository_slug(root)
     fetch_repo = github_repo_slug(run!('git', 'remote', 'get-url', 'origin', chdir: root))
-    push_repo = github_repo_slug(run!('git', 'remote', 'get-url', '--push', 'origin', chdir: root))
+    push_urls = run!('git', 'remote', 'get-url', '--push', '--all', 'origin', chdir: root).lines.map(&:strip).reject(&:empty?)
+    unless push_urls.one?
+      raise ReleaseError, "Origin must have exactly one push URL before releasing; found #{push_urls.length}."
+    end
+
+    push_repo = github_repo_slug(push_urls.first)
     unless fetch_repo == push_repo
       raise ReleaseError,
             "Origin fetch repository #{fetch_repo} does not match push repository #{push_repo}; refusing to release."
@@ -473,7 +478,12 @@ module_function
     push_attempted = false
     begin
       run!('git', 'add', 'lib/comfortable_media_surfer/version.rb', chdir: root)
-      run!('git', 'commit', '-m', "Release #{tag}", chdir: root)
+      staged_files = run!('git', 'diff', '--cached', '--name-only', chdir: root).lines.map(&:strip).reject(&:empty?)
+      if staged_files.empty?
+        puts "✓ Version #{version} is already checked in; tagging the existing HEAD."
+      else
+        run!('git', 'commit', '-m', "Release #{tag}", chdir: root)
+      end
       run!('git', 'tag', '-a', tag, '-m', "Release #{tag}", chdir: root)
       push_attempted = true
       run!('git', 'push', '--atomic', 'origin', DEFAULT_BRANCH, tag, chdir: root)
