@@ -23,6 +23,16 @@ class ReleaseTest < Minitest::Test
     end
   end
 
+  def test_missing_release_files_raise_a_clean_release_error
+    Dir.mktmpdir do |root|
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.resolve_version(root:, requested: nil)
+      end
+
+      assert_match(%r{Required release file is missing}, error.message)
+    end
+  end
+
   def test_requires_an_explicit_version_when_current_version_is_a_prerelease
     Dir.mktmpdir do |root|
       write_release_files(root, version: '3.2.0.rc.0', changelog: "## [v3.2.0-rc.0] - 2026-09-16\n")
@@ -409,6 +419,41 @@ class ReleaseTest < Minitest::Test
       assert_equal original_head, run_git(checkout, 'rev-parse', 'HEAD').strip
       assert_equal original_contents, File.read(File.join(checkout, 'lib/comfortable_media_surfer/version.rb'))
       assert_empty run_git(checkout, 'tag', '--list', 'v3.1.8').strip
+      assert_empty run_git(checkout, 'status', '--porcelain').strip
+    end
+  end
+
+  def test_failure_before_push_rolls_back_without_probing_remote_refs
+    Dir.mktmpdir do |sandbox|
+      _origin, _seed, checkout = create_git_release_fixture(sandbox)
+      original_head = run_git(checkout, 'rev-parse', 'HEAD').strip
+      original_contents = File.read(File.join(checkout, 'lib/comfortable_media_surfer/version.rb'))
+      ComfortableMediaSurferRelease.bump_and_validate!(root: checkout, version: '3.1.8')
+
+      original_run = ComfortableMediaSurferRelease.method(:run!)
+      runner = ->(*command, chdir:) do
+        if command.first(2) == %w[git commit]
+          raise ComfortableMediaSurferRelease::ReleaseError, 'simulated commit-hook failure'
+        end
+
+        original_run.call(*command, chdir:)
+      end
+      remote_probe = ->(**) { flunk 'pre-push failures must not query remote release state' }
+
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          ComfortableMediaSurferRelease.stub(:remote_release_state, remote_probe) do
+            ComfortableMediaSurferRelease.publish_release!(
+              root: checkout,
+              version: '3.1.8',
+              original_version_contents: original_contents
+            )
+          end
+        end
+      end
+
+      assert_equal original_head, run_git(checkout, 'rev-parse', 'HEAD').strip
+      assert_equal original_contents, File.read(File.join(checkout, 'lib/comfortable_media_surfer/version.rb'))
       assert_empty run_git(checkout, 'status', '--porcelain').strip
     end
   end

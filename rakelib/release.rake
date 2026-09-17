@@ -35,9 +35,15 @@ module_function
     %w[1 true yes].include?(value.to_s.downcase)
   end
 
+  def read_required_file(path)
+    File.read(path, encoding: 'UTF-8')
+  rescue Errno::ENOENT
+    raise ReleaseError, "Required release file is missing: #{path}"
+  end
+
   def current_version(root)
     path = File.join(root, 'lib', 'comfortable_media_surfer', 'version.rb')
-    match = File.read(path, encoding: 'UTF-8').match(%r{VERSION\s*=\s*['"]([^'"]+)['"]})
+    match = read_required_file(path).match(%r{VERSION\s*=\s*['"]([^'"]+)['"]})
     raise ReleaseError, "Unable to read the gem version from #{path}" unless match
 
     match[1]
@@ -51,7 +57,8 @@ module_function
   end
 
   def extract_latest_changelog_version(root)
-    File.foreach(File.join(root, 'CHANGELOG.md'), encoding: 'UTF-8') do |line|
+    path = File.join(root, 'CHANGELOG.md')
+    read_required_file(path).each_line do |line|
       match = line.match(%r{^## \[v?(\d+\.\d+\.\d+(?:[-.](?:beta|rc)\.\d+)?)\]})
       return match[1].sub(%r{-(beta|rc)\.}, '.\\1.') if match
     end
@@ -146,7 +153,7 @@ module_function
   end
 
   def changelog_section(root:, version:)
-    changelog = File.read(File.join(root, 'CHANGELOG.md'), encoding: 'UTF-8')
+    changelog = read_required_file(File.join(root, 'CHANGELOG.md'))
     extract_changelog_section(changelog:, version:)
   end
 
@@ -331,7 +338,7 @@ module_function
 
   def bump_and_validate!(root:, version:)
     path = File.join(root, 'lib', 'comfortable_media_surfer', 'version.rb')
-    contents = File.read(path, encoding: 'UTF-8')
+    contents = read_required_file(path)
     updated = contents.sub(%r{(VERSION\s*=\s*['"])[^'"]+(['"])}, "\\1#{version}\\2")
     raise ReleaseError, "Unable to update the gem version in #{path}." if updated == contents
 
@@ -427,12 +434,23 @@ module_function
   def publish_release!(root:, version:, original_version_contents: nil)
     tag = "v#{version}"
     original_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip if original_version_contents
+    push_attempted = false
     begin
       run!('git', 'add', 'lib/comfortable_media_surfer/version.rb', chdir: root)
       run!('git', 'commit', '-m', "Release #{tag}", chdir: root)
       run!('git', 'tag', '-a', tag, '-m', "Release #{tag}", chdir: root)
+      push_attempted = true
       run!('git', 'push', '--atomic', 'origin', DEFAULT_BRANCH, tag, chdir: root)
     rescue ReleaseError => e
+      unless push_attempted
+        begin
+          rollback_failed_git_release!(root:, original_head:, original_version_contents:, tag:) if original_version_contents
+        rescue ReleaseError => rollback_error
+          warn "⚠️ Automatic local rollback also failed: #{rollback_error.message}"
+        end
+        raise e
+      end
+
       release_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
       remote_state = remote_release_state(root:, release_head:, tag:)
       if remote_state == :published
@@ -546,7 +564,7 @@ module_function
 
       confirm!("Release comfortable_media_surfer #{version}?") unless dry_run
       version_path = File.join(release_root, 'lib', 'comfortable_media_surfer', 'version.rb')
-      original_version_contents = File.read(version_path, encoding: 'UTF-8')
+      original_version_contents = read_required_file(version_path)
       bump_and_validate!(root: release_root, version:)
 
       if dry_run
