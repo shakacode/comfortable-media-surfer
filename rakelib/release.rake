@@ -138,7 +138,7 @@ module_function
     return :major if section.match?(%r{^###\s+(?:⚠️\s*)?Breaking(?:\s+Changes?)?\b}i)
     return :major if section.match?(%r{^###\s+Removed\b}i)
     return :minor if section.match?(%r{^###\s+(Added|New\s+Features?|Features?|Enhancements?)\b}i)
-    return :patch if section.match?(%r{^###\s+(Fixed|Fixes|Bug\s+Fixes?|Security|Changed|Deprecated)\b}i)
+    return :patch if section.match?(%r{^###\s+(Fixed|Fixes|Bug\s+Fixes?|Security|Deprecated)\b}i)
 
     nil
   end
@@ -225,7 +225,7 @@ module_function
     raise ReleaseError, 'GitHub CLI authentication required. Run `gh auth login` and retry.' unless status.success?
 
     repo = repository_slug(root)
-    output, permission_status = Open3.capture2e('gh', 'api', "repos/#{repo}", '--jq', '.permissions.push')
+    output, _errors, permission_status = Open3.capture3('gh', 'api', "repos/#{repo}", '--jq', '.permissions.push')
     unless permission_status.success? && output.strip == 'true'
       raise ReleaseError, "GitHub CLI does not have verified write access to #{repo}."
     end
@@ -446,17 +446,25 @@ module_function
     )
   end
 
-  def remote_release_state(root:, release_head:, tag:)
-    output, status = Open3.capture2e(
+  def parse_git_refs(output)
+    output.lines.filter_map do |line|
+      sha, ref = line.split
+      [ref, sha] if sha && ref&.start_with?('refs/')
+    end.to_h
+  end
+
+  def remote_release_state(root:, release_head:, tag:, branch_already_matched: false)
+    output, _errors, status = Open3.capture3(
       'git', 'ls-remote', 'origin', "refs/heads/#{DEFAULT_BRANCH}", "refs/tags/#{tag}", "refs/tags/#{tag}^{}",
       chdir: root
     )
     return :unknown unless status.success?
 
-    refs = output.lines.to_h { |line| line.split.reverse }
+    refs = parse_git_refs(output)
     branch_matches = refs["refs/heads/#{DEFAULT_BRANCH}"] == release_head
     tag_matches = [refs["refs/tags/#{tag}"], refs["refs/tags/#{tag}^{}"]].include?(release_head)
     return :published if branch_matches && tag_matches
+    return :not_published if branch_already_matched && branch_matches && !tag_matches
     return :not_published unless branch_matches || tag_matches
 
     :unknown
@@ -476,6 +484,7 @@ module_function
     tag = "v#{version}"
     original_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip if original_version_contents
     push_attempted = false
+    release_commit_created = false
     begin
       run!('git', 'add', 'lib/comfortable_media_surfer/version.rb', chdir: root)
       staged_files = run!('git', 'diff', '--cached', '--name-only', chdir: root).lines.map(&:strip).reject(&:empty?)
@@ -483,6 +492,7 @@ module_function
         puts "✓ Version #{version} is already checked in; tagging the existing HEAD."
       else
         run!('git', 'commit', '-m', "Release #{tag}", chdir: root)
+        release_commit_created = true
       end
       run!('git', 'tag', '-a', tag, '-m', "Release #{tag}", chdir: root)
       push_attempted = true
@@ -494,7 +504,12 @@ module_function
       end
 
       release_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
-      remote_state = remote_release_state(root:, release_head:, tag:)
+      remote_state = remote_release_state(
+        root:,
+        release_head:,
+        tag:,
+        branch_already_matched: !release_commit_created
+      )
       if remote_state == :published
         warn "⚠️ The push reported a failure, but remote #{DEFAULT_BRANCH} and #{tag} match #{release_head[0, 12]}; " \
              'continuing with publication.'

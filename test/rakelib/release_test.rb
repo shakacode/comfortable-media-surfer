@@ -98,6 +98,14 @@ class ReleaseTest < Minitest::Test
     )
   end
 
+  def test_changed_changelog_entries_do_not_force_a_patch_bump
+    assert ComfortableMediaSurferRelease.validate_version_policy!(
+      target: '3.2.0',
+      tagged_versions: %w[3.1.7],
+      changelog_section: "### Changed\n\n- Updated behavior."
+    )
+  end
+
   def test_removed_changelog_entries_require_a_major_version
     error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
       ComfortableMediaSurferRelease.validate_version_policy!(
@@ -211,6 +219,18 @@ class ReleaseTest < Minitest::Test
   def test_github_repo_slug_rejects_other_hosts
     assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
       ComfortableMediaSurferRelease.github_repo_slug('https://example.com/shakacode/comfortable-media-surfer.git')
+    end
+  end
+
+  def test_github_permission_check_ignores_stderr_warnings
+    status = Struct.new(:success?).new(true)
+
+    ComfortableMediaSurferRelease.stub(:repository_slug, 'shakacode/comfortable-media-surfer') do
+      Open3.stub(:capture2e, ["authenticated\n", status]) do
+        Open3.stub(:capture3, ["true\n", "upgrade warning\n", status]) do
+          assert_nil ComfortableMediaSurferRelease.verify_gh_auth!('/release')
+        end
+      end
     end
   end
 
@@ -519,16 +539,45 @@ class ReleaseTest < Minitest::Test
     OUTPUT
     partial = "release-head\trefs/heads/master\n"
 
-    Open3.stub(:capture2e, [complete, status]) do
+    Open3.stub(:capture3, [complete, "SSH warning\n", status]) do
       assert_equal :published,
                    ComfortableMediaSurferRelease.remote_release_state(
                      root: '/release', release_head: 'release-head', tag: 'v3.2.0'
                    )
     end
-    Open3.stub(:capture2e, [partial, status]) do
+    Open3.stub(:capture3, [partial, '', status]) do
       assert_equal :unknown,
                    ComfortableMediaSurferRelease.remote_release_state(
                      root: '/release', release_head: 'release-head', tag: 'v3.2.0'
+                   )
+    end
+
+    Open3.stub(:capture3, [partial, '', status]) do
+      assert_equal :not_published,
+                   ComfortableMediaSurferRelease.remote_release_state(
+                     root: '/release',
+                     release_head: 'release-head',
+                     tag: 'v3.2.0',
+                     branch_already_matched: true
+                   )
+    end
+  end
+
+  def test_remote_release_state_ignores_non_ref_stdout_lines
+    status = Struct.new(:success?).new(true)
+    output = <<~OUTPUT
+      advice: checking remote state
+      release-head\trefs/heads/master
+      malformed line with extra fields
+    OUTPUT
+
+    Open3.stub(:capture3, [output, '', status]) do
+      assert_equal :not_published,
+                   ComfortableMediaSurferRelease.remote_release_state(
+                     root: '/release',
+                     release_head: 'release-head',
+                     tag: 'v3.2.0',
+                     branch_already_matched: true
                    )
     end
   end
