@@ -44,7 +44,8 @@ Metrics/MethodLength:
   Enabled: false
 
 Metrics/ModuleLength:
-  Enabled: false
+  Exclude:
+    - rakelib/release.rake
 
 Metrics/PerceivedComplexity:
   Max: 15
