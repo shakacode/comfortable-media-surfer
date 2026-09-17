@@ -18,8 +18,7 @@ BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle install
 
 Run focused tests while iterating. Before requesting review for a code change,
 run the checks relevant to the affected Rails version. The Rails 8.1 CI job
-uses these checks; the extra preparation step creates the local databases for
-the six isolated workers used by `rake test`:
+uses:
 
 ```bash
 npm ci
@@ -28,15 +27,14 @@ BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails comfy:compile_assets
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:drop
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:create
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:migrate
-RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake db:test:prepare
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake test
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rubocop --parallel
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec brakeman -q -w3
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec bundler-audit --update --gemfile-lock gemfiles/8.1.gemfile.lock
 ```
 
-For browser-facing changes, ensure the driver described in `CONTRIBUTING.md`
-is installed, then also run:
+For browser-facing changes, ensure a compatible Chrome or Chromium browser is
+installed, then also run:
 
 ```bash
 BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake test:system
