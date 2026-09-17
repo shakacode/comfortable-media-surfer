@@ -498,8 +498,10 @@ class ReleaseTest < Minitest::Test
       ComfortableMediaSurferRelease.bump_and_validate!(root: checkout, version: '3.1.8')
 
       original_run = ComfortableMediaSurferRelease.method(:run!)
+      push_attempted = false
       runner = ->(*command, chdir:) do
         if command == %w[git push --atomic origin master v3.1.8]
+          push_attempted = true
           raise ComfortableMediaSurferRelease::ReleaseError, 'simulated atomic push failure'
         end
 
@@ -518,6 +520,7 @@ class ReleaseTest < Minitest::Test
         end
       end
 
+      assert push_attempted, 'expected the fixture to reach the simulated atomic push failure'
       assert_equal original_head, run_git(checkout, 'rev-parse', 'HEAD').strip
       assert_equal original_contents, File.read(File.join(checkout, 'lib/comfortable_media_surfer/version.rb'))
       assert_empty run_git(checkout, 'tag', '--list', 'v3.1.8').strip
@@ -718,6 +721,9 @@ private
     run_git(seed, 'remote', 'add', 'origin', origin)
     run_git(seed, 'push', '--tags', 'origin', 'master')
     run_git(sandbox, 'clone', origin, checkout)
+    run_git(checkout, 'config', 'user.name', 'Release Test')
+    run_git(checkout, 'config', 'user.email', 'release@example.com')
+    run_git(checkout, 'config', 'commit.gpgsign', 'false')
     [origin, seed, checkout]
   end
 
