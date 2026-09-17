@@ -4,40 +4,39 @@ This repository is a Ruby on Rails engine. `master` is the default branch.
 
 ## Setup
 
-Run the repository setup script from a clean checkout:
-
-```bash
-bin/setup
-```
-
-The GitHub Actions matrix uses Node dependencies and the Rails 7.2, 8.0, and
-8.1 Gemfiles. Use the target Gemfile when reproducing a matrix job; for
-example:
+For the human-facing development setup, including the development database and
+browser-driver prerequisite, follow `CONTRIBUTING.md`. The GitHub Actions
+matrix uses Node dependencies and the Rails 7.2, 8.0, and 8.1 Gemfiles. Before
+running a command with a target Gemfile, install that selected bundle:
 
 ```bash
 npm ci
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:prepare
+BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle install
 ```
 
 ## Validation
 
 Run focused tests while iterating. Before requesting review for a code change,
 run the checks relevant to the affected Rails version. The Rails 8.1 CI job
-uses:
+uses these checks; the extra preparation step creates the local databases for
+the six isolated workers used by `rake test`:
 
 ```bash
 npm ci
+BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle install
 BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails comfy:compile_assets
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:drop
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:create
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:migrate
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake test
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rubocop --parallel
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec brakeman -q -w3
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec bundler-audit --update --gemfile-lock gemfiles/8.1.gemfile.lock
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:drop
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:create
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:migrate
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake db:test:prepare
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake test
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rubocop --parallel
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec brakeman -q -w3
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec bundler-audit --update --gemfile-lock gemfiles/8.1.gemfile.lock
 ```
 
-For browser-facing changes, also run:
+For browser-facing changes, ensure the driver described in `CONTRIBUTING.md`
+is installed, then also run:
 
 ```bash
 BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake test:system
