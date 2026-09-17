@@ -12,6 +12,26 @@ class ReleaseTest < Minitest::Test
     assert ComfortableMediaSurferRelease.truthy?('T')
   end
 
+  def test_interactive_runner_distinguishes_a_missing_command
+    ComfortableMediaSurferRelease.stub(:system, nil) do
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.run_interactive!('missing-command', chdir: '/tmp')
+      end
+
+      assert_match(%r{Command not found: missing-command}, error.message)
+    end
+  end
+
+  def test_interactive_runner_reports_a_failed_command
+    ComfortableMediaSurferRelease.stub(:system, false) do
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.run_interactive!('failing-command', chdir: '/tmp')
+      end
+
+      assert_match(%r{Command failed: failing-command}, error.message)
+    end
+  end
+
   def test_loading_release_tasks_twice_does_not_duplicate_actions
     capture_io { load File.expand_path('../../rakelib/release.rake', __dir__) }
 
@@ -351,6 +371,28 @@ class ReleaseTest < Minitest::Test
       end
 
       assert_equal original_contents, File.read(File.join(root, 'lib/comfortable_media_surfer/version.rb'))
+    end
+  end
+
+  def test_unexpected_preflight_failure_restores_the_original_version_file
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.7', changelog: '')
+      path = File.join(root, 'lib/comfortable_media_surfer/version.rb')
+      original_contents = File.read(path)
+      runner = ->(*command, chdir:) do
+        raise IOError, "unexpected build failure in #{chdir}" if command.first == 'gem'
+
+        ''
+      end
+
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          ComfortableMediaSurferRelease.bump_and_validate!(root:, version: '3.1.8')
+        end
+      end
+
+      assert_match(%r{Release preflight failed: unexpected build failure}, error.message)
+      assert_equal original_contents, File.read(path)
     end
   end
 

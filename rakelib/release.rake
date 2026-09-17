@@ -32,11 +32,14 @@ module_function
   end
 
   def run_interactive!(*command, chdir:)
-    return true if system(*command, chdir:)
+    result = system(*command, chdir:)
+    return true if result
+
+    if result.nil?
+      raise ReleaseError, "Command not found: #{Shellwords.join(command)}"
+    end
 
     raise ReleaseError, "Command failed: #{Shellwords.join(command)}"
-  rescue Errno::ENOENT => e
-    raise ReleaseError, "Command not found: #{e.message}"
   end
 
   def truthy?(value)
@@ -220,11 +223,11 @@ module_function
     raise ReleaseError, "Releases must run from #{DEFAULT_BRANCH}; current branch is #{branch.empty? ? 'detached' : branch}."
   end
 
-  def verify_gh_auth!(root)
+  def verify_gh_auth!(root, repo: nil)
     _output, status = Open3.capture2e('gh', 'auth', 'status')
     raise ReleaseError, 'GitHub CLI authentication required. Run `gh auth login` and retry.' unless status.success?
 
-    repo = repository_slug(root)
+    repo ||= repository_slug(root)
     output, _errors, permission_status = Open3.capture3('gh', 'api', "repos/#{repo}", '--jq', '.permissions.push')
     unless permission_status.success? && output.strip == 'true'
       raise ReleaseError, "GitHub CLI does not have verified write access to #{repo}."
@@ -254,8 +257,8 @@ module_function
     raise ReleaseError, "Release CI is not green: #{problems.join(', ')}."
   end
 
-  def workflow_runs(root:, commit_sha:)
-    repo = repository_slug(root)
+  def workflow_runs(root:, commit_sha:, repo: nil)
+    repo ||= repository_slug(root)
     endpoint = "repos/#{repo}/actions/runs?head_sha=#{commit_sha}&event=push&per_page=100"
     output = run!('gh', 'api', endpoint, '--jq',
                   '[.workflow_runs[] | {name,status,conclusion,created_at}]', chdir: root)
@@ -267,9 +270,9 @@ module_function
     raise ReleaseError, "Unable to parse GitHub workflow data: #{e.message}"
   end
 
-  def validate_release_ci!(root:, override:, dry_run:)
+  def validate_release_ci!(root:, override:, dry_run:, repo: nil)
     sha = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
-    validate_ci_runs!(runs: workflow_runs(root:, commit_sha: sha))
+    validate_ci_runs!(runs: workflow_runs(root:, commit_sha: sha, repo:))
     puts "✓ Required push workflows passed for #{sha[0, 12]}"
   rescue ReleaseError => e
     if override
@@ -371,9 +374,17 @@ module_function
       raise ReleaseError, "Expected gem bump to produce #{version}, but found #{actual}." unless actual == version
 
       run!('gem', 'build', 'comfortable_media_surfer.gemspec', chdir: root)
-    rescue ReleaseError
-      File.write(path, contents, encoding: 'UTF-8')
-      raise
+    rescue StandardError => e
+      begin
+        File.write(path, contents, encoding: 'UTF-8') unless File.read(path, encoding: 'UTF-8') == contents
+      rescue StandardError => restore_error
+        raise ReleaseError,
+              "Release preflight failed (#{e.message}) and the original version file could not be restored: " \
+              "#{restore_error.message}"
+      end
+      raise e if e.is_a?(ReleaseError)
+
+      raise ReleaseError, "Release preflight failed: #{e.message}"
     ensure
       FileUtils.rm_f(File.join(root, "comfortable_media_surfer-#{version}.gem"))
     end
@@ -560,7 +571,7 @@ module_function
     raise ReleaseError, "GitHub CLI is unavailable while checking release #{tag}: #{e.message}"
   end
 
-  def sync_github_release!(root:, version:, dry_run: false)
+  def sync_github_release!(root:, version:, dry_run: false, repo: nil)
     notes = changelog_section(root:, version:)
     unless notes
       message = "No CHANGELOG.md section found for v#{version}; cannot sync the GitHub release."
@@ -576,7 +587,7 @@ module_function
       return true
     end
 
-    repo = repository_slug(root)
+    repo ||= repository_slug(root)
     Tempfile.create(['comfortable-media-surfer-release-', '.md']) do |file|
       file.write(notes)
       file.flush
@@ -594,12 +605,13 @@ module_function
 
   def perform(root:, requested_version:, dry_run:, ci_override:)
     verify_clean_worktree!(root)
-    verify_gh_auth!(root) unless dry_run
+    repo = repository_slug(root) unless dry_run
+    verify_gh_auth!(root, repo:) unless dry_run
     prepare_live_checkout!(root) unless dry_run
 
     result = nil
     with_release_checkout(root:, dry_run:) do |release_root|
-      validate_release_ci!(root: release_root, override: ci_override, dry_run:)
+      validate_release_ci!(root: release_root, override: ci_override, dry_run:, repo:)
       version = resolve_version(root: release_root, requested: requested_version)
       notes = changelog_section(root: release_root, version:)
       notes_present = validate_changelog_presence!(notes:, version:, dry_run:)
@@ -625,12 +637,12 @@ module_function
       bump_and_validate!(root: release_root, version:)
 
       if dry_run
-        sync_github_release!(root: release_root, version:, dry_run: true)
+        sync_github_release!(root: release_root, version:, dry_run: true, repo:)
         result = { version:, dry_run: true, changelog_section_found: notes_present }
       else
         publish_release!(root: release_root, version:, original_version_contents:)
         begin
-          sync_github_release!(root: release_root, version:)
+          sync_github_release!(root: release_root, version:, repo:)
         rescue ReleaseError => e
           warn "PARTIAL RELEASE: gem and tag v#{version} were published, but the GitHub release failed."
           warn "Recover with: bundle exec rake \"sync_github_release[#{version}]\""
@@ -686,9 +698,10 @@ task :sync_github_release, %i[version dry_run] do |_task, args|
   root = File.expand_path('..', __dir__)
   dry_run = ComfortableMediaSurferRelease.truthy?(args[:dry_run])
   ComfortableMediaSurferRelease.verify_clean_worktree!(root)
-  ComfortableMediaSurferRelease.verify_gh_auth!(root) unless dry_run
+  repo = ComfortableMediaSurferRelease.repository_slug(root) unless dry_run
+  ComfortableMediaSurferRelease.verify_gh_auth!(root, repo:) unless dry_run
   ComfortableMediaSurferRelease.with_tag_checkout(root:, version:) do |release_root|
-    ComfortableMediaSurferRelease.sync_github_release!(root: release_root, version:, dry_run:)
+    ComfortableMediaSurferRelease.sync_github_release!(root: release_root, version:, dry_run:, repo:)
   end
 rescue ComfortableMediaSurferRelease::ReleaseError => e
   abort "❌ #{e.message}"
