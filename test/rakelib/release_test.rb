@@ -142,6 +142,10 @@ class ReleaseTest < Minitest::Test
                  ComfortableMediaSurferRelease.github_repo_slug(
                    'https://github.com/shakacode/comfortable-media-surfer.git'
                  )
+    assert_equal 'shakacode/comfortable-media-surfer',
+                 ComfortableMediaSurferRelease.github_repo_slug(
+                   'ssh://git@github.com:443/shakacode/comfortable-media-surfer.git'
+                 )
   end
 
   def test_github_repo_slug_rejects_other_hosts
@@ -285,6 +289,75 @@ class ReleaseTest < Minitest::Test
     end
 
     assert_includes commands, [%w[git push --atomic origin master v3.2.0], '/release']
+  end
+
+  def test_push_response_failure_continues_when_remote_refs_confirm_success
+    commands = []
+    runner = ->(*command, chdir:) do
+      commands << [command, chdir]
+      return 'release-head' if command == %w[git rev-parse HEAD]
+      raise ComfortableMediaSurferRelease::ReleaseError, 'lost push response' if command.include?('push')
+
+      ''
+    end
+    published = false
+
+    _output, warnings = capture_io do
+      ComfortableMediaSurferRelease.stub(:run!, runner) do
+        ComfortableMediaSurferRelease.stub(:remote_release_state, :published) do
+          publisher = ->(**) { published = true }
+          ComfortableMediaSurferRelease.stub(:publish_to_rubygems!, publisher) do
+            ComfortableMediaSurferRelease.publish_release!(root: '/release', version: '3.2.0')
+          end
+        end
+      end
+    end
+
+    assert published
+    assert_match(%r{continuing with publication}, warnings)
+    refute(commands.any? { |command, _root| command.first(3) == %w[git tag -d] })
+  end
+
+  def test_remote_release_state_requires_both_branch_and_tag_to_match
+    status = Struct.new(:success?).new(true)
+    complete = <<~OUTPUT
+      release-head\trefs/heads/master
+      tag-object\trefs/tags/v3.2.0
+      release-head\trefs/tags/v3.2.0^{}
+    OUTPUT
+    partial = "release-head\trefs/heads/master\n"
+
+    Open3.stub(:capture2e, [complete, status]) do
+      assert_equal :published,
+                   ComfortableMediaSurferRelease.remote_release_state(
+                     root: '/release', release_head: 'release-head', tag: 'v3.2.0'
+                   )
+    end
+    Open3.stub(:capture2e, [partial, status]) do
+      assert_equal :unknown,
+                   ComfortableMediaSurferRelease.remote_release_state(
+                     root: '/release', release_head: 'release-head', tag: 'v3.2.0'
+                   )
+    end
+  end
+
+  def test_unknown_push_result_preserves_local_release_state
+    runner = ->(*command, chdir:) do
+      return 'release-head' if command == %w[git rev-parse HEAD]
+      raise ComfortableMediaSurferRelease::ReleaseError, "lost push response in #{chdir}" if command.include?('push')
+
+      ''
+    end
+
+    error = ComfortableMediaSurferRelease.stub(:run!, runner) do
+      ComfortableMediaSurferRelease.stub(:remote_release_state, :unknown) do
+        assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+          ComfortableMediaSurferRelease.publish_release!(root: '/release', version: '3.2.0')
+        end
+      end
+    end
+
+    assert_match(%r{local release commit and tag were preserved}, error.message)
   end
 
   def test_git_failure_does_not_report_rubygems_recovery

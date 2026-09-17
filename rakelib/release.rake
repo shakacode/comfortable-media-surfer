@@ -165,7 +165,7 @@ module_function
   def github_repo_slug(origin_url)
     match = origin_url.strip.match(%r{\Agit@github\.com:(?<repo>[^/]+/[^/]+?)(?:\.git)?\z}) ||
             origin_url.strip.match(%r{\Ahttps://(?:[^/@]+@)?github\.com/(?<repo>[^/]+/[^/]+?)(?:\.git)?\z}) ||
-            origin_url.strip.match(%r{\Assh://git@github\.com/(?<repo>[^/]+/[^/]+?)(?:\.git)?\z})
+            origin_url.strip.match(%r{\Assh://git@github\.com(?::\d+)?/(?<repo>[^/]+/[^/]+?)(?:\.git)?\z})
     repo = match && match[:repo]
     raise ReleaseError, "Unable to determine a GitHub repository from #{origin_url.inspect}." unless repo&.match?(GITHUB_REPO_PATTERN)
 
@@ -276,7 +276,12 @@ module_function
           cleanup_errors << e
           warn "⚠️ #{e.message}"
           FileUtils.rm_rf(directory)
-          run!('git', 'worktree', 'prune', chdir: root)
+          begin
+            run!('git', 'worktree', 'prune', chdir: root)
+          rescue ReleaseError => prune_error
+            cleanup_errors << prune_error
+            warn "⚠️ #{prune_error.message}"
+          end
         end
         begin
           run!('git', 'branch', '-D', branch, chdir: root)
@@ -305,7 +310,11 @@ module_function
         rescue ReleaseError => e
           warn "⚠️ #{e.message}"
           FileUtils.rm_rf(directory)
-          run!('git', 'worktree', 'prune', chdir: root)
+          begin
+            run!('git', 'worktree', 'prune', chdir: root)
+          rescue ReleaseError => prune_error
+            warn "⚠️ #{prune_error.message}"
+          end
           raise e unless original_error
         end
       end
@@ -397,6 +406,24 @@ module_function
     )
   end
 
+  def remote_release_state(root:, release_head:, tag:)
+    output, status = Open3.capture2e(
+      'git', 'ls-remote', 'origin', "refs/heads/#{DEFAULT_BRANCH}", "refs/tags/#{tag}", "refs/tags/#{tag}^{}",
+      chdir: root
+    )
+    return :unknown unless status.success?
+
+    refs = output.lines.to_h { |line| line.split.reverse }
+    branch_matches = refs["refs/heads/#{DEFAULT_BRANCH}"] == release_head
+    tag_matches = [refs["refs/tags/#{tag}"], refs["refs/tags/#{tag}^{}"]].include?(release_head)
+    return :published if branch_matches && tag_matches
+    return :not_published unless branch_matches || tag_matches
+
+    :unknown
+  rescue Errno::ENOENT
+    :unknown
+  end
+
   def publish_release!(root:, version:, original_version_contents: nil)
     tag = "v#{version}"
     original_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip if original_version_contents
@@ -406,14 +433,23 @@ module_function
       run!('git', 'tag', '-a', tag, '-m', "Release #{tag}", chdir: root)
       run!('git', 'push', '--atomic', 'origin', DEFAULT_BRANCH, tag, chdir: root)
     rescue ReleaseError => e
-      if original_version_contents
+      release_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
+      remote_state = remote_release_state(root:, release_head:, tag:)
+      if remote_state == :published
+        warn "⚠️ The push reported a failure, but remote #{DEFAULT_BRANCH} and #{tag} match #{release_head[0, 12]}; " \
+             'continuing with publication.'
+      elsif remote_state == :not_published && original_version_contents
         begin
           rollback_failed_git_release!(root:, original_head:, original_version_contents:, tag:)
         rescue ReleaseError => rollback_error
           warn "⚠️ Automatic local rollback also failed: #{rollback_error.message}"
         end
+        raise e
+      else
+        raise ReleaseError,
+              "#{e.message}\nUnable to prove whether the atomic push reached GitHub. " \
+              "The local release commit and tag were preserved; verify remote #{DEFAULT_BRANCH} and #{tag} before continuing."
       end
-      raise e
     end
 
     begin
