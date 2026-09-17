@@ -452,6 +452,26 @@ class ReleaseTest < Minitest::Test
     assert_match(%r{local release commit and tag were preserved}, error.message)
   end
 
+  def test_definitive_push_rejection_reports_the_original_failure_without_rollback_state
+    runner = ->(*command, chdir:) do
+      return 'release-head' if command == %w[git rev-parse HEAD]
+      raise ComfortableMediaSurferRelease::ReleaseError, "atomic push rejected in #{chdir}" if command.include?('push')
+
+      ''
+    end
+
+    error = ComfortableMediaSurferRelease.stub(:run!, runner) do
+      ComfortableMediaSurferRelease.stub(:remote_release_state, :not_published) do
+        assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+          ComfortableMediaSurferRelease.publish_release!(root: '/release', version: '3.2.0')
+        end
+      end
+    end
+
+    assert_match(%r{atomic push rejected}, error.message)
+    refute_match(%r{Unable to prove whether}, error.message)
+  end
+
   def test_git_failure_does_not_report_rubygems_recovery
     runner = ->(*command, chdir:) do
       raise ComfortableMediaSurferRelease::ReleaseError, "push failed in #{chdir}" if command.include?('push')

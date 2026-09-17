@@ -270,12 +270,11 @@ module_function
     run!('git', 'fetch', 'origin', DEFAULT_BRANCH, '--tags', chdir: root)
     local_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
     remote_head = run!('git', 'rev-parse', "origin/#{DEFAULT_BRANCH}", chdir: root).strip
-    unless local_head == remote_head
-      raise ReleaseError,
-            "Local #{DEFAULT_BRANCH} must exactly match origin/#{DEFAULT_BRANCH} before releasing. " \
-            'Push, reset, or reconcile the branch first.'
-    end
-    verify_clean_worktree!(root)
+    return true if local_head == remote_head
+
+    raise ReleaseError,
+          "Local #{DEFAULT_BRANCH} must exactly match origin/#{DEFAULT_BRANCH} before releasing. " \
+          'Push, reset, or reconcile the branch first.'
   end
 
   def with_release_checkout(root:, dry_run:)
@@ -443,6 +442,14 @@ module_function
     :unknown
   end
 
+  def rollback_release_if_possible!(root:, original_head:, original_version_contents:, tag:)
+    return unless original_version_contents
+
+    rollback_failed_git_release!(root:, original_head:, original_version_contents:, tag:)
+  rescue ReleaseError => e
+    warn "⚠️ Automatic local rollback also failed: #{e.message}"
+  end
+
   def publish_release!(root:, version:, original_version_contents: nil)
     tag = "v#{version}"
     original_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip if original_version_contents
@@ -455,11 +462,7 @@ module_function
       run!('git', 'push', '--atomic', 'origin', DEFAULT_BRANCH, tag, chdir: root)
     rescue ReleaseError => e
       unless push_attempted
-        begin
-          rollback_failed_git_release!(root:, original_head:, original_version_contents:, tag:) if original_version_contents
-        rescue ReleaseError => rollback_error
-          warn "⚠️ Automatic local rollback also failed: #{rollback_error.message}"
-        end
+        rollback_release_if_possible!(root:, original_head:, original_version_contents:, tag:)
         raise e
       end
 
@@ -468,12 +471,8 @@ module_function
       if remote_state == :published
         warn "⚠️ The push reported a failure, but remote #{DEFAULT_BRANCH} and #{tag} match #{release_head[0, 12]}; " \
              'continuing with publication.'
-      elsif remote_state == :not_published && original_version_contents
-        begin
-          rollback_failed_git_release!(root:, original_head:, original_version_contents:, tag:)
-        rescue ReleaseError => rollback_error
-          warn "⚠️ Automatic local rollback also failed: #{rollback_error.message}"
-        end
+      elsif remote_state == :not_published
+        rollback_release_if_possible!(root:, original_head:, original_version_contents:, tag:)
         raise e
       else
         raise ReleaseError,
