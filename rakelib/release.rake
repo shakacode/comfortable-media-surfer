@@ -118,6 +118,7 @@ module_function
 
   def expected_bump_type(section)
     return :major if section.match?(%r{^###\s+(?:⚠️\s*)?Breaking(?:\s+Changes?)?\b}i)
+    return :major if section.match?(%r{^###\s+Removed\b}i)
     return :minor if section.match?(%r{^###\s+(Added|New\s+Features?|Features?|Enhancements?)\b}i)
     return :patch if section.match?(%r{^###\s+(Fixed|Fixes|Bug\s+Fixes?|Security|Changed|Deprecated)\b}i)
 
@@ -287,6 +288,21 @@ module_function
     end
   end
 
+  def with_tag_checkout(root:, version:)
+    tag = "v#{version}"
+    Dir.mktmpdir('comfortable-media-surfer-tag-') do |temporary_root|
+      directory = File.join(temporary_root, 'worktree')
+      begin
+        run!('git', 'fetch', 'origin', '--tags', '--quiet', chdir: root)
+        run!('git', 'worktree', 'add', '--detach', directory, tag, chdir: root)
+        verify_release_tag_at_head!(root: directory, version:)
+        yield(directory)
+      ensure
+        run!('git', 'worktree', 'remove', '--force', directory, chdir: root) if File.exist?(directory)
+      end
+    end
+  end
+
   def confirm!(prompt)
     return if truthy?(ENV.fetch('AUTO_CONFIRM', nil))
 
@@ -296,7 +312,12 @@ module_function
   end
 
   def bump_and_validate!(root:, version:)
-    run!('bundle', 'exec', 'gem', 'bump', '--no-commit', '--version', version, chdir: root)
+    path = File.join(root, 'lib', 'comfortable_media_surfer', 'version.rb')
+    contents = File.read(path, encoding: 'UTF-8')
+    updated = contents.sub(%r{(VERSION\s*=\s*['"])[^'"]+(['"])}, "\\1#{version}\\2")
+    raise ReleaseError, "Unable to update the gem version in #{path}." if updated == contents
+
+    File.write(path, updated, encoding: 'UTF-8')
     actual = current_version(root)
     raise ReleaseError, "Expected gem bump to produce #{version}, but found #{actual}." unless actual == version
 
@@ -504,11 +525,9 @@ task :sync_github_release, %i[version dry_run] do |_task, args|
   dry_run = ComfortableMediaSurferRelease.truthy?(args[:dry_run])
   ComfortableMediaSurferRelease.verify_clean_worktree!(root)
   ComfortableMediaSurferRelease.verify_gh_auth!(root) unless dry_run
-  ComfortableMediaSurferRelease.sync_github_release!(
-    root:,
-    version:,
-    dry_run:
-  )
+  ComfortableMediaSurferRelease.with_tag_checkout(root:, version:) do |release_root|
+    ComfortableMediaSurferRelease.sync_github_release!(root: release_root, version:, dry_run:)
+  end
 rescue ComfortableMediaSurferRelease::ReleaseError => e
   abort "❌ #{e.message}"
 end
@@ -522,9 +541,14 @@ task :publish_rubygems, %i[version dry_run] do |_task, args|
   root = File.expand_path('..', __dir__)
   dry_run = ComfortableMediaSurferRelease.truthy?(args[:dry_run])
   ComfortableMediaSurferRelease.verify_clean_worktree!(root)
-  ComfortableMediaSurferRelease.verify_release_branch!(root)
-  ComfortableMediaSurferRelease.verify_release_tag_at_head!(root:, version:)
-  ComfortableMediaSurferRelease.publish_to_rubygems!(root:, version:, dry_run:, allow_existing: true)
+  ComfortableMediaSurferRelease.with_tag_checkout(root:, version:) do |release_root|
+    ComfortableMediaSurferRelease.publish_to_rubygems!(
+      root: release_root,
+      version:,
+      dry_run:,
+      allow_existing: true
+    )
+  end
 rescue ComfortableMediaSurferRelease::ReleaseError => e
   abort "❌ #{e.message}"
 end

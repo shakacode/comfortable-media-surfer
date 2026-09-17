@@ -63,6 +63,18 @@ class ReleaseTest < Minitest::Test
     )
   end
 
+  def test_removed_changelog_entries_require_a_major_version
+    error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      ComfortableMediaSurferRelease.validate_version_policy!(
+        target: '3.2.0',
+        tagged_versions: %w[3.1.7],
+        changelog_section: "### Removed\n\n- Legacy support."
+      )
+    end
+
+    assert_match(%r{requires a major bump}, error.message)
+  end
+
   def test_extracts_release_notes_without_the_next_version
     changelog = <<~MARKDOWN
       ## [Unreleased]
@@ -267,6 +279,26 @@ class ReleaseTest < Minitest::Test
     end
   end
 
+  def test_tag_checkout_recovers_the_release_after_master_advances
+    Dir.mktmpdir do |sandbox|
+      origin, seed, checkout = create_git_release_fixture(sandbox)
+      File.write(File.join(seed, 'later.txt'), "later\n")
+      run_git(seed, 'add', 'later.txt')
+      run_git(seed, '-c', 'user.name=Release Test', '-c', 'user.email=release@example.com',
+              'commit', '-m', 'Advance master')
+      run_git(seed, 'push', 'origin', 'master')
+      run_git(checkout, 'pull', '--ff-only')
+
+      ComfortableMediaSurferRelease.with_tag_checkout(root: checkout, version: '3.1.7') do |release_root|
+        assert_equal '3.1.7', ComfortableMediaSurferRelease.current_version(release_root)
+        assert_equal run_git(release_root, 'rev-parse', 'HEAD'), run_git(release_root, 'rev-list', '-n', '1', 'v3.1.7')
+      end
+
+      assert_empty run_git(checkout, 'status', '--porcelain').strip
+      assert File.directory?(origin)
+    end
+  end
+
 private
 
   def write_release_files(root, version:, changelog:)
@@ -292,6 +324,23 @@ private
         spec.files = ['lib/comfortable_media_surfer/version.rb']
       end
     RUBY
+  end
+
+  def create_git_release_fixture(sandbox)
+    origin = File.join(sandbox, 'origin.git')
+    seed = File.join(sandbox, 'seed')
+    checkout = File.join(sandbox, 'checkout')
+    run_git(sandbox, 'init', '--bare', '--initial-branch=master', origin)
+    run_git(sandbox, 'init', '--initial-branch=master', seed)
+    write_minimal_gem(seed)
+    run_git(seed, 'add', '.')
+    run_git(seed, '-c', 'user.name=Release Test', '-c', 'user.email=release@example.com',
+            'commit', '-m', 'Initial release')
+    run_git(seed, 'tag', 'v3.1.7')
+    run_git(seed, 'remote', 'add', 'origin', origin)
+    run_git(seed, 'push', '--tags', 'origin', 'master')
+    run_git(sandbox, 'clone', origin, checkout)
+    [origin, seed, checkout]
   end
 
   def run_git(directory, *)
