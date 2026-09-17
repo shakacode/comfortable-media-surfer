@@ -22,7 +22,7 @@ class ReleaseTest < Minitest::Test
     $stdin = StringIO.new("n\n")
 
     assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
-      capture_io { ComfortableMediaSurferRelease.confirm!('Release?') }
+      ComfortableMediaSurferRelease.confirm!('Release?')
     end
 
     ENV['RELEASE_AUTO_CONFIRM'] = 'true'
@@ -222,8 +222,12 @@ class ReleaseTest < Minitest::Test
   def test_workflow_runs_parses_the_complete_json_document
     output = <<~JSON
       [
-        {"name":"Rails CI","status":"completed","conclusion":"success","created_at":"2026-09-16T02:00:00Z"},
-        {"name":"Coveralls","status":"completed","conclusion":"success","created_at":"2026-09-16T02:00:00Z"}
+        {"workflow_runs":[
+          {"name":"Rails CI","status":"completed","conclusion":"success","created_at":"2026-09-16T02:00:00Z"}
+        ]},
+        {"workflow_runs":[
+          {"name":"Coveralls","status":"completed","conclusion":"success","created_at":"2026-09-16T02:00:00Z"}
+        ]}
       ]
     JSON
     command = nil
@@ -240,9 +244,9 @@ class ReleaseTest < Minitest::Test
 
     workflow_names = runs.map { |run| run.fetch('name') }
     assert_equal ['Rails CI', 'Coveralls'], workflow_names
-    assert_includes command.first, '[.[].workflow_runs[] | {name,status,conclusion,created_at}]'
     assert_includes command.first, '--paginate'
     assert_includes command.first, '--slurp'
+    refute_includes command.first, '--jq'
   end
 
   def test_github_repo_slug_accepts_supported_github_remotes

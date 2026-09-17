@@ -260,12 +260,14 @@ module_function
   def workflow_runs(root:, commit_sha:, repo: nil)
     repo ||= repository_slug(root)
     endpoint = "repos/#{repo}/actions/runs?head_sha=#{commit_sha}&event=push&per_page=100"
-    output = run!('gh', 'api', '--paginate', '--slurp', endpoint, '--jq',
-                  '[.[].workflow_runs[] | {name,status,conclusion,created_at}]', chdir: root)
-    runs = JSON.parse(output)
-    raise ReleaseError, 'GitHub workflow response was not an array.' unless runs.is_a?(Array)
+    output = run!('gh', 'api', '--paginate', '--slurp', endpoint, chdir: root)
+    pages = JSON.parse(output)
+    valid_pages = pages.is_a?(Array) && pages.all? do |page|
+      page.is_a?(Hash) && page['workflow_runs'].is_a?(Array)
+    end
+    raise ReleaseError, 'GitHub workflow response did not contain valid pages.' unless valid_pages
 
-    runs
+    pages.flat_map { |page| page.fetch('workflow_runs') }
   rescue JSON::ParserError => e
     raise ReleaseError, "Unable to parse GitHub workflow data: #{e.message}"
   end
