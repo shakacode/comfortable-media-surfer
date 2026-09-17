@@ -32,7 +32,7 @@ module_function
   end
 
   def truthy?(value)
-    %w[1 true yes].include?(value.to_s.downcase)
+    %w[1 true yes t].include?(value.to_s.downcase)
   end
 
   def read_required_file(path)
@@ -617,7 +617,9 @@ module_function
   end
 end
 
-Rake::Task[:release].clear if Rake::Task.task_defined?(:release)
+%i[release create_release sync_github_release publish_rubygems].each do |task_name|
+  Rake::Task[task_name].clear if Rake::Task.task_defined?(task_name)
+end
 
 desc 'Release the gem with version, CI, tag, RubyGems, and GitHub safeguards'
 task :release, %i[version dry_run override_ci_status] do |_task, args|

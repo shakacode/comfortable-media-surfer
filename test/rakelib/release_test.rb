@@ -7,6 +7,19 @@ require 'rake'
 load File.expand_path('../../rakelib/release.rake', __dir__)
 
 class ReleaseTest < Minitest::Test
+  def test_truthy_preserves_the_legacy_t_alias
+    assert ComfortableMediaSurferRelease.truthy?('t')
+    assert ComfortableMediaSurferRelease.truthy?('T')
+  end
+
+  def test_loading_release_tasks_twice_does_not_duplicate_actions
+    capture_io { load File.expand_path('../../rakelib/release.rake', __dir__) }
+
+    %i[release create_release sync_github_release publish_rubygems].each do |task_name|
+      assert_equal 1, Rake::Task[task_name].actions.length, "expected one action for #{task_name}"
+    end
+  end
+
   def test_resolves_newer_changelog_version_before_patch_fallback
     Dir.mktmpdir do |root|
       write_release_files(root, version: '3.1.7', changelog: "## [v3.2.0] - 2026-09-16\n")
