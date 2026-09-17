@@ -4,12 +4,33 @@ require 'minitest/autorun'
 require 'open3'
 require 'tmpdir'
 require 'rake'
+require 'stringio'
 load File.expand_path('../../rakelib/release.rake', __dir__)
 
 class ReleaseTest < Minitest::Test
   def test_truthy_preserves_the_legacy_t_alias
     assert ComfortableMediaSurferRelease.truthy?('t')
     assert ComfortableMediaSurferRelease.truthy?('T')
+  end
+
+  def test_confirmation_only_honors_the_namespaced_release_override
+    original_auto_confirm = ENV.fetch('AUTO_CONFIRM', nil)
+    original_release_auto_confirm = ENV.fetch('RELEASE_AUTO_CONFIRM', nil)
+    original_stdin = $stdin
+    ENV['AUTO_CONFIRM'] = 'true'
+    ENV.delete('RELEASE_AUTO_CONFIRM')
+    $stdin = StringIO.new("n\n")
+
+    assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      capture_io { ComfortableMediaSurferRelease.confirm!('Release?') }
+    end
+
+    ENV['RELEASE_AUTO_CONFIRM'] = 'true'
+    assert_nil ComfortableMediaSurferRelease.confirm!('Release?')
+  ensure
+    ENV['AUTO_CONFIRM'] = original_auto_confirm
+    ENV['RELEASE_AUTO_CONFIRM'] = original_release_auto_confirm
+    $stdin = original_stdin
   end
 
   def test_interactive_runner_distinguishes_a_missing_command
@@ -219,8 +240,9 @@ class ReleaseTest < Minitest::Test
 
     workflow_names = runs.map { |run| run.fetch('name') }
     assert_equal ['Rails CI', 'Coveralls'], workflow_names
-    assert_includes command.first, '[.workflow_runs[] | {name,status,conclusion,created_at}]'
-    refute_includes command.first, '--paginate'
+    assert_includes command.first, '[.[].workflow_runs[] | {name,status,conclusion,created_at}]'
+    assert_includes command.first, '--paginate'
+    assert_includes command.first, '--slurp'
   end
 
   def test_github_repo_slug_accepts_supported_github_remotes

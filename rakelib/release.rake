@@ -260,8 +260,8 @@ module_function
   def workflow_runs(root:, commit_sha:, repo: nil)
     repo ||= repository_slug(root)
     endpoint = "repos/#{repo}/actions/runs?head_sha=#{commit_sha}&event=push&per_page=100"
-    output = run!('gh', 'api', endpoint, '--jq',
-                  '[.workflow_runs[] | {name,status,conclusion,created_at}]', chdir: root)
+    output = run!('gh', 'api', '--paginate', '--slurp', endpoint, '--jq',
+                  '[.[].workflow_runs[] | {name,status,conclusion,created_at}]', chdir: root)
     runs = JSON.parse(output)
     raise ReleaseError, 'GitHub workflow response was not an array.' unless runs.is_a?(Array)
 
@@ -349,7 +349,7 @@ module_function
   end
 
   def confirm!(prompt)
-    return if truthy?(ENV.fetch('AUTO_CONFIRM', nil))
+    return if truthy?(ENV.fetch('RELEASE_AUTO_CONFIRM', nil))
 
     print "#{prompt} [y/N]: "
     answer = $stdin.gets.to_s.strip.downcase
