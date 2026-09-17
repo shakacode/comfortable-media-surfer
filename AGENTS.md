@@ -5,26 +5,21 @@ This repository is a Ruby on Rails engine. `master` is the default branch.
 ## Setup
 
 For the human-facing development setup, including the development database and
-browser prerequisite, follow `CONTRIBUTING.md`. The GitHub Actions
-matrix uses Node dependencies and the Rails 7.2, 8.0, and 8.1 Gemfiles. Before
-running a command with a target Gemfile, install that selected bundle:
-
-```bash
-npm ci
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle install
-```
+browser prerequisite, follow `CONTRIBUTING.md`. The self-contained CI-style
+validation sequence below installs the Node dependencies and selected Rails
+Gemfile before it uses them.
 
 ## Validation
 
 Run focused tests while iterating. Before requesting review for a code change,
 run the checks relevant to the affected Rails version. The Rails 8.1 CI job
-uses:
+uses this sequence (with `RAILS_ENV=test` applied consistently):
 
 ```bash
 npm ci
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle install
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle update comfortable_media_surfer
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails comfy:compile_assets
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle install
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle update comfortable_media_surfer
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails comfy:compile_assets
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:drop
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:create
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rails db:migrate
@@ -34,11 +29,15 @@ RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec brakeman -q -
 RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec bundler-audit --update --gemfile-lock gemfiles/8.1.gemfile.lock
 ```
 
+Like CI, `bundle update comfortable_media_surfer` refreshes the selected
+Gemfile lockfile. Run this sequence from a clean worktree and inspect or discard
+that lockfile change before committing unrelated work.
+
 For browser-facing changes, ensure a compatible Chrome or Chromium browser is
 installed, then also run:
 
 ```bash
-BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake test:system
+RAILS_ENV=test BUNDLE_GEMFILE=gemfiles/8.1.gemfile bin/bundle exec rake test:system
 ```
 
 ## Pull requests and merge authority
