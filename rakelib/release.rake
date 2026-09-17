@@ -379,12 +379,43 @@ module_function
     raise ReleaseError, "Remote tag #{tag} does not point at HEAD. Refusing RubyGems recovery."
   end
 
-  def publish_release!(root:, version:)
+  def rollback_failed_git_release!(root:, original_head:, original_version_contents:, tag:)
+    tag_ref = "refs/tags/#{tag}"
+    _output, tag_status = Open3.capture2e('git', 'rev-parse', '--quiet', '--verify', tag_ref, chdir: root)
+    run!('git', 'tag', '-d', tag, chdir: root) if tag_status.success?
+
+    head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
+    if head == original_head
+      run!('git', 'reset', 'HEAD', '--', 'lib/comfortable_media_surfer/version.rb', chdir: root)
+    else
+      run!('git', 'reset', '--mixed', original_head, chdir: root)
+    end
+    File.write(
+      File.join(root, 'lib', 'comfortable_media_surfer', 'version.rb'),
+      original_version_contents,
+      encoding: 'UTF-8'
+    )
+  end
+
+  def publish_release!(root:, version:, original_version_contents: nil)
     tag = "v#{version}"
-    run!('git', 'add', 'lib/comfortable_media_surfer/version.rb', chdir: root)
-    run!('git', 'commit', '-m', "Release #{tag}", chdir: root)
-    run!('git', 'tag', '-a', tag, '-m', "Release #{tag}", chdir: root)
-    run!('git', 'push', '--atomic', 'origin', DEFAULT_BRANCH, tag, chdir: root)
+    original_head = run!('git', 'rev-parse', 'HEAD', chdir: root).strip if original_version_contents
+    begin
+      run!('git', 'add', 'lib/comfortable_media_surfer/version.rb', chdir: root)
+      run!('git', 'commit', '-m', "Release #{tag}", chdir: root)
+      run!('git', 'tag', '-a', tag, '-m', "Release #{tag}", chdir: root)
+      run!('git', 'push', '--atomic', 'origin', DEFAULT_BRANCH, tag, chdir: root)
+    rescue ReleaseError => e
+      if original_version_contents
+        begin
+          rollback_failed_git_release!(root:, original_head:, original_version_contents:, tag:)
+        rescue ReleaseError => rollback_error
+          warn "⚠️ Automatic local rollback also failed: #{rollback_error.message}"
+        end
+      end
+      raise e
+    end
+
     begin
       publish_to_rubygems!(root:, version:)
     rescue ReleaseError => e
@@ -410,6 +441,18 @@ module_function
     command
   end
 
+  def github_release_exists?(root:, repo:, tag:)
+    output, status = Open3.capture2e('gh', 'api', "repos/#{repo}/releases/tags/#{tag}", '--silent', chdir: root)
+    return true if status.success?
+    return false if output.match?(%r{\bHTTP 404\b})
+
+    detail = output.strip
+    raise ReleaseError,
+          "Unable to check whether GitHub release #{tag} exists#{": #{detail}" unless detail.empty?}."
+  rescue Errno::ENOENT => e
+    raise ReleaseError, "GitHub CLI is unavailable while checking release #{tag}: #{e.message}"
+  end
+
   def sync_github_release!(root:, version:, dry_run: false)
     notes = changelog_section(root:, version:)
     unless notes
@@ -427,13 +470,12 @@ module_function
     Tempfile.create(['comfortable-media-surfer-release-', '.md']) do |file|
       file.write(notes)
       file.flush
-      _output, status = Open3.capture2e('gh', 'release', 'view', tag, '--repo', repo)
       command = github_release_command(
         tag:,
         repo:,
         notes_file: file.path,
         prerelease: prerelease?(version),
-        exists: status.success?
+        exists: github_release_exists?(root:, repo:, tag:)
       )
       run!(*command, chdir: root)
     end
@@ -467,13 +509,15 @@ module_function
       end
 
       confirm!("Release comfortable_media_surfer #{version}?") unless dry_run
+      version_path = File.join(release_root, 'lib', 'comfortable_media_surfer', 'version.rb')
+      original_version_contents = File.read(version_path, encoding: 'UTF-8')
       bump_and_validate!(root: release_root, version:)
 
       if dry_run
         sync_github_release!(root: release_root, version:, dry_run: true)
         result = { version:, dry_run: true, changelog_section_found: notes_present }
       else
-        publish_release!(root: release_root, version:)
+        publish_release!(root: release_root, version:, original_version_contents:)
         begin
           sync_github_release!(root: release_root, version:)
         rescue ReleaseError => e

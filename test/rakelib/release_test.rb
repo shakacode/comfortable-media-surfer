@@ -233,6 +233,44 @@ class ReleaseTest < Minitest::Test
     end
   end
 
+  def test_rubygems_publication_only_builds_and_pushes_the_existing_version
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.8', changelog: '')
+      command = nil
+      runner = ->(*args, chdir:) do
+        command = [args, chdir] if args.first == 'bundle'
+        ''
+      end
+
+      ComfortableMediaSurferRelease.stub(:run!, runner) do
+        ComfortableMediaSurferRelease.stub(:rubygems_versions, []) do
+          ComfortableMediaSurferRelease.publish_to_rubygems!(root:, version: '3.1.8')
+        end
+      end
+
+      assert_equal [%w[bundle exec gem release], root], command
+    end
+  end
+
+  def test_github_release_lookup_distinguishes_not_found_from_transient_errors
+    status = Struct.new(:success?).new(false)
+
+    Open3.stub(:capture2e, ["gh: Not Found (HTTP 404)\n", status]) do
+      refute ComfortableMediaSurferRelease.github_release_exists?(
+        root: '/release', repo: 'shakacode/comfortable-media-surfer', tag: 'v3.2.0'
+      )
+    end
+
+    error = Open3.stub(:capture2e, ["gh: API rate limit exceeded (HTTP 403)\n", status]) do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.github_release_exists?(
+          root: '/release', repo: 'shakacode/comfortable-media-surfer', tag: 'v3.2.0'
+        )
+      end
+    end
+    assert_match(%r{rate limit exceeded}, error.message)
+  end
+
   def test_release_pushes_branch_and_tag_atomically
     commands = []
     runner = ->(*command, chdir:) do
@@ -265,6 +303,39 @@ class ReleaseTest < Minitest::Test
     end
 
     refute_match(%r{RubyGems publication failed}, errors)
+  end
+
+  def test_git_failure_rolls_back_the_release_commit_tag_and_version_file
+    Dir.mktmpdir do |sandbox|
+      _origin, _seed, checkout = create_git_release_fixture(sandbox)
+      original_head = run_git(checkout, 'rev-parse', 'HEAD').strip
+      original_contents = File.read(File.join(checkout, 'lib/comfortable_media_surfer/version.rb'))
+      ComfortableMediaSurferRelease.bump_and_validate!(root: checkout, version: '3.1.8')
+
+      original_run = ComfortableMediaSurferRelease.method(:run!)
+      runner = ->(*command, chdir:) do
+        if command == %w[git push --atomic origin master v3.1.8]
+          raise ComfortableMediaSurferRelease::ReleaseError, 'simulated atomic push failure'
+        end
+
+        original_run.call(*command, chdir:)
+      end
+
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          ComfortableMediaSurferRelease.publish_release!(
+            root: checkout,
+            version: '3.1.8',
+            original_version_contents: original_contents
+          )
+        end
+      end
+
+      assert_equal original_head, run_git(checkout, 'rev-parse', 'HEAD').strip
+      assert_equal original_contents, File.read(File.join(checkout, 'lib/comfortable_media_surfer/version.rb'))
+      assert_empty run_git(checkout, 'tag', '--list', 'v3.1.8').strip
+      assert_empty run_git(checkout, 'status', '--porcelain').strip
+    end
   end
 
   def test_dry_run_builds_in_a_throwaway_worktree_and_leaves_checkout_unchanged
@@ -322,7 +393,10 @@ private
   def write_release_files(root, version:, changelog:)
     version_dir = File.join(root, 'lib', 'comfortable_media_surfer')
     FileUtils.mkdir_p(version_dir)
-    File.write(File.join(version_dir, 'version.rb'), "VERSION = '#{version}'\n")
+    File.write(
+      File.join(version_dir, 'version.rb'),
+      "module ComfortableMediaSurfer\n  VERSION = '#{version}'\nend\n"
+    )
     File.write(File.join(root, 'CHANGELOG.md'), changelog)
   end
 
