@@ -40,3 +40,48 @@ Fork the project. Optionally, create a branch you want to work on.
 
 If everything is good your changes will be merged into master branch. Eventually
 a new version of gem will be published.
+
+## Maintainer release process
+
+Prepare a versioned `CHANGELOG.md` section before releasing. With no version
+argument, the release task uses a newer changelog version or falls back to the
+next patch version.
+
+Rehearse the release from a clean checkout:
+
+```sh
+bundle exec rake "release[3.2.0,true]"
+```
+
+The dry run fetches `origin/master`, creates a temporary worktree, checks the
+release version and changelog policy, reports the exact-commit GitHub Actions
+status, bumps the version, and builds the gem without changing the maintainer's
+checkout.
+
+Run the live release from a clean, up-to-date `master` branch:
+
+```sh
+bundle exec rake "release[3.2.0]"
+```
+
+The live task requires GitHub write access, green `Rails CI` and `Coveralls`
+push workflows for the exact commit, and confirmation before it commits and
+tags the version. It pushes the release commit and tag, publishes the gem to
+RubyGems, and creates or updates the GitHub release from the matching changelog
+section. Beta and RC versions are marked as GitHub prereleases. `create_release`
+remains available as a backward-compatible task name.
+
+Use `RELEASE_CI_STATUS_OVERRIDE=true` only for a known unrelated CI outage. If
+RubyGems publication fails after the release tag is pushed, retry safely with:
+
+```sh
+bundle exec rake "publish_rubygems[3.2.0]"
+```
+
+The recovery task verifies that the local and remote tags point at `HEAD` and
+does nothing if that version is already on RubyGems. If RubyGems publishing
+succeeds but GitHub release synchronization fails, recover with:
+
+```sh
+bundle exec rake "sync_github_release[3.2.0]"
+```

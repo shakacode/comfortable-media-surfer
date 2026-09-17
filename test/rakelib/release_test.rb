@@ -1,0 +1,303 @@
+# frozen_string_literal: true
+
+require 'minitest/autorun'
+require 'open3'
+require 'tmpdir'
+require 'rake'
+load File.expand_path('../../rakelib/release.rake', __dir__)
+
+class ReleaseTest < Minitest::Test
+  def test_resolves_newer_changelog_version_before_patch_fallback
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.7', changelog: "## [v3.2.0] - 2026-09-16\n")
+
+      assert_equal '3.2.0', ComfortableMediaSurferRelease.resolve_version(root:, requested: nil)
+    end
+  end
+
+  def test_falls_back_to_next_patch_when_changelog_has_no_new_version
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.7', changelog: "## [v3.1.7] - 2026-02-20\n")
+
+      assert_equal '3.1.8', ComfortableMediaSurferRelease.resolve_version(root:, requested: '')
+    end
+  end
+
+  def test_requires_an_explicit_version_when_current_version_is_a_prerelease
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.2.0.rc.0', changelog: "## [v3.2.0-rc.0] - 2026-09-16\n")
+
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.resolve_version(root:, requested: nil)
+      end
+
+      assert_match(%r{current version is 3\.2\.0\.rc\.0}, error.message)
+    end
+  end
+
+  def test_rejects_versions_that_are_not_newer_than_the_latest_tag
+    error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      ComfortableMediaSurferRelease.validate_version_policy!(target: '3.1.7', tagged_versions: %w[3.1.6 3.1.7])
+    end
+
+    assert_match(%r{must be greater than latest tagged version 3\.1\.7}, error.message)
+  end
+
+  def test_rejects_a_patch_version_for_changelog_features
+    error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      ComfortableMediaSurferRelease.validate_version_policy!(
+        target: '3.1.8',
+        tagged_versions: %w[3.1.7],
+        changelog_section: "### Added\n\n- A new capability."
+      )
+    end
+
+    assert_match(%r{requires a minor bump}, error.message)
+  end
+
+  def test_accepts_a_minor_version_for_changelog_features
+    assert ComfortableMediaSurferRelease.validate_version_policy!(
+      target: '3.2.0',
+      tagged_versions: %w[3.1.7],
+      changelog_section: "### Added\n\n- A new capability."
+    )
+  end
+
+  def test_extracts_release_notes_without_the_next_version
+    changelog = <<~MARKDOWN
+      ## [Unreleased]
+
+      ## [v3.2.0] - 2026-09-16
+
+      ### Added
+
+      - Safer releases.
+
+      ## [v3.1.7] - 2026-02-20
+
+      ### Fixed
+
+      - Earlier fix.
+    MARKDOWN
+
+    assert_equal "### Added\n\n- Safer releases.",
+                 ComfortableMediaSurferRelease.extract_changelog_section(changelog:, version: '3.2.0')
+  end
+
+  def test_live_release_requires_a_matching_changelog_section
+    error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      ComfortableMediaSurferRelease.validate_changelog_presence!(notes: nil, version: '3.2.0', dry_run: false)
+    end
+
+    assert_match(%r{Add release notes before publishing}, error.message)
+  end
+
+  def test_dry_run_allows_a_missing_changelog_section
+    refute ComfortableMediaSurferRelease.validate_changelog_presence!(
+      notes: nil,
+      version: '3.2.0',
+      dry_run: true
+    )
+  end
+
+  def test_ci_gate_requires_all_expected_workflows_to_finish_successfully
+    runs = [
+      { 'name' => 'Rails CI', 'status' => 'completed', 'conclusion' => 'success' },
+      { 'name' => 'Coveralls', 'status' => 'in_progress', 'conclusion' => nil }
+    ]
+
+    error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      ComfortableMediaSurferRelease.validate_ci_runs!(runs:)
+    end
+
+    assert_match(%r{Coveralls \(in_progress\)}, error.message)
+  end
+
+  def test_ci_gate_uses_only_the_latest_run_for_each_workflow
+    runs = [
+      { 'name' => 'Rails CI', 'status' => 'completed', 'conclusion' => 'success', 'created_at' => '2026-09-16T02:00:00Z' },
+      { 'name' => 'Rails CI', 'status' => 'completed', 'conclusion' => 'failure', 'created_at' => '2026-09-16T01:00:00Z' },
+      { 'name' => 'Coveralls', 'status' => 'completed', 'conclusion' => 'success', 'created_at' => '2026-09-16T02:00:00Z' }
+    ]
+
+    assert ComfortableMediaSurferRelease.validate_ci_runs!(runs:)
+  end
+
+  def test_github_repo_slug_accepts_supported_github_remotes
+    assert_equal 'shakacode/comfortable-media-surfer',
+                 ComfortableMediaSurferRelease.github_repo_slug('git@github.com:shakacode/comfortable-media-surfer.git')
+    assert_equal 'shakacode/comfortable-media-surfer',
+                 ComfortableMediaSurferRelease.github_repo_slug(
+                   'https://github.com/shakacode/comfortable-media-surfer.git'
+                 )
+  end
+
+  def test_github_repo_slug_rejects_other_hosts
+    assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+      ComfortableMediaSurferRelease.github_repo_slug('https://example.com/shakacode/comfortable-media-surfer.git')
+    end
+  end
+
+  def test_new_prerelease_command_marks_the_github_release_as_a_prerelease
+    command = ComfortableMediaSurferRelease.github_release_command(
+      tag: 'v3.2.0.rc.0',
+      repo: 'shakacode/comfortable-media-surfer',
+      notes_file: '/tmp/notes.md',
+      prerelease: true,
+      exists: false
+    )
+
+    assert_includes command, '--prerelease'
+  end
+
+  def test_existing_stable_release_command_clears_the_prerelease_flag
+    command = ComfortableMediaSurferRelease.github_release_command(
+      tag: 'v3.2.0',
+      repo: 'shakacode/comfortable-media-surfer',
+      notes_file: '/tmp/notes.md',
+      prerelease: false,
+      exists: true
+    )
+
+    assert_includes command, '--prerelease=false'
+  end
+
+  def test_rubygems_version_parser_handles_all_remote_versions
+    output = 'comfortable_media_surfer (3.2.0.rc.0, 3.1.8, 3.1.7)'
+    command = nil
+    runner = ->(*args, chdir:) do
+      command = [args, chdir]
+      output
+    end
+
+    ComfortableMediaSurferRelease.stub(:run!, runner) do
+      assert_equal %w[3.2.0.rc.0 3.1.8 3.1.7], ComfortableMediaSurferRelease.rubygems_versions(root: '/tmp')
+    end
+    assert_includes command.first, '--prerelease'
+  end
+
+  def test_rubygems_recovery_is_idempotent_when_version_is_already_published
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.8', changelog: '')
+
+      ComfortableMediaSurferRelease.stub(:rubygems_versions, ['3.1.8']) do
+        assert_equal :already_published,
+                     ComfortableMediaSurferRelease.publish_to_rubygems!(
+                       root:,
+                       version: '3.1.8',
+                       allow_existing: true
+                     )
+      end
+    end
+  end
+
+  def test_normal_rubygems_publication_rejects_an_existing_version
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.8', changelog: '')
+
+      ComfortableMediaSurferRelease.stub(:rubygems_versions, ['3.1.8']) do
+        error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+          ComfortableMediaSurferRelease.publish_to_rubygems!(root:, version: '3.1.8')
+        end
+        assert_match(%r{potentially different artifact}, error.message)
+      end
+    end
+  end
+
+  def test_rubygems_recovery_dry_run_does_not_query_remote_versions
+    Dir.mktmpdir do |root|
+      write_release_files(root, version: '3.1.8', changelog: '')
+      queried = false
+      replacement = ->(root:) do
+        queried = !root.nil?
+        []
+      end
+
+      ComfortableMediaSurferRelease.stub(:rubygems_versions, replacement) do
+        assert_equal :dry_run,
+                     ComfortableMediaSurferRelease.publish_to_rubygems!(root:, version: '3.1.8', dry_run: true)
+      end
+      refute queried
+    end
+  end
+
+  def test_release_pushes_branch_and_tag_atomically
+    commands = []
+    runner = ->(*command, chdir:) do
+      commands << [command, chdir]
+      ''
+    end
+
+    ComfortableMediaSurferRelease.stub(:run!, runner) do
+      ComfortableMediaSurferRelease.stub(:publish_to_rubygems!, :published) do
+        ComfortableMediaSurferRelease.publish_release!(root: '/release', version: '3.2.0')
+      end
+    end
+
+    assert_includes commands, [%w[git push --atomic origin master v3.2.0], '/release']
+  end
+
+  def test_dry_run_builds_in_a_throwaway_worktree_and_leaves_checkout_unchanged
+    Dir.mktmpdir do |sandbox|
+      origin = File.join(sandbox, 'origin.git')
+      seed = File.join(sandbox, 'seed')
+      checkout = File.join(sandbox, 'checkout')
+      run_git(sandbox, 'init', '--bare', '--initial-branch=master', origin)
+      run_git(sandbox, 'init', '--initial-branch=master', seed)
+      write_minimal_gem(seed)
+      run_git(seed, 'add', '.')
+      run_git(seed, '-c', 'user.name=Release Test', '-c', 'user.email=release@example.com',
+              'commit', '-m', 'Initial release')
+      run_git(seed, 'tag', 'v3.1.7')
+      run_git(seed, 'remote', 'add', 'origin', origin)
+      run_git(seed, 'push', '--tags', 'origin', 'master')
+      run_git(sandbox, 'clone', origin, checkout)
+
+      result = ComfortableMediaSurferRelease.perform(
+        root: checkout,
+        requested_version: '3.1.8',
+        dry_run: true,
+        ci_override: false
+      )
+
+      assert_equal '3.1.8', result.fetch(:version)
+      assert_equal '3.1.7', ComfortableMediaSurferRelease.current_version(checkout)
+      assert_empty run_git(checkout, 'branch', '--list', 'release-dry-run-*').strip
+      assert_empty run_git(checkout, 'status', '--porcelain').strip
+    end
+  end
+
+private
+
+  def write_release_files(root, version:, changelog:)
+    version_dir = File.join(root, 'lib', 'comfortable_media_surfer')
+    FileUtils.mkdir_p(version_dir)
+    File.write(File.join(version_dir, 'version.rb'), "VERSION = '#{version}'\n")
+    File.write(File.join(root, 'CHANGELOG.md'), changelog)
+  end
+
+  def write_minimal_gem(root)
+    write_release_files(
+      root,
+      version: '3.1.7',
+      changelog: "## [v3.1.8] - 2026-09-16\n\n### Fixed\n\n- Safer releases.\n"
+    )
+    File.write(File.join(root, 'comfortable_media_surfer.gemspec'), <<~RUBY)
+      require_relative 'lib/comfortable_media_surfer/version'
+      Gem::Specification.new do |spec|
+        spec.name = 'comfortable_media_surfer'
+        spec.version = ComfortableMediaSurfer::VERSION
+        spec.summary = 'Release test gem'
+        spec.authors = ['ShakaCode']
+        spec.files = ['lib/comfortable_media_surfer/version.rb']
+      end
+    RUBY
+  end
+
+  def run_git(directory, *)
+    output, status = Open3.capture2e('git', *, chdir: directory)
+    raise output unless status.success?
+
+    output
+  end
+end
