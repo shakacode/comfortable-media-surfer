@@ -296,7 +296,7 @@ module_function
   end
 
   def bump_and_validate!(root:, version:)
-    run!('gem', 'bump', '--no-commit', '--version', version, chdir: root)
+    run!('bundle', 'exec', 'gem', 'bump', '--no-commit', '--version', version, chdir: root)
     actual = current_version(root)
     raise ReleaseError, "Expected gem bump to produce #{version}, but found #{actual}." unless actual == version
 
@@ -333,7 +333,7 @@ module_function
     end
 
     puts 'Use the OTP for RubyGems when prompted.'
-    run!('gem', 'release', chdir: root)
+    run!('bundle', 'exec', 'gem', 'release', chdir: root)
     :published
   end
 
