@@ -11,7 +11,7 @@ require 'tempfile'
 require 'tmpdir'
 
 # The release flow intentionally lives together so the irreversible ordering is auditable.
-# rubocop:disable-next Metrics/ModuleLength
+# rubocop:disable Metrics/ModuleLength, Style/DirectiveScope
 module ComfortableMediaSurferRelease
   class ReleaseError < StandardError; end
 
@@ -484,6 +484,7 @@ module_function
     puts 'Add a matching CHANGELOG.md section before publishing the GitHub release.'
   end
 end
+# rubocop:enable Metrics/ModuleLength, Style/DirectiveScope
 
 Rake::Task[:release].clear if Rake::Task.task_defined?(:release)
 
