@@ -275,6 +275,8 @@ module_function
         rescue ReleaseError => e
           cleanup_errors << e
           warn "⚠️ #{e.message}"
+          FileUtils.rm_rf(directory)
+          run!('git', 'worktree', 'prune', chdir: root)
         end
         begin
           run!('git', 'branch', '-D', branch, chdir: root)
@@ -297,7 +299,15 @@ module_function
         verify_release_tag_at_head!(root: directory, version:)
         yield(directory)
       ensure
-        run!('git', 'worktree', 'remove', '--force', directory, chdir: root) if File.exist?(directory)
+        original_error = $ERROR_INFO
+        begin
+          run!('git', 'worktree', 'remove', '--force', directory, chdir: root) if File.exist?(directory)
+        rescue ReleaseError => e
+          warn "⚠️ #{e.message}"
+          FileUtils.rm_rf(directory)
+          run!('git', 'worktree', 'prune', chdir: root)
+          raise e unless original_error
+        end
       end
     end
   end
@@ -375,11 +385,13 @@ module_function
     run!('git', 'commit', '-m', "Release #{tag}", chdir: root)
     run!('git', 'tag', '-a', tag, '-m', "Release #{tag}", chdir: root)
     run!('git', 'push', '--atomic', 'origin', DEFAULT_BRANCH, tag, chdir: root)
-    publish_to_rubygems!(root:, version:)
-  rescue ReleaseError => e
-    warn "PARTIAL RELEASE: commit and tag #{tag} may have been pushed, but RubyGems publication failed."
-    warn "Recover safely with: bundle exec rake \"publish_rubygems[#{version}]\""
-    raise e
+    begin
+      publish_to_rubygems!(root:, version:)
+    rescue ReleaseError => e
+      warn "PARTIAL RELEASE: commit and tag #{tag} were pushed, but RubyGems publication failed."
+      warn "Recover safely with: bundle exec rake \"publish_rubygems[#{version}]\""
+      raise e
+    end
   end
 
   def prerelease?(version)
@@ -482,36 +494,30 @@ module_function
 
     puts 'Add a matching CHANGELOG.md section before publishing the GitHub release.'
   end
+
+  def run_release_task(args, root: File.expand_path('..', __dir__))
+    result = perform(
+      root:,
+      requested_version: args[:version],
+      dry_run: truthy?(args[:dry_run]),
+      ci_override: truthy?(args[:override_ci_status]) || truthy?(ENV.fetch('RELEASE_CI_STATUS_OVERRIDE', nil))
+    )
+    print_summary(result)
+  rescue ReleaseError => e
+    abort "❌ #{e.message}"
+  end
 end
 
 Rake::Task[:release].clear if Rake::Task.task_defined?(:release)
 
 desc 'Release the gem with version, CI, tag, RubyGems, and GitHub safeguards'
 task :release, %i[version dry_run override_ci_status] do |_task, args|
-  result = ComfortableMediaSurferRelease.perform(
-    root: File.expand_path('..', __dir__),
-    requested_version: args[:version],
-    dry_run: ComfortableMediaSurferRelease.truthy?(args[:dry_run]),
-    ci_override: ComfortableMediaSurferRelease.truthy?(args[:override_ci_status]) ||
-      ComfortableMediaSurferRelease.truthy?(ENV.fetch('RELEASE_CI_STATUS_OVERRIDE', nil))
-  )
-  ComfortableMediaSurferRelease.print_summary(result)
-rescue ComfortableMediaSurferRelease::ReleaseError => e
-  abort "❌ #{e.message}"
+  ComfortableMediaSurferRelease.run_release_task(args)
 end
 
 desc 'Backward-compatible name for the guarded release task'
 task :create_release, %i[version dry_run override_ci_status] do |_task, args|
-  result = ComfortableMediaSurferRelease.perform(
-    root: File.expand_path('..', __dir__),
-    requested_version: args[:version],
-    dry_run: ComfortableMediaSurferRelease.truthy?(args[:dry_run]),
-    ci_override: ComfortableMediaSurferRelease.truthy?(args[:override_ci_status]) ||
-      ComfortableMediaSurferRelease.truthy?(ENV.fetch('RELEASE_CI_STATUS_OVERRIDE', nil))
-  )
-  ComfortableMediaSurferRelease.print_summary(result)
-rescue ComfortableMediaSurferRelease::ReleaseError => e
-  abort "❌ #{e.message}"
+  ComfortableMediaSurferRelease.run_release_task(args)
 end
 
 desc 'Create or update a GitHub release from CHANGELOG.md for an existing version'

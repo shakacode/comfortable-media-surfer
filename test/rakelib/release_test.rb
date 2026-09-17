@@ -249,6 +249,24 @@ class ReleaseTest < Minitest::Test
     assert_includes commands, [%w[git push --atomic origin master v3.2.0], '/release']
   end
 
+  def test_git_failure_does_not_report_rubygems_recovery
+    runner = ->(*command, chdir:) do
+      raise ComfortableMediaSurferRelease::ReleaseError, "push failed in #{chdir}" if command.include?('push')
+
+      ''
+    end
+
+    _output, errors = capture_io do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          ComfortableMediaSurferRelease.publish_release!(root: '/release', version: '3.2.0')
+        end
+      end
+    end
+
+    refute_match(%r{RubyGems publication failed}, errors)
+  end
+
   def test_dry_run_builds_in_a_throwaway_worktree_and_leaves_checkout_unchanged
     Dir.mktmpdir do |sandbox|
       origin = File.join(sandbox, 'origin.git')
