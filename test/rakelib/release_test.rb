@@ -396,11 +396,13 @@ class ReleaseTest < Minitest::Test
 
       assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
         ComfortableMediaSurferRelease.stub(:run!, runner) do
-          ComfortableMediaSurferRelease.publish_release!(
-            root: checkout,
-            version: '3.1.8',
-            original_version_contents: original_contents
-          )
+          ComfortableMediaSurferRelease.stub(:remote_release_state, :not_published) do
+            ComfortableMediaSurferRelease.publish_release!(
+              root: checkout,
+              version: '3.1.8',
+              original_version_contents: original_contents
+            )
+          end
         end
       end
 
