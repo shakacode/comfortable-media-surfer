@@ -19,7 +19,7 @@ Fork the project. Optionally, create a branch you want to work on.
   Set `PARALLEL_WORKERS` to tune the worker count, or run
   `bundle exec rake test:serial` for a serial coverage run.
 - There are system tests that can be run with `bundle exec rake test:system`.
-  You need to have `chromedriver` installed for that.
+  You need to have a compatible Chrome or Chromium browser installed for that.
 - You should be able to start the app via `bin/rails s` and navigate to http://localhost:3000/admin
   and log in with username 'user' and password 'pass'
 
