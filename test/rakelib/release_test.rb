@@ -257,6 +257,22 @@ class ReleaseTest < Minitest::Test
     assert(command.first.any? { |part| part.include?('branch=master') })
   end
 
+  def test_workflow_runs_rejects_entries_without_names
+    output = '[{"workflow_runs":[{"status":"completed","conclusion":"success"}]}]'
+
+    error = ComfortableMediaSurferRelease.stub(:run!, output) do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.workflow_runs(
+          root: '/release',
+          commit_sha: 'abc123',
+          repo: 'shakacode/comfortable-media-surfer'
+        )
+      end
+    end
+
+    assert_match(%r{did not contain valid pages}, error.message)
+  end
+
   def test_github_repo_slug_accepts_supported_github_remotes
     assert_equal 'shakacode/comfortable-media-surfer',
                  ComfortableMediaSurferRelease.github_repo_slug('git@github.com:shakacode/comfortable-media-surfer.git')
@@ -336,6 +352,18 @@ class ReleaseTest < Minitest::Test
     end
 
     assert_match(%r{exactly one push URL}, error.message)
+  end
+
+  def test_repository_slug_rejects_a_matching_fork
+    runner = ->(*, chdir:) { "git@github.com:someone/comfortable-media-surfer.git\n" if chdir == '/release' }
+
+    error = ComfortableMediaSurferRelease.stub(:run!, runner) do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.repository_slug('/release')
+      end
+    end
+
+    assert_match(%r{must run from shakacode/comfortable-media-surfer}, error.message)
   end
 
   def test_new_prerelease_command_marks_the_github_release_as_a_prerelease
@@ -607,7 +635,7 @@ class ReleaseTest < Minitest::Test
     refute(commands.any? { |command, _root| command.first(3) == %w[git tag -d] })
   end
 
-  def test_remote_release_state_requires_both_branch_and_tag_to_match
+  def test_remote_release_state_uses_atomic_branch_update_as_publication_proof
     status = Struct.new(:success?).new(true)
     complete = <<~OUTPUT
       release-head\trefs/heads/master
@@ -623,7 +651,7 @@ class ReleaseTest < Minitest::Test
                    )
     end
     Open3.stub(:capture3, [partial, '', status]) do
-      assert_equal :unknown,
+      assert_equal :published,
                    ComfortableMediaSurferRelease.remote_release_state(
                      root: '/release', release_head: 'release-head', tag: 'v3.2.0'
                    )

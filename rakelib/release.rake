@@ -15,6 +15,7 @@ module ComfortableMediaSurferRelease
   class ReleaseError < StandardError; end
 
   DEFAULT_BRANCH = 'master'
+  CANONICAL_REPOSITORY = 'shakacode/comfortable-media-surfer'
   REQUIRED_PUSH_WORKFLOWS = ['Rails CI', 'Coveralls'].freeze
   VERSION_PATTERN = %r{\A\d+\.\d+\.\d+(?:\.(?:beta|rc)\.\d+)?\z}
   GITHUB_REPO_PATTERN = %r{\A[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\z}
@@ -206,6 +207,10 @@ module_function
       raise ReleaseError,
             "Origin fetch repository #{fetch_repo} does not match push repository #{push_repo}; refusing to release."
     end
+    unless fetch_repo == CANONICAL_REPOSITORY
+      raise ReleaseError,
+            "Releases must run from #{CANONICAL_REPOSITORY}; origin points to #{fetch_repo}."
+    end
 
     fetch_repo
   end
@@ -228,7 +233,9 @@ module_function
     raise ReleaseError, 'GitHub CLI authentication required. Run `gh auth login` and retry.' unless status.success?
 
     repo ||= repository_slug(root)
-    output, _errors, permission_status = Open3.capture3('gh', 'api', "repos/#{repo}", '--jq', '.permissions.push')
+    output, _errors, permission_status = Open3.capture3(
+      'gh', 'api', "repos/#{repo}", '--jq', '.permissions.push', chdir: root
+    )
     unless permission_status.success? && output.strip == 'true'
       raise ReleaseError, "GitHub CLI does not have verified write access to #{repo}."
     end
@@ -263,7 +270,9 @@ module_function
     output = run!('gh', 'api', '--paginate', '--slurp', endpoint, chdir: root)
     pages = JSON.parse(output)
     valid_pages = pages.is_a?(Array) && pages.all? do |page|
-      page.is_a?(Hash) && page['workflow_runs'].is_a?(Array)
+      page.is_a?(Hash) && page['workflow_runs'].is_a?(Array) && page['workflow_runs'].all? do |run|
+        run.is_a?(Hash) && run['name'].is_a?(String) && !run['name'].empty?
+      end
     end
     raise ReleaseError, 'GitHub workflow response did not contain valid pages.' unless valid_pages
 
@@ -492,6 +501,7 @@ module_function
     branch_matches = refs["refs/heads/#{DEFAULT_BRANCH}"] == release_head
     tag_matches = [refs["refs/tags/#{tag}"], refs["refs/tags/#{tag}^{}"]].include?(release_head)
     return :published if branch_matches && tag_matches
+    return :published if branch_matches && !branch_already_matched
     return :not_published if branch_already_matched && branch_matches && !tag_matches
     return :not_published unless branch_matches || tag_matches
 
@@ -734,6 +744,7 @@ task :publish_rubygems, %i[version dry_run] do |_task, args|
   root = File.expand_path('..', __dir__)
   dry_run = ComfortableMediaSurferRelease.truthy?(args[:dry_run])
   ComfortableMediaSurferRelease.verify_clean_worktree!(root)
+  ComfortableMediaSurferRelease.repository_slug(root)
   ComfortableMediaSurferRelease.with_tag_checkout(root:, version:) do |release_root|
     ComfortableMediaSurferRelease.publish_to_rubygems!(
       root: release_root,
