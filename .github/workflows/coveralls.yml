@@ -8,16 +8,17 @@ on:
 
 jobs:
   coveralls:
+    permissions:
+      contents: read
+    continue-on-error: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
         ruby-version:
           - "3.4"
         rails-version:
           - "8.1"
-        continue-on-error: [true]
     name: ${{ format('Coverage (Ruby {0}, Rails {1})', matrix.ruby-version, matrix.rails-version) }}
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.continue-on-error }}
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.rails-version }}.gemfile
       RAILS_ENV: test

@@ -43,6 +43,10 @@ Metrics/CyclomaticComplexity:
 Metrics/MethodLength:
   Enabled: false
 
+Metrics/ModuleLength:
+  Exclude:
+    - rakelib/release.rake
+
 Metrics/PerceivedComplexity:
   Max: 15
 
