@@ -562,9 +562,10 @@ module_function
     end
 
     begin
+      verify_clean_worktree!(root)
       publish_to_rubygems!(root:, version:)
     rescue ReleaseError => e
-      warn "PARTIAL RELEASE: commit and tag #{tag} were pushed, but RubyGems publication failed."
+      warn "PARTIAL RELEASE: commit and tag #{tag} were pushed, but RubyGems publication did not complete."
       warn "Recover safely with: bundle exec rake \"publish_rubygems[#{version}]\""
       raise e
     end

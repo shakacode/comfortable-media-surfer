@@ -656,6 +656,30 @@ class ReleaseTest < Minitest::Test
     assert_includes commands, [%w[git push --atomic origin master v3.2.0], '/release']
   end
 
+  def test_release_does_not_publish_a_gem_dirtied_by_the_pre_push_hook
+    published = false
+    runner = ->(*command, chdir:) do
+      assert_equal '/release', chdir
+      return " M lib/comfortable_media_surfer/version.rb\n" if command == %w[git status --porcelain]
+
+      ''
+    end
+
+    _output, warnings = capture_io do
+      assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.stub(:run!, runner) do
+          ComfortableMediaSurferRelease.stub(:publish_to_rubygems!, ->(**) { published = true }) do
+            ComfortableMediaSurferRelease.publish_release!(root: '/release', version: '3.2.0')
+          end
+        end
+      end
+    end
+
+    refute published
+    assert_match(%r{RubyGems publication did not complete}, warnings)
+    assert_match(%r{publish_rubygems\[3\.2\.0\]}, warnings)
+  end
+
   def test_release_tags_existing_head_when_version_is_already_checked_in
     commands = []
     runner = ->(*command, chdir:) do
