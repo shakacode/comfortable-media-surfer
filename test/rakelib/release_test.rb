@@ -33,6 +33,13 @@ class ReleaseTest < Minitest::Test
     $stdin = original_stdin
   end
 
+  def test_release_confirmation_calls_out_a_ci_override
+    prompt = ComfortableMediaSurferRelease.release_confirmation_prompt(version: '3.2.0', ci_state: :overridden)
+
+    assert_match(%r{CI IS NOT GREEN}, prompt)
+    assert_match(%r{RELEASE_CI_STATUS_OVERRIDE}, prompt)
+  end
+
   def test_interactive_runner_distinguishes_a_missing_command
     ComfortableMediaSurferRelease.stub(:system, nil) do
       error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
@@ -247,6 +254,7 @@ class ReleaseTest < Minitest::Test
     assert_includes command.first, '--paginate'
     assert_includes command.first, '--slurp'
     refute_includes command.first, '--jq'
+    assert(command.first.any? { |part| part.include?('branch=master') })
   end
 
   def test_github_repo_slug_accepts_supported_github_remotes
@@ -352,6 +360,7 @@ class ReleaseTest < Minitest::Test
     )
 
     assert_includes command, '--prerelease=false'
+    assert_includes command, '--draft=false'
   end
 
   def test_rubygems_version_parser_handles_all_remote_versions
@@ -867,6 +876,19 @@ class ReleaseTest < Minitest::Test
 
       assert_empty run_git(checkout, 'status', '--porcelain').strip
       assert File.directory?(origin)
+    end
+  end
+
+  def test_tag_checkout_reports_a_missing_release_tag_cleanly
+    Dir.mktmpdir do |sandbox|
+      _origin, _seed, checkout = create_git_release_fixture(sandbox)
+
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.with_tag_checkout(root: checkout, version: '9.9.9') { flunk 'must not yield' }
+      end
+
+      assert_match(%r{Release tag v9\.9\.9 does not exist}, error.message)
+      assert_empty run_git(checkout, 'status', '--porcelain').strip
     end
   end
 

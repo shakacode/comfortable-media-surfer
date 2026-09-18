@@ -224,7 +224,7 @@ module_function
   end
 
   def verify_gh_auth!(root, repo: nil)
-    _output, status = Open3.capture2e('gh', 'auth', 'status')
+    _output, status = Open3.capture2e('gh', 'auth', 'status', chdir: root)
     raise ReleaseError, 'GitHub CLI authentication required. Run `gh auth login` and retry.' unless status.success?
 
     repo ||= repository_slug(root)
@@ -259,7 +259,7 @@ module_function
 
   def workflow_runs(root:, commit_sha:, repo: nil)
     repo ||= repository_slug(root)
-    endpoint = "repos/#{repo}/actions/runs?head_sha=#{commit_sha}&event=push&per_page=100"
+    endpoint = "repos/#{repo}/actions/runs?head_sha=#{commit_sha}&branch=#{DEFAULT_BRANCH}&event=push&per_page=100"
     output = run!('gh', 'api', '--paginate', '--slurp', endpoint, chdir: root)
     pages = JSON.parse(output)
     valid_pages = pages.is_a?(Array) && pages.all? do |page|
@@ -276,11 +276,14 @@ module_function
     sha = run!('git', 'rev-parse', 'HEAD', chdir: root).strip
     validate_ci_runs!(runs: workflow_runs(root:, commit_sha: sha, repo:))
     puts "✓ Required push workflows passed for #{sha[0, 12]}"
+    :passed
   rescue ReleaseError => e
     if override
       warn "⚠️ RELEASE_CI_STATUS_OVERRIDE enabled: #{e.message}"
+      :overridden
     elsif dry_run
       warn "⚠️ DRY RUN: #{e.message}"
+      :dry_run_warning
     else
       raise
     end
@@ -327,6 +330,11 @@ module_function
       directory = File.join(temporary_root, 'worktree')
       begin
         run!('git', 'fetch', 'origin', '--tags', '--quiet', chdir: root)
+        _output, status = Open3.capture2e('git', 'rev-parse', '--verify', '--quiet', "refs/tags/#{tag}", chdir: root)
+        unless status.success?
+          raise ReleaseError, "Release tag #{tag} does not exist locally or on origin. Check the recovery version."
+        end
+
         run!('git', 'worktree', 'add', '--detach', directory, tag, chdir: root)
         verify_release_tag_at_head!(root: directory, version:)
         yield(directory)
@@ -356,6 +364,13 @@ module_function
     print "#{prompt} [y/N]: "
     answer = $stdin.gets.to_s.strip.downcase
     raise ReleaseError, 'Aborted by user.' unless %w[y yes].include?(answer)
+  end
+
+  def release_confirmation_prompt(version:, ci_state:)
+    prompt = "Release comfortable_media_surfer #{version}?"
+    return prompt unless ci_state == :overridden
+
+    "CI IS NOT GREEN — RELEASE_CI_STATUS_OVERRIDE is active. #{prompt}"
   end
 
   def bump_and_validate!(root:, version:)
@@ -552,7 +567,7 @@ module_function
   def github_release_command(tag:, repo:, notes_file:, prerelease:, exists:)
     if exists
       return ['gh', 'release', 'edit', tag, '--repo', repo, '--title', tag, '--notes-file', notes_file,
-              "--prerelease=#{prerelease}"]
+              "--prerelease=#{prerelease}", '--draft=false']
     end
 
     command = ['gh', 'release', 'create', tag, '--repo', repo, '--verify-tag', '--title', tag,
@@ -613,7 +628,7 @@ module_function
 
     result = nil
     with_release_checkout(root:, dry_run:) do |release_root|
-      validate_release_ci!(root: release_root, override: ci_override, dry_run:, repo:)
+      ci_state = validate_release_ci!(root: release_root, override: ci_override, dry_run:, repo:)
       version = resolve_version(root: release_root, requested: requested_version)
       notes = changelog_section(root: release_root, version:)
       notes_present = validate_changelog_presence!(notes:, version:, dry_run:)
@@ -633,7 +648,8 @@ module_function
         end
       end
 
-      confirm!("Release comfortable_media_surfer #{version}?") unless dry_run
+      confirm!(release_confirmation_prompt(version:, ci_state:)) unless dry_run
+      verify_clean_worktree!(release_root)
       version_path = File.join(release_root, 'lib', 'comfortable_media_surfer', 'version.rb')
       original_version_contents = read_required_file(version_path)
       bump_and_validate!(root: release_root, version:)
