@@ -65,14 +65,16 @@ bundle exec rake "release[3.2.0]"
 ```
 
 The live task requires GitHub write access, green `Rails CI` and `Coveralls`
-push workflows for the exact commit, and confirmation before it commits and
-tags the version. It pushes the release commit and tag, publishes the gem to
-RubyGems, and creates or updates the GitHub release from the matching changelog
-section. Beta and RC versions are marked as GitHub prereleases. `create_release`
-remains available as a backward-compatible task name.
+push workflows for the exact source commit, and confirmation before it creates
+the deterministic version-only release commit. It builds the final gem, then
+atomically pushes that commit and its tag, publishes the gem to RubyGems, and
+creates or updates the GitHub release from the matching changelog section. Beta
+and RC versions are marked as GitHub prereleases. `create_release` remains
+available as a backward-compatible task name.
 
-Use `RELEASE_CI_STATUS_OVERRIDE=true` only for a known unrelated CI outage. If
-RubyGems publication fails after the release tag is pushed, retry safely with:
+Use `RELEASE_CI_STATUS_OVERRIDE=true` only for a known unrelated CI outage; the
+final confirmation will call out that CI is being overridden. If RubyGems
+publication fails after the release tag is pushed, retry safely with:
 
 ```sh
 bundle exec rake "publish_rubygems[3.2.0]"
