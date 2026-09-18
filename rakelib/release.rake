@@ -633,7 +633,6 @@ module_function
   def recover_rubygems_release!(root:, version:, dry_run: false)
     verify_clean_worktree!(root)
     repo = repository_slug(root)
-    verify_gh_auth!(root, repo:) unless dry_run
 
     with_tag_checkout(root:, version:) do |release_root|
       result = publish_to_rubygems!(
@@ -643,6 +642,7 @@ module_function
         allow_existing: true
       )
       begin
+        verify_gh_auth!(root, repo:) unless dry_run
         sync_github_release!(root: release_root, version:, dry_run:, repo:)
       rescue ReleaseError => e
         warn 'PARTIAL RECOVERY: RubyGems publication is complete, but the GitHub release failed.'

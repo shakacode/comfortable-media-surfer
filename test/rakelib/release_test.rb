@@ -536,10 +536,14 @@ class ReleaseTest < Minitest::Test
       calls << [:github, root, version, dry_run, repo]
       true
     end
+    authenticator = ->(root, repo:) do
+      calls << [:github_auth, root, repo]
+      true
+    end
 
     ComfortableMediaSurferRelease.stub(:verify_clean_worktree!, true) do
       ComfortableMediaSurferRelease.stub(:repository_slug, 'shakacode/comfortable-media-surfer') do
-        ComfortableMediaSurferRelease.stub(:verify_gh_auth!, true) do
+        ComfortableMediaSurferRelease.stub(:verify_gh_auth!, authenticator) do
           ComfortableMediaSurferRelease.stub(:with_tag_checkout, tag_checkout) do
             ComfortableMediaSurferRelease.stub(:publish_to_rubygems!, publisher) do
               ComfortableMediaSurferRelease.stub(:sync_github_release!, synchronizer) do
@@ -558,6 +562,7 @@ class ReleaseTest < Minitest::Test
     assert_equal [
       [:tag_checkout, '/checkout', '3.1.8'],
       [:rubygems, '/tagged-release', '3.1.8', false, true],
+      [:github_auth, '/checkout', 'shakacode/comfortable-media-surfer'],
       [:github, '/tagged-release', '3.1.8', false, 'shakacode/comfortable-media-surfer']
     ], calls
   end
