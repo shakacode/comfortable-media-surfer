@@ -294,14 +294,21 @@ class ReleaseTest < Minitest::Test
 
   def test_github_permission_check_ignores_stderr_warnings
     status = Struct.new(:success?).new(true)
+    auth_command = nil
+    auth_status = ->(*command, chdir:) do
+      auth_command = [command, chdir]
+      ["authenticated\n", status]
+    end
 
     ComfortableMediaSurferRelease.stub(:repository_slug, 'shakacode/comfortable-media-surfer') do
-      Open3.stub(:capture2e, ["authenticated\n", status]) do
+      Open3.stub(:capture2e, auth_status) do
         Open3.stub(:capture3, ["true\n", "upgrade warning\n", status]) do
           assert_nil ComfortableMediaSurferRelease.verify_gh_auth!('/release')
         end
       end
     end
+
+    assert_equal [%w[gh auth status --active --hostname github.com], '/release'], auth_command
   end
 
   def test_repository_slug_requires_matching_fetch_and_push_repositories

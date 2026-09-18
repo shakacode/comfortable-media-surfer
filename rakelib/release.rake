@@ -229,7 +229,7 @@ module_function
   end
 
   def verify_gh_auth!(root, repo: nil)
-    _output, status = Open3.capture2e('gh', 'auth', 'status', chdir: root)
+    _output, status = Open3.capture2e('gh', 'auth', 'status', '--active', '--hostname', 'github.com', chdir: root)
     raise ReleaseError, 'GitHub CLI authentication required. Run `gh auth login` and retry.' unless status.success?
 
     repo ||= repository_slug(root)
@@ -549,8 +549,8 @@ module_function
         branch_already_matched: !release_commit_created
       )
       if remote_state == :published
-        warn "⚠️ The push reported a failure, but remote #{DEFAULT_BRANCH} and #{tag} match #{release_head[0, 12]}; " \
-             'continuing with publication.'
+        warn "⚠️ The push reported a failure, but remote state proves the atomic #{DEFAULT_BRANCH} and #{tag} " \
+             "update reached GitHub at #{release_head[0, 12]}; continuing with publication."
       elsif remote_state == :not_published
         rollback_release_if_possible!(root:, original_head:, original_version_contents:, tag:)
         raise e
