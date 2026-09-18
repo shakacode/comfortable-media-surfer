@@ -630,6 +630,29 @@ module_function
     true
   end
 
+  def recover_rubygems_release!(root:, version:, dry_run: false)
+    verify_clean_worktree!(root)
+    repo = repository_slug(root)
+    verify_gh_auth!(root, repo:) unless dry_run
+
+    with_tag_checkout(root:, version:) do |release_root|
+      result = publish_to_rubygems!(
+        root: release_root,
+        version:,
+        dry_run:,
+        allow_existing: true
+      )
+      begin
+        sync_github_release!(root: release_root, version:, dry_run:, repo:)
+      rescue ReleaseError => e
+        warn 'PARTIAL RECOVERY: RubyGems publication is complete, but the GitHub release failed.'
+        warn "Recover with: bundle exec rake \"sync_github_release[#{version}]\""
+        raise e
+      end
+      result
+    end
+  end
+
   def perform(root:, requested_version:, dry_run:, ci_override:)
     verify_clean_worktree!(root)
     repo = repository_slug(root) unless dry_run
@@ -743,16 +766,7 @@ task :publish_rubygems, %i[version dry_run] do |_task, args|
   ComfortableMediaSurferRelease.validate_requested_version!(version)
   root = File.expand_path('..', __dir__)
   dry_run = ComfortableMediaSurferRelease.truthy?(args[:dry_run])
-  ComfortableMediaSurferRelease.verify_clean_worktree!(root)
-  ComfortableMediaSurferRelease.repository_slug(root)
-  ComfortableMediaSurferRelease.with_tag_checkout(root:, version:) do |release_root|
-    ComfortableMediaSurferRelease.publish_to_rubygems!(
-      root: release_root,
-      version:,
-      dry_run:,
-      allow_existing: true
-    )
-  end
+  ComfortableMediaSurferRelease.recover_rubygems_release!(root:, version:, dry_run:)
 rescue ComfortableMediaSurferRelease::ReleaseError => e
   abort "❌ #{e.message}"
 end

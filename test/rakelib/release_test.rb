@@ -522,6 +522,46 @@ class ReleaseTest < Minitest::Test
     end
   end
 
+  def test_rubygems_recovery_also_synchronizes_the_github_release
+    calls = []
+    tag_checkout = ->(root:, version:, &block) do
+      calls << [:tag_checkout, root, version]
+      block.call('/tagged-release')
+    end
+    publisher = ->(root:, version:, dry_run:, allow_existing:) do
+      calls << [:rubygems, root, version, dry_run, allow_existing]
+      :already_published
+    end
+    synchronizer = ->(root:, version:, dry_run:, repo:) do
+      calls << [:github, root, version, dry_run, repo]
+      true
+    end
+
+    ComfortableMediaSurferRelease.stub(:verify_clean_worktree!, true) do
+      ComfortableMediaSurferRelease.stub(:repository_slug, 'shakacode/comfortable-media-surfer') do
+        ComfortableMediaSurferRelease.stub(:verify_gh_auth!, true) do
+          ComfortableMediaSurferRelease.stub(:with_tag_checkout, tag_checkout) do
+            ComfortableMediaSurferRelease.stub(:publish_to_rubygems!, publisher) do
+              ComfortableMediaSurferRelease.stub(:sync_github_release!, synchronizer) do
+                result = ComfortableMediaSurferRelease.recover_rubygems_release!(
+                  root: '/checkout', version: '3.1.8'
+                )
+
+                assert_equal :already_published, result
+              end
+            end
+          end
+        end
+      end
+    end
+
+    assert_equal [
+      [:tag_checkout, '/checkout', '3.1.8'],
+      [:rubygems, '/tagged-release', '3.1.8', false, true],
+      [:github, '/tagged-release', '3.1.8', false, 'shakacode/comfortable-media-surfer']
+    ], calls
+  end
+
   def test_rubygems_publication_only_builds_and_pushes_the_existing_version
     Dir.mktmpdir do |root|
       write_release_files(root, version: '3.1.8', changelog: '')

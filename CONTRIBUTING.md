@@ -80,9 +80,10 @@ publication fails after the release tag is pushed, retry safely with:
 bundle exec rake "publish_rubygems[3.2.0]"
 ```
 
-The recovery task verifies that the local and remote tags point at `HEAD` and
-does nothing if that version is already on RubyGems. If RubyGems publishing
-succeeds but GitHub release synchronization fails, recover with:
+The recovery task verifies that the local and remote tags point at `HEAD`, does
+nothing if that version is already on RubyGems, and then creates or updates the
+GitHub release from the tagged changelog. If GitHub release synchronization
+still fails, recover with:
 
 ```sh
 bundle exec rake "sync_github_release[3.2.0]"
