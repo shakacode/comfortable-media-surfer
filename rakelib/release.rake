@@ -608,6 +608,11 @@ module_function
       return false
     end
 
+    actual = current_version(root)
+    unless actual == version
+      raise ReleaseError, "Version file contains #{actual}, not the requested GitHub release version #{version}."
+    end
+
     tag = "v#{version}"
     if dry_run
       puts "DRY RUN: GitHub release #{tag} would use the matching CHANGELOG.md section."

@@ -605,6 +605,22 @@ class ReleaseTest < Minitest::Test
     end
   end
 
+  def test_github_release_sync_rejects_a_tagged_version_mismatch
+    Dir.mktmpdir do |root|
+      write_release_files(
+        root,
+        version: '3.1.8',
+        changelog: "## [v3.2.0] - 2026-09-18\n\n### Fixed\n\n- Release metadata.\n"
+      )
+
+      error = assert_raises(ComfortableMediaSurferRelease::ReleaseError) do
+        ComfortableMediaSurferRelease.sync_github_release!(root:, version: '3.2.0', dry_run: true)
+      end
+
+      assert_match(%r{Version file contains 3\.1\.8}, error.message)
+    end
+  end
+
   def test_github_release_lookup_distinguishes_not_found_from_transient_errors
     status = Struct.new(:success?).new(false)
 
