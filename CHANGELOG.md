@@ -12,6 +12,26 @@ For all changes prior to the inception of this project, see the [Release History
 
 ## [Unreleased]
 
+## [v3.2.0] - 2026-09-18
+
+This is the final ShakaCode release. Ongoing development continues in the
+independently maintained [Comfy Middle Seat](https://github.com/avonderluft/comfy-middle-seat)
+successor, published as [`comfy_middle_seat`](https://rubygems.org/gems/comfy_middle_seat).
+
+### Added
+
+- Added controls to publish or unpublish all child pages of a parent page.
+
+### Fixed
+
+- Hardened CMS site isolation, JSON parsing, and parallel test isolation.
+
+### Changed
+
+- Raised the minimum supported Rails version to 7.2.
+- Added Ruby 4.0 and Rails 8.1 to the CI matrix.
+- Updated development dependencies and CI workflows.
+
 ## [v3.1.7] - 2026-02-20
 
 ### Fixed
@@ -135,7 +155,8 @@ First release of `comfortable_media_surfer`. This new gem is a revival of [Comfo
 
 - Rebranded **ComfortableMexicanSofa** as **ComfortableMediaSurfer** in order to publish new gem (database table names and schema have not changed).
 
-[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.7...master
+[Unreleased]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.2.0...master
+[v3.2.0]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.7...v3.2.0
 [v3.1.7]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.6...v3.1.7
 [v3.1.6]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.5...v3.1.6
 [v3.1.5]: https://github.com/shakacode/comfortable-media-surfer/compare/v3.1.4...v3.1.5
