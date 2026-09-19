@@ -28,7 +28,9 @@ successor, published as [`comfy_middle_seat`](https://rubygems.org/gems/comfy_mi
 
 ### Changed
 
-- Raised the minimum supported Rails version to 7.2.
+- Ended testing and support for Rails 7.0 and 7.1; the supported matrix now
+  begins at Rails 7.2. The published gem metadata still permits installation on
+  the older Rails versions.
 - Added Ruby 4.0 and Rails 8.1 to the CI matrix.
 - Updated development dependencies and CI workflows.
 
