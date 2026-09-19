@@ -13,7 +13,7 @@
 > independently maintained successor published as
 > [`comfy_middle_seat`](https://rubygems.org/gems/comfy_middle_seat).
 
-ComfortableMediaSurfer is a powerful Ruby 7.2+ CMS (Content Management System) Engine, picking up where [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) left off.
+ComfortableMediaSurfer is a powerful Rails 7.2+ CMS (Content Management System) Engine, picking up where [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) left off.
 
 ## Features
 
