@@ -1,6 +1,11 @@
 # Contributing
 
-Contribute your code to ComfortableMediaSurfer in 5 easy steps:
+ShakaCode no longer actively maintains this project or accepts new feature
+contributions. For ongoing development, contribute to the independently
+maintained [Comfy Middle Seat](https://github.com/avonderluft/comfy-middle-seat)
+successor.
+
+The process below is retained for historical reference.
 
 ### 1. Fork it
 
@@ -38,5 +43,5 @@ Fork the project. Optionally, create a branch you want to work on.
 
 ### 5. Done!
 
-If everything is good your changes will be merged into master branch. Eventually
-a new version of gem will be published.
+This repository is archived for the final ShakaCode release. No further gem
+versions are planned here.
