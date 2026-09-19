@@ -6,6 +6,13 @@
 
 # ComfortableMediaSurfer
 
+> [!IMPORTANT]
+> ShakaCode no longer actively maintains Comfortable Media Surfer. Version
+> 3.2.0 is the final ShakaCode release. For ongoing development, see
+> [Comfy Middle Seat](https://github.com/avonderluft/comfy-middle-seat), an
+> independently maintained successor published as
+> [`comfy_middle_seat`](https://rubygems.org/gems/comfy_middle_seat).
+
 ComfortableMediaSurfer is a powerful Ruby 7.2+ CMS (Content Management System) Engine, picking up where [ComfortableMexicanSofa](https://github.com/comfy/comfortable-mexican-sofa) left off.
 
 ## Features
@@ -34,7 +41,7 @@ On Ruby 3.2+, 4.x, Rails 7.2+, 8.x
 Add gem definition to your Gemfile:
 
 ```ruby
-gem "comfortable_media_surfer", "~> 3.1.0"
+gem "comfortable_media_surfer", "~> 3.2.0"
 ```
 
 Then from the Rails project's root run:
@@ -61,7 +68,7 @@ The database structure is the same.  Your Sofa project will also need to be upgr
 Then you should simply be able to update your Gemfile thus, and run bundle
 
 ```ruby
-gem 'comfortable_media_surfer', '~> 3.1.0'
+gem 'comfortable_media_surfer', '~> 3.2.0'
 ```
 
 ### From Occams to Surfer
